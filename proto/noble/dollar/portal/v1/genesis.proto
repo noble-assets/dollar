@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package noble.dollar.portal.v1;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "noble/dollar/portal/v1/portal.proto";
+
+option go_package = "dollar.noble.xyz/types/portal";
+
+// GenesisState defines the genesis state of the Noble Dollar Portal submodule.
+message GenesisState {
+  // owner is the account that controls the Noble Dollar Portal.
+  string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // peers contains the genesis peers of the Noble Dollar Portal.
+  map<uint32, Peer> peers = 2 [
+    (gogoproto.castkey) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+}
