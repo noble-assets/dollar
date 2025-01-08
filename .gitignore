@@ -2,3 +2,4 @@
 .idea
 build
 coverage.out
+coverage.html
