@@ -11,6 +11,11 @@ import "google/api/annotations.proto";
 option go_package = "dollar.noble.xyz/types";
 
 service Query {
+  rpc Index(QueryIndex) returns (QueryIndexResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/dollar/v1/index";
+  }
+
   rpc Principal(QueryPrincipal) returns (QueryPrincipalResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/dollar/v1/principal/{account}";
@@ -20,6 +25,17 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/dollar/v1/yield/{account}";
   }
+}
+
+message QueryIndex {}
+
+message QueryIndexResponse {
+  string index = 1 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message QueryPrincipal {

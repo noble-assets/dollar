@@ -117,6 +117,10 @@ func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*
 	})
 }
 
+func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {
+	panic("unimplemented")
+}
+
 // EnsureOwner is a utility that ensures a message was signed by the portal owner.
 func (k portalMsgServer) EnsureOwner(ctx context.Context, signer string) error {
 	owner, _ := k.Owner.Get(ctx)

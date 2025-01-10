@@ -51,16 +51,16 @@ func (k *Keeper) Mint(ctx context.Context, recipient []byte, amount math.Int) er
 	return nil
 }
 
-func (k *Keeper) UpdateIndex(ctx context.Context, index math.LegacyDec) error {
+func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	oldIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return errors.Wrap(err, "unable to get index from state")
 	}
-	if index.LT(oldIndex) {
+	if rawIndex <= oldIndex {
 		return types.ErrDecreasingIndex
 	}
 
-	err = k.Index.Set(ctx, index)
+	err = k.Index.Set(ctx, rawIndex)
 	if err != nil {
 		return errors.Wrap(err, "unable to set index in state")
 	}
@@ -70,6 +70,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index math.LegacyDec) error {
 		return errors.Wrap(err, "unable to get total principal from state")
 	}
 
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
 	// TODO(@john): Ensure that we're always rounding down here, to avoid minting more $USDN than underlying M.
 	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()

@@ -25,7 +25,7 @@ type Keeper struct {
 	bank     types.BankKeeper
 	wormhole portal.WormholeKeeper
 
-	Index     collections.Item[math.LegacyDec]
+	Index     collections.Item[int64]
 	Principal collections.Map[[]byte, math.Int]
 
 	Owner collections.Item[string]
@@ -43,7 +43,7 @@ func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header
 		bank:     bank,
 		wormhole: wormhole,
 
-		Index:     collections.NewItem(builder, types.IndexKey, "index", sdk.LegacyDecValue),
+		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 
 		Owner: collections.NewItem(builder, portal.OwnerKey, "owner", collections.StringValue),
@@ -65,10 +65,11 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			return recipient, nil
 		}
 
-		index, err := k.Index.Get(ctx)
+		rawIndex, err := k.Index.Get(ctx)
 		if err != nil {
 			return recipient, errors.Wrap(err, "unable to get index from state")
 		}
+		index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 		principal := amount.ToLegacyDec().Quo(index).TruncateInt()
 
 		if !sender.Equals(types.ModuleAddress) {
@@ -115,10 +116,11 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 		return math.ZeroInt(), nil, errors.Wrapf(err, "unable to get principal for account %s from state", account)
 	}
 
-	index, err := k.Index.Get(ctx)
+	rawIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), nil, errors.Wrap(err, "unable to get index from state")
 	}
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
 	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
 	// TODO(@john): Ensure that we're always rounding down here, to avoid giving users more $USDN than underlying M.
