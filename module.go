@@ -23,9 +23,11 @@ import (
 	modulev1 "dollar.noble.xyz/api/module/v1"
 	portalv1 "dollar.noble.xyz/api/portal/v1"
 	dollarv1 "dollar.noble.xyz/api/v1"
+	vaultsv1 "dollar.noble.xyz/api/vaults/v1"
 	"dollar.noble.xyz/keeper"
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
+	"dollar.noble.xyz/types/vaults"
 )
 
 // ConsensusVersion defines the current Noble Dollar module consensus version.
@@ -66,6 +68,10 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	}
 
 	if err := portal.RegisterQueryHandlerClient(context.Background(), mux, portal.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
+
+	if err := vaults.RegisterQueryHandlerClient(context.Background(), mux, vaults.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
@@ -122,6 +128,9 @@ func (m AppModule) RegisterServices(cfg module.Configurator) {
 
 	portal.RegisterMsgServer(cfg.MsgServer(), keeper.NewPortalMsgServer(m.keeper))
 	portal.RegisterQueryServer(cfg.QueryServer(), keeper.NewPortalQueryServer(m.keeper))
+
+	vaults.RegisterMsgServer(cfg.MsgServer(), keeper.NewVaultsMsgServer(m.keeper))
+	vaults.RegisterQueryServer(cfg.QueryServer(), keeper.NewVaultsQueryServer(m.keeper))
 }
 
 //
@@ -156,6 +165,34 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 						},
 					},
 				},
+				"vaults": {
+					Service: vaultsv1.Msg_ServiceDesc.ServiceName,
+					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
+						{
+							RpcMethod: "Lock",
+							Use:       "lock",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "vault_type"},
+								{ProtoField: "amount"},
+							},
+						},
+						{
+							RpcMethod: "Unlock",
+							Use:       "unlock",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "vault_type"},
+								{ProtoField: "amount"},
+							},
+						},
+						{
+							RpcMethod: "SetPause",
+							Use:       "set-pause",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "paused"},
+							},
+						},
+					},
+				},
 			},
 		},
 		Query: &autocliv1.ServiceCommandDescriptor{
@@ -186,6 +223,26 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 						},
 					},
 				},
+				"vaults": {
+					Service: vaultsv1.Query_ServiceDesc.ServiceName,
+					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
+						{
+							RpcMethod: "Owner",
+							Use:       "owner",
+						},
+						{
+							RpcMethod: "Paused",
+							Use:       "paused",
+						},
+						{
+							RpcMethod:      "PositionsByProvider",
+							Use:            "positions-by-provider [provider]",
+							Short:          "List Vaults positions by a specific provider",
+							Long:           "Retrieves all the active Vaults positions attributed to provider",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "provider"}},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -210,6 +267,7 @@ type ModuleInputs struct {
 	Cdc            codec.Codec
 	AddressCodec   address.Codec
 	BankKeeper     types.BankKeeper
+	AccountKeeper  types.AccountKeeper
 	WormholeKeeper portal.WormholeKeeper
 }
 
@@ -230,6 +288,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.EventService,
 		in.AddressCodec,
 		in.BankKeeper,
+		in.AccountKeeper,
 		in.WormholeKeeper,
 	)
 	m := NewAppModule(in.AddressCodec, k)

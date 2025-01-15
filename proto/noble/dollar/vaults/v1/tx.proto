@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v1;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+
+option go_package = "dollar.noble.xyz/types/vaults";
+
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  rpc Lock(MsgLock) returns (MsgLockResponse);
+  rpc Unlock(MsgUnlock) returns (MsgUnlockResponse);
+  rpc SetPause(MsgSetPause) returns (MsgSetPauseResponse);
+}
+
+message MsgLock {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/vaults/Lock";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  vaults.v1.VaultType vault_type = 2;
+  string amount = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+message MsgLockResponse {
+  uint64 position_id = 1;
+}
+
+message MsgUnlock {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/vaults/Unlock";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  vaults.v1.VaultType vault_type = 2;
+  string amount = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+message MsgUnlockResponse {}
+
+message MsgSetPause {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/vaults/SetPause";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  vaults.v1.PausedType paused = 2;
+}
+
+message MsgSetPauseResponse {}

@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
+	"dollar.noble.xyz/types/vaults"
 
 	"dollar.noble.xyz/keeper"
 	"dollar.noble.xyz/types"
@@ -48,6 +50,39 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 			panic(errors.Wrapf(err, "unable to set genesis peer (%d:%s)", chain, peer))
 		}
 	}
+
+	if err = k.Owner.Set(ctx, genesis.Vaults.Owner); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis vaults owner"))
+	}
+
+	for _, position := range genesis.Vaults.Positions {
+		if err = k.Positions.Set(ctx, collections.Join3(position.User, int32(position.VaultType), position.Time.Unix()), vaults.Position{
+			Principal: position.Principal,
+			Index:     position.Index,
+			Amount:    position.Amount,
+			Time:      position.Time,
+		}); err != nil {
+			panic(errors.Wrapf(err, "unable to set position (%s:%s)", position.User, position.VaultType))
+		}
+	}
+
+	for _, reward := range genesis.Vaults.Rewards {
+		if err = k.Rewards.Set(ctx, reward.Index.String(), vaults.RewardsRecord{
+			Index:   reward.Index,
+			Total:   reward.Total,
+			Rewards: reward.Rewards,
+		}); err != nil {
+			panic(errors.Wrapf(err, "unable to set reward (index:%s)", reward.Index))
+		}
+	}
+
+	if err = k.Paused.Set(ctx, int32(genesis.Vaults.Paused)); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis vaults paused"))
+	}
+
+	if err = k.TotalFlexiblePrincipal.Set(ctx, genesis.Vaults.TotalFlexiblePrincipal); err != nil {
+		panic(errors.Wrap(err, "unable to set total flexible principal"))
+	}
 }
 
 func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
@@ -56,6 +91,10 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 
 	owner, _ := k.Owner.Get(ctx)
 	peers, _ := k.GetPeers(ctx)
+	rewards, _ := k.GetRewards(ctx)
+	positions, _ := k.GetPositions(ctx)
+	totalFlexiblePrincipal, _ := k.GetTotalFlexiblePrincipal(ctx)
+	paused := k.GetPaused(ctx)
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
@@ -64,5 +103,12 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 		},
 		Index:     index,
 		Principal: principal,
+		Vaults: vaults.GenesisState{
+			Owner:                  owner,
+			Positions:              positions,
+			Rewards:                rewards,
+			TotalFlexiblePrincipal: totalFlexiblePrincipal,
+			Paused:                 paused,
+		},
 	}
 }

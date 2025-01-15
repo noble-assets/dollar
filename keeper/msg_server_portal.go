@@ -23,7 +23,10 @@ func NewPortalMsgServer(keeper *Keeper) portal.MsgServer {
 }
 
 func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*portal.MsgDeliverResponse, error) {
-	vaa, _ := k.wormhole.ParseAndVerifyVAA(ctx, msg.Vaa)
+	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, msg.Vaa)
+	if err != nil {
+		return nil, err
+	}
 
 	peer, err := k.Peers.Get(ctx, uint16(vaa.EmitterChain))
 	if err != nil {
