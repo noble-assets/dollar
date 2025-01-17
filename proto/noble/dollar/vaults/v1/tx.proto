@@ -18,6 +18,7 @@ service Msg {
   rpc SetPause(MsgSetPause) returns (MsgSetPauseResponse);
 }
 
+// MsgLock is a message holders of the Noble Dollar can use to lock their $USDN into a Vault to earn rewards.
 message MsgLock {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/vaults/Lock";
@@ -26,7 +27,7 @@ message MsgLock {
   option (gogoproto.goproto_getters) = false;
 
   string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  vaults.v1.VaultType vault_type = 2;
+  vaults.v1.VaultType vault = 2;
   string amount = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
@@ -35,10 +36,10 @@ message MsgLock {
   ];
 }
 
-message MsgLockResponse {
-  uint64 position_id = 1;
-}
+// MsgLockResponse is the response of the Lock message.
+message MsgLockResponse {}
 
+// MsgUnlock is a message that allows holders of the Noble Dollar to unlock their $USDN from a Vault, releasing their funds and claiming any available rewards.
 message MsgUnlock {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/vaults/Unlock";
@@ -47,7 +48,7 @@ message MsgUnlock {
   option (gogoproto.goproto_getters) = false;
 
   string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  vaults.v1.VaultType vault_type = 2;
+  vaults.v1.VaultType vault = 2;
   string amount = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
@@ -56,8 +57,10 @@ message MsgUnlock {
   ];
 }
 
+// MsgLockResponse is the response of the Unlock message.
 message MsgUnlockResponse {}
 
+// MsgSetPause allows the authority to configure the Vault pause state, enabling or disabling Lock and Unlock actions.
 message MsgSetPause {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/vaults/SetPause";
@@ -69,4 +72,5 @@ message MsgSetPause {
   vaults.v1.PausedType paused = 2;
 }
 
+// MsgSetPauseResponse is the response of the SetPause message.
 message MsgSetPauseResponse {}

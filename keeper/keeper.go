@@ -37,7 +37,7 @@ type Keeper struct {
 	Paused                 collections.Item[int32]
 	Positions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, PositionsIndexes]
 	TotalFlexiblePrincipal collections.Item[math.Int]
-	Rewards                collections.Map[string, vaults.RewardsRecord]
+	Rewards                collections.Map[string, vaults.Reward]
 }
 
 // Positions Indexes
@@ -92,8 +92,8 @@ func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header
 
 		Paused:                 collections.NewItem(builder, vaults.PausedKey, "paused", collections.Int32Value),
 		Positions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewPositionsIndexes(builder)),
-		TotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "total_principal", sdk.IntValue),
-		Rewards:                collections.NewMap(builder, vaults.RewardsPrefix, "rewards", collections.StringKey, codec.CollValue[vaults.RewardsRecord](cdc)),
+		TotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "total_flexible_principal", sdk.IntValue),
+		Rewards:                collections.NewMap(builder, vaults.RewardPrefix, "rewards", collections.StringKey, codec.CollValue[vaults.Reward](cdc)),
 	}
 
 	_, err := builder.Build()

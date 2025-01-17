@@ -14,8 +14,13 @@ message GenesisState {
   // owner is the account that controls the Noble Dollar Vaults.
   string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
+  // total_flexible_principal contains all the users positions inside Vaults.
   repeated vaults.v1.PositionEntry positions = 2 [(gogoproto.nullable) = false];
-  repeated vaults.v1.RewardsRecord rewards = 3 [(gogoproto.nullable) = false];
+
+  // rewards maps the rewards amounts by the index.
+  repeated vaults.v1.Reward rewards = 3 [(gogoproto.nullable) = false];
+
+  // total_flexible_principal contains the total principal amount contained in the flexible Vault.
   string total_flexible_principal = 4 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",

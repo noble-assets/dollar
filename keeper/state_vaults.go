@@ -36,8 +36,8 @@ func (k *Keeper) GetPositions(ctx context.Context) ([]vaults.PositionEntry, erro
 		key, _ := itr.Key()
 		position, _ := k.Positions.Get(ctx, key)
 		positions = append(positions, vaults.PositionEntry{
-			User:      key.K1(),
-			VaultType: vaults.VaultType(key.K2()),
+			Address:   key.K1(),
+			Vault:     vaults.VaultType(key.K2()),
 			Index:     position.Index,
 			Principal: position.Principal,
 			Amount:    position.Amount,
@@ -60,8 +60,8 @@ func (k *Keeper) GetPositionsByProvider(ctx context.Context, provider []byte) ([
 		key, _ := itr.PrimaryKey()
 		position, _ := k.Positions.Get(ctx, key)
 		positions = append(positions, vaults.PositionEntry{
-			User:      key.K1(),
-			VaultType: vaults.VaultType(key.K2()),
+			Address:   key.K1(),
+			Vault:     vaults.VaultType(key.K2()),
 			Index:     position.Index,
 			Principal: position.Principal,
 			Amount:    position.Amount,
@@ -72,8 +72,8 @@ func (k *Keeper) GetPositionsByProvider(ctx context.Context, provider []byte) ([
 	return positions, err
 }
 
-func (k *Keeper) GetRewards(ctx context.Context) ([]vaults.RewardsRecord, error) {
-	var rewards []vaults.RewardsRecord
+func (k *Keeper) GetRewards(ctx context.Context) ([]vaults.Reward, error) {
+	var rewards []vaults.Reward
 
 	itr, err := k.Rewards.Iterate(ctx, nil)
 	if err != nil {
@@ -83,7 +83,7 @@ func (k *Keeper) GetRewards(ctx context.Context) ([]vaults.RewardsRecord, error)
 	for ; itr.Valid(); itr.Next() {
 		key, _ := itr.Key()
 		reward, _ := k.Rewards.Get(ctx, key)
-		rewards = append(rewards, vaults.RewardsRecord{
+		rewards = append(rewards, vaults.Reward{
 			Index:   reward.Index,
 			Total:   reward.Total,
 			Rewards: reward.Rewards,

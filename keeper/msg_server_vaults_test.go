@@ -43,9 +43,9 @@ func TestPausing(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -68,17 +68,17 @@ func TestPausing(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.Error(t, err)
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.Error(t, err)
 
@@ -94,17 +94,17 @@ func TestPausing(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(100 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(100 * ONE),
 	})
 	assert.Error(t, err)
 
@@ -120,17 +120,17 @@ func TestPausing(t *testing.T) {
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.Error(t, err)
 }
@@ -157,9 +157,9 @@ func TestStakedVault(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(50*ONE)) // 50 USDN.
@@ -177,16 +177,16 @@ func TestStakedVault(t *testing.T) {
 
 	// ACT: Bob attempts to withdraw from the Staked Vault with an invalid amount.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
 	})
 	assert.Error(t, err)
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -235,18 +235,18 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(50*ONE)) // 50 USDN.
 
 	// ACT: Bob attempts deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	// ASSERT: Should've failed to same block execution.
 	assert.Error(t, err)
@@ -256,9 +256,9 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching Positions state.
@@ -272,9 +272,9 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(100 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(100 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield.
@@ -312,9 +312,9 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.STAKED,
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.STAKED,
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -327,9 +327,9 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ACT: Bob deposits other 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.STAKED,
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.STAKED,
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching state.
@@ -337,16 +337,16 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.Equal(t, 2, len(positions))
 	assert.Equal(t, []vaults.PositionEntry{
 		{
-			User:      bob.Bytes,
-			VaultType: vaults.STAKED,
+			Address:   bob.Bytes,
+			Vault:     vaults.STAKED,
 			Principal: math.NewInt(45454545),
 			Index:     math.LegacyMustNewDecFromStr("1.1"),
 			Amount:    math.NewInt(50 * ONE),
 			Time:      time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			User:      bob.Bytes,
-			VaultType: vaults.STAKED,
+			Address:   bob.Bytes,
+			Vault:     vaults.STAKED,
 			Principal: math.NewInt(41322314),
 			Index:     math.LegacyMustNewDecFromStr("1.21"),
 			Amount:    math.NewInt(50 * ONE),
@@ -356,9 +356,9 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ACT: Bob withdraws 10 USDN (partial first position) from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.STAKED,
-		Amount:    math.NewInt(10 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.STAKED,
+		Amount: math.NewInt(10 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: matching state.
@@ -367,16 +367,16 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.Equal(t, 2, len(positions))
 	assert.Equal(t, []vaults.PositionEntry{
 		{
-			User:      bob.Bytes,
-			VaultType: vaults.STAKED,
+			Address:   bob.Bytes,
+			Vault:     vaults.STAKED,
 			Principal: math.NewInt(36363636), // reduced (50-10)/1,1
 			Index:     math.LegacyMustNewDecFromStr("1.1"),
 			Amount:    math.NewInt(40 * ONE), // reduced
 			Time:      time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC),
 		},
 		{
-			User:      bob.Bytes,
-			VaultType: vaults.STAKED,
+			Address:   bob.Bytes,
+			Vault:     vaults.STAKED,
 			Principal: math.NewInt(41322314),
 			Index:     math.LegacyMustNewDecFromStr("1.21"),
 			Amount:    math.NewInt(50 * ONE),
@@ -386,9 +386,9 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ACT: Bob withdraws other 40 USDN (completes first position) from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.STAKED,
-		Amount:    math.NewInt(40 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.STAKED,
+		Amount: math.NewInt(40 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching state.
@@ -397,8 +397,8 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.Equal(t, 1, len(positions))
 	assert.Equal(t, []vaults.PositionEntry{
 		{
-			User:      bob.Bytes,
-			VaultType: vaults.STAKED,
+			Address:   bob.Bytes,
+			Vault:     vaults.STAKED,
 			Principal: math.NewInt(41322314),
 			Index:     math.LegacyMustNewDecFromStr("1.21"),
 			Amount:    math.NewInt(50 * ONE),
@@ -408,9 +408,9 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ACT: Bob withdraws other 50 USDN from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.STAKED,
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.STAKED,
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching state.
@@ -451,9 +451,9 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 
 	// ACT: Bob deposits 50 USDN (half balance) into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, math.NewInt(50*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
@@ -475,9 +475,9 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 
 	// ACT: Bob withdraws 50 USDN (total) from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected to increase by only the deposited amount.
@@ -498,9 +498,9 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 
 	// ACT: Bob deposits 1 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -535,25 +535,25 @@ func TestFlexibleVaultMultiUser(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob deposits 50 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Alice deposits 50 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected to be empty.
@@ -578,17 +578,17 @@ func TestFlexibleVaultMultiUser(t *testing.T) {
 
 	// ACT: Bob withdraws 50 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Alice withdraws 50 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected to increase by a factor of 1.1.
@@ -638,25 +638,25 @@ func TestFlexibleVaultMultiUserEarlyExit(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob deposits 50 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Alice deposits 50 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected to be empty.
@@ -666,16 +666,16 @@ func TestFlexibleVaultMultiUserEarlyExit(t *testing.T) {
 
 	// ACT: Bob withdraws 50 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ACT: Alice withdraws 50 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(50 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(50 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected be as in the initial state.
@@ -726,17 +726,17 @@ func TestFlexibleVaultMultiUserEarlyExitCase2(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -768,17 +768,17 @@ func TestFlexibleVaultMultiUserEarlyExitCase3(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected be as in the initial state.
@@ -820,17 +820,17 @@ func TestFlexibleVaultBaseLockUnlock(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -864,9 +864,9 @@ func TestFlexibleVaultSimpleNoRewards(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -876,9 +876,9 @@ func TestFlexibleVaultSimpleNoRewards(t *testing.T) {
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -910,9 +910,9 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -925,27 +925,27 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 
 	// ACT: Alice deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, math.NewInt(0), bank.Balances[alice.Address].AmountOf("uusdn"))
 
 	// ACT: Bob attempts to withdraw from the Flexible Vault with an invalid amount.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, math.NewInt(1100*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ACT: Alice withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -982,17 +982,17 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1013,9 +1013,9 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 
 	// ACT: Alice deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1026,7 +1026,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	// ASSERT: Matching Rewards state.
 	rewards, err := k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1062,16 +1062,16 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.Equal(t, 2, len(bobPositions))
 	assert.Equal(t, 1, len(alicePositions))
 	assert.Equal(t, vaults.PositionEntry{
-		User:      bob.Bytes,
-		VaultType: vaults.FLEXIBLE,
+		Address:   bob.Bytes,
+		Vault:     vaults.FLEXIBLE,
 		Principal: math.NewInt(1000 * ONE),
 		Index:     math.LegacyMustNewDecFromStr("1.0"),
 		Amount:    math.NewInt(1000 * ONE),
 		Time:      time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC),
 	}, bobPositions[1])
 	assert.Equal(t, vaults.PositionEntry{
-		User:      alice.Bytes,
-		VaultType: vaults.FLEXIBLE,
+		Address:   alice.Bytes,
+		Vault:     vaults.FLEXIBLE,
 		Principal: math.LegacyNewDec(1000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.33")).TruncateInt(),
 		Index:     math.LegacyMustNewDecFromStr("1.33"),
 		Amount:    math.NewInt(1000 * ONE),
@@ -1080,16 +1080,16 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ASSERT: Matching Rewards state.
 	rewards, err = k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1127,16 +1127,16 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 
 	// ACT: Alice withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ASSERT: Matching Rewards state.
 	rewards, err = k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1199,9 +1199,9 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1214,9 +1214,9 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1225,8 +1225,8 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 2, len(bobPositions))
 	assert.Equal(t, vaults.PositionEntry{
-		User:      bob.Bytes,
-		VaultType: vaults.FLEXIBLE,
+		Address:   bob.Bytes,
+		Vault:     vaults.FLEXIBLE,
 		Principal: math.LegacyNewDec(1000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.1")).TruncateInt(),
 		Index:     math.LegacyMustNewDecFromStr("1.1"),
 		Amount:    math.NewInt(1000 * ONE),
@@ -1242,9 +1242,9 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ACT: Alice deposits 9000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(9000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(9000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1253,8 +1253,8 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(alicePositions))
 	assert.Equal(t, vaults.PositionEntry{
-		User:      alice.Bytes,
-		VaultType: vaults.FLEXIBLE,
+		Address:   alice.Bytes,
+		Vault:     vaults.FLEXIBLE,
 		Principal: math.LegacyNewDec(9000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.21")).TruncateInt(),
 		Index:     math.LegacyMustNewDecFromStr("1.21"),
 		Amount:    math.NewInt(9000 * ONE),
@@ -1264,7 +1264,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	// ASSERT: Matching Rewards state.
 	rewards, err := k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1288,9 +1288,9 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1302,7 +1302,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	// ASSERT: Matching Rewards state.
 	rewards, err = k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1327,9 +1327,9 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ACT: Alice withdraws 9000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(9000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(9000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1341,7 +1341,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	// ASSERT: Matching Rewards state.
 	rewards, err = k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1394,17 +1394,17 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Staking Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1417,9 +1417,9 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 
 	// ACT: Alice deposits 9000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(9000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(9000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1430,7 +1430,7 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	// ASSERT: Matching Rewards state.
 	rewards, err := k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1450,24 +1450,24 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Alice withdraws 9000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    alice.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(9000 * ONE),
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(9000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ASSERT: Rewards Positions state.
 	rewards, err = k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),
@@ -1515,9 +1515,9 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1531,17 +1531,17 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
-		Signer:    bob.Address,
-		VaultType: vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
-		Amount:    math.NewInt(1000 * ONE),
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
 
@@ -1555,7 +1555,7 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	// ASSERT: Matching Rewards state.
 	rewards, err := k.GetRewards(ctx)
 	assert.NoError(t, err)
-	assert.Equal(t, []vaults.RewardsRecord{
+	assert.Equal(t, []vaults.Reward{
 		{
 			Index:   math.LegacyMustNewDecFromStr("1.0"),
 			Total:   math.NewInt(0),

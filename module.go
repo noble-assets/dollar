@@ -172,7 +172,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							RpcMethod: "Lock",
 							Use:       "lock",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "vault_type"},
+								{ProtoField: "vault"},
 								{ProtoField: "amount"},
 							},
 						},
@@ -180,7 +180,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							RpcMethod: "Unlock",
 							Use:       "unlock",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "vault_type"},
+								{ProtoField: "vault"},
 								{ProtoField: "amount"},
 							},
 						},

@@ -105,7 +105,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index math.LegacyDec) error {
 
 	// Register the new Rewards record.
 	rewards := stakedYield.Add(flexibleYield)
-	if err = k.Rewards.Set(ctx, index.String(), vaults.RewardsRecord{
+	if err = k.Rewards.Set(ctx, index.String(), vaults.Reward{
 		Index:   index,
 		Total:   totalFlexiblePrincipal,
 		Rewards: rewards,

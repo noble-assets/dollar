@@ -56,18 +56,18 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	}
 
 	for _, position := range genesis.Vaults.Positions {
-		if err = k.Positions.Set(ctx, collections.Join3(position.User, int32(position.VaultType), position.Time.Unix()), vaults.Position{
+		if err = k.Positions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
 			Principal: position.Principal,
 			Index:     position.Index,
 			Amount:    position.Amount,
 			Time:      position.Time,
 		}); err != nil {
-			panic(errors.Wrapf(err, "unable to set position (%s:%s)", position.User, position.VaultType))
+			panic(errors.Wrapf(err, "unable to set position (%s:%s)", position.Address, position.Vault))
 		}
 	}
 
 	for _, reward := range genesis.Vaults.Rewards {
-		if err = k.Rewards.Set(ctx, reward.Index.String(), vaults.RewardsRecord{
+		if err = k.Rewards.Set(ctx, reward.Index.String(), vaults.Reward{
 			Index:   reward.Index,
 			Total:   reward.Total,
 			Rewards: reward.Rewards,

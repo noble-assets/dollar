@@ -30,7 +30,7 @@ enum PausedType {
   ALL = 3;
 }
 
-message RewardsRecord {
+message Reward {
   string index = 1 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Dec",
@@ -77,8 +77,8 @@ message Position {
 }
 
 message PositionEntry {
-  bytes user = 1;
-  vaults.v1.VaultType vault_type = 2;
+  bytes address = 1;
+  vaults.v1.VaultType vault = 2;
   string principal = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",

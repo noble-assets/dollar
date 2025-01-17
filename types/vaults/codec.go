@@ -10,7 +10,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgLock{}, "dollar/vaults/Lock", nil)
 	cdc.RegisterConcrete(&MsgUnlock{}, "dollar/vaults/Unlock", nil)
-	cdc.RegisterConcrete(&MsgUnlock{}, "dollar/vaults/SetPause", nil)
+	cdc.RegisterConcrete(&MsgSetPause{}, "dollar/vaults/SetPause", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {

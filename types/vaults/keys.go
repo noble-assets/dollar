@@ -23,5 +23,5 @@ var (
 	PausedKey                 = []byte("paused")
 	TotalFlexiblePrincipalKey = []byte("total_flexible_principal")
 	PositionPrefix            = []byte("position/")
-	RewardsPrefix             = []byte("rewards/")
+	RewardPrefix              = []byte("reward/")
 )
