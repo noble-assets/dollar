@@ -28,23 +28,36 @@ func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*t
 
 	err = k.bank.SendCoinsFromModuleToAccount(ctx, types.YieldName, account, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
-		return nil, err
+		return nil, errors.Wrap(err, "unable to distribute yield to user")
 	}
 
 	return &types.MsgClaimYieldResponse{}, nil
 }
 
-func (k *Keeper) Mint(ctx context.Context, recipient []byte, amount math.Int) error {
+func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {
+	coins := sdk.NewCoins(sdk.NewCoin(k.denom, amount))
+	err := k.bank.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, coins)
+	if err != nil {
+		return err
+	}
+	err = k.bank.BurnCoins(ctx, types.ModuleName, coins)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (k *Keeper) Mint(ctx context.Context, recipient []byte, amount math.Int, index int64) error {
+	_ = k.UpdateIndex(ctx, index)
+
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, amount))
 	err := k.bank.MintCoins(ctx, types.ModuleName, coins)
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
 		return err
 	}
 	err = k.bank.SendCoinsFromModuleToAccount(ctx, types.ModuleName, recipient, coins)
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
 		return err
 	}
 
@@ -77,8 +90,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	err = k.bank.MintCoins(ctx, types.YieldName, sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply))))
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
-		return err
+		return errors.Wrap(err, "unable to mint coins")
 	}
 
 	return nil

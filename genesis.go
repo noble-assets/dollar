@@ -48,6 +48,10 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 			panic(errors.Wrapf(err, "unable to set genesis peer (%d:%s)", chain, peer))
 		}
 	}
+
+	if err = k.Nonce.Set(ctx, genesis.Portal.Nonce); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis nonce"))
+	}
 }
 
 func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
@@ -56,11 +60,13 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 
 	owner, _ := k.Owner.Get(ctx)
 	peers, _ := k.GetPeers(ctx)
+	nonce, _ := k.Nonce.Get(ctx)
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
 			Owner: owner,
 			Peers: peers,
+			Nonce: nonce,
 		},
 		Index:     index,
 		Principal: principal,

@@ -54,7 +54,7 @@ message MsgSetPeer {
 // MsgSetPeerResponse is the response of the SetPeer message.
 message MsgSetPeerResponse {}
 
-// MsgTransfer ... TODO
+// MsgTransfer is the entrypoint for transferring the Noble Dollar cross-chain.
 message MsgTransfer {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/portal/Transfer";
@@ -63,6 +63,17 @@ message MsgTransfer {
   option (gogoproto.goproto_getters) = false;
 
   string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint32 chain = 2 [
+    (gogoproto.customtype) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+  bytes recipient = 3;
+  string amount = 4 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // MsgTransferResponse is the response of the Transfer message.

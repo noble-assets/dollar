@@ -158,6 +158,11 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							RpcMethod: "Transfer",
 							Use:       "transfer",
 							Short:     "Transfer USDN from Noble and receive M cross-chain",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "chain"},
+								{ProtoField: "recipient"},
+								{ProtoField: "amount"},
+							},
 						},
 					},
 				},

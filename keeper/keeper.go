@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/address"
@@ -12,6 +13,7 @@ import (
 	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
@@ -30,9 +32,21 @@ type Keeper struct {
 
 	Owner collections.Item[string]
 	Peers collections.Map[uint16, portal.Peer]
+	Nonce collections.Item[uint32]
 }
 
 func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, wormhole portal.WormholeKeeper) *Keeper {
+	transceiverAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/transceiver", portal.SubmoduleName))
+	copy(portal.PaddedTransceiverAddress[12:], transceiverAddress)
+	portal.TransceiverAddress, _ = address.BytesToString(transceiverAddress)
+
+	managerAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/manager", portal.SubmoduleName))
+	copy(portal.PaddedManagerAddress[12:], managerAddress)
+	portal.ManagerAddress, _ = address.BytesToString(managerAddress)
+
+	bz := []byte(denom)
+	copy(portal.RawToken[32-len(bz):], bz)
+
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
@@ -48,6 +62,7 @@ func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header
 
 		Owner: collections.NewItem(builder, portal.OwnerKey, "owner", collections.StringValue),
 		Peers: collections.NewMap(builder, portal.PeerPrefix, "peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),
+		Nonce: collections.NewItem(builder, portal.NonceKey, "nonce", collections.Uint32Value),
 	}
 
 	_, err := builder.Build()

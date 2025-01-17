@@ -18,4 +18,7 @@ message GenesisState {
     (gogoproto.castkey) = "uint16",
     (gogoproto.nullable) = false
   ];
+
+  // nonce contains the next available nonce used for transfers out of the Noble Dollar Portal.
+  uint32 nonce = 3;
 }

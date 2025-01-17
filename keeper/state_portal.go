@@ -3,6 +3,8 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
+
 	"dollar.noble.xyz/types/portal"
 )
 
@@ -16,4 +18,19 @@ func (k *Keeper) GetPeers(ctx context.Context) (map[uint16]portal.Peer, error) {
 	})
 
 	return peers, err
+}
+
+// IncrementNonce is a utility that returns the next nonce and increments.
+func (k *Keeper) IncrementNonce(ctx context.Context) (uint32, error) {
+	nonce, err := k.Nonce.Get(ctx)
+	if err != nil {
+		return 0, errors.Wrap(err, "unable to get nonce from state")
+	}
+
+	err = k.Nonce.Set(ctx, nonce+1)
+	if err != nil {
+		return 0, errors.Wrap(err, "unable to set nonce in state")
+	}
+
+	return nonce, nil
 }

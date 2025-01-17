@@ -18,7 +18,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.50.10
 	github.com/cosmos/ibc-go/modules/capability v1.0.1
 	github.com/cosmos/ibc-go/v8 v8.5.1
-	github.com/noble-assets/wormhole v0.0.0-20250107120010-3554988b4fcf
+	github.com/noble-assets/wormhole v1.0.0-alpha.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
 )
@@ -204,8 +204,10 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-// use local dollar.noble.xyz
-replace dollar.noble.xyz => ../
+replace (
+	// use local dollar.noble.xyz
+	dollar.noble.xyz => ../
 
-// use cosmos compatible syndtr/goleveldb
-replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+	// use cosmos compatible syndtr/goleveldb
+	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+)

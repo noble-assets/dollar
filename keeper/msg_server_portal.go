@@ -3,6 +3,7 @@ package keeper
 import (
 	"bytes"
 	"context"
+	"encoding/binary"
 	"encoding/hex"
 	"fmt"
 
@@ -53,11 +54,11 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 		)
 	}
 
-	if !bytes.Equal(portal.ManagerAddress, transceiverMessage.RecipientManagerAddress) {
+	if !bytes.Equal(portal.PaddedManagerAddress, transceiverMessage.RecipientManagerAddress) {
 		return nil, errors.Wrapf(
 			portal.ErrInvalidMessage,
 			"expected recipient manager %s, got %s",
-			hex.EncodeToString(portal.ManagerAddress),
+			hex.EncodeToString(portal.PaddedManagerAddress),
 			hex.EncodeToString(transceiverMessage.RecipientManagerAddress),
 		)
 	}
@@ -118,7 +119,70 @@ func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*
 }
 
 func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {
-	panic("unimplemented")
+	peer, err := k.Peers.Get(ctx, msg.Chain)
+	if err != nil {
+		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain %d is not configured", msg.Chain)
+	}
+
+	if len(msg.Recipient) != 32 {
+		return nil, errors.Wrap(portal.ErrInvalidRecipient, "recipient must be 32 bytes")
+	}
+
+	index, err := k.Index.Get(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get index from state")
+	}
+	additionalPayload := make([]byte, 8)
+	binary.BigEndian.PutUint64(additionalPayload, uint64(index))
+
+	rawNativeTokenTransfer := ntt.EncodeNativeTokenTransfer(ntt.NativeTokenTransfer{
+		Amount:            msg.Amount.Uint64(),
+		SourceToken:       portal.RawToken,
+		To:                msg.Recipient,
+		ToChain:           msg.Chain,
+		AdditionalPayload: additionalPayload,
+	})
+
+	sender, err := k.address.StringToBytes(msg.Signer)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to decode account %s", msg.Signer)
+	}
+	rawSender := make([]byte, 32)
+	copy(rawSender[32-len(sender):], sender)
+
+	nonce, err := k.IncrementNonce(ctx)
+	if err != nil {
+		return nil, err
+	}
+	rawNonce := make([]byte, 4)
+	binary.BigEndian.PutUint32(rawNonce, nonce)
+	id := make([]byte, 32)
+	copy(id[32-len(rawNonce):], rawNonce)
+
+	rawManagerMessage := ntt.EncodeManagerMessage(ntt.ManagerMessage{
+		Id:      id,
+		Sender:  rawSender,
+		Payload: rawNativeTokenTransfer,
+	})
+
+	rawTransceiverMessage := ntt.EncodeTransceiverMessage(ntt.TransceiverMessage{
+		SourceManagerAddress:    portal.PaddedManagerAddress,
+		RecipientManagerAddress: peer.Manager,
+		ManagerPayload:          rawManagerMessage,
+		TransceiverPayload:      nil,
+	})
+
+	err = k.Burn(ctx, sender, msg.Amount)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to burn coins")
+	}
+
+	return &portal.MsgTransferResponse{}, k.wormhole.PostMessage(
+		ctx,
+		portal.TransceiverAddress,
+		rawTransceiverMessage,
+		nonce,
+	)
 }
 
 // EnsureOwner is a utility that ensures a message was signed by the portal owner.
@@ -143,12 +207,12 @@ func (k portalMsgServer) HandlePayload(ctx context.Context, payload []byte) erro
 	case portal.Unknown:
 		return nil
 	case portal.Token:
-		amount, _, recipient, destination := portal.DecodeTokenPayload(payload)
+		amount, index, recipient, destination := portal.DecodeTokenPayload(payload)
 		if chain != destination {
 			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
 		}
 
-		return k.Mint(ctx, recipient, amount)
+		return k.Mint(ctx, recipient, amount, index)
 	case portal.Index:
 		index, destination := portal.DecodeIndexPayload(payload)
 		if chain != destination {
