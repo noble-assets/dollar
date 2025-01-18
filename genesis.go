@@ -51,10 +51,6 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
-	if err = k.Owner.Set(ctx, genesis.Vaults.Owner); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis vaults owner"))
-	}
-
 	for _, position := range genesis.Vaults.Positions {
 		if err = k.Positions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
 			Principal: position.Principal,
@@ -104,7 +100,6 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 		Index:     index,
 		Principal: principal,
 		Vaults: vaults.GenesisState{
-			Owner:                  owner,
 			Positions:              positions,
 			Rewards:                rewards,
 			TotalFlexiblePrincipal: totalFlexiblePrincipal,

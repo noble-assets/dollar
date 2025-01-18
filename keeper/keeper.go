@@ -20,7 +20,9 @@ import (
 )
 
 type Keeper struct {
-	denom    string
+	denom     string
+	authority string
+
 	header   header.Service
 	event    event.Service
 	address  address.Codec
@@ -72,17 +74,18 @@ func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 	k.bank = bankKeeper
 }
 
-func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
+func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
-		denom:    denom,
-		header:   header,
-		event:    event,
-		address:  address,
-		bank:     bank,
-		wormhole: wormhole,
-		account:  account,
+		denom:     denom,
+		authority: authority,
+		header:    header,
+		event:     event,
+		address:   address,
+		bank:      bank,
+		wormhole:  wormhole,
+		account:   account,
 
 		Index:     collections.NewItem(builder, types.IndexKey, "index", sdk.LegacyDecValue),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),

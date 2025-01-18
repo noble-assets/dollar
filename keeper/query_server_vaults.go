@@ -17,16 +17,6 @@ func NewVaultsQueryServer(keeper *Keeper) vaults.QueryServer {
 	return &vaultsQueryServer{Keeper: keeper}
 }
 
-func (k vaultsQueryServer) Owner(ctx context.Context, req *vaults.QueryOwner) (*vaults.QueryOwnerResponse, error) {
-	if req == nil {
-		return nil, types.ErrInvalidRequest
-	}
-
-	owner, err := k.Keeper.Owner.Get(ctx)
-
-	return &vaults.QueryOwnerResponse{Owner: owner}, err
-}
-
 func (k vaultsQueryServer) Paused(ctx context.Context, req *vaults.QueryPaused) (*vaults.QueryPausedResponse, error) {
 	if req == nil {
 		return nil, types.ErrInvalidRequest

@@ -29,7 +29,6 @@ func TestPausing(t *testing.T) {
 	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
-	_ = k.Owner.Set(ctx, "authority")
 
 	vaultsServer := keeper.NewVaultsMsgServer(k)
 	bob := utils.TestAccount()

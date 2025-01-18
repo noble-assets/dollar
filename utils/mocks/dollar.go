@@ -47,6 +47,7 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 
 	k := keeper.NewKeeper(
 		"uusdn",
+		"authority",
 		cfg.Codec,
 		storeService,
 		headerService,

@@ -119,7 +119,6 @@ func (x *_GenesisState_3_list) IsValid() bool {
 
 var (
 	md_GenesisState                          protoreflect.MessageDescriptor
-	fd_GenesisState_owner                    protoreflect.FieldDescriptor
 	fd_GenesisState_positions                protoreflect.FieldDescriptor
 	fd_GenesisState_rewards                  protoreflect.FieldDescriptor
 	fd_GenesisState_total_flexible_principal protoreflect.FieldDescriptor
@@ -129,7 +128,6 @@ var (
 func init() {
 	file_noble_dollar_vaults_v1_genesis_proto_init()
 	md_GenesisState = File_noble_dollar_vaults_v1_genesis_proto.Messages().ByName("GenesisState")
-	fd_GenesisState_owner = md_GenesisState.Fields().ByName("owner")
 	fd_GenesisState_positions = md_GenesisState.Fields().ByName("positions")
 	fd_GenesisState_rewards = md_GenesisState.Fields().ByName("rewards")
 	fd_GenesisState_total_flexible_principal = md_GenesisState.Fields().ByName("total_flexible_principal")
@@ -201,12 +199,6 @@ func (x *fastReflection_GenesisState) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.Owner != "" {
-		value := protoreflect.ValueOfString(x.Owner)
-		if !f(fd_GenesisState_owner, value) {
-			return
-		}
-	}
 	if len(x.Positions) != 0 {
 		value := protoreflect.ValueOfList(&_GenesisState_2_list{list: &x.Positions})
 		if !f(fd_GenesisState_positions, value) {
@@ -246,8 +238,6 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.GenesisState.owner":
-		return x.Owner != ""
 	case "noble.dollar.vaults.v1.GenesisState.positions":
 		return len(x.Positions) != 0
 	case "noble.dollar.vaults.v1.GenesisState.rewards":
@@ -272,8 +262,6 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.GenesisState.owner":
-		x.Owner = ""
 	case "noble.dollar.vaults.v1.GenesisState.positions":
 		x.Positions = nil
 	case "noble.dollar.vaults.v1.GenesisState.rewards":
@@ -298,9 +286,6 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v1.GenesisState.owner":
-		value := x.Owner
-		return protoreflect.ValueOfString(value)
 	case "noble.dollar.vaults.v1.GenesisState.positions":
 		if len(x.Positions) == 0 {
 			return protoreflect.ValueOfList(&_GenesisState_2_list{})
@@ -339,8 +324,6 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.GenesisState.owner":
-		x.Owner = value.Interface().(string)
 	case "noble.dollar.vaults.v1.GenesisState.positions":
 		lv := value.List()
 		clv := lv.(*_GenesisState_2_list)
@@ -385,8 +368,6 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		}
 		value := &_GenesisState_3_list{list: &x.Rewards}
 		return protoreflect.ValueOfList(value)
-	case "noble.dollar.vaults.v1.GenesisState.owner":
-		panic(fmt.Errorf("field owner of message noble.dollar.vaults.v1.GenesisState is not mutable"))
 	case "noble.dollar.vaults.v1.GenesisState.total_flexible_principal":
 		panic(fmt.Errorf("field total_flexible_principal of message noble.dollar.vaults.v1.GenesisState is not mutable"))
 	case "noble.dollar.vaults.v1.GenesisState.paused":
@@ -404,8 +385,6 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.GenesisState.owner":
-		return protoreflect.ValueOfString("")
 	case "noble.dollar.vaults.v1.GenesisState.positions":
 		list := []*PositionEntry{}
 		return protoreflect.ValueOfList(&_GenesisState_2_list{list: &list})
@@ -485,10 +464,6 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		l = len(x.Owner)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
 		if len(x.Positions) > 0 {
 			for _, e := range x.Positions {
 				l = options.Size(e)
@@ -581,13 +556,6 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				dAtA[i] = 0x12
 			}
 		}
-		if len(x.Owner) > 0 {
-			i -= len(x.Owner)
-			copy(dAtA[i:], x.Owner)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Owner)))
-			i--
-			dAtA[i] = 0xa
-		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
 		} else {
@@ -637,38 +605,6 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: GenesisState: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
-			case 1:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
-				}
-				var stringLen uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.Owner = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
 			case 2:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Positions", wireType)
@@ -842,15 +778,14 @@ type GenesisState struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// owner is the account that controls the Noble Dollar Vaults.
-	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
 	// total_flexible_principal contains all the users positions inside Vaults.
 	Positions []*PositionEntry `protobuf:"bytes,2,rep,name=positions,proto3" json:"positions,omitempty"`
 	// rewards maps the rewards amounts by the index.
 	Rewards []*Reward `protobuf:"bytes,3,rep,name=rewards,proto3" json:"rewards,omitempty"`
 	// total_flexible_principal contains the total principal amount contained in the flexible Vault.
-	TotalFlexiblePrincipal string     `protobuf:"bytes,4,opt,name=total_flexible_principal,json=totalFlexiblePrincipal,proto3" json:"total_flexible_principal,omitempty"`
-	Paused                 PausedType `protobuf:"varint,5,opt,name=paused,proto3,enum=noble.dollar.vaults.v1.PausedType" json:"paused,omitempty"`
+	TotalFlexiblePrincipal string `protobuf:"bytes,4,opt,name=total_flexible_principal,json=totalFlexiblePrincipal,proto3" json:"total_flexible_principal,omitempty"`
+	// paused represents the current pausing state of the Vaults.
+	Paused PausedType `protobuf:"varint,5,opt,name=paused,proto3,enum=noble.dollar.vaults.v1.PausedType" json:"paused,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -871,13 +806,6 @@ func (*GenesisState) ProtoMessage() {}
 // Deprecated: Use GenesisState.ProtoReflect.Descriptor instead.
 func (*GenesisState) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v1_genesis_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *GenesisState) GetOwner() string {
-	if x != nil {
-		return x.Owner
-	}
-	return ""
 }
 
 func (x *GenesisState) GetPositions() []*PositionEntry {
@@ -921,11 +849,8 @@ var file_noble_dollar_vaults_v1_genesis_proto_rawDesc = []byte{
 	0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x1a, 0x23, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
 	0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xf1, 0x02, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65,
-	0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x2e, 0x0a, 0x05, 0x6f, 0x77, 0x6e, 0x65,
-	0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73,
-	0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e,
-	0x67, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x49, 0x0a, 0x09, 0x70, 0x6f, 0x73, 0x69,
+	0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xc1, 0x02, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65,
+	0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x49, 0x0a, 0x09, 0x70, 0x6f, 0x73, 0x69,
 	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x25, 0x2e, 0x6e, 0x6f,
 	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74,
 	0x73, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x45, 0x6e, 0x74,

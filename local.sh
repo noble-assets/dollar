@@ -18,8 +18,9 @@ if ! [ -f .dollar/data/priv_validator_state.json ]; then
   dollard keys add owner --recover --home .dollar --keyring-backend test --output json <<< "enjoy pen flee moral inform welcome cannon caught letter symbol patch discover bid juice toward abuse bonus gospel frame chapter magnet depart throw crater" &> /dev/null
   dollard genesis add-genesis-account owner 1000000uusdc --home .dollar --keyring-backend test
   dollard genesis add-genesis-account noble1cyyzpxplxdzkeea7kwsydadg87357qnah9s9cv 1000000uusdc --home .dollar --keyring-backend test
-
-  dollard keys add tom --recover --home .dollar --keyring-backend test --output json <<< "dice hill prepare foam tiny album cart steel pact say never hen" &> /dev/null
+  dollar keys add authority --recover --home .dollar --keyring-backend test <<< "occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon" &> /dev/null
+  dollar genesis add-genesis-account authority 1000000uusdn --home .dollar --keyring-backend test
+  dollard keys add user --recover --home .dollar --keyring-backend test --output json <<< "dice hill prepare foam tiny album cart steel pact say never hen" &> /dev/null
   dollard genesis add-genesis-account noble1zlxkchy77rp2tmknx5n8kckntyj3wp6h6c2edm 1000000uusdn --home .dollar --keyring-backend test
 
 
@@ -28,7 +29,6 @@ if ! [ -f .dollar/data/priv_validator_state.json ]; then
   TEMP=.dollar/genesis.json
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.dollar.portal.owner = "noble1s7evsmath5f3ef7vk97ru2tez9k5rs00klunzu"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
-  touch $TEMP && jq '.app_state.dollar.vaults.owner = "noble1s7evsmath5f3ef7vk97ru2tez9k5rs00klunzu"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.wormhole.config.chain_id = 4009' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.wormhole.config.gov_chain = 1' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.wormhole.config.gov_address = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ="' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
