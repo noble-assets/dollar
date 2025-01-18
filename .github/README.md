@@ -18,10 +18,13 @@ The module continuously keeps track of every $USDN holders principal on Noble, b
 
 - [01 — State](../spec/01_state.md)
   - [01 — Portal State](../spec/01_state_portal.md)
+  - [01 — Vaults State](../spec/01_state_vaults.md)
 - [02 — Messages](../spec/02_messages.md)
   - [02 — Portal Messages](../spec/02_messages_portal.md)
+  - [02 — Vaults Messages](../spec/02_messages_vaults.md)
 - [03 — Queries](../spec/03_queries.md)
   - [03 — Portal Queries](../spec/03_queries_portal.md)
+  - [03 — Vaults Queries](../spec/03_queries_vaults.md)
 
 [article]: https://www.theblock.co/post/329332/cosmos-based-noble-first-to-launch-custom-stablecoin-using-cryptodollar-infrastructure-startup-m0
 [ntt]: https://wormhole.com/docs/learn/messaging/native-token-transfers

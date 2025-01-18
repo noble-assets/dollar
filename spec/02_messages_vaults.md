@@ -138,4 +138,4 @@ This message allows the authority to set the Vault Pause state to `LOCK` | `UNLO
 
 ### State Changes
 
-- [`paused`](./01_state_vaults.md#paused)
+- Updates the Vaults module paused state.
