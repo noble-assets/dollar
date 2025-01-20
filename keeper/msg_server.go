@@ -72,7 +72,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	if err != nil {
 		return errors.Wrap(err, "unable to get index from state")
 	}
-	if rawIndex < oldIndex {
+	if rawIndex <= oldIndex {
 		return types.ErrDecreasingIndex
 	}
 
