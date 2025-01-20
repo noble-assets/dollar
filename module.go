@@ -17,6 +17,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 
@@ -180,7 +181,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 						{
 							RpcMethod: "Lock",
-							Use:       "lock",
+							Use:       "lock [vault] [amount]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 								{ProtoField: "vault"},
 								{ProtoField: "amount"},
@@ -188,7 +189,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 						},
 						{
 							RpcMethod: "Unlock",
-							Use:       "unlock",
+							Use:       "unlock [vault] [amount]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 								{ProtoField: "vault"},
 								{ProtoField: "amount"},
@@ -237,12 +238,9 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Service: vaultsv1.Query_ServiceDesc.ServiceName,
 					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 						{
-							RpcMethod: "Owner",
-							Use:       "owner",
-						},
-						{
 							RpcMethod: "Paused",
 							Use:       "paused",
+							Short:     "Retrieves the current pausing state of the Vault module",
 						},
 						{
 							RpcMethod:      "PositionsByProvider",
@@ -290,8 +288,14 @@ type ModuleOutputs struct {
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
+	if in.Config.Authority == "" {
+		panic("authority for Noble Dollar module must be set")
+	}
+
+	authority := authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
 	k := keeper.NewKeeper(
 		in.Config.Denom,
+		authority.String(),
 		in.Cdc,
 		in.StoreService,
 		in.HeaderService,

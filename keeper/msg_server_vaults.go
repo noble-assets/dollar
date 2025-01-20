@@ -229,8 +229,8 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 
 func (k vaultsMsgServer) SetPause(ctx context.Context, msg *vaults.MsgSetPause) (*vaults.MsgSetPauseResponse, error) {
 	// Ensure that the signer has the required authority.
-	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
-		return nil, err
+	if msg.Signer != k.authority {
+		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
 	}
 
 	// Ensure that the Pause type does exist.
@@ -323,18 +323,4 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 		// Staked Vaults use a shared account for all users.
 		return vaults.StakedVaultName
 	}
-}
-
-// EnsureOwner is a utility that ensures a message was signed by the vaults owner.
-func (k vaultsMsgServer) EnsureOwner(ctx context.Context, signer string) error {
-	owner, _ := k.Owner.Get(ctx)
-	if owner == "" {
-		return vaults.ErrNoOwner
-	}
-
-	if signer != owner {
-		return errors.Wrapf(vaults.ErrNotOwner, "expected %s, got %s", owner, signer)
-	}
-
-	return nil
 }

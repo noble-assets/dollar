@@ -1,21 +1,5 @@
 # Vaults Queries
 
-## Owner
-
-**Endpoint**: `/dollar/vaults/v1/owner`
-
-Retrieves the address of the current Noble Dollar Vaults owner.
-
-```json
-{
-  "address": "noble1owner"
-}
-```
-
-### Response
-
-- `owner` — The address of the current Noble Dollar Vaults owner.
-
 ## Paused
 
 **Endpoint**: `/dollar/vaults/v1/paused`
@@ -36,7 +20,7 @@ Retrieves the current Pause state of the Noble Dollar Vaults.
 
 **Endpoint**: `/dollar/portal/v1/positions/{address}`
 
-Retrieves all of the current Noble Dollar Vaults positions, filtered by a Provider address.
+Retrieves all the current Noble Dollar Vaults positions, filtered by a Provider address.
 
 ```json
 {

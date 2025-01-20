@@ -7,7 +7,6 @@ import (
 	context "context"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-sdk/types/query"
-	_ "github.com/cosmos/cosmos-sdk/types/tx/amino"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/cosmos/gogoproto/grpc"
 	proto "github.com/cosmos/gogoproto/proto"
@@ -31,86 +30,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type QueryOwner struct {
-}
-
-func (m *QueryOwner) Reset()         { *m = QueryOwner{} }
-func (m *QueryOwner) String() string { return proto.CompactTextString(m) }
-func (*QueryOwner) ProtoMessage()    {}
-func (*QueryOwner) Descriptor() ([]byte, []int) {
-	return fileDescriptor_958128dd0b4264ed, []int{0}
-}
-func (m *QueryOwner) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryOwner) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryOwner.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryOwner) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryOwner.Merge(m, src)
-}
-func (m *QueryOwner) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryOwner) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryOwner.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryOwner proto.InternalMessageInfo
-
-type QueryOwnerResponse struct {
-	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
-}
-
-func (m *QueryOwnerResponse) Reset()         { *m = QueryOwnerResponse{} }
-func (m *QueryOwnerResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryOwnerResponse) ProtoMessage()    {}
-func (*QueryOwnerResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_958128dd0b4264ed, []int{1}
-}
-func (m *QueryOwnerResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryOwnerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryOwnerResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryOwnerResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryOwnerResponse.Merge(m, src)
-}
-func (m *QueryOwnerResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryOwnerResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryOwnerResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryOwnerResponse proto.InternalMessageInfo
-
-func (m *QueryOwnerResponse) GetOwner() string {
-	if m != nil {
-		return m.Owner
-	}
-	return ""
-}
-
 type QueryPositionsByProvider struct {
 	Provider string `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
 }
@@ -119,7 +38,7 @@ func (m *QueryPositionsByProvider) Reset()         { *m = QueryPositionsByProvid
 func (m *QueryPositionsByProvider) String() string { return proto.CompactTextString(m) }
 func (*QueryPositionsByProvider) ProtoMessage()    {}
 func (*QueryPositionsByProvider) Descriptor() ([]byte, []int) {
-	return fileDescriptor_958128dd0b4264ed, []int{2}
+	return fileDescriptor_958128dd0b4264ed, []int{0}
 }
 func (m *QueryPositionsByProvider) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -163,7 +82,7 @@ func (m *QueryPositionsByProviderResponse) Reset()         { *m = QueryPositions
 func (m *QueryPositionsByProviderResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryPositionsByProviderResponse) ProtoMessage()    {}
 func (*QueryPositionsByProviderResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_958128dd0b4264ed, []int{3}
+	return fileDescriptor_958128dd0b4264ed, []int{1}
 }
 func (m *QueryPositionsByProviderResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -206,7 +125,7 @@ func (m *QueryPaused) Reset()         { *m = QueryPaused{} }
 func (m *QueryPaused) String() string { return proto.CompactTextString(m) }
 func (*QueryPaused) ProtoMessage()    {}
 func (*QueryPaused) Descriptor() ([]byte, []int) {
-	return fileDescriptor_958128dd0b4264ed, []int{4}
+	return fileDescriptor_958128dd0b4264ed, []int{2}
 }
 func (m *QueryPaused) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -243,7 +162,7 @@ func (m *QueryPausedResponse) Reset()         { *m = QueryPausedResponse{} }
 func (m *QueryPausedResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryPausedResponse) ProtoMessage()    {}
 func (*QueryPausedResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_958128dd0b4264ed, []int{5}
+	return fileDescriptor_958128dd0b4264ed, []int{3}
 }
 func (m *QueryPausedResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -280,8 +199,6 @@ func (m *QueryPausedResponse) GetPaused() PausedType {
 }
 
 func init() {
-	proto.RegisterType((*QueryOwner)(nil), "noble.dollar.vaults.v1.QueryOwner")
-	proto.RegisterType((*QueryOwnerResponse)(nil), "noble.dollar.vaults.v1.QueryOwnerResponse")
 	proto.RegisterType((*QueryPositionsByProvider)(nil), "noble.dollar.vaults.v1.QueryPositionsByProvider")
 	proto.RegisterType((*QueryPositionsByProviderResponse)(nil), "noble.dollar.vaults.v1.QueryPositionsByProviderResponse")
 	proto.RegisterType((*QueryPaused)(nil), "noble.dollar.vaults.v1.QueryPaused")
@@ -293,37 +210,32 @@ func init() {
 }
 
 var fileDescriptor_958128dd0b4264ed = []byte{
-	// 470 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0x41, 0x6b, 0x13, 0x41,
-	0x14, 0xce, 0x58, 0x13, 0xec, 0xab, 0x0a, 0x4e, 0x45, 0xe3, 0x54, 0xd7, 0x30, 0xb5, 0x12, 0x2a,
-	0xec, 0x98, 0x14, 0x54, 0x3c, 0x06, 0x3c, 0x78, 0xb2, 0x5d, 0x3c, 0x79, 0xdb, 0x9a, 0x21, 0x2c,
-	0x6c, 0xe6, 0x8d, 0x3b, 0x9b, 0xe8, 0x2a, 0x3d, 0xe8, 0xc9, 0xa3, 0xe0, 0x9f, 0xf0, 0xe8, 0xc9,
-	0x3f, 0xe0, 0xa5, 0xc7, 0x82, 0x17, 0x4f, 0x22, 0x89, 0xe0, 0xdf, 0x90, 0xcc, 0x6c, 0x76, 0xc5,
-	0xee, 0x56, 0xbd, 0x84, 0xf7, 0xde, 0x7c, 0xdf, 0xfb, 0x3e, 0xbe, 0x97, 0x05, 0xae, 0x70, 0x3f,
-	0x96, 0x62, 0x88, 0x71, 0x1c, 0x26, 0x62, 0x1a, 0x4e, 0xe2, 0xd4, 0x88, 0x69, 0x4f, 0x3c, 0x9b,
-	0xc8, 0x24, 0xf3, 0x75, 0x82, 0x29, 0xd2, 0x4b, 0x16, 0xe3, 0x3b, 0x8c, 0xef, 0x30, 0xfe, 0xb4,
-	0xc7, 0x2e, 0x84, 0xe3, 0x48, 0xa1, 0xb0, 0xbf, 0x0e, 0xca, 0x36, 0x9e, 0xa2, 0x19, 0xa3, 0x71,
-	0xf4, 0x3f, 0xf6, 0xb0, 0x8b, 0x23, 0x1c, 0xa1, 0x2d, 0xc5, 0xa2, 0xca, 0xa7, 0x57, 0x47, 0x88,
-	0xa3, 0x58, 0x8a, 0x50, 0x47, 0x22, 0x54, 0x0a, 0xd3, 0x30, 0x8d, 0x50, 0x99, 0xfc, 0x75, 0xb3,
-	0xc6, 0x5f, 0xee, 0xc2, 0x82, 0xf8, 0x59, 0x80, 0xbd, 0x85, 0xce, 0xa3, 0xe7, 0x4a, 0x26, 0xbc,
-	0x07, 0xb4, 0xec, 0x02, 0x69, 0x34, 0x2a, 0x23, 0xe9, 0x06, 0x34, 0x71, 0x31, 0x68, 0x93, 0x0e,
-	0xe9, 0xae, 0x0e, 0x9a, 0x1f, 0x7e, 0x7e, 0xdc, 0x26, 0x81, 0x9b, 0xf1, 0x3b, 0xd0, 0xb6, 0x94,
-	0x5d, 0x34, 0x91, 0x55, 0x1f, 0x64, 0xbb, 0x09, 0x4e, 0xa3, 0xa1, 0x4c, 0x28, 0x83, 0x33, 0x3a,
-	0xaf, 0x1d, 0x37, 0x28, 0x7a, 0x3e, 0x86, 0x4e, 0x1d, 0xaf, 0x10, 0x7e, 0x08, 0xab, 0x7a, 0xf9,
-	0xdc, 0x26, 0x9d, 0x95, 0xee, 0x5a, 0x7f, 0xcb, 0xaf, 0x4e, 0xd4, 0x5f, 0xee, 0x79, 0xa0, 0xd2,
-	0x24, 0x1b, 0x9c, 0x3e, 0xfc, 0x76, 0xbd, 0x11, 0x94, 0x6c, 0x7e, 0x0e, 0xd6, 0x9c, 0x5c, 0x38,
-	0x31, 0x72, 0xc8, 0xf7, 0x60, 0xfd, 0xb7, 0xb6, 0x10, 0xbc, 0x0f, 0x2d, 0x6d, 0x27, 0xd6, 0xee,
-	0xf9, 0x3e, 0xaf, 0x55, 0xb3, 0xa8, 0xc7, 0x99, 0x96, 0x41, 0xce, 0xe8, 0x7f, 0x5e, 0x81, 0xa6,
-	0xdd, 0x49, 0x0f, 0xa0, 0x69, 0x03, 0xa4, 0xb5, 0xf4, 0x32, 0x64, 0xb6, 0xfd, 0x77, 0xcc, 0xd2,
-	0x1e, 0xbf, 0xf1, 0x76, 0x91, 0xfc, 0x9b, 0x2f, 0x3f, 0xde, 0x9f, 0xba, 0x42, 0x2f, 0x1f, 0xbf,
-	0xac, 0xbd, 0x08, 0xfd, 0x44, 0x60, 0xbd, 0xea, 0x1a, 0xb7, 0x4f, 0x54, 0xaa, 0x60, 0xb0, 0x7b,
-	0xff, 0xcb, 0x28, 0x9c, 0xee, 0x94, 0x4e, 0xbb, 0xf4, 0xe6, 0x71, 0xa7, 0xc5, 0x61, 0xc4, 0xab,
-	0xe5, 0x3f, 0xe2, 0x80, 0xbe, 0x26, 0xd0, 0x72, 0xc1, 0xd2, 0xcd, 0x93, 0x95, 0x2d, 0x88, 0xdd,
-	0xfa, 0x07, 0x50, 0xe1, 0x68, 0xab, 0x74, 0xc4, 0x68, 0xbb, 0xc2, 0x91, 0x85, 0x0f, 0xee, 0x1e,
-	0xce, 0x3c, 0x72, 0x34, 0xf3, 0xc8, 0xf7, 0x99, 0x47, 0xde, 0xcd, 0xbd, 0xc6, 0xd1, 0xdc, 0x6b,
-	0x7c, 0x9d, 0x7b, 0x8d, 0x27, 0xd7, 0x72, 0x19, 0xa7, 0xf9, 0x22, 0x7b, 0x29, 0xd2, 0x4c, 0x4b,
-	0x93, 0xaf, 0xd8, 0x6f, 0xd9, 0xef, 0x69, 0xe7, 0x57, 0x00, 0x00, 0x00, 0xff, 0xff, 0x74, 0x4c,
-	0x8a, 0xf3, 0x16, 0x04, 0x00, 0x00,
+	// 395 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0xca, 0xcb, 0x4f, 0xca,
+	0x49, 0xd5, 0x4f, 0xc9, 0xcf, 0xc9, 0x49, 0x2c, 0xd2, 0x2f, 0x4b, 0x2c, 0xcd, 0x29, 0x29, 0xd6,
+	0x2f, 0x33, 0xd4, 0x2f, 0x2c, 0x4d, 0x2d, 0xaa, 0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12,
+	0x03, 0xab, 0xd1, 0x83, 0xa8, 0xd1, 0x83, 0xa8, 0xd1, 0x2b, 0x33, 0x94, 0x92, 0x4e, 0xce, 0x2f,
+	0xce, 0xcd, 0x2f, 0x86, 0xa8, 0x45, 0xd3, 0x24, 0x25, 0x92, 0x9e, 0x9f, 0x9e, 0x0f, 0x66, 0xea,
+	0x83, 0x58, 0x50, 0x51, 0x99, 0xf4, 0xfc, 0xfc, 0xf4, 0x9c, 0x54, 0xfd, 0xc4, 0x82, 0x4c, 0xfd,
+	0xc4, 0xbc, 0xbc, 0xfc, 0x92, 0xc4, 0x92, 0xcc, 0xfc, 0xbc, 0x62, 0xa8, 0xac, 0x32, 0x0e, 0xc7,
+	0x40, 0xad, 0x04, 0x2b, 0x52, 0x32, 0xe3, 0x92, 0x08, 0x04, 0xd9, 0x13, 0x90, 0x5f, 0x9c, 0x09,
+	0xd6, 0xec, 0x54, 0x19, 0x50, 0x94, 0x5f, 0x96, 0x99, 0x92, 0x5a, 0x24, 0x24, 0xc5, 0xc5, 0x51,
+	0x00, 0x65, 0x4b, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0xc1, 0xf9, 0x4a, 0xb9, 0x5c, 0x0a, 0xb8,
+	0xf4, 0x05, 0xa5, 0x16, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0x79, 0x72, 0x71, 0x16, 0xc0, 0xa4,
+	0x25, 0x18, 0x15, 0x98, 0x35, 0xb8, 0x8d, 0x54, 0xf5, 0xb0, 0xfb, 0x5e, 0x0f, 0x66, 0x8e, 0x6b,
+	0x5e, 0x49, 0x51, 0xa5, 0x13, 0xcb, 0x89, 0x7b, 0xf2, 0x0c, 0x41, 0x08, 0xdd, 0x4a, 0xbc, 0x5c,
+	0xdc, 0x10, 0xeb, 0x12, 0x4b, 0x8b, 0x53, 0x53, 0x94, 0x02, 0xb9, 0x84, 0x91, 0xb8, 0x70, 0x0b,
+	0xad, 0xb8, 0xd8, 0x0a, 0xc0, 0x22, 0x60, 0xe7, 0xf2, 0x19, 0x29, 0xe1, 0xb4, 0x0d, 0xac, 0x2a,
+	0xa4, 0xb2, 0x20, 0x35, 0x08, 0xaa, 0xc3, 0xe8, 0x08, 0x13, 0x17, 0x2b, 0xd8, 0x4c, 0xa1, 0x6d,
+	0x8c, 0x5c, 0xc2, 0xd8, 0x82, 0xc3, 0x00, 0x97, 0x69, 0xb8, 0x02, 0x42, 0xca, 0x82, 0x54, 0x1d,
+	0x30, 0x9f, 0x28, 0x19, 0x77, 0x3c, 0xdf, 0xa0, 0xc5, 0xd8, 0x74, 0xf9, 0xc9, 0x64, 0x26, 0x0d,
+	0x21, 0x35, 0xcc, 0x38, 0x84, 0x87, 0x8c, 0x7e, 0x35, 0x2c, 0x4a, 0x6a, 0x85, 0x1a, 0x19, 0xb9,
+	0xd8, 0x20, 0x3e, 0x13, 0x52, 0xc6, 0x6f, 0x33, 0x58, 0x91, 0x94, 0x36, 0x11, 0x8a, 0xe0, 0x2e,
+	0x52, 0x45, 0xb8, 0x48, 0x4a, 0x48, 0x02, 0x8b, 0x8b, 0xc0, 0xca, 0x9d, 0xcc, 0x4f, 0x3c, 0x92,
+	0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c,
+	0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0x16, 0x6a, 0x0d, 0xc4, 0xce, 0x8a, 0xca, 0x2a,
+	0xfd, 0x92, 0xca, 0x82, 0xd4, 0x62, 0xa8, 0x11, 0x49, 0x6c, 0xe0, 0xf4, 0x68, 0x0c, 0x08, 0x00,
+	0x00, 0xff, 0xff, 0x1b, 0x1e, 0xdf, 0x3e, 0x43, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -338,7 +250,6 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
 	PositionsByProvider(ctx context.Context, in *QueryPositionsByProvider, opts ...grpc.CallOption) (*QueryPositionsByProviderResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
 }
@@ -349,15 +260,6 @@ type queryClient struct {
 
 func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
-}
-
-func (c *queryClient) Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error) {
-	out := new(QueryOwnerResponse)
-	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v1.Query/Owner", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *queryClient) PositionsByProvider(ctx context.Context, in *QueryPositionsByProvider, opts ...grpc.CallOption) (*QueryPositionsByProviderResponse, error) {
@@ -380,7 +282,6 @@ func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error)
 	PositionsByProvider(context.Context, *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
 }
@@ -389,9 +290,6 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) Owner(ctx context.Context, req *QueryOwner) (*QueryOwnerResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Owner not implemented")
-}
 func (*UnimplementedQueryServer) PositionsByProvider(ctx context.Context, req *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PositionsByProvider not implemented")
 }
@@ -401,24 +299,6 @@ func (*UnimplementedQueryServer) Paused(ctx context.Context, req *QueryPaused) (
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
-}
-
-func _Query_Owner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryOwner)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).Owner(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/noble.dollar.vaults.v1.Query/Owner",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Owner(ctx, req.(*QueryOwner))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_PositionsByProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -463,10 +343,6 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Owner",
-			Handler:    _Query_Owner_Handler,
-		},
-		{
 			MethodName: "PositionsByProvider",
 			Handler:    _Query_PositionsByProvider_Handler,
 		},
@@ -477,59 +353,6 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "noble/dollar/vaults/v1/query.proto",
-}
-
-func (m *QueryOwner) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryOwner) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryOwner) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryOwnerResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryOwnerResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryOwnerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Owner) > 0 {
-		i -= len(m.Owner)
-		copy(dAtA[i:], m.Owner)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Owner)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
 }
 
 func (m *QueryPositionsByProvider) Marshal() (dAtA []byte, err error) {
@@ -661,28 +484,6 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *QueryOwner) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *QueryOwnerResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Owner)
-	if l > 0 {
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
 func (m *QueryPositionsByProvider) Size() (n int) {
 	if m == nil {
 		return 0
@@ -737,138 +538,6 @@ func sovQuery(x uint64) (n int) {
 }
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *QueryOwner) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryOwner: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryOwner: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryOwnerResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryOwnerResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryOwnerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Owner = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *QueryPositionsByProvider) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

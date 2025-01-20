@@ -19,7 +19,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Query_Owner_FullMethodName               = "/noble.dollar.vaults.v1.Query/Owner"
 	Query_PositionsByProvider_FullMethodName = "/noble.dollar.vaults.v1.Query/PositionsByProvider"
 	Query_Paused_FullMethodName              = "/noble.dollar.vaults.v1.Query/Paused"
 )
@@ -28,7 +27,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryClient interface {
-	Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
 	PositionsByProvider(ctx context.Context, in *QueryPositionsByProvider, opts ...grpc.CallOption) (*QueryPositionsByProviderResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
 }
@@ -39,16 +37,6 @@ type queryClient struct {
 
 func NewQueryClient(cc grpc.ClientConnInterface) QueryClient {
 	return &queryClient{cc}
-}
-
-func (c *queryClient) Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryOwnerResponse)
-	err := c.cc.Invoke(ctx, Query_Owner_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *queryClient) PositionsByProvider(ctx context.Context, in *QueryPositionsByProvider, opts ...grpc.CallOption) (*QueryPositionsByProviderResponse, error) {
@@ -75,7 +63,6 @@ func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
 type QueryServer interface {
-	Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error)
 	PositionsByProvider(context.Context, *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
 	mustEmbedUnimplementedQueryServer()
@@ -88,9 +75,6 @@ type QueryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedQueryServer struct{}
 
-func (UnimplementedQueryServer) Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Owner not implemented")
-}
 func (UnimplementedQueryServer) PositionsByProvider(context.Context, *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PositionsByProvider not implemented")
 }
@@ -116,24 +100,6 @@ func RegisterQueryServer(s grpc.ServiceRegistrar, srv QueryServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Query_ServiceDesc, srv)
-}
-
-func _Query_Owner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryOwner)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).Owner(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Query_Owner_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Owner(ctx, req.(*QueryOwner))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_PositionsByProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -179,10 +145,6 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "noble.dollar.vaults.v1.Query",
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Owner",
-			Handler:    _Query_Owner_Handler,
-		},
 		{
 			MethodName: "PositionsByProvider",
 			Handler:    _Query_PositionsByProvider_Handler,
