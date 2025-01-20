@@ -838,8 +838,8 @@ github.com/nats-io/nkeys v0.1.0/go.mod h1:xpnFELMwJABBLVhffcfd1MZx6VsNRFpEugbxzi
 github.com/nats-io/nkeys v0.1.3/go.mod h1:xpnFELMwJABBLVhffcfd1MZx6VsNRFpEugbxziKVo7w=
 github.com/nats-io/nuid v1.0.1/go.mod h1:19wcPz3Ph3q0Jbyiqsd0kePYG7A95tJPxeL+1OSON2c=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
-github.com/noble-assets/wormhole v0.0.0-20250107120010-3554988b4fcf h1:51p+VdA8Y+ZiAoYIrtMtEQ17jJmwqPk9sHB2vAajQNM=
-github.com/noble-assets/wormhole v0.0.0-20250107120010-3554988b4fcf/go.mod h1:OUivFiRSS9o7k4q/5rBBZEwh0hR8kzoDVD7LulOkHx0=
+github.com/noble-assets/wormhole v1.0.0-alpha.0 h1:SEZvL0yT/tOFbBxzMVebl/Zaqc9VbuLnd0ER8wNyX40=
+github.com/noble-assets/wormhole v1.0.0-alpha.0/go.mod h1:OUivFiRSS9o7k4q/5rBBZEwh0hR8kzoDVD7LulOkHx0=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
 github.com/nxadm/tail v1.4.8/go.mod h1:+ncqLTQzXmGhMZNUePPaPqPvBxHAIsmXswZKocGu+AU=

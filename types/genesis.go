@@ -1,10 +1,8 @@
 package types
 
-import "cosmossdk.io/math"
-
 func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
-		Index: math.LegacyOneDec(),
+		Index: 1e12,
 	}
 }
 

@@ -8,6 +8,23 @@ import (
 	"fmt"
 )
 
+// EncodeNativeTokenTransfer is a utility that encodes a native token transfer.
+func EncodeNativeTokenTransfer(ntt NativeTokenTransfer) (bz []byte) {
+	bz = append(bz, NativeTokenTransferPrefix...)
+	bz = append(bz, 6)
+	bz = binary.BigEndian.AppendUint64(bz, ntt.Amount)
+	bz = append(bz, ntt.SourceToken...)
+	bz = append(bz, ntt.To...)
+	bz = binary.BigEndian.AppendUint16(bz, ntt.ToChain)
+
+	if len(ntt.AdditionalPayload) > 0 {
+		bz = binary.BigEndian.AppendUint16(bz, uint16(len(ntt.AdditionalPayload)))
+		bz = append(bz, ntt.AdditionalPayload...)
+	}
+
+	return
+}
+
 // ParseNativeTokenTransfer is a utility that parses a native token transfer.
 func ParseNativeTokenTransfer(bz []byte) (transfer NativeTokenTransfer, err error) {
 	if len(bz) < 79 {

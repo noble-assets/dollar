@@ -1,27 +1,18 @@
 package portal
 
-import (
-	"fmt"
-
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-)
-
 const SubmoduleName = "dollar/portal"
 
+// NOTE: These variables are initialized when creating the module keeper.
 var (
-	TransceiverAddress = make([]byte, 32)
-	ManagerAddress     = make([]byte, 32)
+	PaddedTransceiverAddress = make([]byte, 32)
+	TransceiverAddress       = ""
+	PaddedManagerAddress     = make([]byte, 32)
+	ManagerAddress           = ""
+	RawToken                 = make([]byte, 32)
 )
 
 var (
 	OwnerKey   = []byte("owner")
 	PeerPrefix = []byte("peer/")
+	NonceKey   = []byte("nonce")
 )
-
-func init() {
-	transceiverAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/transceiver", SubmoduleName))
-	copy(TransceiverAddress[12:], transceiverAddress)
-
-	managerAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/manager", SubmoduleName))
-	copy(ManagerAddress[12:], managerAddress)
-}

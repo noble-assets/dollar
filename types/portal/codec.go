@@ -10,11 +10,13 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgDeliver{}, "dollar/portal/Deliver", nil)
 	cdc.RegisterConcrete(&MsgSetPeer{}, "dollar/portal/SetPeer", nil)
+	cdc.RegisterConcrete(&MsgTransfer{}, "dollar/portal/Transfer", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgDeliver{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPeer{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgTransfer{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

@@ -17,6 +17,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/golangci/golangci-lint v1.61.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
+	github.com/stretchr/testify v1.9.0
 	github.com/wormhole-foundation/wormhole/sdk v0.0.0-20241211155336-e9b080b95f74
 	google.golang.org/genproto/googleapis/api v0.0.0-20240725223205-93522f1f2a9f
 	google.golang.org/grpc v1.66.0
@@ -249,7 +250,6 @@ require (
 	github.com/ssgreg/nlreturn/v2 v2.2.1 // indirect
 	github.com/stbenjam/no-sprintf-host-port v0.1.1 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect

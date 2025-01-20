@@ -36,3 +36,13 @@ func (k portalQueryServer) Peers(ctx context.Context, req *portal.QueryPeers) (*
 
 	return &portal.QueryPeersResponse{Peers: peers}, err
 }
+
+func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*portal.QueryNonceResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	nonce, err := k.Keeper.Nonce.Get(ctx)
+
+	return &portal.QueryNonceResponse{Nonce: nonce}, err
+}

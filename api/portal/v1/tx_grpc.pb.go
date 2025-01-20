@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_Deliver_FullMethodName = "/noble.dollar.portal.v1.Msg/Deliver"
-	Msg_SetPeer_FullMethodName = "/noble.dollar.portal.v1.Msg/SetPeer"
+	Msg_Deliver_FullMethodName  = "/noble.dollar.portal.v1.Msg/Deliver"
+	Msg_SetPeer_FullMethodName  = "/noble.dollar.portal.v1.Msg/SetPeer"
+	Msg_Transfer_FullMethodName = "/noble.dollar.portal.v1.Msg/Transfer"
 )
 
 // MsgClient is the client API for Msg service.
@@ -29,6 +30,7 @@ const (
 type MsgClient interface {
 	Deliver(ctx context.Context, in *MsgDeliver, opts ...grpc.CallOption) (*MsgDeliverResponse, error)
 	SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.CallOption) (*MsgSetPeerResponse, error)
+	Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error)
 }
 
 type msgClient struct {
@@ -59,12 +61,23 @@ func (c *msgClient) SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *msgClient) Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgTransferResponse)
+	err := c.cc.Invoke(ctx, Msg_Transfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
 type MsgServer interface {
 	Deliver(context.Context, *MsgDeliver) (*MsgDeliverResponse, error)
 	SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error)
+	Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedMsgServer) Deliver(context.Context, *MsgDeliver) (*MsgDeliver
 }
 func (UnimplementedMsgServer) SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPeer not implemented")
+}
+func (UnimplementedMsgServer) Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -138,6 +154,24 @@ func _Msg_SetPeer_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgTransfer)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).Transfer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_Transfer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).Transfer(ctx, req.(*MsgTransfer))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetPeer",
 			Handler:    _Msg_SetPeer_Handler,
+		},
+		{
+			MethodName: "Transfer",
+			Handler:    _Msg_Transfer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
