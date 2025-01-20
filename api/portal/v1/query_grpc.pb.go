@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Query_Owner_FullMethodName = "/noble.dollar.portal.v1.Query/Owner"
 	Query_Peers_FullMethodName = "/noble.dollar.portal.v1.Query/Peers"
+	Query_Nonce_FullMethodName = "/noble.dollar.portal.v1.Query/Nonce"
 )
 
 // QueryClient is the client API for Query service.
@@ -29,6 +30,7 @@ const (
 type QueryClient interface {
 	Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
 	Peers(ctx context.Context, in *QueryPeers, opts ...grpc.CallOption) (*QueryPeersResponse, error)
+	Nonce(ctx context.Context, in *QueryNonce, opts ...grpc.CallOption) (*QueryNonceResponse, error)
 }
 
 type queryClient struct {
@@ -59,12 +61,23 @@ func (c *queryClient) Peers(ctx context.Context, in *QueryPeers, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *queryClient) Nonce(ctx context.Context, in *QueryNonce, opts ...grpc.CallOption) (*QueryNonceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryNonceResponse)
+	err := c.cc.Invoke(ctx, Query_Nonce_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
 type QueryServer interface {
 	Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error)
 	Peers(context.Context, *QueryPeers) (*QueryPeersResponse, error)
+	Nonce(context.Context, *QueryNonce) (*QueryNonceResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedQueryServer) Owner(context.Context, *QueryOwner) (*QueryOwner
 }
 func (UnimplementedQueryServer) Peers(context.Context, *QueryPeers) (*QueryPeersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Peers not implemented")
+}
+func (UnimplementedQueryServer) Nonce(context.Context, *QueryNonce) (*QueryNonceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Nonce not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 func (UnimplementedQueryServer) testEmbeddedByValue()               {}
@@ -138,6 +154,24 @@ func _Query_Peers_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Nonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryNonce)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Nonce(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Nonce_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Nonce(ctx, req.(*QueryNonce))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Peers",
 			Handler:    _Query_Peers_Handler,
+		},
+		{
+			MethodName: "Nonce",
+			Handler:    _Query_Nonce_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

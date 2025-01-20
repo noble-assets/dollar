@@ -7,6 +7,21 @@ import (
 	"fmt"
 )
 
+// EncodeTransceiverMessage is a utility that encodes a transceiver message.
+func EncodeTransceiverMessage(msg TransceiverMessage) (bz []byte) {
+	bz = append(bz, TransceiverMessagePrefix...)
+	bz = append(bz, msg.SourceManagerAddress...)
+	bz = append(bz, msg.RecipientManagerAddress...)
+
+	bz = binary.BigEndian.AppendUint16(bz, uint16(len(msg.ManagerPayload)))
+	bz = append(bz, msg.ManagerPayload...)
+
+	bz = binary.BigEndian.AppendUint16(bz, uint16(len(msg.TransceiverPayload)))
+	bz = append(bz, msg.TransceiverPayload...)
+
+	return
+}
+
 // ParseTransceiverMessage is a utility that parses a transceiver message.
 func ParseTransceiverMessage(bz []byte) (msg TransceiverMessage, err error) {
 	offset := 0

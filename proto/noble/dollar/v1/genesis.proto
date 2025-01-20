@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package noble.dollar.v1;
 
-import "amino/amino.proto";
-import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "noble/dollar/portal/v1/genesis.proto";
 import "noble/dollar/vaults/v1/genesis.proto";
@@ -16,12 +14,7 @@ message GenesisState {
   noble.dollar.portal.v1.GenesisState portal = 1 [(gogoproto.nullable) = false];
 
   // index contains the genesis index of the Noble Dollar, used for rebasing.
-  string index = 2 [
-    (amino.dont_omitempty) = true,
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable) = false
-  ];
+  int64 index = 2;
 
   // principal contains the genesis principal amounts of Noble Dollar holders.
   map<string, string> principal = 3;

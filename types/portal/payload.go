@@ -41,22 +41,20 @@ func GetPayloadType(payload []byte) PayloadType {
 // DecodeTokenPayload is a utility for decoding a custom payload of type Token.
 //
 // https://github.com/m0-foundation/m-portal/blob/ddf583b9bef971752ec1360f9b089e6fefa9c526/src/libs/PayloadEncoder.sol#L45-L62
-func DecodeTokenPayload(payload []byte) (amount math.Int, index math.LegacyDec, recipient []byte, destination uint16) {
+func DecodeTokenPayload(payload []byte) (amount math.Int, index int64, recipient []byte, destination uint16) {
 	ntt, _ := ntt.ParseNativeTokenTransfer(payload)
 
-	rawIndex := binary.BigEndian.Uint64(ntt.AdditionalPayload)
-	index = math.LegacyNewDec(int64(rawIndex)).QuoInt64(1e12)
+	amount = math.NewIntFromUint64(ntt.Amount)
+	index = int64(binary.BigEndian.Uint64(ntt.AdditionalPayload))
 
-	return math.NewIntFromUint64(ntt.Amount), index, ntt.To[12:], ntt.ToChain
+	return amount, index, ntt.To[12:], ntt.ToChain
 }
 
 // DecodeIndexPayload is a utility for decoding a custom payload of type Index.
 //
 // https://github.com/m0-foundation/m-portal/blob/ddf583b9bef971752ec1360f9b089e6fefa9c526/src/libs/PayloadEncoder.sol#L68-L75
-func DecodeIndexPayload(payload []byte) (index math.LegacyDec, destination uint16) {
-	rawIndex := binary.BigEndian.Uint64(payload[4:12])
-	index = math.LegacyNewDec(int64(rawIndex)).QuoInt64(1e12)
-
+func DecodeIndexPayload(payload []byte) (index int64, destination uint16) {
+	index = int64(binary.BigEndian.Uint64(payload[4:12]))
 	destination = binary.BigEndian.Uint16(payload[12:14])
 
 	return

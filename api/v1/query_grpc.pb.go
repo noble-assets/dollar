@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	Query_Index_FullMethodName     = "/noble.dollar.v1.Query/Index"
 	Query_Principal_FullMethodName = "/noble.dollar.v1.Query/Principal"
 	Query_Yield_FullMethodName     = "/noble.dollar.v1.Query/Yield"
 )
@@ -27,6 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryClient interface {
+	Index(ctx context.Context, in *QueryIndex, opts ...grpc.CallOption) (*QueryIndexResponse, error)
 	Principal(ctx context.Context, in *QueryPrincipal, opts ...grpc.CallOption) (*QueryPrincipalResponse, error)
 	Yield(ctx context.Context, in *QueryYield, opts ...grpc.CallOption) (*QueryYieldResponse, error)
 }
@@ -37,6 +39,16 @@ type queryClient struct {
 
 func NewQueryClient(cc grpc.ClientConnInterface) QueryClient {
 	return &queryClient{cc}
+}
+
+func (c *queryClient) Index(ctx context.Context, in *QueryIndex, opts ...grpc.CallOption) (*QueryIndexResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryIndexResponse)
+	err := c.cc.Invoke(ctx, Query_Index_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *queryClient) Principal(ctx context.Context, in *QueryPrincipal, opts ...grpc.CallOption) (*QueryPrincipalResponse, error) {
@@ -63,6 +75,7 @@ func (c *queryClient) Yield(ctx context.Context, in *QueryYield, opts ...grpc.Ca
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
 type QueryServer interface {
+	Index(context.Context, *QueryIndex) (*QueryIndexResponse, error)
 	Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error)
 	Yield(context.Context, *QueryYield) (*QueryYieldResponse, error)
 	mustEmbedUnimplementedQueryServer()
@@ -75,6 +88,9 @@ type QueryServer interface {
 // pointer dereference when methods are called.
 type UnimplementedQueryServer struct{}
 
+func (UnimplementedQueryServer) Index(context.Context, *QueryIndex) (*QueryIndexResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Index not implemented")
+}
 func (UnimplementedQueryServer) Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Principal not implemented")
 }
@@ -100,6 +116,24 @@ func RegisterQueryServer(s grpc.ServiceRegistrar, srv QueryServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Query_ServiceDesc, srv)
+}
+
+func _Query_Index_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryIndex)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Index(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Index_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Index(ctx, req.(*QueryIndex))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_Principal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -145,6 +179,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "noble.dollar.v1.Query",
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Index",
+			Handler:    _Query_Index_Handler,
+		},
 		{
 			MethodName: "Principal",
 			Handler:    _Query_Principal_Handler,

@@ -34,12 +34,12 @@ func TestPausing(t *testing.T) {
 	vaultsServer := keeper.NewVaultsMsgServer(k)
 	bob := utils.TestAccount()
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	assert.Equal(t, vaults.NONE, k.GetPaused(ctx))
 
 	// ARRANGE: Bob mints 100 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -150,10 +150,10 @@ func TestStakedVault(t *testing.T) {
 	vaultsServer := keeper.NewVaultsMsgServer(k)
 	bob := utils.TestAccount()
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 100 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -165,7 +165,7 @@ func TestStakedVault(t *testing.T) {
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(50*ONE)) // 50 USDN.
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ACT: Bob claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
@@ -202,7 +202,7 @@ func TestStakedVault(t *testing.T) {
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(105*ONE))
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 
 	// ACT: Bob claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
@@ -228,10 +228,10 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	vaultsServer := keeper.NewVaultsMsgServer(k)
 	bob := utils.TestAccount()
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 100 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -268,7 +268,7 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(0*ONE))
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -305,10 +305,10 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ARRANGE: Bob mints 50 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(50*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(50*ONE), nil)
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -320,10 +320,10 @@ func TestStakedPartialRemoval(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 
 	// ARRANGE: Bob mints other 50 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(50*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(50*ONE), nil)
 
 	// ACT: Bob deposits other 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -444,10 +444,10 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 100 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
 
 	// ACT: Bob deposits 50 USDN (half balance) into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -459,7 +459,7 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 	assert.Equal(t, math.NewInt(50*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 	// ASSERT: Flexible vault balance is expected to increase by the yield.
 	assert.Equal(t, math.NewInt(5*ONE), bank.Balances[vaults.FlexibleVaultAddress.String()].AmountOf("uusdn"))
 
@@ -484,7 +484,7 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 	assert.Equal(t, math.NewInt(105*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 	assert.Equal(t, math.NewInt(5499999), bank.Balances[vaults.FlexibleVaultAddress.String()].AmountOf("uusdn"))
 
 	// ACT: Bob claims the yield.
@@ -526,12 +526,12 @@ func TestFlexibleVaultMultiUser(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 1050 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1050*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1050*ONE), nil)
 	// ARRANGE: Alice mints 50 USDN.
-	_ = k.Mint(ctx, alice.Bytes, math.NewInt(50*ONE))
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(50*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -563,7 +563,7 @@ func TestFlexibleVaultMultiUser(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ASSERT: Matching Staked Vault balance.
 	assert.Equal(t, math.NewInt(1000*ONE), bank.Balances[vaults.StakedVaultAddress.String()].AmountOf("uusdn"))
@@ -629,12 +629,12 @@ func TestFlexibleVaultMultiUserEarlyExit(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 1050 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1050*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1050*ONE), nil)
 	// ARRANGE: Alice mints 50 USDN.
-	_ = k.Mint(ctx, alice.Bytes, math.NewInt(50*ONE))
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(50*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -684,7 +684,7 @@ func TestFlexibleVaultMultiUserEarlyExit(t *testing.T) {
 	assert.Equal(t, math.NewInt(50*ONE), bank.Balances[alice.Address].AmountOf("uusdn"))
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 
 	// ACT: Bob attempts to claim the yield.
@@ -719,10 +719,10 @@ func TestFlexibleVaultMultiUserEarlyExitCase2(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.1 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -761,10 +761,10 @@ func TestFlexibleVaultMultiUserEarlyExitCase3(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.1 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -785,7 +785,7 @@ func TestFlexibleVaultMultiUserEarlyExitCase3(t *testing.T) {
 	assert.Equal(t, math.NewInt(1000*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 
 	// ACT: Bob claims the yield.
@@ -813,10 +813,10 @@ func TestFlexibleVaultBaseLockUnlock(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -857,10 +857,10 @@ func TestFlexibleVaultSimpleNoRewards(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -871,7 +871,7 @@ func TestFlexibleVaultSimpleNoRewards(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
@@ -903,10 +903,10 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -917,11 +917,11 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 
 	// ARRANGE: Alice mints 1000 USDN.
-	_ = k.Mint(ctx, alice.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Alice deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -975,10 +975,10 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ACT: Bob deposits 2000 USDN into the Flexible Vault.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(2000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(2000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -997,19 +997,19 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
 
 	// ARRANGE: Increase the index from 1.21 to 1.33 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.33"))
+	_ = k.UpdateIndex(ctx, 1.33e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC)})
 
 	// ARRANGE: Alice mints 1000 USDN.
-	_ = k.Mint(ctx, alice.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Alice deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1020,7 +1020,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ARRANGE: Increase the index from 1.33 to 1.46 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.46"))
+	_ = k.UpdateIndex(ctx, 1.46e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC)})
 
 	// ASSERT: Matching Rewards state.
@@ -1192,10 +1192,10 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1207,10 +1207,10 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ARRANGE: Bob mints 1000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1234,11 +1234,11 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	}, bobPositions[1])
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
 
 	// ARRANGE: Alice mints 9000 USDN.
-	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE))
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE), nil)
 
 	// ACT: Alice deposits 9000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1283,7 +1283,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	}, rewards)
 
 	// ARRANGE: Increase the index from 1.21 to 1.33 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.33"))
+	_ = k.UpdateIndex(ctx, 1.33e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC)})
 
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
@@ -1387,10 +1387,10 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 2000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(2000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(2000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Staking Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1410,10 +1410,10 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ARRANGE: Alice mints 9000 USDN.
-	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE))
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE), nil)
 
 	// ACT: Alice deposits 9000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1424,7 +1424,7 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
 
 	// ASSERT: Matching Rewards state.
@@ -1508,10 +1508,10 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 
 	// ARRANGE: Set the default index to 1.0 .
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.0"))
+	_ = k.UpdateIndex(ctx, 1e12)
 
 	// ARRANGE: Bob mints 2000 USDN.
-	_ = k.Mint(ctx, bob.Bytes, math.NewInt(2000*ONE))
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(2000*ONE), nil)
 
 	// ACT: Bob deposits 1000 USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1523,11 +1523,11 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.1"))
+	_ = k.UpdateIndex(ctx, 1.1e12)
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.21"))
+	_ = k.UpdateIndex(ctx, 1.21e12)
 
 	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -1547,7 +1547,7 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 
 	// ARRANGE: Increase the index from 1.21 to 1.33 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC)})
-	_ = k.UpdateIndex(ctx, math.LegacyMustNewDecFromStr("1.33"))
+	_ = k.UpdateIndex(ctx, 1.33e12)
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield.
 	assert.Equal(t, math.NewInt(1000*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))

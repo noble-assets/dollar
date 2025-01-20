@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"cosmossdk.io/errors"
+	"cosmossdk.io/math"
 
 	"dollar.noble.xyz/types"
 )
@@ -16,6 +17,21 @@ type queryServer struct {
 
 func NewQueryServer(keeper *Keeper) types.QueryServer {
 	return &queryServer{Keeper: keeper}
+}
+
+func (k queryServer) Index(ctx context.Context, req *types.QueryIndex) (*types.QueryIndexResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	rawIndex, err := k.Keeper.Index.Get(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get index from state")
+	}
+
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
+
+	return &types.QueryIndexResponse{Index: index}, nil
 }
 
 func (k queryServer) Principal(ctx context.Context, req *types.QueryPrincipal) (*types.QueryPrincipalResponse, error) {

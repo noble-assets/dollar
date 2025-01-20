@@ -69,10 +69,11 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 	}
 
 	// Get the current Index.
-	index, err := k.Index.Get(ctx)
+	rawIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get index from state")
 	}
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
 	// Calculate the amount Principal.
 	amountPrincipal := msg.Amount.ToLegacyDec().Quo(index).TruncateInt()
@@ -263,10 +264,11 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	}
 
 	// Retrieve the current Index and amount Principal.
-	currentIndex, err := k.Index.Get(ctx)
+	rawCurrentIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), errors.Wrap(err, "unable to get index from state")
 	}
+	currentIndex := math.LegacyNewDec(rawCurrentIndex).QuoInt64(1e12)
 	amountPrincipal := amount.ToLegacyDec().Quo(position.Index)
 
 	// Iterate through the rewards to calculate the amount owed to the user, proportional to their position.

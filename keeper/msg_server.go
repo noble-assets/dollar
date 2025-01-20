@@ -29,39 +29,54 @@ func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*t
 
 	err = k.bank.SendCoinsFromModuleToAccount(ctx, types.YieldName, account, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
-		return nil, err
+		return nil, errors.Wrap(err, "unable to distribute yield to user")
 	}
 
 	return &types.MsgClaimYieldResponse{}, nil
 }
 
-func (k *Keeper) Mint(ctx context.Context, recipient []byte, amount math.Int) error {
+func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, amount))
-	err := k.bank.MintCoins(ctx, types.ModuleName, coins)
+	err := k.bank.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, coins)
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
 		return err
 	}
-	err = k.bank.SendCoinsFromModuleToAccount(ctx, types.ModuleName, recipient, coins)
+	err = k.bank.BurnCoins(ctx, types.ModuleName, coins)
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
 		return err
 	}
 
 	return nil
 }
 
-func (k *Keeper) UpdateIndex(ctx context.Context, index math.LegacyDec) error {
+func (k *Keeper) Mint(ctx context.Context, recipient []byte, amount math.Int, index *int64) error {
+	if index != nil {
+		_ = k.UpdateIndex(ctx, *index)
+	}
+
+	coins := sdk.NewCoins(sdk.NewCoin(k.denom, amount))
+	err := k.bank.MintCoins(ctx, types.ModuleName, coins)
+	if err != nil {
+		return err
+	}
+	err = k.bank.SendCoinsFromModuleToAccount(ctx, types.ModuleName, recipient, coins)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	oldIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return errors.Wrap(err, "unable to get index from state")
 	}
-	if index.LT(oldIndex) {
+	if rawIndex < oldIndex {
 		return types.ErrDecreasingIndex
 	}
 
-	err = k.Index.Set(ctx, index)
+	err = k.Index.Set(ctx, rawIndex)
 	if err != nil {
 		return errors.Wrap(err, "unable to set index in state")
 	}
@@ -71,14 +86,14 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index math.LegacyDec) error {
 		return errors.Wrap(err, "unable to get total principal from state")
 	}
 
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
 	// TODO(@john): Ensure that we're always rounding down here, to avoid minting more $USDN than underlying M.
 	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
 
 	err = k.bank.MintCoins(ctx, types.YieldName, sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply))))
 	if err != nil {
-		// TODO(@john): Wrap error for developer friendliness!
-		return err
+		return errors.Wrap(err, "unable to mint coins")
 	}
 
 	// Claim the yield of the Flexible vault.
@@ -150,10 +165,11 @@ func (k *Keeper) claimStakedVaultYield(ctx context.Context) (math.Int, error) {
 	}
 
 	// Get the current Index.
-	index, err := k.Index.Get(ctx)
+	rawIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), err
 	}
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 	// Calculate the Yield Principal.
 	yieldPrincipal := yield.ToLegacyDec().Quo(index).TruncateInt()
 

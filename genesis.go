@@ -51,6 +51,10 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
+	if err = k.Nonce.Set(ctx, genesis.Portal.Nonce); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis nonce"))
+	}
+
 	if err = k.Owner.Set(ctx, genesis.Vaults.Owner); err != nil {
 		panic(errors.Wrap(err, "unable to set genesis vaults owner"))
 	}
@@ -91,6 +95,8 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 
 	owner, _ := k.Owner.Get(ctx)
 	peers, _ := k.GetPeers(ctx)
+	nonce, _ := k.Nonce.Get(ctx)
+
 	rewards, _ := k.GetRewards(ctx)
 	positions, _ := k.GetPositions(ctx)
 	totalFlexiblePrincipal, _ := k.GetTotalFlexiblePrincipal(ctx)
@@ -100,6 +106,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 		Portal: portal.GenesisState{
 			Owner: owner,
 			Peers: peers,
+			Nonce: nonce,
 		},
 		Index:     index,
 		Principal: principal,

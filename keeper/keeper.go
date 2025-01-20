@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/collections/indexes"
@@ -13,6 +14,7 @@ import (
 	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
@@ -28,11 +30,12 @@ type Keeper struct {
 	account  types.AccountKeeper
 	wormhole portal.WormholeKeeper
 
-	Index     collections.Item[math.LegacyDec]
+	Index     collections.Item[int64]
 	Principal collections.Map[[]byte, math.Int]
 
 	Owner collections.Item[string]
 	Peers collections.Map[uint16, portal.Peer]
+	Nonce collections.Item[uint32]
 
 	Paused                 collections.Item[int32]
 	Positions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, PositionsIndexes]
@@ -73,6 +76,17 @@ func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 }
 
 func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
+	transceiverAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/transceiver", portal.SubmoduleName))
+	copy(portal.PaddedTransceiverAddress[12:], transceiverAddress)
+	portal.TransceiverAddress, _ = address.BytesToString(transceiverAddress)
+
+	managerAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/manager", portal.SubmoduleName))
+	copy(portal.PaddedManagerAddress[12:], managerAddress)
+	portal.ManagerAddress, _ = address.BytesToString(managerAddress)
+
+	bz := []byte(denom)
+	copy(portal.RawToken[32-len(bz):], bz)
+
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
@@ -84,11 +98,12 @@ func NewKeeper(denom string, cdc codec.Codec, store store.KVStoreService, header
 		wormhole: wormhole,
 		account:  account,
 
-		Index:     collections.NewItem(builder, types.IndexKey, "index", sdk.LegacyDecValue),
+		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 
 		Owner: collections.NewItem(builder, portal.OwnerKey, "owner", collections.StringValue),
 		Peers: collections.NewMap(builder, portal.PeerPrefix, "peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),
+		Nonce: collections.NewItem(builder, portal.NonceKey, "nonce", collections.Uint32Value),
 
 		Paused:                 collections.NewItem(builder, vaults.PausedKey, "paused", collections.Int32Value),
 		Positions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewPositionsIndexes(builder)),
@@ -111,10 +126,11 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			return recipient, nil
 		}
 
-		index, err := k.Index.Get(ctx)
+		rawIndex, err := k.Index.Get(ctx)
 		if err != nil {
 			return recipient, errors.Wrap(err, "unable to get index from state")
 		}
+		index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 		principal := amount.ToLegacyDec().Quo(index).TruncateInt()
 
 		if !sender.Equals(types.ModuleAddress) {
@@ -161,10 +177,11 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 		return math.ZeroInt(), nil, errors.Wrapf(err, "unable to get principal for account %s from state", account)
 	}
 
-	index, err := k.Index.Get(ctx)
+	rawIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), nil, errors.Wrap(err, "unable to get index from state")
 	}
+	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
 	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
 	// TODO(@john): Ensure that we're always rounding down here, to avoid giving users more $USDN than underlying M.
