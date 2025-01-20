@@ -4,6 +4,7 @@ package noble.dollar.v1;
 
 import "gogoproto/gogo.proto";
 import "noble/dollar/portal/v1/genesis.proto";
+import "noble/dollar/vaults/v1/genesis.proto";
 
 option go_package = "dollar.noble.xyz/types";
 
@@ -17,4 +18,7 @@ message GenesisState {
 
   // principal contains the genesis principal amounts of Noble Dollar holders.
   map<string, string> principal = 3;
+
+  // vaults contains the genesis state of the Noble Dollar Vaults submodule.
+  noble.dollar.vaults.v1.GenesisState vaults = 4 [(gogoproto.nullable) = false];
 }

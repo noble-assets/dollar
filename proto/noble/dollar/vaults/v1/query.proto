@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v1;
+
+import "cosmos/query/v1/query.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+
+option go_package = "dollar.noble.xyz/types/vaults";
+
+service Query {
+  rpc PositionsByProvider(QueryPositionsByProvider) returns (QueryPositionsByProviderResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/dollar/vaults/v1/positions/{provider}";
+  }
+  rpc Paused(QueryPaused) returns (QueryPausedResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/dollar/vaults/v1/paused";
+  }
+}
+
+message QueryPositionsByProvider {
+  string provider = 1;
+}
+
+message QueryPositionsByProviderResponse {
+  repeated vaults.v1.PositionEntry positions = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryPaused {}
+
+message QueryPausedResponse {
+  vaults.v1.PausedType paused = 1;
+}

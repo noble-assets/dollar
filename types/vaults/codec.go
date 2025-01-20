@@ -1,8 +1,6 @@
-package types
+package vaults
 
 import (
-	"dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/vaults"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,17 +8,15 @@ import (
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	portal.RegisterLegacyAminoCodec(cdc)
-	vaults.RegisterLegacyAminoCodec(cdc)
-
-	cdc.RegisterConcrete(&MsgClaimYield{}, "dollar/ClaimYield", nil)
+	cdc.RegisterConcrete(&MsgLock{}, "dollar/vaults/Lock", nil)
+	cdc.RegisterConcrete(&MsgUnlock{}, "dollar/vaults/Unlock", nil)
+	cdc.RegisterConcrete(&MsgSetPause{}, "dollar/vaults/SetPause", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
-	portal.RegisterInterfaces(registry)
-	vaults.RegisterInterfaces(registry)
-
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgClaimYield{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgLock{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgUnlock{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPause{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
