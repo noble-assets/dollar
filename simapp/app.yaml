@@ -21,8 +21,6 @@ modules:
           permissions: [ burner, staking ]
         - account: dollar
           permissions: [ burner, minter ]
-        - account: dollar/yield
-          permissions: [ minter ]
   - name: bank
     config:
       "@type": cosmos.bank.module.v1.Module
