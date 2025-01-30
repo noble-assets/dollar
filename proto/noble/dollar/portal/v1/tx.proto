@@ -13,8 +13,10 @@ service Msg {
   option (cosmos.msg.v1.service) = true;
 
   rpc Deliver(MsgDeliver) returns (MsgDeliverResponse);
-  rpc SetPeer(MsgSetPeer) returns (MsgSetPeerResponse);
   rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
+
+  rpc SetPeer(MsgSetPeer) returns (MsgSetPeerResponse);
+  rpc TransferOwnership(MsgTransferOwnership) returns (MsgTransferOwnershipResponse);
 }
 
 // MsgDeliver is the entrypoint for delivering Noble Dollar Portal messages.
@@ -33,26 +35,6 @@ message MsgDeliver {
 
 // MsgDeliverResponse is the response of the Deliver message.
 message MsgDeliverResponse {}
-
-// MsgSetPeer allows the Noble Dollar Portal owner to set external peers.
-message MsgSetPeer {
-  option (cosmos.msg.v1.signer) = "signer";
-  option (amino.name) = "dollar/portal/SetPeer";
-
-  option (gogoproto.equal) = false;
-  option (gogoproto.goproto_getters) = false;
-
-  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  uint32 chain = 2 [
-    (gogoproto.customtype) = "uint16",
-    (gogoproto.nullable) = false
-  ];
-  bytes transceiver = 3;
-  bytes manager = 4;
-}
-
-// MsgSetPeerResponse is the response of the SetPeer message.
-message MsgSetPeerResponse {}
 
 // MsgTransfer is the entrypoint for transferring the Noble Dollar cross-chain.
 message MsgTransfer {
@@ -78,3 +60,38 @@ message MsgTransfer {
 
 // MsgTransferResponse is the response of the Transfer message.
 message MsgTransferResponse {}
+
+// MsgSetPeer allows the Noble Dollar Portal owner to set external peers.
+message MsgSetPeer {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/portal/SetPeer";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint32 chain = 2 [
+    (gogoproto.customtype) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+  bytes transceiver = 3;
+  bytes manager = 4;
+}
+
+// MsgSetPeerResponse is the response of the SetPeer message.
+message MsgSetPeerResponse {}
+
+// MsgTransferOwnership allows the Noble Dollar Portal ownership to be transferred.
+message MsgTransferOwnership {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/portal/TransferOwnership";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string new_owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgTransferOwnershipResponse is the response of the TransferOwnership message.
+message MsgTransferOwnershipResponse {}

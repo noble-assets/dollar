@@ -19,3 +19,9 @@ message PeerUpdated {
   bytes old_manager = 4;
   bytes new_manager = 5;
 }
+
+// OwnershipTransferred is an event emitted whenever an ownership transfer occurs.
+message OwnershipTransferred {
+  string previous_owner = 1;
+  string new_owner = 2;
+}
