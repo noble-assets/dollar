@@ -2,7 +2,7 @@
 
 ## Owner
 
-**Endpoint**: `/dollar/portal/v1/owner`
+**Endpoint**: `/noble/dollar/portal/v1/owner`
 
 Retrieves the address of the current Noble Dollar Portal owner.
 
@@ -18,7 +18,7 @@ Retrieves the address of the current Noble Dollar Portal owner.
 
 ## Peers
 
-**Endpoint**: `/dollar/portal/v1/peers`
+**Endpoint**: `/noble/dollar/portal/v1/peers`
 
 Retrieves all of the current Noble Dollar Portal external peers, filtered by Wormhole Chain ID.
 

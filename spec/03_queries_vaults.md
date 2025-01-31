@@ -2,7 +2,7 @@
 
 ## Paused
 
-**Endpoint**: `/dollar/vaults/v1/paused`
+**Endpoint**: `/noble/dollar/vaults/v1/paused`
 
 Retrieves the current Pause state of the Noble Dollar Vaults.
 
@@ -18,7 +18,7 @@ Retrieves the current Pause state of the Noble Dollar Vaults.
 
 ## PositionsByProvider
 
-**Endpoint**: `/dollar/portal/v1/positions/{address}`
+**Endpoint**: `/noble/dollar/portal/v1/positions/{address}`
 
 Retrieves all the current Noble Dollar Vaults positions, filtered by a Provider address.
 
