@@ -2,7 +2,7 @@
 
 ## Principal
 
-**Endpoint**: `/dollar/v1/principal/{account}`
+**Endpoint**: `/noble/dollar/v1/principal/{account}`
 
 Retrieves the principal amount associated with a $USDN holders account.
 
@@ -22,7 +22,7 @@ Retrieves the principal amount associated with a $USDN holders account.
 
 ## Yield
 
-**Endpoint**: `/dollar/v1/yield/{account}`
+**Endpoint**: `/noble/dollar/v1/yield/{account}`
 
 Retrieves the amount of yield that is claimable for a $USDN holder.
 
