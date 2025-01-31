@@ -92,6 +92,13 @@ func (k BankKeeper) SendCoinsFromModuleToAccount(ctx context.Context, senderModu
 	return k.SendCoins(ctx, senderAddr, recipientAddr, amt)
 }
 
+func (k BankKeeper) SendCoinsFromModuleToModule(ctx context.Context, senderModule string, recipientModule string, amt sdk.Coins) error {
+	senderAddr := authtypes.NewModuleAddress(senderModule)
+	recipientAddr := authtypes.NewModuleAddress(recipientModule)
+
+	return k.SendCoins(ctx, senderAddr, recipientAddr, amt)
+}
+
 //
 
 type SendRestrictionFn func(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error)

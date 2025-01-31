@@ -111,9 +111,16 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	// TODO(@john): Ensure that we're always rounding down here, to avoid minting more $USDN than underlying M.
 	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
 
-	err = k.bank.MintCoins(ctx, types.YieldName, sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply))))
-	if err != nil {
-		return errors.Wrap(err, "unable to mint coins")
+	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
+	if coins.IsAllPositive() {
+		err = k.bank.MintCoins(ctx, types.ModuleName, coins)
+		if err != nil {
+			return errors.Wrap(err, "unable to mint coins")
+		}
+		err = k.bank.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.YieldName, coins)
+		if err != nil {
+			return errors.Wrap(err, "unable to send coins")
+		}
 	}
 
 	// Claim the yield of the Flexible vault.

@@ -94,53 +94,6 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 	return &portal.MsgDeliverResponse{}, k.HandlePayload(ctx, managerMessage.Payload)
 }
 
-func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {
-	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
-		return nil, err
-	}
-
-	if msg.Chain == 0 {
-		return nil, errors.Wrap(portal.ErrInvalidPeer, "chain cannot be 0")
-	}
-	chain, err := k.wormhole.GetChain(ctx)
-	if err != nil || msg.Chain == chain {
-		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain cannot be %d", chain)
-	}
-
-	empty := make([]byte, 32)
-
-	if len(msg.Transceiver) != 32 {
-		return nil, errors.Wrap(portal.ErrInvalidPeer, "transceiver must be 32 bytes")
-	}
-	if bytes.Equal(msg.Transceiver, empty) {
-		return nil, errors.Wrap(portal.ErrInvalidPeer, "transceiver must not be empty")
-	}
-
-	if len(msg.Manager) != 32 {
-		return nil, errors.Wrap(portal.ErrInvalidPeer, "manager must be 32 bytes")
-	}
-	if bytes.Equal(msg.Manager, empty) {
-		return nil, errors.Wrap(portal.ErrInvalidPeer, "manager must not be empty")
-	}
-
-	peer, _ := k.Peers.Get(ctx, msg.Chain)
-	err = k.Peers.Set(ctx, msg.Chain, portal.Peer{
-		Transceiver: msg.Transceiver,
-		Manager:     msg.Manager,
-	})
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to set peer in state")
-	}
-
-	return &portal.MsgSetPeerResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.PeerUpdated{
-		Chain:          msg.Chain,
-		OldTransceiver: peer.Transceiver,
-		NewTransceiver: msg.Transceiver,
-		OldManager:     peer.Manager,
-		NewManager:     msg.Manager,
-	})
-}
-
 func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {
 	peer, err := k.Peers.Get(ctx, msg.Chain)
 	if err != nil {
@@ -206,6 +159,75 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		rawTransceiverMessage,
 		nonce,
 	)
+}
+
+func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {
+	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
+		return nil, err
+	}
+
+	if msg.Chain == 0 {
+		return nil, errors.Wrap(portal.ErrInvalidPeer, "chain cannot be 0")
+	}
+	chain, err := k.wormhole.GetChain(ctx)
+	if err != nil || msg.Chain == chain {
+		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain cannot be %d", chain)
+	}
+
+	empty := make([]byte, 32)
+
+	if len(msg.Transceiver) != 32 {
+		return nil, errors.Wrap(portal.ErrInvalidPeer, "transceiver must be 32 bytes")
+	}
+	if bytes.Equal(msg.Transceiver, empty) {
+		return nil, errors.Wrap(portal.ErrInvalidPeer, "transceiver must not be empty")
+	}
+
+	if len(msg.Manager) != 32 {
+		return nil, errors.Wrap(portal.ErrInvalidPeer, "manager must be 32 bytes")
+	}
+	if bytes.Equal(msg.Manager, empty) {
+		return nil, errors.Wrap(portal.ErrInvalidPeer, "manager must not be empty")
+	}
+
+	peer, _ := k.Peers.Get(ctx, msg.Chain)
+	err = k.Peers.Set(ctx, msg.Chain, portal.Peer{
+		Transceiver: msg.Transceiver,
+		Manager:     msg.Manager,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to set peer in state")
+	}
+
+	return &portal.MsgSetPeerResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.PeerUpdated{
+		Chain:          msg.Chain,
+		OldTransceiver: peer.Transceiver,
+		NewTransceiver: msg.Transceiver,
+		OldManager:     peer.Manager,
+		NewManager:     msg.Manager,
+	})
+}
+
+func (k portalMsgServer) TransferOwnership(ctx context.Context, msg *portal.MsgTransferOwnership) (*portal.MsgTransferOwnershipResponse, error) {
+	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
+		return nil, err
+	}
+
+	if _, err := k.address.StringToBytes(msg.NewOwner); err != nil {
+		return nil, errors.Wrap(err, "unable to decode new owner address")
+	}
+	if msg.NewOwner == msg.Signer {
+		return nil, portal.ErrSameOwner
+	}
+
+	if err := k.Owner.Set(ctx, msg.NewOwner); err != nil {
+		return nil, errors.Wrap(err, "unable to set owner in state")
+	}
+
+	return &portal.MsgTransferOwnershipResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.OwnershipTransferred{
+		PreviousOwner: msg.Signer,
+		NewOwner:      msg.NewOwner,
+	})
 }
 
 // EnsureOwner is a utility that ensures a message was signed by the portal owner.

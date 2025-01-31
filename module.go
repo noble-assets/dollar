@@ -176,6 +176,16 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "vaa"}},
 						},
 						{
+							RpcMethod: "Transfer",
+							Use:       "transfer",
+							Short:     "Transfer USDN from Noble and receive M cross-chain",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "chain"},
+								{ProtoField: "recipient"},
+								{ProtoField: "amount"},
+							},
+						},
+						{
 							RpcMethod: "SetPeer",
 							Use:       "set-peer [chain] [transceiver] [manager]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
@@ -185,14 +195,9 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							},
 						},
 						{
-							RpcMethod: "Transfer",
-							Use:       "transfer",
-							Short:     "Transfer USDN from Noble and receive M cross-chain",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "chain"},
-								{ProtoField: "recipient"},
-								{ProtoField: "amount"},
-							},
+							RpcMethod:      "TransferOwnership",
+							Use:            "transfer-ownership [new-owner]",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "new_owner"}},
 						},
 					},
 				},
