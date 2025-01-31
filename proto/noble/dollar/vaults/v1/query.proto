@@ -12,11 +12,11 @@ option go_package = "dollar.noble.xyz/types/vaults";
 service Query {
   rpc PositionsByProvider(QueryPositionsByProvider) returns (QueryPositionsByProviderResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/dollar/vaults/v1/positions/{provider}";
+    option (google.api.http).get = "/noble/dollar/vaults/v1/positions/{provider}";
   }
   rpc Paused(QueryPaused) returns (QueryPausedResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/dollar/vaults/v1/paused";
+    option (google.api.http).get = "/noble/dollar/vaults/v1/paused";
   }
 }
 

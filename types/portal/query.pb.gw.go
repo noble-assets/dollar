@@ -267,11 +267,11 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Owner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"dollar", "portal", "v1", "owner"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Owner_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "portal", "v1", "owner"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Peers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"dollar", "portal", "v1", "peers"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Peers_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "portal", "v1", "peers"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Nonce_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"dollar", "portal", "v1", "nonce"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Nonce_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "portal", "v1", "nonce"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
