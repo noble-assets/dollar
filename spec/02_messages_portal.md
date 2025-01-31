@@ -48,6 +48,52 @@ This message acts as the core mechanism for delivering Noble Dollar Portal messa
   - In the case of an $M transfer, this is minted directly to a user.
   - In the case of an index update, this is minted to the module yield accrual account.
 
+## Transfer
+
+`noble.dollar.portal.v1.MsgTransfer`
+
+This message allows transferring \$USDN from Noble and receiving \$M cross-chain.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/noble.dollar.portal.v1.MsgTransfer",
+        "signer": "noble1user",
+        "chain": "2",
+        "recipient": "base64_encoded_recipient_address",
+        "amount": "1000000"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `chain` — The Wormhole Chain ID of the destination chain.
+- `recipient` — The 32-byte encoded recipient address on the destination chain.
+- `amount` — The amount of $USDN to be transferred.
+
+### State Changes
+
+- The specified amount of $USDN is burned on Noble and sent via Wormhole to the destination chain.
+
 ## Set Peer
 
 `noble.dollar.portal.v1.MsgSetPeer`
@@ -97,3 +143,51 @@ This message allows the owner of the Noble Dollar Portal to set external peers.
 ### State Changes
 
 - [`peers`](./01_state_portal.md#peers)
+
+
+## Transfer Ownership
+
+`noble.dollar.portal.v1.MsgTransferOwnership`
+
+This message allows the transfer of ownership of the Noble Dollar Portal to a new address.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/noble.dollar.portal.v1.MsgTransferOwnership",
+        "signer": "noble1owner",
+        "new_owner": "noble1newowner"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `new_owner` — The Noble address to transfer ownership to.
+
+### Requirements
+
+- Signer must be the current [`owner`](./01_state_portal.md#owner).
+- `new_owner` must not be the current [`owner`](./01_state_portal.md#owner).
+
+### State Changes
+
+- [`owner`](./01_state_portal.md#owner)

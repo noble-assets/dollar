@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_Deliver_FullMethodName  = "/noble.dollar.portal.v1.Msg/Deliver"
-	Msg_SetPeer_FullMethodName  = "/noble.dollar.portal.v1.Msg/SetPeer"
-	Msg_Transfer_FullMethodName = "/noble.dollar.portal.v1.Msg/Transfer"
+	Msg_Deliver_FullMethodName           = "/noble.dollar.portal.v1.Msg/Deliver"
+	Msg_Transfer_FullMethodName          = "/noble.dollar.portal.v1.Msg/Transfer"
+	Msg_SetPeer_FullMethodName           = "/noble.dollar.portal.v1.Msg/SetPeer"
+	Msg_TransferOwnership_FullMethodName = "/noble.dollar.portal.v1.Msg/TransferOwnership"
 )
 
 // MsgClient is the client API for Msg service.
@@ -29,8 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MsgClient interface {
 	Deliver(ctx context.Context, in *MsgDeliver, opts ...grpc.CallOption) (*MsgDeliverResponse, error)
-	SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.CallOption) (*MsgSetPeerResponse, error)
 	Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error)
+	SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.CallOption) (*MsgSetPeerResponse, error)
+	TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error)
 }
 
 type msgClient struct {
@@ -51,6 +53,16 @@ func (c *msgClient) Deliver(ctx context.Context, in *MsgDeliver, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *msgClient) Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgTransferResponse)
+	err := c.cc.Invoke(ctx, Msg_Transfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.CallOption) (*MsgSetPeerResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MsgSetPeerResponse)
@@ -61,10 +73,10 @@ func (c *msgClient) SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *msgClient) Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error) {
+func (c *msgClient) TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgTransferResponse)
-	err := c.cc.Invoke(ctx, Msg_Transfer_FullMethodName, in, out, cOpts...)
+	out := new(MsgTransferOwnershipResponse)
+	err := c.cc.Invoke(ctx, Msg_TransferOwnership_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,8 +88,9 @@ func (c *msgClient) Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.
 // for forward compatibility.
 type MsgServer interface {
 	Deliver(context.Context, *MsgDeliver) (*MsgDeliverResponse, error)
-	SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error)
 	Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error)
+	SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error)
+	TransferOwnership(context.Context, *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -91,11 +104,14 @@ type UnimplementedMsgServer struct{}
 func (UnimplementedMsgServer) Deliver(context.Context, *MsgDeliver) (*MsgDeliverResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Deliver not implemented")
 }
+func (UnimplementedMsgServer) Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
+}
 func (UnimplementedMsgServer) SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPeer not implemented")
 }
-func (UnimplementedMsgServer) Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
+func (UnimplementedMsgServer) TransferOwnership(context.Context, *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransferOwnership not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -136,24 +152,6 @@ func _Msg_Deliver_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SetPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetPeer)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).SetPeer(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Msg_SetPeer_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetPeer(ctx, req.(*MsgSetPeer))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Msg_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgTransfer)
 	if err := dec(in); err != nil {
@@ -172,6 +170,42 @@ func _Msg_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_SetPeer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetPeer)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SetPeer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_SetPeer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SetPeer(ctx, req.(*MsgSetPeer))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_TransferOwnership_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgTransferOwnership)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).TransferOwnership(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_TransferOwnership_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).TransferOwnership(ctx, req.(*MsgTransferOwnership))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -184,12 +218,16 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_Deliver_Handler,
 		},
 		{
+			MethodName: "Transfer",
+			Handler:    _Msg_Transfer_Handler,
+		},
+		{
 			MethodName: "SetPeer",
 			Handler:    _Msg_SetPeer_Handler,
 		},
 		{
-			MethodName: "Transfer",
-			Handler:    _Msg_Transfer_Handler,
+			MethodName: "TransferOwnership",
+			Handler:    _Msg_TransferOwnership_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
