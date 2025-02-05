@@ -25,7 +25,6 @@ import (
 	"fmt"
 
 	"cosmossdk.io/collections"
-	"cosmossdk.io/collections/indexes"
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/core/header"
@@ -63,38 +62,6 @@ type Keeper struct {
 	Positions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, PositionsIndexes]
 	TotalFlexiblePrincipal collections.Item[math.Int]
 	Rewards                collections.Map[string, vaults.Reward]
-}
-
-// Positions Indexes
-
-type PositionsIndexes struct {
-	ByProvider *indexes.Multi[[]byte, collections.Triple[[]byte, int32, int64], vaults.Position]
-}
-
-func (i PositionsIndexes) IndexesList() []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position] {
-	return []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position]{
-		i.ByProvider,
-	}
-}
-
-func NewPositionsIndexes(builder *collections.SchemaBuilder) PositionsIndexes {
-	return PositionsIndexes{
-		ByProvider: indexes.NewMulti(
-			builder, []byte("positions_by_provider"), "positions_by_provider",
-			collections.BytesKey,
-			collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key),
-			func(key collections.Triple[[]byte, int32, int64], value vaults.Position) ([]byte, error) {
-				return key.K1(), nil
-			},
-		),
-	}
-}
-
-//
-
-// SetBankKeeper overwrites the bank keeper used in this module.
-func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
-	k.bank = bankKeeper
 }
 
 func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
@@ -142,6 +109,11 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 	return keeper
 }
 
+// SetBankKeeper overwrites the bank keeper used in this module.
+func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
+	k.bank = bankKeeper
+}
+
 // SendRestrictionFn performs an underlying transfer of principal when executing a $USDN transfer.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.AccAddress, coins sdk.Coins) (newRecipient sdk.AccAddress, err error) {
 	if amount := coins.AmountOf(k.denom); !amount.IsZero() {
@@ -186,6 +158,11 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 	}
 
 	return recipient, nil
+}
+
+// GetDenom is a utility that returns the configured denomination of $USDN.
+func (k *Keeper) GetDenom() string {
+	return k.denom
 }
 
 // GetYield is a utility that returns the user's current amount of claimable $USDN yield.
