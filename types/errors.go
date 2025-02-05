@@ -26,6 +26,4 @@ var (
 	ErrInvalidRequest = errors.Register(ModuleName, 0, "invalid request")
 
 	ErrDecreasingIndex = errors.Register(ModuleName, 1, "decreasing index")
-
-	ErrCannotSendViaIBC = errors.Register(ModuleName, 2, "cannot send via IBC")
 )
