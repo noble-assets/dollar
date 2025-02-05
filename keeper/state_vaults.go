@@ -23,10 +23,37 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
+	"cosmossdk.io/collections/indexes"
 	"cosmossdk.io/math"
 
 	"dollar.noble.xyz/types/vaults"
 )
+
+type PositionsIndexes struct {
+	ByProvider *indexes.Multi[[]byte, collections.Triple[[]byte, int32, int64], vaults.Position]
+}
+
+func (i PositionsIndexes) IndexesList() []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position] {
+	return []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position]{
+		i.ByProvider,
+	}
+}
+
+func NewPositionsIndexes(builder *collections.SchemaBuilder) PositionsIndexes {
+	return PositionsIndexes{
+		ByProvider: indexes.NewMulti(
+			builder, []byte("positions_by_provider"), "positions_by_provider",
+			collections.BytesKey,
+			collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key),
+			func(key collections.Triple[[]byte, int32, int64], value vaults.Position) ([]byte, error) {
+				return key.K1(), nil
+			},
+		),
+	}
+}
+
+//
 
 func (k *Keeper) GetTotalFlexiblePrincipal(ctx context.Context) (math.Int, error) {
 	value, err := k.TotalFlexiblePrincipal.Get(ctx)
