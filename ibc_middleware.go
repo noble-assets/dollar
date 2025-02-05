@@ -113,5 +113,5 @@ func (i IBCMiddleware) WriteAcknowledgement(ctx sdk.Context, chanCap *capability
 
 // GetAppVersion implements the ICS4 Wrapper interface.
 func (i IBCMiddleware) GetAppVersion(ctx sdk.Context, portID, channelID string) (string, bool) {
-	return i.GetAppVersion(ctx, portID, channelID)
+	return i.ics4Wrapper.GetAppVersion(ctx, portID, channelID)
 }
