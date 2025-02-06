@@ -108,7 +108,6 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
-	// TODO(@john): Ensure that we're always rounding down here, to avoid minting more $USDN than underlying M.
 	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
 
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))

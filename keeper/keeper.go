@@ -120,6 +120,9 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		if sender.Equals(types.YieldAddress) {
 			return recipient, nil
 		}
+		if sender.Equals(types.ModuleAddress) && recipient.Equals(types.YieldAddress) {
+			return recipient, nil
+		}
 
 		rawIndex, err := k.Index.Get(ctx)
 		if err != nil {
@@ -184,7 +187,6 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
 	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
-	// TODO(@john): Ensure that we're always rounding down here, to avoid giving users more $USDN than underlying M.
 	expectedBalance := index.MulInt(principal).TruncateInt()
 
 	yield, _ := expectedBalance.SafeSub(currentBalance)
