@@ -120,6 +120,10 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 		if err != nil {
 			return errors.Wrap(err, "unable to send coins")
 		}
+		err = k.IncrementTotalYieldAccrued(ctx, coins.AmountOf(k.denom))
+		if err != nil {
+			return errors.Wrap(err, "unable to increment total yield accrued")
+		}
 	}
 
 	// Claim the yield of the Flexible vault.

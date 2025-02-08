@@ -53,6 +53,7 @@ type Keeper struct {
 
 	Index     collections.Item[int64]
 	Principal collections.Map[[]byte, math.Int]
+	Stats     collections.Item[types.Stats]
 
 	Owner collections.Item[string]
 	Peers collections.Map[uint16, portal.Peer]
@@ -90,6 +91,7 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 
 		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
+		Stats:     collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[types.Stats](cdc)),
 
 		Owner: collections.NewItem(builder, portal.OwnerKey, "owner", collections.StringValue),
 		Peers: collections.NewMap(builder, portal.PeerPrefix, "peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),

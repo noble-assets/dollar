@@ -54,3 +54,15 @@ func (k *Keeper) GetTotalPrincipal(ctx context.Context) (math.Int, error) {
 
 	return totalPrincipal, err
 }
+
+// IncrementTotalYieldAccrued is a utility that increments the total yield accrued stat.
+func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalYieldAccrued = stats.TotalYieldAccrued.Add(amount)
+
+	return k.Stats.Set(ctx, stats)
+}
