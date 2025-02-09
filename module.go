@@ -235,9 +235,17 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			Service: dollarv1.Query_ServiceDesc.ServiceName,
 			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 				{
+					RpcMethod: "Index",
+					Use:       "index",
+				},
+				{
 					RpcMethod:      "Principal",
 					Use:            "principal [account]",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "account"}},
+				},
+				{
+					RpcMethod: "TotalPrincipal",
+					Use:       "total-principal",
 				},
 				{
 					RpcMethod:      "Yield",

@@ -20,6 +20,10 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/v1/principal/{account}";
   }
+  rpc TotalPrincipal(QueryTotalPrincipal) returns (QueryTotalPrincipalResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v1/total_principal";
+  }
 
   rpc Yield(QueryYield) returns (QueryYieldResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
@@ -44,6 +48,17 @@ message QueryPrincipal {
 
 message QueryPrincipalResponse {
   string principal = 1 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message QueryTotalPrincipal {}
+
+message QueryTotalPrincipalResponse {
+  string total_principal = 1 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",

@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Query_Index_FullMethodName     = "/noble.dollar.v1.Query/Index"
-	Query_Principal_FullMethodName = "/noble.dollar.v1.Query/Principal"
-	Query_Yield_FullMethodName     = "/noble.dollar.v1.Query/Yield"
+	Query_Index_FullMethodName          = "/noble.dollar.v1.Query/Index"
+	Query_Principal_FullMethodName      = "/noble.dollar.v1.Query/Principal"
+	Query_TotalPrincipal_FullMethodName = "/noble.dollar.v1.Query/TotalPrincipal"
+	Query_Yield_FullMethodName          = "/noble.dollar.v1.Query/Yield"
 )
 
 // QueryClient is the client API for Query service.
@@ -30,6 +31,7 @@ const (
 type QueryClient interface {
 	Index(ctx context.Context, in *QueryIndex, opts ...grpc.CallOption) (*QueryIndexResponse, error)
 	Principal(ctx context.Context, in *QueryPrincipal, opts ...grpc.CallOption) (*QueryPrincipalResponse, error)
+	TotalPrincipal(ctx context.Context, in *QueryTotalPrincipal, opts ...grpc.CallOption) (*QueryTotalPrincipalResponse, error)
 	Yield(ctx context.Context, in *QueryYield, opts ...grpc.CallOption) (*QueryYieldResponse, error)
 }
 
@@ -61,6 +63,16 @@ func (c *queryClient) Principal(ctx context.Context, in *QueryPrincipal, opts ..
 	return out, nil
 }
 
+func (c *queryClient) TotalPrincipal(ctx context.Context, in *QueryTotalPrincipal, opts ...grpc.CallOption) (*QueryTotalPrincipalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryTotalPrincipalResponse)
+	err := c.cc.Invoke(ctx, Query_TotalPrincipal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Yield(ctx context.Context, in *QueryYield, opts ...grpc.CallOption) (*QueryYieldResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(QueryYieldResponse)
@@ -77,6 +89,7 @@ func (c *queryClient) Yield(ctx context.Context, in *QueryYield, opts ...grpc.Ca
 type QueryServer interface {
 	Index(context.Context, *QueryIndex) (*QueryIndexResponse, error)
 	Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error)
+	TotalPrincipal(context.Context, *QueryTotalPrincipal) (*QueryTotalPrincipalResponse, error)
 	Yield(context.Context, *QueryYield) (*QueryYieldResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
@@ -93,6 +106,9 @@ func (UnimplementedQueryServer) Index(context.Context, *QueryIndex) (*QueryIndex
 }
 func (UnimplementedQueryServer) Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Principal not implemented")
+}
+func (UnimplementedQueryServer) TotalPrincipal(context.Context, *QueryTotalPrincipal) (*QueryTotalPrincipalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalPrincipal not implemented")
 }
 func (UnimplementedQueryServer) Yield(context.Context, *QueryYield) (*QueryYieldResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Yield not implemented")
@@ -154,6 +170,24 @@ func _Query_Principal_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_TotalPrincipal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryTotalPrincipal)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).TotalPrincipal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_TotalPrincipal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).TotalPrincipal(ctx, req.(*QueryTotalPrincipal))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Yield_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryYield)
 	if err := dec(in); err != nil {
@@ -186,6 +220,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Principal",
 			Handler:    _Query_Principal_Handler,
+		},
+		{
+			MethodName: "TotalPrincipal",
+			Handler:    _Query_TotalPrincipal_Handler,
 		},
 		{
 			MethodName: "Yield",

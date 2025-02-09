@@ -69,6 +69,16 @@ func (k queryServer) Principal(ctx context.Context, req *types.QueryPrincipal) (
 	return &types.QueryPrincipalResponse{Principal: principal}, nil
 }
 
+func (k queryServer) TotalPrincipal(ctx context.Context, req *types.QueryTotalPrincipal) (*types.QueryTotalPrincipalResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	totalPrincipal, err := k.GetTotalPrincipal(ctx)
+
+	return &types.QueryTotalPrincipalResponse{TotalPrincipal: totalPrincipal}, err
+}
+
 func (k queryServer) Yield(ctx context.Context, req *types.QueryYield) (*types.QueryYieldResponse, error) {
 	if req == nil {
 		return nil, types.ErrInvalidRequest
