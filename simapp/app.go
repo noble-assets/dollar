@@ -29,8 +29,8 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/x/staking"
 	_ "github.com/noble-assets/wormhole"
 
-	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	// Cosmos Modules
+	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	consensuskeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"

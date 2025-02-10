@@ -32,6 +32,7 @@ import (
 	"cosmossdk.io/core/header"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
+	"cosmossdk.io/x/tx/signing"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -39,7 +40,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	gogoproto "github.com/cosmos/gogoproto/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	modulev1 "dollar.noble.xyz/api/module/v1"
 	portalv1 "dollar.noble.xyz/api/portal/v1"
@@ -171,9 +175,8 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Service: portalv1.Msg_ServiceDesc.ServiceName,
 					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 						{
-							RpcMethod:      "Deliver",
-							Use:            "deliver [vaa]",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "vaa"}},
+							RpcMethod: "Deliver",
+							Skip:      true,
 						},
 						{
 							RpcMethod: "Transfer",
@@ -284,8 +287,11 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 //
 
 func init() {
-	appmodule.Register(&modulev1.Module{},
-		appmodule.Provide(ProvideModule),
+	appmodule.Register(
+		&modulev1.Module{},
+		appmodule.Provide(
+			ProvideModule, ProvideCustomSigner,
+		),
 	)
 }
 
@@ -333,4 +339,13 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 	m := NewAppModule(in.AddressCodec, k)
 
 	return ModuleOutputs{Keeper: k, Module: m, Restrictions: k.SendRestrictionFn}
+}
+
+func ProvideCustomSigner() signing.CustomGetSigner {
+	return signing.CustomGetSigner{
+		MsgType: protoreflect.FullName(gogoproto.MessageName(&portal.MsgDeliver{})),
+		Fn: func(msg proto.Message) ([][]byte, error) {
+			return [][]byte{}, nil
+		},
+	}
 }
