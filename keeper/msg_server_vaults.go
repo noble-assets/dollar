@@ -45,7 +45,7 @@ func NewVaultsMsgServer(keeper *Keeper) vaults.MsgServer {
 }
 
 func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults.MsgLockResponse, error) {
-	if paused := k.GetPaused(ctx); paused == vaults.ALL || paused == vaults.LOCK {
+	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.LOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused")
 	}
 
@@ -65,7 +65,7 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 
 	// Verify that no position from the same user and vault exists within the current block.
 	key := collections.Join3(addr, int32(msg.Vault), currentTime)
-	if has, _ := k.Positions.Has(ctx, key); has {
+	if has, _ := k.VaultsPositions.Has(ctx, key); has {
 		return nil, errors.Wrapf(vaults.ErrInvalidVaultType, "cannot create multiple user positions in the same block")
 	}
 
@@ -99,7 +99,7 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 	amountPrincipal := msg.Amount.ToLegacyDec().Quo(index).TruncateInt()
 
 	// Create the user Vault Position.
-	if err = k.Positions.Set(ctx, key, vaults.Position{
+	if err = k.VaultsPositions.Set(ctx, key, vaults.Position{
 		Index:     index,
 		Principal: amountPrincipal,
 		Amount:    msg.Amount,
@@ -112,14 +112,14 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 	if msg.Vault == vaults.FLEXIBLE {
 		// Increase the Total Flexible Principal
 		total := math.ZeroInt()
-		if has, _ := k.TotalFlexiblePrincipal.Has(ctx); has {
-			current, err := k.TotalFlexiblePrincipal.Get(ctx)
+		if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
+			current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
 			if err != nil {
 				return nil, err
 			}
 			total = total.Add(current)
 		}
-		if err = k.TotalFlexiblePrincipal.Set(ctx, total.Add(amountPrincipal)); err != nil {
+		if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, total.Add(amountPrincipal)); err != nil {
 			return nil, err
 		}
 	}
@@ -128,7 +128,7 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
-	if paused := k.GetPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
+	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
 	}
 
@@ -150,7 +150,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	}
 
 	// Retrieve all positions associated with the user.
-	positions, err := k.GetPositionsByProvider(ctx, addr)
+	positions, err := k.GetVaultsPositionsByProvider(ctx, addr)
 	if err != nil {
 		return nil, err
 	}
@@ -180,15 +180,15 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 		if msg.Vault == vaults.FLEXIBLE {
 			// Get total Vault principal.
 			totalVaultUsersPrincipal := math.ZeroInt()
-			if has, _ := k.TotalFlexiblePrincipal.Has(ctx); has {
-				current, err := k.TotalFlexiblePrincipal.Get(ctx)
+			if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
+				current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
 				if err != nil {
 					return nil, err
 				}
 				totalVaultUsersPrincipal = totalVaultUsersPrincipal.Add(current)
 			}
 			// Deduct the relative position's principal amount from the TotalVaultUsersPrincipal.
-			if err = k.TotalFlexiblePrincipal.Set(ctx, totalVaultUsersPrincipal.Sub(positionPrincipalToRemove)); err != nil {
+			if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, totalVaultUsersPrincipal.Sub(positionPrincipalToRemove)); err != nil {
 				return nil, errors.Wrapf(err, "unable to set position for %s", msg.Vault)
 			}
 
@@ -221,12 +221,12 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 
 		// Remove or update the user's position.
 		if positionAmountToRemove.GTE(position.Amount) {
-			if err = k.Positions.Remove(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix())); err != nil {
+			if err = k.VaultsPositions.Remove(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix())); err != nil {
 				return nil, errors.Wrapf(err, "unable to remove position")
 			}
 		} else {
 			updatedPrincipal := position.Principal.Sub(positionPrincipalToRemove)
-			if err = k.Positions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
+			if err = k.VaultsPositions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
 				Principal: updatedPrincipal,
 				Index:     position.Index,
 				Amount:    position.Amount.Sub(positionAmountToRemove),
@@ -256,11 +256,11 @@ func (k vaultsMsgServer) SetPause(ctx context.Context, msg *vaults.MsgSetPause) 
 	// Ensure that the Pause type does exist.
 	_, pausedTypeExists := vaults.PausedType_value[msg.Paused.String()]
 	if !pausedTypeExists {
-		return nil, errors.Wrapf(vaults.ErrInvalidPauseType, "pause type %s does not exist", msg.Paused)
+		return nil, errors.Wrapf(vaults.ErrInvalidPauseType, "vaults pause type %s does not exist", msg.Paused)
 	}
 
 	// Set the new Paused status.
-	if err := k.Paused.Set(ctx, int32(msg.Paused)); err != nil {
+	if err := k.VaultsPaused.Set(ctx, int32(msg.Paused)); err != nil {
 		return nil, err
 	}
 
@@ -294,7 +294,7 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	// Iterate through the rewards to calculate the amount owed to the user, proportional to their position.
 	// NOTE: For the user to be eligible, they must have joined before and exited after a complete `UpdateIndex` cycle.
 	rewardsAmount := math.ZeroInt()
-	if err := k.Rewards.Walk(
+	if err := k.VaultsRewards.Walk(
 		ctx,
 		new(collections.Range[string]).StartExclusive(position.Index.String()), // Exclude the entry point Index.
 		func(key string, record vaults.Reward) (stop bool, err error) {
@@ -309,7 +309,7 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 			}
 
 			// Update the Rewards entry.
-			if err = k.Rewards.Set(ctx, key, vaults.Reward{
+			if err = k.VaultsRewards.Set(ctx, key, vaults.Reward{
 				Index:   record.Index,
 				Total:   record.Total.Sub(amountPrincipal.TruncateInt()),
 				Rewards: record.Rewards.Sub(userReward),

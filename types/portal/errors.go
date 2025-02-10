@@ -29,4 +29,5 @@ var (
 	ErrInvalidPeer      = errors.Register(SubmoduleName, 4, "invalid peer")
 	ErrInvalidMessage   = errors.Register(SubmoduleName, 5, "invalid message")
 	ErrInvalidRecipient = errors.Register(SubmoduleName, 6, "invalid recipient")
+	ErrPaused           = errors.Register(SubmoduleName, 7, "portal is paused")
 )

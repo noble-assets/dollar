@@ -30,20 +30,20 @@ import (
 	"dollar.noble.xyz/types/vaults"
 )
 
-type PositionsIndexes struct {
+type VaultsPositionsIndexes struct {
 	ByProvider *indexes.Multi[[]byte, collections.Triple[[]byte, int32, int64], vaults.Position]
 }
 
-func (i PositionsIndexes) IndexesList() []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position] {
+func (i VaultsPositionsIndexes) IndexesList() []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position] {
 	return []collections.Index[collections.Triple[[]byte, int32, int64], vaults.Position]{
 		i.ByProvider,
 	}
 }
 
-func NewPositionsIndexes(builder *collections.SchemaBuilder) PositionsIndexes {
-	return PositionsIndexes{
+func NewVaultsPositionsIndexes(builder *collections.SchemaBuilder) VaultsPositionsIndexes {
+	return VaultsPositionsIndexes{
 		ByProvider: indexes.NewMulti(
-			builder, []byte("positions_by_provider"), "positions_by_provider",
+			builder, []byte("vaults_positions_by_provider"), "vaults_positions_by_provider",
 			collections.BytesKey,
 			collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key),
 			func(key collections.Triple[[]byte, int32, int64], value vaults.Position) ([]byte, error) {
@@ -55,33 +55,36 @@ func NewPositionsIndexes(builder *collections.SchemaBuilder) PositionsIndexes {
 
 //
 
-func (k *Keeper) GetTotalFlexiblePrincipal(ctx context.Context) (math.Int, error) {
-	value, err := k.TotalFlexiblePrincipal.Get(ctx)
+// GetVaultsTotalFlexiblePrincipal is a utility that returns the total flexible vault principal from state.
+func (k *Keeper) GetVaultsTotalFlexiblePrincipal(ctx context.Context) (math.Int, error) {
+	value, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), err
 	}
 	return value, nil
 }
 
-func (k *Keeper) GetPaused(ctx context.Context) vaults.PausedType {
-	value, err := k.Paused.Get(ctx)
+// GetVaultsPaused is a utility that returns the current pausing state.
+func (k *Keeper) GetVaultsPaused(ctx context.Context) vaults.PausedType {
+	value, err := k.VaultsPaused.Get(ctx)
 	if err != nil {
 		return vaults.NONE
 	}
 	return vaults.PausedType(value)
 }
 
-func (k *Keeper) GetPositions(ctx context.Context) ([]vaults.PositionEntry, error) {
+// GetVaultsPositions is a utility that returns all vaults positions from state.
+func (k *Keeper) GetVaultsPositions(ctx context.Context) ([]vaults.PositionEntry, error) {
 	var positions []vaults.PositionEntry
 
-	itr, err := k.Positions.Iterate(ctx, nil)
+	itr, err := k.VaultsPositions.Iterate(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	for ; itr.Valid(); itr.Next() {
 		key, _ := itr.Key()
-		position, _ := k.Positions.Get(ctx, key)
+		position, _ := k.VaultsPositions.Get(ctx, key)
 		positions = append(positions, vaults.PositionEntry{
 			Address:   key.K1(),
 			Vault:     vaults.VaultType(key.K2()),
@@ -95,17 +98,18 @@ func (k *Keeper) GetPositions(ctx context.Context) ([]vaults.PositionEntry, erro
 	return positions, err
 }
 
-func (k *Keeper) GetPositionsByProvider(ctx context.Context, provider []byte) ([]vaults.PositionEntry, error) {
+// GetVaultsPositionsByProvider is a utility that returns all vaults positions from state by a given provider.
+func (k *Keeper) GetVaultsPositionsByProvider(ctx context.Context, provider []byte) ([]vaults.PositionEntry, error) {
 	var positions []vaults.PositionEntry
 
-	itr, err := k.Positions.Indexes.ByProvider.MatchExact(ctx, provider)
+	itr, err := k.VaultsPositions.Indexes.ByProvider.MatchExact(ctx, provider)
 	if err != nil {
 		return nil, err
 	}
 
 	for ; itr.Valid(); itr.Next() {
 		key, _ := itr.PrimaryKey()
-		position, _ := k.Positions.Get(ctx, key)
+		position, _ := k.VaultsPositions.Get(ctx, key)
 		positions = append(positions, vaults.PositionEntry{
 			Address:   key.K1(),
 			Vault:     vaults.VaultType(key.K2()),
@@ -119,17 +123,18 @@ func (k *Keeper) GetPositionsByProvider(ctx context.Context, provider []byte) ([
 	return positions, err
 }
 
-func (k *Keeper) GetRewards(ctx context.Context) ([]vaults.Reward, error) {
+// GetVaultsRewards is a utility that returns all rewards positions from state.
+func (k *Keeper) GetVaultsRewards(ctx context.Context) ([]vaults.Reward, error) {
 	var rewards []vaults.Reward
 
-	itr, err := k.Rewards.Iterate(ctx, nil)
+	itr, err := k.VaultsRewards.Iterate(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	for ; itr.Valid(); itr.Next() {
 		key, _ := itr.Key()
-		reward, _ := k.Rewards.Get(ctx, key)
+		reward, _ := k.VaultsRewards.Get(ctx, key)
 		rewards = append(rewards, vaults.Reward{
 			Index:   reward.Index,
 			Total:   reward.Total,

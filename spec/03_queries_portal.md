@@ -16,6 +16,22 @@ Retrieves the address of the current Noble Dollar Portal owner.
 
 - `owner` — The address of the current Noble Dollar Portal owner.
 
+## Paused
+
+**Endpoint**: `/noble/dollar/portal/v1/paused`
+
+Retrieves the current Pause state of the Noble Dollar Portal module.
+
+```json
+{
+  "paused": "true"
+}
+```
+
+### Response
+
+- `paused` — The Pause state Noble Dollar Portal.
+
 ## Peers
 
 **Endpoint**: `/noble/dollar/portal/v1/peers`

@@ -13,6 +13,7 @@ service Msg {
   option (cosmos.msg.v1.service) = true;
 
   rpc ClaimYield(MsgClaimYield) returns (MsgClaimYieldResponse);
+  rpc SetPause(MsgSetPause) returns (MsgSetPauseResponse);
 }
 
 // MsgClaimYield is a message holders of the Noble Dollar can use to claim their yield.
@@ -28,3 +29,18 @@ message MsgClaimYield {
 
 // MsgClaimYieldResponse is the response of the ClaimYield message.
 message MsgClaimYieldResponse {}
+
+// MsgSetPause allows the authority to configure the Noble Dollar Portal pause state.
+message MsgSetPause {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/SetPause";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  bool paused = 2;
+}
+
+// MsgSetPauseResponse is the response of the SetPause message.
+message MsgSetPauseResponse {}

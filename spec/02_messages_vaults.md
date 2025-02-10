@@ -134,7 +134,7 @@ This message allows the authority to set the Vault Pause state to `LOCK` | `UNLO
 
 ### Requirements
 
-- Signer must be the current [`owner`](./01_state_portal.md#owner).
+- Signer must be the current Authority.
 
 ### State Changes
 

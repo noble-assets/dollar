@@ -28,11 +28,11 @@ import (
 	"dollar.noble.xyz/types/portal"
 )
 
-// GetPeers is a utility that returns all peers from state.
-func (k *Keeper) GetPeers(ctx context.Context) (map[uint16]portal.Peer, error) {
+// GetPortalPeers is a utility that returns all peers from state.
+func (k *Keeper) GetPortalPeers(ctx context.Context) (map[uint16]portal.Peer, error) {
 	peers := make(map[uint16]portal.Peer)
 
-	err := k.Peers.Walk(ctx, nil, func(chain uint16, peer portal.Peer) (stop bool, err error) {
+	err := k.PortalPeers.Walk(ctx, nil, func(chain uint16, peer portal.Peer) (stop bool, err error) {
 		peers[chain] = peer
 		return false, nil
 	})
@@ -40,16 +40,22 @@ func (k *Keeper) GetPeers(ctx context.Context) (map[uint16]portal.Peer, error) {
 	return peers, err
 }
 
-// IncrementNonce is a utility that returns the next nonce and increments.
-func (k *Keeper) IncrementNonce(ctx context.Context) (uint32, error) {
-	nonce, err := k.Nonce.Get(ctx)
+// GetPortalPaused is a utility that returns the current pausing state.
+func (k *Keeper) GetPortalPaused(ctx context.Context) bool {
+	value, _ := k.PortalPaused.Get(ctx)
+	return value
+}
+
+// IncrementPortalNonce is a utility that returns the next nonce and increments.
+func (k *Keeper) IncrementPortalNonce(ctx context.Context) (uint32, error) {
+	nonce, err := k.PortalNonce.Get(ctx)
 	if err != nil {
-		return 0, errors.Wrap(err, "unable to get nonce from state")
+		return 0, errors.Wrap(err, "unable to get portal nonce from state")
 	}
 
-	err = k.Nonce.Set(ctx, nonce+1)
+	err = k.PortalNonce.Set(ctx, nonce+1)
 	if err != nil {
-		return 0, errors.Wrap(err, "unable to set nonce in state")
+		return 0, errors.Wrap(err, "unable to set portal nonce in state")
 	}
 
 	return nonce, nil

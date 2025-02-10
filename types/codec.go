@@ -34,6 +34,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	vaults.RegisterLegacyAminoCodec(cdc)
 
 	cdc.RegisterConcrete(&MsgClaimYield{}, "dollar/ClaimYield", nil)
+	cdc.RegisterConcrete(&MsgSetPause{}, "dollar/SetPause", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
@@ -41,6 +42,7 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	vaults.RegisterInterfaces(registry)
 
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgClaimYield{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPause{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

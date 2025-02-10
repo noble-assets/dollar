@@ -42,9 +42,19 @@ func (k portalQueryServer) Owner(ctx context.Context, req *portal.QueryOwner) (*
 		return nil, types.ErrInvalidRequest
 	}
 
-	owner, err := k.Keeper.Owner.Get(ctx)
+	owner, err := k.Keeper.PortalOwner.Get(ctx)
 
 	return &portal.QueryOwnerResponse{Owner: owner}, err
+}
+
+func (k portalQueryServer) Paused(ctx context.Context, req *portal.QueryPaused) (*portal.QueryPausedResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	return &portal.QueryPausedResponse{
+		Paused: k.GetPortalPaused(ctx),
+	}, nil
 }
 
 func (k portalQueryServer) Peers(ctx context.Context, req *portal.QueryPeers) (*portal.QueryPeersResponse, error) {
@@ -52,7 +62,7 @@ func (k portalQueryServer) Peers(ctx context.Context, req *portal.QueryPeers) (*
 		return nil, types.ErrInvalidRequest
 	}
 
-	peers, err := k.GetPeers(ctx)
+	peers, err := k.GetPortalPeers(ctx)
 
 	return &portal.QueryPeersResponse{Peers: peers}, err
 }
@@ -62,7 +72,7 @@ func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*
 		return nil, types.ErrInvalidRequest
 	}
 
-	nonce, err := k.Keeper.Nonce.Get(ctx)
+	nonce, err := k.Keeper.PortalNonce.Get(ctx)
 
 	return &portal.QueryNonceResponse{Nonce: nonce}, err
 }
