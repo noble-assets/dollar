@@ -43,16 +43,38 @@ func (k *Keeper) GetPrincipal(ctx context.Context) (map[string]string, error) {
 	return principal, err
 }
 
-// GetTotalPrincipal is a utility that returns the total principal from state.
+// GetTotalPrincipal is a utility that returns the total principal stat.
 func (k *Keeper) GetTotalPrincipal(ctx context.Context) (math.Int, error) {
-	totalPrincipal := math.ZeroInt()
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return math.ZeroInt(), err
+	}
 
-	err := k.Principal.Walk(ctx, nil, func(_ []byte, value math.Int) (stop bool, err error) {
-		totalPrincipal = totalPrincipal.Add(value)
-		return false, nil
-	})
+	return stats.TotalPrincipal, nil
+}
 
-	return totalPrincipal, err
+// DecrementTotalPrincipal is a utility that decrements the total principal stat.
+func (k *Keeper) DecrementTotalPrincipal(ctx context.Context, amount math.Int) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalPrincipal = stats.TotalPrincipal.Sub(amount)
+
+	return k.Stats.Set(ctx, stats)
+}
+
+// IncrementTotalPrincipal is a utility that increments the total principal stat.
+func (k *Keeper) IncrementTotalPrincipal(ctx context.Context, amount math.Int) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalPrincipal = stats.TotalPrincipal.Add(amount)
+
+	return k.Stats.Set(ctx, stats)
 }
 
 // IncrementTotalYieldAccrued is a utility that increments the total yield accrued stat.

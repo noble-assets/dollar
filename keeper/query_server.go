@@ -89,5 +89,8 @@ func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.Q
 		return nil, errors.Wrap(err, "unable to get stats from state")
 	}
 
-	return &types.QueryStatsResponse{TotalYieldAccrued: stats.TotalYieldAccrued}, nil
+	return &types.QueryStatsResponse{
+		TotalPrincipal:    stats.TotalPrincipal,
+		TotalYieldAccrued: stats.TotalYieldAccrued,
+	}, nil
 }

@@ -9,7 +9,14 @@ import "gogoproto/gogo.proto";
 option go_package = "dollar.noble.xyz/types";
 
 message Stats {
-  string total_yield_accrued = 1 [
+  string total_principal = 1 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string total_yield_accrued = 2 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
