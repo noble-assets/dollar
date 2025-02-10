@@ -102,3 +102,30 @@ message PositionEntry {
     (gogoproto.stdtime) = true
   ];
 }
+
+message Stats {
+  map<int32, Vault> vaults = 1 [(gogoproto.nullable) = false];
+
+  message Vault {
+    string total_principal = 1 [
+      (amino.dont_omitempty) = true,
+      (cosmos_proto.scalar) = "cosmos.Int",
+      (gogoproto.customtype) = "cosmossdk.io/math.Int",
+      (gogoproto.nullable) = false
+    ];
+
+    string total_users = 2 [
+      (amino.dont_omitempty) = true,
+      (cosmos_proto.scalar) = "cosmos.Int",
+      (gogoproto.customtype) = "cosmossdk.io/math.Int",
+      (gogoproto.nullable) = false
+    ];
+
+    string total_rewards = 3 [
+      (amino.dont_omitempty) = false,
+      (cosmos_proto.scalar) = "cosmos.Int",
+      (gogoproto.customtype) = "cosmossdk.io/math.Int",
+      (gogoproto.nullable) = false
+    ];
+  }
+}

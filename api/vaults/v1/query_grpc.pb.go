@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Query_PositionsByProvider_FullMethodName = "/noble.dollar.vaults.v1.Query/PositionsByProvider"
 	Query_Paused_FullMethodName              = "/noble.dollar.vaults.v1.Query/Paused"
+	Query_Stats_FullMethodName               = "/noble.dollar.vaults.v1.Query/Stats"
 )
 
 // QueryClient is the client API for Query service.
@@ -29,6 +30,7 @@ const (
 type QueryClient interface {
 	PositionsByProvider(ctx context.Context, in *QueryPositionsByProvider, opts ...grpc.CallOption) (*QueryPositionsByProviderResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
+	Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error)
 }
 
 type queryClient struct {
@@ -59,12 +61,23 @@ func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.
 	return out, nil
 }
 
+func (c *queryClient) Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryStatsResponse)
+	err := c.cc.Invoke(ctx, Query_Stats_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
 type QueryServer interface {
 	PositionsByProvider(context.Context, *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
+	Stats(context.Context, *QueryStats) (*QueryStatsResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedQueryServer) PositionsByProvider(context.Context, *QueryPosit
 }
 func (UnimplementedQueryServer) Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
+}
+func (UnimplementedQueryServer) Stats(context.Context, *QueryStats) (*QueryStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Stats not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 func (UnimplementedQueryServer) testEmbeddedByValue()               {}
@@ -138,6 +154,24 @@ func _Query_Paused_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Stats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryStats)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Stats(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Stats_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Stats(ctx, req.(*QueryStats))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Paused",
 			Handler:    _Query_Paused_Handler,
+		},
+		{
+			MethodName: "Stats",
+			Handler:    _Query_Stats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

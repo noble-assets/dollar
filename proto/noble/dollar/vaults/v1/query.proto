@@ -14,9 +14,15 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/vaults/v1/positions/{provider}";
   }
+
   rpc Paused(QueryPaused) returns (QueryPausedResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/vaults/v1/paused";
+  }
+
+  rpc Stats(QueryStats) returns (QueryStatsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/vaults/v1/stats";
   }
 }
 
@@ -32,4 +38,10 @@ message QueryPaused {}
 
 message QueryPausedResponse {
   vaults.v1.PausedType paused = 1;
+}
+
+message QueryStats {}
+
+message QueryStatsResponse {
+  map<string, vaults.v1.Stats.Vault> vaults = 1;
 }

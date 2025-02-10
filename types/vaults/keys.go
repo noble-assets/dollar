@@ -44,4 +44,5 @@ var (
 	TotalFlexiblePrincipalKey = []byte("total_flexible_principal")
 	PositionPrefix            = []byte("position/")
 	RewardPrefix              = []byte("reward/")
+	StatsPrefix               = []byte("vaults/stats/")
 )

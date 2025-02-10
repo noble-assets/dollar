@@ -74,7 +74,6 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 		return nil, errors.Wrapf(vaults.ErrInvalidAmount, "insufficient balance")
 	}
 
-	// TODO(@g-luca): any perf improvements? especially for the staked vault
 	vaultUserAccount := authtypes.NewEmptyModuleAccount(k.ToUserVaultPositionModuleAccount(msg.Signer, msg.Vault, currentTime))
 	vaultAccount := k.account.NewAccount(ctx, vaultUserAccount).(*authtypes.ModuleAccount)
 	k.account.SetModuleAccount(ctx, vaultAccount)
@@ -124,6 +123,12 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 		}
 	}
 
+	// Update Vaults stats.
+	if positions, _ := k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 1 {
+		_ = k.IncrementVaultUsers(ctx, msg.Vault)
+	}
+	_ = k.IncrementVaultTotalPrincipal(ctx, msg.Vault, amountPrincipal)
+
 	return &vaults.MsgLockResponse{}, nil
 }
 
@@ -150,19 +155,15 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	}
 
 	// Retrieve all positions associated with the user.
-	positions, err := k.GetPositionsByProvider(ctx, addr)
+	positions, err := k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()])
 	if err != nil {
 		return nil, err
 	}
 
 	// Iterate through the user's positions until the required principal amount for removal is reached.
 	remainingAmountToRemove := msg.Amount
+	removedPrincipal := math.ZeroInt()
 	for _, position := range positions {
-		// Ignore different Vault types.
-		if position.Vault != msg.Vault {
-			continue
-		}
-
 		// Exit when the amount to remove is zero.
 		if remainingAmountToRemove.IsZero() {
 			break
@@ -235,6 +236,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 				return nil, errors.Wrapf(err, "unable to update position")
 			}
 		}
+		removedPrincipal = removedPrincipal.Add(positionPrincipalToRemove)
 
 		// Update the remaining amount to be removed.
 		remainingAmountToRemove = remainingAmountToRemove.Sub(positionAmountToRemove)
@@ -243,6 +245,12 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	if !remainingAmountToRemove.IsZero() || !remainingAmountToRemove.Abs().Equal(math.ZeroInt()) {
 		return nil, errors.Wrapf(vaults.ErrInvalidAmount, "invalid amount left: %s", remainingAmountToRemove.String())
 	}
+
+	// Update Vaults stats.
+	if positions, _ = k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 0 {
+		_ = k.DecrementVaultUsers(ctx, msg.Vault)
+	}
+	_ = k.DecrementVaultTotalPrincipal(ctx, msg.Vault, removedPrincipal)
 
 	return &vaults.MsgUnlockResponse{}, nil
 }
@@ -331,6 +339,8 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	if err != nil {
 		return math.ZeroInt(), err
 	}
+
+	_ = k.IncrementVaultTotalRewards(ctx, position.Vault, rewardsAmount)
 
 	return rewardsAmount, nil
 }

@@ -27,4 +27,7 @@ message GenesisState {
 
   // paused represents the current pausing state of the Vaults.
   vaults.v1.PausedType paused = 5;
+
+  // stats contains the genesis statistics around the Noble Dollar Vaults.
+  vaults.v1.Stats stats = 6 [(gogoproto.nullable) = false];
 }

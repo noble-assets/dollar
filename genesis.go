@@ -101,6 +101,14 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
+	if len(genesis.Vaults.Stats.GetVaults()) > 0 {
+		for key, stats := range genesis.Vaults.Stats.Vaults {
+			if err = k.VaultsStats.Set(ctx, key, stats); err != nil {
+				panic(errors.Wrapf(err, "unable to set vaults stats of vault %s", vaults.VaultType_name[key]))
+			}
+		}
+	}
+
 	if err = k.Paused.Set(ctx, int32(genesis.Vaults.Paused)); err != nil {
 		panic(errors.Wrap(err, "unable to set genesis vaults paused"))
 	}
@@ -123,6 +131,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	positions, _ := k.GetPositions(ctx)
 	totalFlexiblePrincipal, _ := k.GetTotalFlexiblePrincipal(ctx)
 	paused := k.GetPaused(ctx)
+	vaultsStats, _ := k.GetVaultsStats(ctx)
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
@@ -135,6 +144,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Rewards:                rewards,
 			TotalFlexiblePrincipal: totalFlexiblePrincipal,
 			Paused:                 paused,
+			Stats:                  vaultsStats,
 		},
 		Index:     index,
 		Principal: principal,

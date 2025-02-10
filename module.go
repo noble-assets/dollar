@@ -282,6 +282,10 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							Long:           "Retrieves all the active Vaults positions attributed to provider",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "provider"}},
 						},
+						{
+							RpcMethod: "Stats",
+							Use:       "stats",
+						},
 					},
 				},
 			},
