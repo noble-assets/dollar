@@ -959,7 +959,7 @@ type GenesisState struct {
 	Portal *v1.GenesisState `protobuf:"bytes,1,opt,name=portal,proto3" json:"portal,omitempty"`
 	// index contains the genesis index of the Noble Dollar, used for rebasing.
 	Index int64 `protobuf:"varint,2,opt,name=index,proto3" json:"index,omitempty"`
-	// paused represents the current pausing state of the Noble Portal.
+	// paused contains the genesis paused state of the Noble Dollar.
 	Paused bool `protobuf:"varint,3,opt,name=paused,proto3" json:"paused,omitempty"`
 	// principal contains the genesis principal amounts of Noble Dollar holders.
 	Principal map[string]string `protobuf:"bytes,4,rep,name=principal,proto3" json:"principal,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`

@@ -15,7 +15,7 @@ service Msg {
   rpc Deliver(MsgDeliver) returns (MsgDeliverResponse);
   rpc Transfer(MsgTransfer) returns (MsgTransferResponse);
 
-  rpc SetPause(MsgSetPause) returns (MsgSetPauseResponse);
+  rpc SetPausedState(MsgSetPausedState) returns (MsgSetPausedStateResponse);
   rpc SetPeer(MsgSetPeer) returns (MsgSetPeerResponse);
   rpc TransferOwnership(MsgTransferOwnership) returns (MsgTransferOwnershipResponse);
 }
@@ -62,10 +62,10 @@ message MsgTransfer {
 // MsgTransferResponse is the response of the Transfer message.
 message MsgTransferResponse {}
 
-// MsgSetPause allows the authority to configure the Noble Dollar Portal pause state.
-message MsgSetPause {
+// MsgSetPausedState allows the authority to configure the Noble Dollar Portal pause state.
+message MsgSetPausedState {
   option (cosmos.msg.v1.signer) = "signer";
-  option (amino.name) = "dollar/portal/SetPause";
+  option (amino.name) = "dollar/portal/SetPausedState";
 
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
@@ -74,8 +74,8 @@ message MsgSetPause {
   bool paused = 2;
 }
 
-// MsgSetPauseResponse is the response of the SetPause message.
-message MsgSetPauseResponse {}
+// MsgSetPausedStateResponse is the response of the SetPausedState message.
+message MsgSetPausedStateResponse {}
 
 // MsgSetPeer allows the Noble Dollar Portal owner to set external peers.
 message MsgSetPeer {

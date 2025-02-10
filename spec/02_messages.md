@@ -46,9 +46,9 @@ A message allowing holders of the Noble Dollar to claim their accumulated yield 
 - A transfer of $USDN from the module yield accrual to the transaction signer accounts.
 
 
-## SetPause
+## SetPausedState
 
-`noble.dollar.v1.MsgSetPause`
+`noble.dollar.v1.MsgSetPausedState`
 
 This message allows the authority to set the Pause state to `true` or `false`, enabling or disabling the [ClaimYield](#claim-yield) action.
 
@@ -57,7 +57,7 @@ This message allows the authority to set the Pause state to `true` or `false`, e
   "body": {
     "messages": [
       {
-        "@type": "/noble.dollar.v1.MsgSetPause",
+        "@type": "/noble.dollar.v1.MsgSetPausedState",
         "signer": "noble1signer",
         "paused": "true"
       }

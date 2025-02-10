@@ -94,9 +94,9 @@ This message allows transferring \$USDN from Noble and receiving \$M cross-chain
 
 - The specified amount of $USDN is burned on Noble and sent via Wormhole to the destination chain.
 
-## SetPause
+## SetPausedState
 
-`noble.dollar.portal.v1.MsgSetPause`
+`noble.dollar.portal.v1.MsgSetPausedState`
 
 This message allows the owner to set the PortalPause state to `true` or `false`, enabling or disabling the [Deliver](#deliver) and [Transfer](#transfer) actions.
 
@@ -105,7 +105,7 @@ This message allows the owner to set the PortalPause state to `true` or `false`,
   "body": {
     "messages": [
       {
-        "@type": "/noble.dollar.portal.v1.MsgSetPause",
+        "@type": "/noble.dollar.portal.v1.MsgSetPausedState",
         "signer": "noble1signer",
         "paused": "true"
       }

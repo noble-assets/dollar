@@ -28,7 +28,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type GenesisState struct {
 	// owner is the account that controls the Noble Dollar Portal.
 	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
-	// paused represents the current pausing state of the Noble Dollar Portal.
+	// paused contains the genesis paused state of the Noble Dollar Portal.
 	Paused bool `protobuf:"varint,2,opt,name=paused,proto3" json:"paused,omitempty"`
 	// peers contains the genesis peers of the Noble Dollar Portal.
 	Peers map[uint16]Peer `protobuf:"bytes,3,rep,name=peers,proto3,castkey=uint16" json:"peers" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`

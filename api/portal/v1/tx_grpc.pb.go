@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Msg_Deliver_FullMethodName           = "/noble.dollar.portal.v1.Msg/Deliver"
 	Msg_Transfer_FullMethodName          = "/noble.dollar.portal.v1.Msg/Transfer"
-	Msg_SetPause_FullMethodName          = "/noble.dollar.portal.v1.Msg/SetPause"
+	Msg_SetPausedState_FullMethodName    = "/noble.dollar.portal.v1.Msg/SetPausedState"
 	Msg_SetPeer_FullMethodName           = "/noble.dollar.portal.v1.Msg/SetPeer"
 	Msg_TransferOwnership_FullMethodName = "/noble.dollar.portal.v1.Msg/TransferOwnership"
 )
@@ -32,7 +32,7 @@ const (
 type MsgClient interface {
 	Deliver(ctx context.Context, in *MsgDeliver, opts ...grpc.CallOption) (*MsgDeliverResponse, error)
 	Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error)
-	SetPause(ctx context.Context, in *MsgSetPause, opts ...grpc.CallOption) (*MsgSetPauseResponse, error)
+	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
 	SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.CallOption) (*MsgSetPeerResponse, error)
 	TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error)
 }
@@ -65,10 +65,10 @@ func (c *msgClient) Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.
 	return out, nil
 }
 
-func (c *msgClient) SetPause(ctx context.Context, in *MsgSetPause, opts ...grpc.CallOption) (*MsgSetPauseResponse, error) {
+func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgSetPauseResponse)
-	err := c.cc.Invoke(ctx, Msg_SetPause_FullMethodName, in, out, cOpts...)
+	out := new(MsgSetPausedStateResponse)
+	err := c.cc.Invoke(ctx, Msg_SetPausedState_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (c *msgClient) TransferOwnership(ctx context.Context, in *MsgTransferOwners
 type MsgServer interface {
 	Deliver(context.Context, *MsgDeliver) (*MsgDeliverResponse, error)
 	Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error)
-	SetPause(context.Context, *MsgSetPause) (*MsgSetPauseResponse, error)
+	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
 	SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error)
 	TransferOwnership(context.Context, *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error)
 	mustEmbedUnimplementedMsgServer()
@@ -120,8 +120,8 @@ func (UnimplementedMsgServer) Deliver(context.Context, *MsgDeliver) (*MsgDeliver
 func (UnimplementedMsgServer) Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
 }
-func (UnimplementedMsgServer) SetPause(context.Context, *MsgSetPause) (*MsgSetPauseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetPause not implemented")
+func (UnimplementedMsgServer) SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetPausedState not implemented")
 }
 func (UnimplementedMsgServer) SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPeer not implemented")
@@ -186,20 +186,20 @@ func _Msg_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SetPause_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetPause)
+func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetPausedState)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).SetPause(ctx, in)
+		return srv.(MsgServer).SetPausedState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Msg_SetPause_FullMethodName,
+		FullMethod: Msg_SetPausedState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetPause(ctx, req.(*MsgSetPause))
+		return srv.(MsgServer).SetPausedState(ctx, req.(*MsgSetPausedState))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -256,8 +256,8 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_Transfer_Handler,
 		},
 		{
-			MethodName: "SetPause",
-			Handler:    _Msg_SetPause_Handler,
+			MethodName: "SetPausedState",
+			Handler:    _Msg_SetPausedState_Handler,
 		},
 		{
 			MethodName: "SetPeer",

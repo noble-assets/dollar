@@ -59,7 +59,7 @@ func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*t
 	return &types.MsgClaimYieldResponse{}, nil
 }
 
-func (k msgServer) SetPause(ctx context.Context, msg *types.MsgSetPause) (*types.MsgSetPauseResponse, error) {
+func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedState) (*types.MsgSetPausedStateResponse, error) {
 	// Ensure that the signer has the required authority.
 	if msg.Signer != k.authority {
 		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
@@ -69,7 +69,7 @@ func (k msgServer) SetPause(ctx context.Context, msg *types.MsgSetPause) (*types
 		return nil, err
 	}
 
-	return &types.MsgSetPauseResponse{}, nil
+	return &types.MsgSetPausedStateResponse{}, nil
 }
 
 func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {

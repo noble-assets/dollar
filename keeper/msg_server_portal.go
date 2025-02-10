@@ -169,7 +169,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	)
 }
 
-func (k portalMsgServer) SetPause(ctx context.Context, msg *portal.MsgSetPause) (*portal.MsgSetPauseResponse, error) {
+func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetPausedState) (*portal.MsgSetPausedStateResponse, error) {
 	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ func (k portalMsgServer) SetPause(ctx context.Context, msg *portal.MsgSetPause) 
 		return nil, err
 	}
 
-	return &portal.MsgSetPauseResponse{}, nil
+	return &portal.MsgSetPausedStateResponse{}, nil
 }
 
 func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {

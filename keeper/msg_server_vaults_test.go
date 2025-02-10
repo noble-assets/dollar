@@ -69,14 +69,14 @@ func TestPausing(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ACT: Attempt to Pause with an invalid authority.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: bob.Address,
 		Paused: vaults.ALL,
 	})
 	assert.Error(t, err)
 
 	// ACT: Pause ALL actions.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: "authority",
 		Paused: vaults.ALL,
 	})
@@ -104,7 +104,7 @@ func TestPausing(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 2, 0, 0, 0, time.UTC)})
 
 	// ACT: Pause only Unlock actions.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: "authority",
 		Paused: vaults.UNLOCK,
 	})
@@ -130,7 +130,7 @@ func TestPausing(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 3, 0, 0, 0, time.UTC)})
 
 	// ACT: Pause only Lock actions.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: "authority",
 		Paused: vaults.LOCK,
 	})

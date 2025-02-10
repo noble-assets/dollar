@@ -247,7 +247,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	return &vaults.MsgUnlockResponse{}, nil
 }
 
-func (k vaultsMsgServer) SetPause(ctx context.Context, msg *vaults.MsgSetPause) (*vaults.MsgSetPauseResponse, error) {
+func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetPausedState) (*vaults.MsgSetPausedStateResponse, error) {
 	// Ensure that the signer has the required authority.
 	if msg.Signer != k.authority {
 		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
@@ -264,7 +264,7 @@ func (k vaultsMsgServer) SetPause(ctx context.Context, msg *vaults.MsgSetPause) 
 		return nil, err
 	}
 
-	return &vaults.MsgSetPauseResponse{}, nil
+	return &vaults.MsgSetPausedStateResponse{}, nil
 }
 
 func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry, amount math.Int) (math.Int, error) {

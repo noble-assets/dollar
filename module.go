@@ -166,8 +166,8 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					Use:       "claim-yield",
 				},
 				{
-					RpcMethod: "SetPause",
-					Use:       "set-pause [paused]",
+					RpcMethod: "SetPausedState",
+					Use:       "set-paused-state [paused]",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 						{ProtoField: "paused"},
 					},
@@ -193,8 +193,8 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							},
 						},
 						{
-							RpcMethod: "SetPause",
-							Use:       "set-pause [paused]",
+							RpcMethod: "SetPausedState",
+							Use:       "set-paused-state [paused]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 								{ProtoField: "paused"},
 							},
@@ -235,8 +235,8 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							},
 						},
 						{
-							RpcMethod: "SetPause",
-							Use:       "set-pause [paused]",
+							RpcMethod: "SetPausedState",
+							Use:       "set-paused-state [paused]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 								{ProtoField: "paused"},
 							},

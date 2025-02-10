@@ -30,13 +30,13 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgLock{}, "dollar/vaults/Lock", nil)
 	cdc.RegisterConcrete(&MsgUnlock{}, "dollar/vaults/Unlock", nil)
-	cdc.RegisterConcrete(&MsgSetPause{}, "dollar/vaults/SetPause", nil)
+	cdc.RegisterConcrete(&MsgSetPausedState{}, "dollar/vaults/SetPausedState", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgLock{})
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgUnlock{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPause{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPausedState{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

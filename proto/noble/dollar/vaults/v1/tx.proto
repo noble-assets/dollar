@@ -15,7 +15,7 @@ service Msg {
 
   rpc Lock(MsgLock) returns (MsgLockResponse);
   rpc Unlock(MsgUnlock) returns (MsgUnlockResponse);
-  rpc SetPause(MsgSetPause) returns (MsgSetPauseResponse);
+  rpc SetPausedState(MsgSetPausedState) returns (MsgSetPausedStateResponse);
 }
 
 // MsgLock is a message holders of the Noble Dollar can use to lock their $USDN into a Vault to earn rewards.
@@ -60,10 +60,10 @@ message MsgUnlock {
 // MsgLockResponse is the response of the Unlock message.
 message MsgUnlockResponse {}
 
-// MsgSetPause allows the authority to configure the Vault pause state, enabling or disabling Lock and Unlock actions.
-message MsgSetPause {
+// MsgSetPausedState allows the authority to configure the Vault pause state, enabling or disabling Lock and Unlock actions.
+message MsgSetPausedState {
   option (cosmos.msg.v1.signer) = "signer";
-  option (amino.name) = "dollar/vaults/SetPause";
+  option (amino.name) = "dollar/vaults/SetPausedState";
 
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
@@ -72,5 +72,5 @@ message MsgSetPause {
   vaults.v1.PausedType paused = 2;
 }
 
-// MsgSetPauseResponse is the response of the SetPause message.
-message MsgSetPauseResponse {}
+// MsgSetPausedStateResponse is the response of the SetPausedState message.
+message MsgSetPausedStateResponse {}
