@@ -64,7 +64,7 @@ func (k *Keeper) GetVaultsTotalFlexiblePrincipal(ctx context.Context) (math.Int,
 	return value, nil
 }
 
-// GetVaultsPaused is a utility that returns the current pausing state.
+// GetVaultsPaused is a utility that returns the current paused state.
 func (k *Keeper) GetVaultsPaused(ctx context.Context) vaults.PausedType {
 	value, err := k.VaultsPaused.Get(ctx)
 	if err != nil {

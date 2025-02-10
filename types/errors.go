@@ -24,6 +24,6 @@ import "cosmossdk.io/errors"
 
 var (
 	ErrInvalidRequest  = errors.Register(ModuleName, 0, "invalid request")
-	ErrDecreasingIndex = errors.Register(ModuleName, 1, "decreasing index")
-	ErrPaused          = errors.Register(ModuleName, 2, "module is paused")
+	ErrPaused          = errors.Register(ModuleName, 1, "module is paused")
+	ErrDecreasingIndex = errors.Register(ModuleName, 2, "decreasing index")
 )

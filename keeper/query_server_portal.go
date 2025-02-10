@@ -42,7 +42,7 @@ func (k portalQueryServer) Owner(ctx context.Context, req *portal.QueryOwner) (*
 		return nil, types.ErrInvalidRequest
 	}
 
-	owner, err := k.Keeper.PortalOwner.Get(ctx)
+	owner, err := k.PortalOwner.Get(ctx)
 
 	return &portal.QueryOwnerResponse{Owner: owner}, err
 }
@@ -72,7 +72,7 @@ func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*
 		return nil, types.ErrInvalidRequest
 	}
 
-	nonce, err := k.Keeper.PortalNonce.Get(ctx)
+	nonce, err := k.PortalNonce.Get(ctx)
 
 	return &portal.QueryNonceResponse{Nonce: nonce}, err
 }

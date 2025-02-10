@@ -45,7 +45,7 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 
 	err = k.Paused.Set(ctx, genesis.Paused)
 	if err != nil {
-		panic(errors.Wrap(err, "unable to set genesis paused"))
+		panic(errors.Wrap(err, "unable to set genesis paused state"))
 	}
 
 	for rawAccount, rawPrincipal := range genesis.Principal {
@@ -70,7 +70,7 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	}
 
 	if err = k.PortalPaused.Set(ctx, genesis.Portal.Paused); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis portal paused"))
+		panic(errors.Wrap(err, "unable to set genesis portal paused state"))
 	}
 
 	for chain, peer := range genesis.Portal.Peers {
@@ -106,7 +106,7 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	}
 
 	if err = k.VaultsPaused.Set(ctx, int32(genesis.Vaults.Paused)); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis vaults paused"))
+		panic(errors.Wrap(err, "unable to set genesis vaults paused state"))
 	}
 
 	if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, genesis.Vaults.TotalFlexiblePrincipal); err != nil {

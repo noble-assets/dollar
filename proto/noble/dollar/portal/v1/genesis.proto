@@ -13,7 +13,7 @@ message GenesisState {
   // owner is the account that controls the Noble Dollar Portal.
   string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // paused represents the current pausing state of the Noble Dollar Portal.
+  // paused contains the genesis paused state of the Noble Dollar Portal.
   bool paused = 2;
 
   // peers contains the genesis peers of the Noble Dollar Portal.

@@ -40,10 +40,10 @@ func (k *Keeper) GetPortalPeers(ctx context.Context) (map[uint16]portal.Peer, er
 	return peers, err
 }
 
-// GetPortalPaused is a utility that returns the current pausing state.
+// GetPortalPaused is a utility that returns the current paused state.
 func (k *Keeper) GetPortalPaused(ctx context.Context) bool {
-	value, _ := k.PortalPaused.Get(ctx)
-	return value
+	paused, _ := k.PortalPaused.Get(ctx)
+	return paused
 }
 
 // IncrementPortalNonce is a utility that returns the next nonce and increments.

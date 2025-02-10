@@ -20,7 +20,7 @@ Retrieves the address of the current Noble Dollar Portal owner.
 
 **Endpoint**: `/noble/dollar/portal/v1/paused`
 
-Retrieves the current Pause state of the Noble Dollar Portal module.
+Retrieves the current paused state of the Noble Dollar Portal.
 
 ```json
 {
@@ -30,7 +30,7 @@ Retrieves the current Pause state of the Noble Dollar Portal module.
 
 ### Response
 
-- `paused` — The Pause state Noble Dollar Portal.
+- `paused` — The paused state of the Noble Dollar Portal.
 
 ## Peers
 

@@ -4,7 +4,7 @@
 
 **Endpoint**: `/noble/dollar/v1/paused`
 
-Retrieves the current Pause state of the Noble Dollar module.
+Retrieves the current paused state of the Noble Dollar.
 
 ```json
 {
@@ -14,7 +14,7 @@ Retrieves the current Pause state of the Noble Dollar module.
 
 ### Response
 
-- `paused` — The Pause state Noble Dollar module.
+- `paused` — The paused state of the Noble Dollar.
 
 ## Principal
 

@@ -16,7 +16,7 @@ message GenesisState {
   // index contains the genesis index of the Noble Dollar, used for rebasing.
   int64 index = 2;
 
-  // paused represents the current pausing state of the Noble Portal.
+  // paused contains the genesis paused state of the Noble Dollar.
   bool paused = 3;
 
   // principal contains the genesis principal amounts of Noble Dollar holders.

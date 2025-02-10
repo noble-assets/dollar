@@ -51,8 +51,8 @@ type Keeper struct {
 	account  types.AccountKeeper
 	wormhole portal.WormholeKeeper
 
-	Index     collections.Item[int64]
 	Paused    collections.Item[bool]
+	Index     collections.Item[int64]
 	Principal collections.Map[[]byte, math.Int]
 
 	PortalOwner  collections.Item[string]
@@ -90,8 +90,8 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 		wormhole:  wormhole,
 		account:   account,
 
-		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Paused:    collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
+		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 
 		PortalOwner:  collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
