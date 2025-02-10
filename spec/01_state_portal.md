@@ -13,7 +13,7 @@ const OwnerKey = []byte("owner")
 The `Paused` field is a [`collections.Item`][item] that stores the current paused state (`boolean`).
 
 ```go
-const PausedKey = []byte("portal_paused")
+const PausedKey = []byte("portal/paused")
 ```
 
 ## Peers

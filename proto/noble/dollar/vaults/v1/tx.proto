@@ -60,7 +60,7 @@ message MsgUnlock {
 // MsgLockResponse is the response of the Unlock message.
 message MsgUnlockResponse {}
 
-// MsgSetPausedState allows the authority to configure the Vault pause state, enabling or disabling Lock and Unlock actions.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Vault paused state, enabling or disabling Lock and Unlock actions.
 message MsgSetPausedState {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/vaults/SetPausedState";

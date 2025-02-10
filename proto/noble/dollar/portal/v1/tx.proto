@@ -62,7 +62,7 @@ message MsgTransfer {
 // MsgTransferResponse is the response of the Transfer message.
 message MsgTransferResponse {}
 
-// MsgSetPausedState allows the authority to configure the Noble Dollar Portal pause state.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Portal paused state.
 message MsgSetPausedState {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/portal/SetPausedState";
