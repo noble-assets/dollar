@@ -8,6 +8,14 @@ The `Owner` field is a [`collections.Item`][item] that stores the address of the
 const OwnerKey = []byte("owner")
 ```
 
+## Paused
+
+The `Paused` field is a [`collections.Item`][item] that stores the current paused state (`boolean`).
+
+```go
+const PausedKey = []byte("portal/paused")
+```
+
 ## Peers
 
 The `Peers` field is a mapping ([`collections.Map`][map]) between Wormhole Chain IDs (`uint16`) and a `portal.Peer` values.

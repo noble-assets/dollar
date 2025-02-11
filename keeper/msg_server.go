@@ -42,6 +42,10 @@ func NewMsgServer(keeper *Keeper) types.MsgServer {
 }
 
 func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*types.MsgClaimYieldResponse, error) {
+	if k.GetPaused(ctx) {
+		return nil, types.ErrPaused
+	}
+
 	yield, account, err := k.GetYield(ctx, msg.Signer)
 	if err != nil {
 		return nil, err
@@ -53,6 +57,19 @@ func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*t
 	}
 
 	return &types.MsgClaimYieldResponse{}, nil
+}
+
+func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedState) (*types.MsgSetPausedStateResponse, error) {
+	// Ensure that the signer has the required authority.
+	if msg.Signer != k.authority {
+		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
+	}
+
+	if err := k.Paused.Set(ctx, msg.Paused); err != nil {
+		return nil, err
+	}
+
+	return &types.MsgSetPausedStateResponse{}, nil
 }
 
 func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {
@@ -136,8 +153,8 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	// get the current Flexible total principal.
 	totalFlexiblePrincipal := math.ZeroInt()
-	if has, _ := k.TotalFlexiblePrincipal.Has(ctx); has {
-		current, err := k.TotalFlexiblePrincipal.Get(ctx)
+	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
+		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
 		if err != nil {
 			return err
 		}
@@ -146,7 +163,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	// Register the new Rewards record.
 	rewards := stakedYield.Add(flexibleYield)
-	if err = k.Rewards.Set(ctx, index.String(), vaults.Reward{
+	if err = k.VaultsRewards.Set(ctx, index.String(), vaults.Reward{
 		Index:   index,
 		Total:   totalFlexiblePrincipal,
 		Rewards: rewards,

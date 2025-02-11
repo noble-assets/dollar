@@ -30,6 +30,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgDeliver{}, "dollar/portal/Deliver", nil)
 	cdc.RegisterConcrete(&MsgTransfer{}, "dollar/portal/Transfer", nil)
+	cdc.RegisterConcrete(&MsgSetPausedState{}, "dollar/portal/SetPausedState", nil)
 	cdc.RegisterConcrete(&MsgSetPeer{}, "dollar/portal/SetPeer", nil)
 	cdc.RegisterConcrete(&MsgTransferOwnership{}, "dollar/portal/TransferOwnership", nil)
 }
@@ -38,6 +39,7 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeliver{},
 		&MsgDeliverInjection{},
+		&MsgSetPausedState{},
 		&MsgTransfer{},
 		&MsgSetPeer{},
 		&MsgTransferOwnership{},
