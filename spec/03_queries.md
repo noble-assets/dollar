@@ -1,5 +1,21 @@
 # Queries
 
+## Paused
+
+**Endpoint**: `/noble/dollar/v1/paused`
+
+Retrieves the current paused state of the Noble Dollar.
+
+```json
+{
+  "paused": "true"
+}
+```
+
+### Response
+
+- `paused` — The paused state of the Noble Dollar.
+
 ## Principal
 
 **Endpoint**: `/noble/dollar/v1/principal/{account}`

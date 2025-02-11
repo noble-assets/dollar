@@ -16,6 +16,11 @@ service Query {
     option (google.api.http).get = "/noble/dollar/v1/index";
   }
 
+  rpc Paused(QueryPaused) returns (QueryPausedResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v1/paused";
+  }
+
   rpc Principal(QueryPrincipal) returns (QueryPrincipalResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/v1/principal/{account}";
@@ -41,6 +46,12 @@ message QueryIndexResponse {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
+}
+
+message QueryPaused {}
+
+message QueryPausedResponse {
+  bool paused = 1;
 }
 
 message QueryPrincipal {

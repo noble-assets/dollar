@@ -44,12 +44,16 @@ func NewPortalMsgServer(keeper *Keeper) portal.MsgServer {
 }
 
 func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*portal.MsgDeliverResponse, error) {
+	if k.GetPortalPaused(ctx) {
+		return nil, portal.ErrPaused
+	}
+
 	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, msg.Vaa)
 	if err != nil {
 		return nil, err
 	}
 
-	peer, err := k.Peers.Get(ctx, uint16(vaa.EmitterChain))
+	peer, err := k.PortalPeers.Get(ctx, uint16(vaa.EmitterChain))
 	if err != nil {
 		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain %d not configured", vaa.EmitterChain)
 	}
@@ -95,7 +99,11 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 }
 
 func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {
-	peer, err := k.Peers.Get(ctx, msg.Chain)
+	if k.GetPortalPaused(ctx) {
+		return nil, portal.ErrPaused
+	}
+
+	peer, err := k.PortalPeers.Get(ctx, msg.Chain)
 	if err != nil {
 		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain %d is not configured", msg.Chain)
 	}
@@ -126,7 +134,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	rawSender := make([]byte, 32)
 	copy(rawSender[32-len(sender):], sender)
 
-	nonce, err := k.IncrementNonce(ctx)
+	nonce, err := k.IncrementPortalNonce(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -161,6 +169,18 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	)
 }
 
+func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetPausedState) (*portal.MsgSetPausedStateResponse, error) {
+	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
+		return nil, err
+	}
+
+	if err := k.PortalPaused.Set(ctx, msg.Paused); err != nil {
+		return nil, err
+	}
+
+	return &portal.MsgSetPausedStateResponse{}, nil
+}
+
 func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {
 	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
 		return nil, err
@@ -190,8 +210,8 @@ func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*
 		return nil, errors.Wrap(portal.ErrInvalidPeer, "manager must not be empty")
 	}
 
-	peer, _ := k.Peers.Get(ctx, msg.Chain)
-	err = k.Peers.Set(ctx, msg.Chain, portal.Peer{
+	peer, _ := k.PortalPeers.Get(ctx, msg.Chain)
+	err = k.PortalPeers.Set(ctx, msg.Chain, portal.Peer{
 		Transceiver: msg.Transceiver,
 		Manager:     msg.Manager,
 	})
@@ -220,7 +240,7 @@ func (k portalMsgServer) TransferOwnership(ctx context.Context, msg *portal.MsgT
 		return nil, portal.ErrSameOwner
 	}
 
-	if err := k.Owner.Set(ctx, msg.NewOwner); err != nil {
+	if err := k.PortalOwner.Set(ctx, msg.NewOwner); err != nil {
 		return nil, errors.Wrap(err, "unable to set owner in state")
 	}
 
@@ -232,7 +252,7 @@ func (k portalMsgServer) TransferOwnership(ctx context.Context, msg *portal.MsgT
 
 // EnsureOwner is a utility that ensures a message was signed by the portal owner.
 func (k portalMsgServer) EnsureOwner(ctx context.Context, signer string) error {
-	owner, _ := k.Owner.Get(ctx)
+	owner, _ := k.PortalOwner.Get(ctx)
 	if owner == "" {
 		return portal.ErrNoOwner
 	}

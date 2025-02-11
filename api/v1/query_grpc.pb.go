@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Query_Index_FullMethodName     = "/noble.dollar.v1.Query/Index"
+	Query_Paused_FullMethodName    = "/noble.dollar.v1.Query/Paused"
 	Query_Principal_FullMethodName = "/noble.dollar.v1.Query/Principal"
 	Query_Yield_FullMethodName     = "/noble.dollar.v1.Query/Yield"
 	Query_Stats_FullMethodName     = "/noble.dollar.v1.Query/Stats"
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryClient interface {
 	Index(ctx context.Context, in *QueryIndex, opts ...grpc.CallOption) (*QueryIndexResponse, error)
+	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
 	Principal(ctx context.Context, in *QueryPrincipal, opts ...grpc.CallOption) (*QueryPrincipalResponse, error)
 	Yield(ctx context.Context, in *QueryYield, opts ...grpc.CallOption) (*QueryYieldResponse, error)
 	Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error)
@@ -47,6 +49,16 @@ func (c *queryClient) Index(ctx context.Context, in *QueryIndex, opts ...grpc.Ca
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(QueryIndexResponse)
 	err := c.cc.Invoke(ctx, Query_Index_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryPausedResponse)
+	err := c.cc.Invoke(ctx, Query_Paused_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +100,7 @@ func (c *queryClient) Stats(ctx context.Context, in *QueryStats, opts ...grpc.Ca
 // for forward compatibility.
 type QueryServer interface {
 	Index(context.Context, *QueryIndex) (*QueryIndexResponse, error)
+	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
 	Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error)
 	Yield(context.Context, *QueryYield) (*QueryYieldResponse, error)
 	Stats(context.Context, *QueryStats) (*QueryStatsResponse, error)
@@ -103,6 +116,9 @@ type UnimplementedQueryServer struct{}
 
 func (UnimplementedQueryServer) Index(context.Context, *QueryIndex) (*QueryIndexResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Index not implemented")
+}
+func (UnimplementedQueryServer) Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
 }
 func (UnimplementedQueryServer) Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Principal not implemented")
@@ -148,6 +164,24 @@ func _Query_Index_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Index(ctx, req.(*QueryIndex))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_Paused_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPaused)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Paused(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Paused_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Paused(ctx, req.(*QueryPaused))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -216,6 +250,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Index",
 			Handler:    _Query_Index_Handler,
+		},
+		{
+			MethodName: "Paused",
+			Handler:    _Query_Paused_Handler,
 		},
 		{
 			MethodName: "Principal",

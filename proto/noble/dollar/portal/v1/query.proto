@@ -16,6 +16,11 @@ service Query {
     option (google.api.http).get = "/noble/dollar/portal/v1/owner";
   }
 
+  rpc Paused(QueryPaused) returns (QueryPausedResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/portal/v1/paused";
+  }
+
   rpc Peers(QueryPeers) returns (QueryPeersResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/portal/v1/peers";
@@ -31,6 +36,12 @@ message QueryOwner {}
 
 message QueryOwnerResponse {
   string owner = 1 [(amino.dont_omitempty) = true];
+}
+
+message QueryPaused {}
+
+message QueryPausedResponse {
+  bool paused = 1;
 }
 
 message QueryPeers {}

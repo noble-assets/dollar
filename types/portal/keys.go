@@ -32,7 +32,8 @@ var (
 )
 
 var (
-	OwnerKey   = []byte("owner")
-	PeerPrefix = []byte("peer/")
-	NonceKey   = []byte("nonce")
+	OwnerKey   = []byte("portal/owner")
+	PausedKey  = []byte("portal/paused")
+	PeerPrefix = []byte("portal/peer/")
+	NonceKey   = []byte("portal/nonce")
 )

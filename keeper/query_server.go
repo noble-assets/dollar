@@ -54,6 +54,16 @@ func (k queryServer) Index(ctx context.Context, req *types.QueryIndex) (*types.Q
 	return &types.QueryIndexResponse{Index: index}, nil
 }
 
+func (k queryServer) Paused(ctx context.Context, req *types.QueryPaused) (*types.QueryPausedResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	return &types.QueryPausedResponse{
+		Paused: k.GetPaused(ctx),
+	}, nil
+}
+
 func (k queryServer) Principal(ctx context.Context, req *types.QueryPrincipal) (*types.QueryPrincipalResponse, error) {
 	if req == nil {
 		return nil, types.ErrInvalidRequest
