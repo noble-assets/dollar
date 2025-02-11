@@ -83,7 +83,7 @@ message QueryYieldResponse {
 message QueryStats {}
 
 message QueryStatsResponse {
-  uint64 total_holders = 1;
+  uint64 total_holders = 1 [(amino.dont_omitempty) = true];
 
   string total_principal = 2 [
     (amino.dont_omitempty) = true,

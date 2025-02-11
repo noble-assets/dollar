@@ -166,10 +166,10 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			}
 
 			balance := k.bank.GetBalance(ctx, sender, k.denom)
-			if balance.Equal(coin) {
-				// If the sender's $USDN balance prior to the transfer is equal
-				// to the transfer amount, this indicates that they are no
-				// longer a holder, and we should decrement the statistic.
+			if balance.IsZero() {
+				// If the sender's $USDN balance is zero, this indicates that
+				// they are a new holder, and we should decrement the
+				// statistic.
 				err = k.DecrementTotalHolders(ctx)
 				if err != nil {
 					return recipient, errors.Wrap(err, "unable to decrement total holders")
@@ -200,9 +200,9 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 
 			balance := k.bank.GetBalance(ctx, recipient, k.denom)
 			if balance.IsZero() {
-				// If the recipient's $USDN balance prior to the transfer is
-				// zero, this indicates that they are a new holder, and we
-				// should increment the statistic.
+				// If the recipient's $USDN balance is zero, this indicates
+				// that they are a new holder, and we should increment the
+				// statistic.
 				err = k.IncrementTotalHolders(ctx)
 				if err != nil {
 					return recipient, errors.Wrap(err, "unable to increment total holders")
