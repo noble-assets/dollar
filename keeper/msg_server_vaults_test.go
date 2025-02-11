@@ -55,7 +55,7 @@ func TestPausing(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
 	_ = k.UpdateIndex(ctx, 1e12)
 
-	assert.Equal(t, vaults.NONE, k.GetPaused(ctx))
+	assert.Equal(t, vaults.NONE, k.GetVaultsPaused(ctx))
 
 	// ARRANGE: Bob mints 100 USDN.
 	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
@@ -69,19 +69,19 @@ func TestPausing(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ACT: Attempt to Pause with an invalid authority.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: bob.Address,
 		Paused: vaults.ALL,
 	})
 	assert.Error(t, err)
 
 	// ACT: Pause ALL actions.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: "authority",
 		Paused: vaults.ALL,
 	})
 	assert.NoError(t, err)
-	assert.Equal(t, vaults.ALL, k.GetPaused(ctx))
+	assert.Equal(t, vaults.ALL, k.GetVaultsPaused(ctx))
 
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 1, 0, 0, 0, time.UTC)})
 
@@ -104,12 +104,12 @@ func TestPausing(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 2, 0, 0, 0, time.UTC)})
 
 	// ACT: Pause only Unlock actions.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: "authority",
 		Paused: vaults.UNLOCK,
 	})
 	assert.NoError(t, err)
-	assert.Equal(t, vaults.UNLOCK, k.GetPaused(ctx))
+	assert.Equal(t, vaults.UNLOCK, k.GetVaultsPaused(ctx))
 
 	// ACT: Bob deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -130,12 +130,12 @@ func TestPausing(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 3, 0, 0, 0, time.UTC)})
 
 	// ACT: Pause only Lock actions.
-	_, err = vaultsServer.SetPause(ctx, &vaults.MsgSetPause{
+	_, err = vaultsServer.SetPausedState(ctx, &vaults.MsgSetPausedState{
 		Signer: "authority",
 		Paused: vaults.LOCK,
 	})
 	assert.NoError(t, err)
-	assert.Equal(t, vaults.LOCK, k.GetPaused(ctx))
+	assert.Equal(t, vaults.LOCK, k.GetVaultsPaused(ctx))
 
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -297,7 +297,7 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching Positions state.
-	bobPositions, err := k.GetPositionsByProvider(ctx, bob.Bytes)
+	bobPositions, err := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.NoError(t, err)
 	assert.Len(t, bobPositions, 2)
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(0*ONE))
@@ -381,7 +381,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching state.
-	positions, _ := k.GetPositionsByProvider(ctx, bob.Bytes)
+	positions, _ := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.Equal(t, 2, len(positions))
 	assert.Equal(t, []vaults.PositionEntry{
 		{
@@ -415,7 +415,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: matching state.
 	assert.Equal(t, math.NewInt(10*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
-	positions, _ = k.GetPositionsByProvider(ctx, bob.Bytes)
+	positions, _ = k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.Equal(t, 2, len(positions))
 	assert.Equal(t, []vaults.PositionEntry{
 		{
@@ -449,7 +449,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Matching state.
 	assert.Equal(t, math.NewInt(50*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
-	positions, _ = k.GetPositionsByProvider(ctx, bob.Bytes)
+	positions, _ = k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.Equal(t, 1, len(positions))
 	assert.Equal(t, []vaults.PositionEntry{
 		{
@@ -475,7 +475,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Matching state.
 	assert.Equal(t, math.NewInt(100*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
-	positions, _ = k.GetPositionsByProvider(ctx, bob.Bytes)
+	positions, _ = k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.Equal(t, 0, len(positions))
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
@@ -573,7 +573,7 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ASSERT: Matching state.
-	totalFlexiblePrincipal, _ := k.TotalFlexiblePrincipal.Get(ctx)
+	totalFlexiblePrincipal, _ := k.VaultsTotalFlexiblePrincipal.Get(ctx)
 	assert.Equal(t, math.NewInt(826446), totalFlexiblePrincipal)
 }
 
@@ -1092,7 +1092,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 4, 0, 0, 0, 0, time.UTC)})
 
 	// ASSERT: Matching Rewards state.
-	rewards, err := k.GetRewards(ctx)
+	rewards, err := k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1123,9 +1123,9 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	}, rewards)
 
 	// ASSERT: Matching Positions state.
-	bobPositions, err := k.GetPositionsByProvider(ctx, bob.Bytes)
+	bobPositions, err := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.NoError(t, err)
-	alicePositions, err := k.GetPositionsByProvider(ctx, alice.Bytes)
+	alicePositions, err := k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, len(bobPositions))
 	assert.Equal(t, 1, len(alicePositions))
@@ -1155,7 +1155,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ASSERT: Matching Rewards state.
-	rewards, err = k.GetRewards(ctx)
+	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1186,10 +1186,10 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	}, rewards)
 
 	// ASSERT: Matching Positions state.
-	bobPositions, err = k.GetPositionsByProvider(ctx, bob.Bytes)
+	bobPositions, err = k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(bobPositions))
-	alicePositions, err = k.GetPositionsByProvider(ctx, alice.Bytes)
+	alicePositions, err = k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(alicePositions))
 
@@ -1202,7 +1202,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ASSERT: Matching Rewards state.
-	rewards, err = k.GetRewards(ctx)
+	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1233,7 +1233,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	}, rewards)
 
 	// ASSERT: Matching Positions state.
-	alicePositions, err = k.GetPositionsByProvider(ctx, alice.Bytes)
+	alicePositions, err = k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(alicePositions))
 
@@ -1293,7 +1293,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching Positions state.
-	bobPositions, err := k.GetPositionsByProvider(ctx, bob.Bytes)
+	bobPositions, err := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, len(bobPositions))
 	assert.Equal(t, vaults.PositionEntry{
@@ -1326,7 +1326,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	// ASSERT: Matching Positions state.
-	alicePositions, err := k.GetPositionsByProvider(ctx, alice.Bytes)
+	alicePositions, err := k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(alicePositions))
 	assert.Equal(t, vaults.PositionEntry{
@@ -1345,7 +1345,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(8347107437))
 
 	// ASSERT: Matching Rewards state.
-	rewards, err := k.GetRewards(ctx)
+	rewards, err := k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1378,12 +1378,12 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ASSERT: Matching Positions state.
-	bobPositions, err = k.GetPositionsByProvider(ctx, bob.Bytes)
+	bobPositions, err = k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(bobPositions))
 
 	// ASSERT: Matching Rewards state.
-	rewards, err = k.GetRewards(ctx)
+	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1425,12 +1425,12 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ASSERT: Matching Positions state.
-	alicePositions, err = k.GetPositionsByProvider(ctx, alice.Bytes)
+	alicePositions, err = k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(alicePositions))
 
 	// ASSERT: Matching Rewards state.
-	rewards, err = k.GetRewards(ctx)
+	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1527,7 +1527,7 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
 
 	// ASSERT: Matching Rewards state.
-	rewards, err := k.GetRewards(ctx)
+	rewards, err := k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1564,7 +1564,7 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	assert.NoError(t, err)
 
 	// ASSERT: Rewards Positions state.
-	rewards, err = k.GetRewards(ctx)
+	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
@@ -1652,7 +1652,7 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	assert.Equal(t, math.NewInt(1000*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ASSERT: Matching Rewards state.
-	rewards, err := k.GetRewards(ctx)
+	rewards, err := k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{

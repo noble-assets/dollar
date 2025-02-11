@@ -94,9 +94,9 @@ This message allows Noble Dollar users to unlock a specified amount of $USDN fro
 
 - The user closes all positions in the specified Vault up to the given amount, claiming any available rewards.
 
-## SetPause
+## SetPausedState
 
-`noble.dollar.vaults.v1.MsgSetPause`
+`noble.dollar.vaults.v1.MsgSetPausedState`
 
 This message allows the authority to set the Vault Pause state to `LOCK` | `UNLOCK` | `ALL` | `NONE`, enabling or disabling the [Lock](#lock) and [Unlock](#unlock) actions. 
 
@@ -105,7 +105,7 @@ This message allows the authority to set the Vault Pause state to `LOCK` | `UNLO
   "body": {
     "messages": [
       {
-        "@type": "/noble.dollar.vaults.v1.MsgSetPause",
+        "@type": "/noble.dollar.vaults.v1.MsgSetPausedState",
         "signer": "noble1signer",
         "paused": "LOCK"
       }
@@ -134,7 +134,7 @@ This message allows the authority to set the Vault Pause state to `LOCK` | `UNLO
 
 ### Requirements
 
-- Signer must be the current [`owner`](./01_state_portal.md#owner).
+- Signer must be the current Authority.
 
 ### State Changes
 

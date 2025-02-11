@@ -51,18 +51,20 @@ type Keeper struct {
 	account  types.AccountKeeper
 	wormhole portal.WormholeKeeper
 
+	Paused    collections.Item[bool]
 	Index     collections.Item[int64]
 	Principal collections.Map[[]byte, math.Int]
 	Stats     collections.Item[types.Stats]
 
-	Owner collections.Item[string]
-	Peers collections.Map[uint16, portal.Peer]
-	Nonce collections.Item[uint32]
+	PortalOwner  collections.Item[string]
+	PortalPaused collections.Item[bool]
+	PortalPeers  collections.Map[uint16, portal.Peer]
+	PortalNonce  collections.Item[uint32]
 
-	Paused                 collections.Item[int32]
-	Positions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, PositionsIndexes]
-	TotalFlexiblePrincipal collections.Item[math.Int]
-	Rewards                collections.Map[string, vaults.Reward]
+	VaultsPaused                 collections.Item[int32]
+	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
+	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
+	VaultsRewards                collections.Map[string, vaults.Reward]
 	VaultsStats            collections.Item[vaults.Stats]
 }
 
@@ -90,18 +92,20 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 		wormhole:  wormhole,
 		account:   account,
 
+		Paused:    collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
 		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 		Stats:     collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[types.Stats](cdc)),
 
-		Owner: collections.NewItem(builder, portal.OwnerKey, "owner", collections.StringValue),
-		Peers: collections.NewMap(builder, portal.PeerPrefix, "peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),
-		Nonce: collections.NewItem(builder, portal.NonceKey, "nonce", collections.Uint32Value),
+		PortalOwner:  collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
+		PortalPaused: collections.NewItem(builder, portal.PausedKey, "portal_paused", collections.BoolValue),
+		PortalPeers:  collections.NewMap(builder, portal.PeerPrefix, "portal_peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),
+		PortalNonce:  collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
 
-		Paused:                 collections.NewItem(builder, vaults.PausedKey, "paused", collections.Int32Value),
-		Positions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewPositionsIndexes(builder)),
-		TotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "total_flexible_principal", sdk.IntValue),
-		Rewards:                collections.NewMap(builder, vaults.RewardPrefix, "rewards", collections.StringKey, codec.CollValue[vaults.Reward](cdc)),
+		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
+		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
+		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
+		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.StringKey, codec.CollValue[vaults.Reward](cdc)),
 		VaultsStats:            collections.NewItem(builder, vaults.StatsPrefix, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
 	}
 
@@ -120,16 +124,24 @@ func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 
 // SendRestrictionFn performs an underlying transfer of principal when executing a $USDN transfer.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.AccAddress, coins sdk.Coins) (newRecipient sdk.AccAddress, err error) {
-	if amount := coins.AmountOf(k.denom); !amount.IsZero() {
-		// We don't want to perform any principal updates in the case of yield accrual.
-		// -> Transfer from Module to Yield account.
-		if sender.Equals(types.ModuleAddress) && recipient.Equals(types.YieldAddress) {
-			return recipient, nil
-		}
+	coin := coins.AmountOf(k.denom)
+	if amount := coin; !amount.IsZero() {
 		// We don't want to perform any principal updates in the case of yield payout.
 		// -> Transfer from Yield to User account.
 		if sender.Equals(types.YieldAddress) {
 			return recipient, nil
+		}
+		// Handle transfers where the recipient is the yield account.
+		if recipient.Equals(types.YieldAddress) {
+			if sender.Equals(types.ModuleAddress) {
+				// We don't want to perform any principal updates in the case of yield accrual.
+				// -> Transfer from Module to Yield account.
+				return recipient, nil
+			} else {
+				// We don't want to allow any other transfers to the yield account.
+				// -> Transfer from User to Yield account.
+				return recipient, fmt.Errorf("transfers of %s to %s are not allowed", k.denom, recipient.String())
+			}
 		}
 
 		rawIndex, err := k.Index.Get(ctx)
@@ -154,6 +166,17 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			if err != nil {
 				return recipient, errors.Wrap(err, "unable to set sender principal to state")
 			}
+
+			balance := k.bank.GetBalance(ctx, sender, k.denom)
+			if balance.Equal(coin) {
+				// If the sender's $USDN balance prior to the transfer is equal
+				// to the transfer amount, this indicates that they are no
+				// longer a holder, and we should decrement the statistic.
+				err = k.DecrementTotalHolders(ctx)
+				if err != nil {
+					return recipient, errors.Wrap(err, "unable to decrement total holders")
+				}
+			}
 		} else {
 			err = k.IncrementTotalPrincipal(ctx, principal)
 			if err != nil {
@@ -175,6 +198,17 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			err = k.Principal.Set(ctx, recipient, recipientPrincipal.Add(principal))
 			if err != nil {
 				return recipient, errors.Wrap(err, "unable to set recipient principal to state")
+			}
+
+			balance := k.bank.GetBalance(ctx, recipient, k.denom)
+			if balance.IsZero() {
+				// If the recipient's $USDN balance prior to the transfer is
+				// zero, this indicates that they are a new holder, and we
+				// should increment the statistic.
+				err = k.IncrementTotalHolders(ctx)
+				if err != nil {
+					return recipient, errors.Wrap(err, "unable to increment total holders")
+				}
 			}
 		} else {
 			err = k.DecrementTotalPrincipal(ctx, principal)

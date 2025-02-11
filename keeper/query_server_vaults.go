@@ -43,7 +43,7 @@ func (k vaultsQueryServer) Paused(ctx context.Context, req *vaults.QueryPaused) 
 	}
 
 	return &vaults.QueryPausedResponse{
-		Paused: k.GetPaused(ctx),
+		Paused: k.GetVaultsPaused(ctx),
 	}, nil
 }
 
@@ -57,7 +57,7 @@ func (k vaultsQueryServer) PositionsByProvider(ctx context.Context, req *vaults.
 		return nil, types.ErrInvalidRequest
 	}
 
-	positions, err := k.GetPositionsByProvider(ctx, addr)
+	positions, err := k.GetVaultsPositionsByProvider(ctx, addr)
 	if err != nil {
 		return nil, err
 	}

@@ -26,6 +26,12 @@ import (
 	"cosmossdk.io/math"
 )
 
+// GetPaused is a utility that returns the current paused state.
+func (k *Keeper) GetPaused(ctx context.Context) bool {
+	paused, _ := k.Paused.Get(ctx)
+	return paused
+}
+
 // GetPrincipal is a utility that returns all principal entries from state.
 func (k *Keeper) GetPrincipal(ctx context.Context) (map[string]string, error) {
 	principal := make(map[string]string)
@@ -41,6 +47,30 @@ func (k *Keeper) GetPrincipal(ctx context.Context) (map[string]string, error) {
 	})
 
 	return principal, err
+}
+
+// DecrementTotalHolders is a utility that decrements the total holders stat.
+func (k *Keeper) DecrementTotalHolders(ctx context.Context) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalHolders -= 1
+
+	return k.Stats.Set(ctx, stats)
+}
+
+// IncrementTotalHolders is a utility that increments the total holders stat.
+func (k *Keeper) IncrementTotalHolders(ctx context.Context) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalHolders += 1
+
+	return k.Stats.Set(ctx, stats)
 }
 
 // GetTotalPrincipal is a utility that returns the total principal stat.

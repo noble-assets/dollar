@@ -38,6 +38,11 @@ import (
 func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, genesis types.GenesisState) {
 	var err error
 
+	err = k.Paused.Set(ctx, genesis.Paused)
+	if err != nil {
+		panic(errors.Wrap(err, "unable to set genesis paused state"))
+	}
+
 	err = k.Index.Set(ctx, genesis.Index)
 	if err != nil {
 		panic(errors.Wrap(err, "unable to set genesis index"))
@@ -65,83 +70,91 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis stats"))
 	}
 
-	if err = k.Owner.Set(ctx, genesis.Portal.Owner); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis owner"))
+	if err = k.PortalOwner.Set(ctx, genesis.Portal.Owner); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis portal owner"))
+	}
+
+	if err = k.PortalPaused.Set(ctx, genesis.Portal.Paused); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis portal paused state"))
 	}
 
 	for chain, peer := range genesis.Portal.Peers {
-		err = k.Peers.Set(ctx, chain, peer)
+		err = k.PortalPeers.Set(ctx, chain, peer)
 		if err != nil {
-			panic(errors.Wrapf(err, "unable to set genesis peer (%d:%s)", chain, peer))
+			panic(errors.Wrapf(err, "unable to set genesis portal peer (%d:%s)", chain, peer))
 		}
 	}
 
-	if err = k.Nonce.Set(ctx, genesis.Portal.Nonce); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis nonce"))
+	if err = k.PortalNonce.Set(ctx, genesis.Portal.Nonce); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis portal nonce"))
 	}
 
 	for _, position := range genesis.Vaults.Positions {
-		if err = k.Positions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
+		if err = k.VaultsPositions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
 			Principal: position.Principal,
 			Index:     position.Index,
 			Amount:    position.Amount,
 			Time:      position.Time,
 		}); err != nil {
-			panic(errors.Wrapf(err, "unable to set position (%s:%s)", position.Address, position.Vault))
+			panic(errors.Wrapf(err, "unable to set vaults position (%s:%s)", position.Address, position.Vault))
 		}
 	}
 
 	for _, reward := range genesis.Vaults.Rewards {
-		if err = k.Rewards.Set(ctx, reward.Index.String(), vaults.Reward{
+		if err = k.VaultsRewards.Set(ctx, reward.Index.String(), vaults.Reward{
 			Index:   reward.Index,
 			Total:   reward.Total,
 			Rewards: reward.Rewards,
 		}); err != nil {
-			panic(errors.Wrapf(err, "unable to set reward (index:%s)", reward.Index))
+			panic(errors.Wrapf(err, "unable to set vaults reward (index:%s)", reward.Index))
 		}
+	}
+
+	if err = k.VaultsPaused.Set(ctx, int32(genesis.Vaults.Paused)); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis vaults paused state"))
 	}
 
 	if err = k.VaultsStats.Set(ctx, genesis.Vaults.Stats); err != nil {
 		panic(errors.Wrapf(err, "unable to set genesis vaults stats"))
 	}
 
-	if err = k.Paused.Set(ctx, int32(genesis.Vaults.Paused)); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis vaults paused"))
-	}
-
-	if err = k.TotalFlexiblePrincipal.Set(ctx, genesis.Vaults.TotalFlexiblePrincipal); err != nil {
-		panic(errors.Wrap(err, "unable to set total flexible principal"))
+	if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, genesis.Vaults.TotalFlexiblePrincipal); err != nil {
+		panic(errors.Wrap(err, "unable to set total vaults flexible principal"))
 	}
 }
 
 func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
+	paused := k.GetPaused(ctx)
 	index, _ := k.Index.Get(ctx)
 	principal, _ := k.GetPrincipal(ctx)
 	stats, _ := k.Stats.Get(ctx)
 
-	owner, _ := k.Owner.Get(ctx)
-	peers, _ := k.GetPeers(ctx)
-	nonce, _ := k.Nonce.Get(ctx)
+	portalOwner, _ := k.PortalOwner.Get(ctx)
+	portalPaused := k.GetPortalPaused(ctx)
+	portalPeers, _ := k.GetPortalPeers(ctx)
+	portalNonce, _ := k.PortalNonce.Get(ctx)
 
-	rewards, _ := k.GetRewards(ctx)
-	positions, _ := k.GetPositions(ctx)
-	totalFlexiblePrincipal, _ := k.GetTotalFlexiblePrincipal(ctx)
-	paused := k.GetPaused(ctx)
+	vaultsRewards, _ := k.GetVaultsRewards(ctx)
+	vaultsPositions, _ := k.GetVaultsPositions(ctx)
+	vaultsTotalFlexiblePrincipal, _ := k.GetVaultsTotalFlexiblePrincipal(ctx)
+	vaultsPaused := k.GetVaultsPaused(ctx)
 	vaultsStats, _ := k.GetVaultsStats(ctx)
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
-			Owner: owner,
-			Peers: peers,
-			Nonce: nonce,
+			Owner:  portalOwner,
+			Paused: portalPaused,
+			Peers:  portalPeers,
+			Nonce:  portalNonce,
 		},
 		Vaults: vaults.GenesisState{
-			Positions:              positions,
-			Rewards:                rewards,
-			TotalFlexiblePrincipal: totalFlexiblePrincipal,
-			Paused:                 paused,
+			Positions:              vaultsPositions,
+			Rewards:                vaultsRewards,
+			TotalFlexiblePrincipal: vaultsTotalFlexiblePrincipal,
+			Paused:                 vaultsPaused,
 			Stats:                  vaultsStats,
 		},
+		Paused:    paused,
 		Index:     index,
 		Principal: principal,
 		Stats:     stats,
