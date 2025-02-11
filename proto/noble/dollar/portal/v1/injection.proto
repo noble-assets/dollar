@@ -4,9 +4,8 @@ package noble.dollar.portal.v1;
 
 option go_package = "dollar.noble.xyz/types/portal";
 
-// 
-// Note: this is a special message type that is only for internal ABCI++ usage
-// for inserting VAA's into the block
+// MsgDeliverInjection is an internal message type used for delivering Noble Dollar Portal messages.
+// It is specifically used for internal ABCI++ operations to insert VAA's into the block.
 message MsgDeliverInjection {
   bytes vaa = 1;
 }

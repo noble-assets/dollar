@@ -447,6 +447,8 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// MsgDeliverInjection is an internal message type used for delivering Noble Dollar Portal messages.
+// It is specifically used for internal ABCI++ operations to insert VAA's into the block.
 type MsgDeliverInjection struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
