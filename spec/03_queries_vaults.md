@@ -48,3 +48,27 @@ Retrieves all the current Noble Dollar Vaults positions, filtered by a Provider 
 ### Response
 
 - `positions` — An array of `vaults.PositionEntry` objects containing the user's position details.
+
+## Stats
+
+**Endpoint**: `/noble/dollar/vaults/v1/stats`
+
+Retrieves the latest stats of the Vaults.
+
+```json
+{
+    "flexible_total_principal": "100",
+    "flexible_total_users": "10000",
+    "flexible_total_distributed_rewards_principal": "42",
+    "staked_total_principal": "1000",
+    "staked_total_users": "50"
+}
+```
+
+### Response
+
+- `flexible_total_principal`: — The total principal amount currently held within the Flexible Vault.
+- `flexible_total_users`: — The total number of users who have funds locked in the Flexible Vault.
+- `flexible_total_distributed_rewards_principal`: — The total amount of boosted rewards principal, that has been distributed to users in the Flexible Vault.
+- `staked_total_principal`: — The total principal amount that is locked inside the Staked Vault.
+- `staked_total_users`: — The total number of users who have funds staked in the Staked Vault.

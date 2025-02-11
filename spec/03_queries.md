@@ -36,6 +36,27 @@ Retrieves the principal amount associated with a $USDN holders account.
 
 - `principal` — The current principal amount held by the requested account.
 
+## Stats
+
+**Endpoint**: `/noble/dollar/v1/stats`
+
+Retrieves the latest stats of Noble Dollar.
+
+```json
+{
+  "total_holders": "1000",
+  "total_principal": "100000",
+  "total_yield_accrued": "100"
+}
+```
+
+### Response
+
+- `total_holders`:  — The total number of $USDN holders.
+- `total_principal`:  — The total principal amount in the system.
+- `total_yield_accrued`:  — The total amount of yield that has been accrued over time.
+
+
 ## Yield
 
 **Endpoint**: `/noble/dollar/v1/yield/{account}`

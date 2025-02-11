@@ -1932,6 +1932,682 @@ func (x *fastReflection_PositionEntry) ProtoMethods() *protoiface.Methods {
 	}
 }
 
+var (
+	md_Stats                                              protoreflect.MessageDescriptor
+	fd_Stats_flexible_total_principal                     protoreflect.FieldDescriptor
+	fd_Stats_flexible_total_users                         protoreflect.FieldDescriptor
+	fd_Stats_flexible_total_distributed_rewards_principal protoreflect.FieldDescriptor
+	fd_Stats_staked_total_principal                       protoreflect.FieldDescriptor
+	fd_Stats_staked_total_users                           protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_noble_dollar_vaults_v1_vaults_proto_init()
+	md_Stats = File_noble_dollar_vaults_v1_vaults_proto.Messages().ByName("Stats")
+	fd_Stats_flexible_total_principal = md_Stats.Fields().ByName("flexible_total_principal")
+	fd_Stats_flexible_total_users = md_Stats.Fields().ByName("flexible_total_users")
+	fd_Stats_flexible_total_distributed_rewards_principal = md_Stats.Fields().ByName("flexible_total_distributed_rewards_principal")
+	fd_Stats_staked_total_principal = md_Stats.Fields().ByName("staked_total_principal")
+	fd_Stats_staked_total_users = md_Stats.Fields().ByName("staked_total_users")
+}
+
+var _ protoreflect.Message = (*fastReflection_Stats)(nil)
+
+type fastReflection_Stats Stats
+
+func (x *Stats) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_Stats)(x)
+}
+
+func (x *Stats) slowProtoReflect() protoreflect.Message {
+	mi := &file_noble_dollar_vaults_v1_vaults_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_Stats_messageType fastReflection_Stats_messageType
+var _ protoreflect.MessageType = fastReflection_Stats_messageType{}
+
+type fastReflection_Stats_messageType struct{}
+
+func (x fastReflection_Stats_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_Stats)(nil)
+}
+func (x fastReflection_Stats_messageType) New() protoreflect.Message {
+	return new(fastReflection_Stats)
+}
+func (x fastReflection_Stats_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_Stats
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_Stats) Descriptor() protoreflect.MessageDescriptor {
+	return md_Stats
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_Stats) Type() protoreflect.MessageType {
+	return _fastReflection_Stats_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_Stats) New() protoreflect.Message {
+	return new(fastReflection_Stats)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_Stats) Interface() protoreflect.ProtoMessage {
+	return (*Stats)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_Stats) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.FlexibleTotalPrincipal != "" {
+		value := protoreflect.ValueOfString(x.FlexibleTotalPrincipal)
+		if !f(fd_Stats_flexible_total_principal, value) {
+			return
+		}
+	}
+	if x.FlexibleTotalUsers != "" {
+		value := protoreflect.ValueOfString(x.FlexibleTotalUsers)
+		if !f(fd_Stats_flexible_total_users, value) {
+			return
+		}
+	}
+	if x.FlexibleTotalDistributedRewardsPrincipal != "" {
+		value := protoreflect.ValueOfString(x.FlexibleTotalDistributedRewardsPrincipal)
+		if !f(fd_Stats_flexible_total_distributed_rewards_principal, value) {
+			return
+		}
+	}
+	if x.StakedTotalPrincipal != "" {
+		value := protoreflect.ValueOfString(x.StakedTotalPrincipal)
+		if !f(fd_Stats_staked_total_principal, value) {
+			return
+		}
+	}
+	if x.StakedTotalUsers != "" {
+		value := protoreflect.ValueOfString(x.StakedTotalUsers)
+		if !f(fd_Stats_staked_total_users, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_Stats) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "noble.dollar.vaults.v1.Stats.flexible_total_principal":
+		return x.FlexibleTotalPrincipal != ""
+	case "noble.dollar.vaults.v1.Stats.flexible_total_users":
+		return x.FlexibleTotalUsers != ""
+	case "noble.dollar.vaults.v1.Stats.flexible_total_distributed_rewards_principal":
+		return x.FlexibleTotalDistributedRewardsPrincipal != ""
+	case "noble.dollar.vaults.v1.Stats.staked_total_principal":
+		return x.StakedTotalPrincipal != ""
+	case "noble.dollar.vaults.v1.Stats.staked_total_users":
+		return x.StakedTotalUsers != ""
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Stats"))
+		}
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.Stats does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_Stats) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "noble.dollar.vaults.v1.Stats.flexible_total_principal":
+		x.FlexibleTotalPrincipal = ""
+	case "noble.dollar.vaults.v1.Stats.flexible_total_users":
+		x.FlexibleTotalUsers = ""
+	case "noble.dollar.vaults.v1.Stats.flexible_total_distributed_rewards_principal":
+		x.FlexibleTotalDistributedRewardsPrincipal = ""
+	case "noble.dollar.vaults.v1.Stats.staked_total_principal":
+		x.StakedTotalPrincipal = ""
+	case "noble.dollar.vaults.v1.Stats.staked_total_users":
+		x.StakedTotalUsers = ""
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Stats"))
+		}
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.Stats does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_Stats) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "noble.dollar.vaults.v1.Stats.flexible_total_principal":
+		value := x.FlexibleTotalPrincipal
+		return protoreflect.ValueOfString(value)
+	case "noble.dollar.vaults.v1.Stats.flexible_total_users":
+		value := x.FlexibleTotalUsers
+		return protoreflect.ValueOfString(value)
+	case "noble.dollar.vaults.v1.Stats.flexible_total_distributed_rewards_principal":
+		value := x.FlexibleTotalDistributedRewardsPrincipal
+		return protoreflect.ValueOfString(value)
+	case "noble.dollar.vaults.v1.Stats.staked_total_principal":
+		value := x.StakedTotalPrincipal
+		return protoreflect.ValueOfString(value)
+	case "noble.dollar.vaults.v1.Stats.staked_total_users":
+		value := x.StakedTotalUsers
+		return protoreflect.ValueOfString(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Stats"))
+		}
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.Stats does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_Stats) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "noble.dollar.vaults.v1.Stats.flexible_total_principal":
+		x.FlexibleTotalPrincipal = value.Interface().(string)
+	case "noble.dollar.vaults.v1.Stats.flexible_total_users":
+		x.FlexibleTotalUsers = value.Interface().(string)
+	case "noble.dollar.vaults.v1.Stats.flexible_total_distributed_rewards_principal":
+		x.FlexibleTotalDistributedRewardsPrincipal = value.Interface().(string)
+	case "noble.dollar.vaults.v1.Stats.staked_total_principal":
+		x.StakedTotalPrincipal = value.Interface().(string)
+	case "noble.dollar.vaults.v1.Stats.staked_total_users":
+		x.StakedTotalUsers = value.Interface().(string)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Stats"))
+		}
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.Stats does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_Stats) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "noble.dollar.vaults.v1.Stats.flexible_total_principal":
+		panic(fmt.Errorf("field flexible_total_principal of message noble.dollar.vaults.v1.Stats is not mutable"))
+	case "noble.dollar.vaults.v1.Stats.flexible_total_users":
+		panic(fmt.Errorf("field flexible_total_users of message noble.dollar.vaults.v1.Stats is not mutable"))
+	case "noble.dollar.vaults.v1.Stats.flexible_total_distributed_rewards_principal":
+		panic(fmt.Errorf("field flexible_total_distributed_rewards_principal of message noble.dollar.vaults.v1.Stats is not mutable"))
+	case "noble.dollar.vaults.v1.Stats.staked_total_principal":
+		panic(fmt.Errorf("field staked_total_principal of message noble.dollar.vaults.v1.Stats is not mutable"))
+	case "noble.dollar.vaults.v1.Stats.staked_total_users":
+		panic(fmt.Errorf("field staked_total_users of message noble.dollar.vaults.v1.Stats is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Stats"))
+		}
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.Stats does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_Stats) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "noble.dollar.vaults.v1.Stats.flexible_total_principal":
+		return protoreflect.ValueOfString("")
+	case "noble.dollar.vaults.v1.Stats.flexible_total_users":
+		return protoreflect.ValueOfString("")
+	case "noble.dollar.vaults.v1.Stats.flexible_total_distributed_rewards_principal":
+		return protoreflect.ValueOfString("")
+	case "noble.dollar.vaults.v1.Stats.staked_total_principal":
+		return protoreflect.ValueOfString("")
+	case "noble.dollar.vaults.v1.Stats.staked_total_users":
+		return protoreflect.ValueOfString("")
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Stats"))
+		}
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.Stats does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_Stats) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.vaults.v1.Stats", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_Stats) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_Stats) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_Stats) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*Stats)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		l = len(x.FlexibleTotalPrincipal)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.FlexibleTotalUsers)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.FlexibleTotalDistributedRewardsPrincipal)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.StakedTotalPrincipal)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.StakedTotalUsers)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*Stats)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.StakedTotalUsers) > 0 {
+			i -= len(x.StakedTotalUsers)
+			copy(dAtA[i:], x.StakedTotalUsers)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.StakedTotalUsers)))
+			i--
+			dAtA[i] = 0x2a
+		}
+		if len(x.StakedTotalPrincipal) > 0 {
+			i -= len(x.StakedTotalPrincipal)
+			copy(dAtA[i:], x.StakedTotalPrincipal)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.StakedTotalPrincipal)))
+			i--
+			dAtA[i] = 0x22
+		}
+		if len(x.FlexibleTotalDistributedRewardsPrincipal) > 0 {
+			i -= len(x.FlexibleTotalDistributedRewardsPrincipal)
+			copy(dAtA[i:], x.FlexibleTotalDistributedRewardsPrincipal)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.FlexibleTotalDistributedRewardsPrincipal)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if len(x.FlexibleTotalUsers) > 0 {
+			i -= len(x.FlexibleTotalUsers)
+			copy(dAtA[i:], x.FlexibleTotalUsers)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.FlexibleTotalUsers)))
+			i--
+			dAtA[i] = 0x12
+		}
+		if len(x.FlexibleTotalPrincipal) > 0 {
+			i -= len(x.FlexibleTotalPrincipal)
+			copy(dAtA[i:], x.FlexibleTotalPrincipal)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.FlexibleTotalPrincipal)))
+			i--
+			dAtA[i] = 0xa
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*Stats)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Stats: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Stats: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FlexibleTotalPrincipal", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.FlexibleTotalPrincipal = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FlexibleTotalUsers", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.FlexibleTotalUsers = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FlexibleTotalDistributedRewardsPrincipal", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.FlexibleTotalDistributedRewardsPrincipal = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field StakedTotalPrincipal", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.StakedTotalPrincipal = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 5:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field StakedTotalUsers", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.StakedTotalUsers = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
 // Code generated by protoc-gen-go. DO NOT EDIT.
 // versions:
 // 	protoc-gen-go v1.27.0
@@ -2235,6 +2911,73 @@ func (x *PositionEntry) GetTime() *timestamppb.Timestamp {
 	return nil
 }
 
+type Stats struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	FlexibleTotalPrincipal                   string `protobuf:"bytes,1,opt,name=flexible_total_principal,json=flexibleTotalPrincipal,proto3" json:"flexible_total_principal,omitempty"`
+	FlexibleTotalUsers                       string `protobuf:"bytes,2,opt,name=flexible_total_users,json=flexibleTotalUsers,proto3" json:"flexible_total_users,omitempty"`
+	FlexibleTotalDistributedRewardsPrincipal string `protobuf:"bytes,3,opt,name=flexible_total_distributed_rewards_principal,json=flexibleTotalDistributedRewardsPrincipal,proto3" json:"flexible_total_distributed_rewards_principal,omitempty"`
+	StakedTotalPrincipal                     string `protobuf:"bytes,4,opt,name=staked_total_principal,json=stakedTotalPrincipal,proto3" json:"staked_total_principal,omitempty"`
+	StakedTotalUsers                         string `protobuf:"bytes,5,opt,name=staked_total_users,json=stakedTotalUsers,proto3" json:"staked_total_users,omitempty"`
+}
+
+func (x *Stats) Reset() {
+	*x = Stats{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_noble_dollar_vaults_v1_vaults_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Stats) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Stats) ProtoMessage() {}
+
+// Deprecated: Use Stats.ProtoReflect.Descriptor instead.
+func (*Stats) Descriptor() ([]byte, []int) {
+	return file_noble_dollar_vaults_v1_vaults_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Stats) GetFlexibleTotalPrincipal() string {
+	if x != nil {
+		return x.FlexibleTotalPrincipal
+	}
+	return ""
+}
+
+func (x *Stats) GetFlexibleTotalUsers() string {
+	if x != nil {
+		return x.FlexibleTotalUsers
+	}
+	return ""
+}
+
+func (x *Stats) GetFlexibleTotalDistributedRewardsPrincipal() string {
+	if x != nil {
+		return x.FlexibleTotalDistributedRewardsPrincipal
+	}
+	return ""
+}
+
+func (x *Stats) GetStakedTotalPrincipal() string {
+	if x != nil {
+		return x.StakedTotalPrincipal
+	}
+	return ""
+}
+
+func (x *Stats) GetStakedTotalUsers() string {
+	if x != nil {
+		return x.StakedTotalUsers
+	}
+	return ""
+}
+
 var File_noble_dollar_vaults_v1_vaults_proto protoreflect.FileDescriptor
 
 var file_noble_dollar_vaults_v1_vaults_proto_rawDesc = []byte{
@@ -2306,29 +3049,64 @@ var file_noble_dollar_vaults_v1_vaults_proto_rawDesc = []byte{
 	0x69, 0x6d, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
 	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65,
 	0x73, 0x74, 0x61, 0x6d, 0x70, 0x42, 0x08, 0xc8, 0xde, 0x1f, 0x00, 0x90, 0xdf, 0x1f, 0x01, 0x52,
-	0x04, 0x74, 0x69, 0x6d, 0x65, 0x2a, 0x3c, 0x0a, 0x09, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79,
-	0x70, 0x65, 0x12, 0x0f, 0x0a, 0x0b, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49, 0x45,
-	0x44, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x54, 0x41, 0x4b, 0x45, 0x44, 0x10, 0x01, 0x12,
-	0x0c, 0x0a, 0x08, 0x46, 0x4c, 0x45, 0x58, 0x49, 0x42, 0x4c, 0x45, 0x10, 0x02, 0x1a, 0x04, 0x88,
-	0xa3, 0x1e, 0x00, 0x2a, 0x3b, 0x0a, 0x0a, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x54, 0x79, 0x70,
-	0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x4f, 0x4e, 0x45, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x4c,
-	0x4f, 0x43, 0x4b, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06, 0x55, 0x4e, 0x4c, 0x4f, 0x43, 0x4b, 0x10,
-	0x02, 0x12, 0x07, 0x0a, 0x03, 0x41, 0x4c, 0x4c, 0x10, 0x03, 0x1a, 0x04, 0x88, 0xa3, 0x1e, 0x00,
-	0x42, 0xda, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x42,
-	0x0b, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34,
-	0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a,
-	0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62,
-	0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73,
-	0x2e, 0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e,
-	0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74,
-	0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x04, 0x74, 0x69, 0x6d, 0x65, 0x22, 0xb2, 0x04, 0x0a, 0x05, 0x53, 0x74, 0x61, 0x74, 0x73, 0x12,
+	0x6a, 0x0a, 0x18, 0x66, 0x6c, 0x65, 0x78, 0x69, 0x62, 0x6c, 0x65, 0x5f, 0x74, 0x6f, 0x74, 0x61,
+	0x6c, 0x5f, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
+	0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74,
+	0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7,
+	0xb0, 0x2a, 0x01, 0x52, 0x16, 0x66, 0x6c, 0x65, 0x78, 0x69, 0x62, 0x6c, 0x65, 0x54, 0x6f, 0x74,
+	0x61, 0x6c, 0x50, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x12, 0x62, 0x0a, 0x14, 0x66,
+	0x6c, 0x65, 0x78, 0x69, 0x62, 0x6c, 0x65, 0x5f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x75, 0x73,
+	0x65, 0x72, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda,
+	0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f,
+	0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d,
+	0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x66, 0x6c, 0x65,
+	0x78, 0x69, 0x62, 0x6c, 0x65, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x55, 0x73, 0x65, 0x72, 0x73, 0x12,
+	0x90, 0x01, 0x0a, 0x2c, 0x66, 0x6c, 0x65, 0x78, 0x69, 0x62, 0x6c, 0x65, 0x5f, 0x74, 0x6f, 0x74,
+	0x61, 0x6c, 0x5f, 0x64, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x64, 0x5f, 0x72,
+	0x65, 0x77, 0x61, 0x72, 0x64, 0x73, 0x5f, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74,
+	0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
+	0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x28, 0x66, 0x6c, 0x65, 0x78, 0x69, 0x62,
+	0x6c, 0x65, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x44, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74,
+	0x65, 0x64, 0x52, 0x65, 0x77, 0x61, 0x72, 0x64, 0x73, 0x50, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70,
+	0x61, 0x6c, 0x12, 0x66, 0x0a, 0x16, 0x73, 0x74, 0x61, 0x6b, 0x65, 0x64, 0x5f, 0x74, 0x6f, 0x74,
+	0x61, 0x6c, 0x5f, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d,
+	0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e,
+	0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8,
+	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x14, 0x73, 0x74, 0x61, 0x6b, 0x65, 0x64, 0x54, 0x6f, 0x74, 0x61,
+	0x6c, 0x50, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x12, 0x5e, 0x0a, 0x12, 0x73, 0x74,
+	0x61, 0x6b, 0x65, 0x64, 0x5f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73,
+	0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74,
+	0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
+	0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x10, 0x73, 0x74, 0x61, 0x6b, 0x65, 0x64,
+	0x54, 0x6f, 0x74, 0x61, 0x6c, 0x55, 0x73, 0x65, 0x72, 0x73, 0x2a, 0x3c, 0x0a, 0x09, 0x56, 0x61,
+	0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0f, 0x0a, 0x0b, 0x55, 0x4e, 0x53, 0x50, 0x45,
+	0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x54, 0x41, 0x4b,
+	0x45, 0x44, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x46, 0x4c, 0x45, 0x58, 0x49, 0x42, 0x4c, 0x45,
+	0x10, 0x02, 0x1a, 0x04, 0x88, 0xa3, 0x1e, 0x00, 0x2a, 0x3b, 0x0a, 0x0a, 0x50, 0x61, 0x75, 0x73,
+	0x65, 0x64, 0x54, 0x79, 0x70, 0x65, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x4f, 0x4e, 0x45, 0x10, 0x00,
+	0x12, 0x08, 0x0a, 0x04, 0x4c, 0x4f, 0x43, 0x4b, 0x10, 0x01, 0x12, 0x0a, 0x0a, 0x06, 0x55, 0x4e,
+	0x4c, 0x4f, 0x43, 0x4b, 0x10, 0x02, 0x12, 0x07, 0x0a, 0x03, 0x41, 0x4c, 0x4c, 0x10, 0x03, 0x1a,
+	0x04, 0x88, 0xa3, 0x1e, 0x00, 0x42, 0xda, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74,
+	0x73, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74,
+	0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f,
+	0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31,
+	0x3b, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa,
+	0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56,
+	0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65,
+	0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56,
+	0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65,
+	0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a,
+	0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a,
+	0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2344,19 +3122,20 @@ func file_noble_dollar_vaults_v1_vaults_proto_rawDescGZIP() []byte {
 }
 
 var file_noble_dollar_vaults_v1_vaults_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_noble_dollar_vaults_v1_vaults_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_noble_dollar_vaults_v1_vaults_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_noble_dollar_vaults_v1_vaults_proto_goTypes = []interface{}{
 	(VaultType)(0),                // 0: noble.dollar.vaults.v1.VaultType
 	(PausedType)(0),               // 1: noble.dollar.vaults.v1.PausedType
 	(*Reward)(nil),                // 2: noble.dollar.vaults.v1.Reward
 	(*Position)(nil),              // 3: noble.dollar.vaults.v1.Position
 	(*PositionEntry)(nil),         // 4: noble.dollar.vaults.v1.PositionEntry
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(*Stats)(nil),                 // 5: noble.dollar.vaults.v1.Stats
+	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
 }
 var file_noble_dollar_vaults_v1_vaults_proto_depIdxs = []int32{
-	5, // 0: noble.dollar.vaults.v1.Position.time:type_name -> google.protobuf.Timestamp
+	6, // 0: noble.dollar.vaults.v1.Position.time:type_name -> google.protobuf.Timestamp
 	0, // 1: noble.dollar.vaults.v1.PositionEntry.vault:type_name -> noble.dollar.vaults.v1.VaultType
-	5, // 2: noble.dollar.vaults.v1.PositionEntry.time:type_name -> google.protobuf.Timestamp
+	6, // 2: noble.dollar.vaults.v1.PositionEntry.time:type_name -> google.protobuf.Timestamp
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -2406,6 +3185,18 @@ func file_noble_dollar_vaults_v1_vaults_proto_init() {
 				return nil
 			}
 		}
+		file_noble_dollar_vaults_v1_vaults_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Stats); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -2413,7 +3204,7 @@ func file_noble_dollar_vaults_v1_vaults_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_noble_dollar_vaults_v1_vaults_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
