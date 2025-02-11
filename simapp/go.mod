@@ -2,8 +2,6 @@ module dollar.noble.xyz/simapp
 
 go 1.22.7
 
-toolchain go1.22.7
-
 require (
 	cosmossdk.io/client/v2 v2.0.0-beta.4
 	cosmossdk.io/core v0.11.1
