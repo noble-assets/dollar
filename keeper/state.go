@@ -49,6 +49,30 @@ func (k *Keeper) GetPrincipal(ctx context.Context) (map[string]string, error) {
 	return principal, err
 }
 
+// DecrementTotalHolders is a utility that decrements the total holders stat.
+func (k *Keeper) DecrementTotalHolders(ctx context.Context) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalHolders -= 1
+
+	return k.Stats.Set(ctx, stats)
+}
+
+// IncrementTotalHolders is a utility that increments the total holders stat.
+func (k *Keeper) IncrementTotalHolders(ctx context.Context) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	stats.TotalHolders += 1
+
+	return k.Stats.Set(ctx, stats)
+}
+
 // GetTotalPrincipal is a utility that returns the total principal stat.
 func (k *Keeper) GetTotalPrincipal(ctx context.Context) (math.Int, error) {
 	stats, err := k.Stats.Get(ctx)

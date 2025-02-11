@@ -100,6 +100,7 @@ func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.Q
 	}
 
 	return &types.QueryStatsResponse{
+		TotalHolders:      stats.TotalHolders,
 		TotalPrincipal:    stats.TotalPrincipal,
 		TotalYieldAccrued: stats.TotalYieldAccrued,
 	}, nil
