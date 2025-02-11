@@ -31,7 +31,7 @@ import (
 )
 
 type VaultsPositionsIndexes struct {
-	ByProvider *indexes.Multi[[]byte, collections.Triple[[]byte, int32, int64], vaults.Position]
+	ByProvider         *indexes.Multi[[]byte, collections.Triple[[]byte, int32, int64], vaults.Position]
 	ByProviderAndVault *indexes.Multi[collections.Pair[[]byte, int32], collections.Triple[[]byte, int32, int64], vaults.Position]
 }
 
