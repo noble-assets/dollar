@@ -65,7 +65,7 @@ type Keeper struct {
 	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
 	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
 	VaultsRewards                collections.Map[string, vaults.Reward]
-	VaultsStats            collections.Item[vaults.Stats]
+	VaultsStats                  collections.Item[vaults.Stats]
 }
 
 func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
@@ -106,7 +106,7 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
 		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
 		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.StringKey, codec.CollValue[vaults.Reward](cdc)),
-		VaultsStats:            collections.NewItem(builder, vaults.StatsPrefix, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
+		VaultsStats:                  collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
 	}
 
 	_, err := builder.Build()

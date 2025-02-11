@@ -124,7 +124,7 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 	}
 
 	// Update Vaults stats.
-	if positions, _ := k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 1 {
+	if positions, _ := k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 1 {
 		if err = k.IncrementVaultUsers(ctx, msg.Vault); err != nil {
 			return nil, err
 		}
@@ -254,7 +254,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	}
 
 	// Update Vaults stats.
-	if positions, _ = k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 0 {
+	if positions, _ = k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 0 {
 		if err = k.DecrementVaultUsers(ctx, msg.Vault); err != nil {
 			return nil, err
 		}
