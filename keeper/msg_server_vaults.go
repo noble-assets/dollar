@@ -125,9 +125,13 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 
 	// Update Vaults stats.
 	if positions, _ := k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 1 {
-		_ = k.IncrementVaultUsers(ctx, msg.Vault)
+		if err = k.IncrementVaultUsers(ctx, msg.Vault); err != nil {
+			return nil, err
+		}
 	}
-	_ = k.IncrementVaultTotalPrincipal(ctx, msg.Vault, amountPrincipal)
+	if err = k.IncrementVaultTotalPrincipal(ctx, msg.Vault, amountPrincipal); err != nil {
+		return nil, err
+	}
 
 	return &vaults.MsgLockResponse{}, nil
 }
@@ -194,8 +198,11 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 			}
 
 			// Claim the rewards associated to the current position.
-			_, err = k.ClaimRewards(ctx, position, positionAmountToRemove)
+			rewards, err := k.ClaimRewards(ctx, position, positionAmountToRemove)
 			if err != nil {
+				return nil, err
+			}
+			if err = k.IncrementFlexibleTotalDistributedRewardsPrincipal(ctx, rewards); err != nil {
 				return nil, err
 			}
 
@@ -248,9 +255,13 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 
 	// Update Vaults stats.
 	if positions, _ = k.GetPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 0 {
-		_ = k.DecrementVaultUsers(ctx, msg.Vault)
+		if err = k.DecrementVaultUsers(ctx, msg.Vault); err != nil {
+			return nil, err
+		}
 	}
-	_ = k.DecrementVaultTotalPrincipal(ctx, msg.Vault, removedPrincipal)
+	if err = k.DecrementVaultTotalPrincipal(ctx, msg.Vault, removedPrincipal); err != nil {
+		return nil, err
+	}
 
 	return &vaults.MsgUnlockResponse{}, nil
 }
@@ -339,8 +350,6 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	if err != nil {
 		return math.ZeroInt(), err
 	}
-
-	_ = k.IncrementVaultTotalRewards(ctx, position.Vault, rewardsAmount)
 
 	return rewardsAmount, nil
 }

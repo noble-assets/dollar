@@ -177,79 +177,93 @@ func (k *Keeper) GetRewards(ctx context.Context) ([]vaults.Reward, error) {
 
 // GetVaultsStats is a utility that returns all vaults stats from state.
 func (k *Keeper) GetVaultsStats(ctx context.Context) (vaults.Stats, error) {
-	vaultsStats := make(map[int32]vaults.Stats_Vault)
-
-	err := k.VaultsStats.Walk(ctx, nil, func(key int32, value vaults.Stats_Vault) (stop bool, err error) {
-		vaultsStats[key] = value
-		return false, nil
-	})
+	stats, err := k.VaultsStats.Get(ctx)
 	if err != nil {
 		return vaults.Stats{}, err
 	}
-
-	return vaults.Stats{
-		Vaults: vaultsStats,
-	}, nil
+	return stats, nil
 }
 
 // IncrementVaultUsers is a utility that increments the total vault users stat.
 func (k *Keeper) IncrementVaultUsers(ctx context.Context, vault vaults.VaultType) error {
-	key := vaults.VaultType_value[vault.String()]
-
-	stats, _ := k.VaultsStats.Get(ctx, key)
-	if !stats.TotalUsers.IsNil() {
-		stats.TotalUsers = stats.TotalUsers.Add(math.OneInt())
-	} else {
-		stats.TotalUsers = math.OneInt()
+	stats, err := k.GetVaultsStats(ctx)
+	if err != nil {
+		return err
 	}
 
-	return k.VaultsStats.Set(ctx, key, stats)
+	switch vault {
+	case vaults.STAKED:
+		stats.StakedTotalUsers = stats.StakedTotalUsers.Add(math.OneInt())
+	case vaults.FLEXIBLE:
+		stats.FlexibleTotalUsers = stats.FlexibleTotalUsers.Add(math.OneInt())
+	}
+
+	return k.VaultsStats.Set(ctx, stats)
 }
 
 // DecrementVaultUsers is a utility that decrements the total vault users stat.
 func (k *Keeper) DecrementVaultUsers(ctx context.Context, vault vaults.VaultType) error {
-	key := vaults.VaultType_value[vault.String()]
+	stats, err := k.GetVaultsStats(ctx)
+	if err != nil {
+		return err
+	}
 
-	stats, _ := k.VaultsStats.Get(ctx, key)
-	stats.TotalUsers = stats.TotalUsers.Sub(math.OneInt())
+	switch vault {
+	case vaults.STAKED:
+		stats.StakedTotalUsers = stats.StakedTotalUsers.Sub(math.OneInt())
+	case vaults.FLEXIBLE:
+		stats.FlexibleTotalUsers = stats.FlexibleTotalUsers.Sub(math.OneInt())
+	}
 
-	return k.VaultsStats.Set(ctx, key, stats)
+	return k.VaultsStats.Set(ctx, stats)
 }
 
 // IncrementVaultTotalPrincipal is a utility that increments the total vault principal stat.
 func (k *Keeper) IncrementVaultTotalPrincipal(ctx context.Context, vault vaults.VaultType, amount math.Int) error {
-	key := vaults.VaultType_value[vault.String()]
-
-	stats, _ := k.VaultsStats.Get(ctx, key)
-	if !stats.TotalPrincipal.IsNil() {
-		stats.TotalPrincipal = stats.TotalPrincipal.Add(amount)
-	} else {
-		stats.TotalPrincipal = amount
+	stats, err := k.GetVaultsStats(ctx)
+	if err != nil {
+		return err
 	}
 
-	return k.VaultsStats.Set(ctx, key, stats)
+	switch vault {
+	case vaults.STAKED:
+		stats.StakedTotalPrincipal = stats.StakedTotalPrincipal.Add(amount)
+	case vaults.FLEXIBLE:
+		stats.FlexibleTotalPrincipal = stats.FlexibleTotalPrincipal.Add(amount)
+	}
+
+	return k.VaultsStats.Set(ctx, stats)
 }
 
 // DecrementVaultTotalPrincipal is a utility that decrements the total vault principal stat.
 func (k *Keeper) DecrementVaultTotalPrincipal(ctx context.Context, vault vaults.VaultType, amount math.Int) error {
-	key := vaults.VaultType_value[vault.String()]
-
-	stats, _ := k.VaultsStats.Get(ctx, key)
-	stats.TotalPrincipal = stats.TotalPrincipal.Sub(amount)
-
-	return k.VaultsStats.Set(ctx, key, stats)
-}
-
-// IncrementVaultTotalRewards is a utility that increments the total vault rewards stat.
-func (k *Keeper) IncrementVaultTotalRewards(ctx context.Context, vault vaults.VaultType, amount math.Int) error {
-	key := vaults.VaultType_value[vault.String()]
-
-	stats, _ := k.VaultsStats.Get(ctx, key)
-	if !stats.TotalRewards.IsNil() {
-		stats.TotalRewards = stats.TotalRewards.Add(amount)
-	} else {
-		stats.TotalRewards = amount
+	stats, err := k.GetVaultsStats(ctx)
+	if err != nil {
+		return err
 	}
 
-	return k.VaultsStats.Set(ctx, key, stats)
+	switch vault {
+	case vaults.STAKED:
+		stats.StakedTotalPrincipal = stats.StakedTotalPrincipal.Sub(amount)
+	case vaults.FLEXIBLE:
+		stats.FlexibleTotalPrincipal = stats.FlexibleTotalPrincipal.Sub(amount)
+	}
+
+	return k.VaultsStats.Set(ctx, stats)
+}
+
+// IncrementFlexibleTotalDistributedRewardsPrincipal is a utility that increments the total flexible vault distributed principal rewards stat.
+func (k *Keeper) IncrementFlexibleTotalDistributedRewardsPrincipal(ctx context.Context, amount math.Int) error {
+	stats, err := k.GetVaultsStats(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !stats.FlexibleTotalDistributedRewardsPrincipal.IsNil() {
+		stats.FlexibleTotalDistributedRewardsPrincipal = stats.FlexibleTotalDistributedRewardsPrincipal.Add(amount)
+	} else {
+		stats.FlexibleTotalDistributedRewardsPrincipal = amount
+	}
+
+	return k.VaultsStats.Set(ctx, stats)
 }

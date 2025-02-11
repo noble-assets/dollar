@@ -72,13 +72,16 @@ func (k vaultsQueryServer) Stats(ctx context.Context, req *vaults.QueryStats) (*
 		return nil, types.ErrInvalidRequest
 	}
 
-	vaultsStats := make(map[string]*vaults.Stats_Vault)
-	_ = k.Keeper.VaultsStats.Walk(ctx, nil, func(key int32, value vaults.Stats_Vault) (stop bool, err error) {
-		vaultsStats[vaults.VaultType_name[key]] = &value
-		return false, nil
-	})
+	stats, err := k.GetVaultsStats(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	return &vaults.QueryStatsResponse{
-		Vaults: vaultsStats,
+		FlexibleTotalPrincipal:                   stats.FlexibleTotalPrincipal,
+		FlexibleTotalUsers:                       stats.FlexibleTotalUsers,
+		FlexibleTotalDistributedRewardsPrincipal: stats.FlexibleTotalDistributedRewardsPrincipal,
+		StakedTotalPrincipal:                     stats.StakedTotalPrincipal,
+		StakedTotalUsers:                         stats.StakedTotalUsers,
 	}, nil
 }

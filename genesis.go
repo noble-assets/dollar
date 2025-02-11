@@ -101,12 +101,8 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
-	if len(genesis.Vaults.Stats.GetVaults()) > 0 {
-		for key, stats := range genesis.Vaults.Stats.Vaults {
-			if err = k.VaultsStats.Set(ctx, key, stats); err != nil {
-				panic(errors.Wrapf(err, "unable to set vaults stats of vault %s", vaults.VaultType_name[key]))
-			}
-		}
+	if err = k.VaultsStats.Set(ctx, genesis.Vaults.Stats); err != nil {
+		panic(errors.Wrapf(err, "unable to set genesis vaults stats"))
 	}
 
 	if err = k.Paused.Set(ctx, int32(genesis.Vaults.Paused)); err != nil {

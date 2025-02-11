@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package noble.dollar.vaults.v1;
 
+import "amino/amino.proto";
 import "cosmos/query/v1/query.proto";
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "noble/dollar/vaults/v1/vaults.proto";
@@ -43,5 +45,38 @@ message QueryPausedResponse {
 message QueryStats {}
 
 message QueryStatsResponse {
-  map<string, vaults.v1.Stats.Vault> vaults = 1;
+  string flexible_total_principal = 1 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string flexible_total_users = 2 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string flexible_total_distributed_rewards_principal = 3 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string staked_total_principal = 4 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string staked_total_users = 5 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }

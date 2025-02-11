@@ -186,8 +186,8 @@ func TestStakedVault(t *testing.T) {
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaultsv1.VaultType_STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaultsv1.VaultType_STAKED.String()].TotalPrincipal, math.NewInt(50*ONE))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(50*ONE))
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	_ = k.UpdateIndex(ctx, 1.1e12)
@@ -217,8 +217,8 @@ func TestStakedVault(t *testing.T) {
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaultsv1.VaultType_STAKED.String()].TotalUsers, math.ZeroInt())
-	assert.Equal(t, stats.Vaults[vaultsv1.VaultType_STAKED.String()].TotalPrincipal, math.ZeroInt())
+	assert.Equal(t, stats.StakedTotalUsers, math.ZeroInt())
+	assert.Equal(t, stats.StakedTotalPrincipal, math.ZeroInt())
 
 	// ASSERT: Bob receives back the deposited amount.
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(105*ONE))
@@ -274,8 +274,8 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(50*ONE)) // 50 USDN.
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(50*ONE))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(50*ONE))
 
 	// ACT: Bob attempts deposits 50 USDN into the Staked Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -303,8 +303,8 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(0*ONE))
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(100*ONE))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(100*ONE))
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	_ = k.UpdateIndex(ctx, 1.1e12)
@@ -320,8 +320,8 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt(), math.NewInt(100*ONE))
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(0))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(0))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(0))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(0))
 
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
 		Signer: bob.Address,
@@ -363,8 +363,8 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(45454545))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(45454545))
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
@@ -403,8 +403,8 @@ func TestStakedPartialRemoval(t *testing.T) {
 	}, positions)
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(45454545+41322314))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(45454545+41322314))
 
 	// ACT: Bob withdraws 10 USDN (partial first position) from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -437,8 +437,8 @@ func TestStakedPartialRemoval(t *testing.T) {
 	}, positions)
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(36363636+41322314))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(36363636+41322314))
 
 	// ACT: Bob withdraws other 40 USDN (completes first position) from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -463,8 +463,8 @@ func TestStakedPartialRemoval(t *testing.T) {
 	}, positions)
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(41322314))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(41322314))
 
 	// ACT: Bob withdraws other 50 USDN from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -479,12 +479,12 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.Equal(t, 0, len(positions))
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(0))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(0))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(0))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(0))
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(0))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(0))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(0))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(0))
 
 	// ACT: Bob claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
@@ -1275,8 +1275,8 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(990099009))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
@@ -1306,10 +1306,10 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	}, bobPositions[1])
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(990099009))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalPrincipal, math.NewInt(909090909))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
+	assert.Equal(t, stats.FlexibleTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(909090909))
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	_ = k.UpdateIndex(ctx, 1.21e12)
@@ -1339,10 +1339,10 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	}, alicePositions[0])
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(990099009))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalUsers, math.NewInt(2))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalPrincipal, math.NewInt(8347107437))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
+	assert.Equal(t, stats.FlexibleTotalUsers, math.NewInt(2))
+	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(8347107437))
 
 	// ASSERT: Matching Rewards state.
 	rewards, err := k.GetRewards(ctx)
@@ -1410,11 +1410,11 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(990099009))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalPrincipal, math.NewInt(7438016528))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalRewards, math.NewInt(108910891))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
+	assert.Equal(t, stats.FlexibleTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(7438016528))
+	assert.Equal(t, stats.FlexibleTotalDistributedRewardsPrincipal, math.NewInt(108910891))
 
 	// ACT: Alice withdraws 9000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -1457,11 +1457,11 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalUsers, math.NewInt(1))
-	assert.Equal(t, stats.Vaults[vaults.STAKED.String()].TotalPrincipal, math.NewInt(990099009))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalUsers, math.NewInt(0))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalPrincipal, math.NewInt(0))
-	assert.Equal(t, stats.Vaults[vaults.FLEXIBLE.String()].TotalRewards, math.NewInt(108910891+0))
+	assert.Equal(t, stats.StakedTotalUsers, math.NewInt(1))
+	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
+	assert.Equal(t, stats.FlexibleTotalUsers, math.NewInt(0))
+	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(0))
+	assert.Equal(t, stats.FlexibleTotalDistributedRewardsPrincipal, math.NewInt(108910891+0))
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield + boosted yield. (1000/1,1*1,33)[yield] + 110[rewards] = ~1318
 	assert.Equal(t, math.NewInt(1318001799), bank.Balances[bob.Address].AmountOf("uusdn"))
