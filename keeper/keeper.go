@@ -127,6 +127,11 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		if sender.Equals(types.YieldAddress) {
 			return recipient, nil
 		}
+		// We don't want to allow any transfer from a User to the Yield account.
+		// -> Transfer from User to Yield account.
+		if !sender.Equals(types.ModuleAddress) && recipient.Equals(types.YieldAddress) {
+			return recipient, errors.Wrap(err, "sending funds to the Yield account is not allowed")
+		}
 
 		rawIndex, err := k.Index.Get(ctx)
 		if err != nil {
