@@ -67,3 +67,8 @@ test-unit:
 	@go test -cover -coverprofile=coverage.out -race -v ./keeper ./types/portal/ntt
 	@go tool cover -html coverage.out -o coverage.html
 	@echo "✅ Completed unit tests!"
+
+local-image:
+	@echo "🤖 Building image..."
+	@heighliner build --chain noble-dollar-simd --file e2e/chains.yaml --local
+	@echo "✅ Completed build!"
