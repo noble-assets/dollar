@@ -224,12 +224,16 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 }
 
 func (k *Keeper) DeliverInjections(ctx context.Context, msg *portal.MsgDeliverInjection) error {
+	if k.GetPortalPaused(ctx) {
+		return portal.ErrPaused
+	}
+
 	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, msg.Vaa)
 	if err != nil {
 		return err
 	}
 
-	peer, err := k.Peers.Get(ctx, uint16(vaa.EmitterChain))
+	peer, err := k.PortalPeers.Get(ctx, uint16(vaa.EmitterChain))
 	if err != nil {
 		return errors.Wrapf(portal.ErrInvalidPeer, "chain %d not configured", vaa.EmitterChain)
 	}
@@ -272,6 +276,7 @@ func (k *Keeper) DeliverInjections(ctx context.Context, msg *portal.MsgDeliverIn
 	}
 
 	return k.HandlePayload(ctx, managerMessage.Payload)
+
 }
 
 // HandlePayload is a utility that handles custom payloads when delivering portal messages.
