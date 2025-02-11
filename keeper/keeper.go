@@ -117,11 +117,22 @@ func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 // SendRestrictionFn performs an underlying transfer of principal when executing a $USDN transfer.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.AccAddress, coins sdk.Coins) (newRecipient sdk.AccAddress, err error) {
 	if amount := coins.AmountOf(k.denom); !amount.IsZero() {
+		// We don't want to perform any principal updates in the case of yield payout.
+		// -> Transfer from Yield to User account.
 		if sender.Equals(types.YieldAddress) {
 			return recipient, nil
 		}
-		if sender.Equals(types.ModuleAddress) && recipient.Equals(types.YieldAddress) {
-			return recipient, nil
+		// Handle transfers where the recipient is the yield account.
+		if recipient.Equals(types.YieldAddress) {
+			if sender.Equals(types.ModuleAddress) {
+				// We don't want to perform any principal updates in the case of yield accrual.
+				// -> Transfer from Module to Yield account.
+				return recipient, nil
+			} else {
+				// We don't want to allow any other transfers to the yield account.
+				// -> Transfer from User to Yield account.
+				return recipient, fmt.Errorf("transfers of %s to %s are not allowed", k.denom, recipient.String())
+			}
 		}
 
 		rawIndex, err := k.Index.Get(ctx)
@@ -131,6 +142,8 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 		principal := amount.ToLegacyDec().Quo(index).TruncateInt()
 
+		// We don't want to update the sender's principal in the case of issuance.
+		// -> Transfer from Module to User account.
 		if !sender.Equals(types.ModuleAddress) {
 			senderPrincipal, err := k.Principal.Get(ctx, sender)
 			if err != nil {
@@ -146,17 +159,21 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			}
 		}
 
-		recipientPrincipal, err := k.Principal.Get(ctx, recipient)
-		if err != nil {
-			if errors.IsOf(err, collections.ErrNotFound) {
-				recipientPrincipal = math.ZeroInt()
-			} else {
-				return recipient, errors.Wrap(err, "unable to get recipient principal from state")
+		// We don't want to update the recipient's principal in the case of withdrawal.
+		// -> Transfer from User to Module account.
+		if !recipient.Equals(types.ModuleAddress) {
+			recipientPrincipal, err := k.Principal.Get(ctx, recipient)
+			if err != nil {
+				if errors.IsOf(err, collections.ErrNotFound) {
+					recipientPrincipal = math.ZeroInt()
+				} else {
+					return recipient, errors.Wrap(err, "unable to get recipient principal from state")
+				}
 			}
-		}
-		err = k.Principal.Set(ctx, recipient, recipientPrincipal.Add(principal))
-		if err != nil {
-			return recipient, errors.Wrap(err, "unable to set recipient principal to state")
+			err = k.Principal.Set(ctx, recipient, recipientPrincipal.Add(principal))
+			if err != nil {
+				return recipient, errors.Wrap(err, "unable to set recipient principal to state")
+			}
 		}
 	}
 
