@@ -26,6 +26,12 @@ import (
 	"cosmossdk.io/math"
 )
 
+// GetPaused is a utility that returns the current paused state.
+func (k *Keeper) GetPaused(ctx context.Context) bool {
+	paused, _ := k.Paused.Get(ctx)
+	return paused
+}
+
 // GetPrincipal is a utility that returns all principal entries from state.
 func (k *Keeper) GetPrincipal(ctx context.Context) (map[string]string, error) {
 	principal := make(map[string]string)

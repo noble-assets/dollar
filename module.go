@@ -165,6 +165,13 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod: "ClaimYield",
 					Use:       "claim-yield",
 				},
+				{
+					RpcMethod: "SetPausedState",
+					Use:       "set-paused-state [paused]",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+						{ProtoField: "paused"},
+					},
+				},
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
 				"portal": {
@@ -183,6 +190,13 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 								{ProtoField: "chain"},
 								{ProtoField: "recipient"},
 								{ProtoField: "amount"},
+							},
+						},
+						{
+							RpcMethod: "SetPausedState",
+							Use:       "set-paused-state [paused]",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "paused"},
 							},
 						},
 						{
@@ -221,8 +235,8 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							},
 						},
 						{
-							RpcMethod: "SetPause",
-							Use:       "set-pause",
+							RpcMethod: "SetPausedState",
+							Use:       "set-paused-state [paused]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 								{ProtoField: "paused"},
 							},

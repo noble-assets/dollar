@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_Lock_FullMethodName     = "/noble.dollar.vaults.v1.Msg/Lock"
-	Msg_Unlock_FullMethodName   = "/noble.dollar.vaults.v1.Msg/Unlock"
-	Msg_SetPause_FullMethodName = "/noble.dollar.vaults.v1.Msg/SetPause"
+	Msg_Lock_FullMethodName           = "/noble.dollar.vaults.v1.Msg/Lock"
+	Msg_Unlock_FullMethodName         = "/noble.dollar.vaults.v1.Msg/Unlock"
+	Msg_SetPausedState_FullMethodName = "/noble.dollar.vaults.v1.Msg/SetPausedState"
 )
 
 // MsgClient is the client API for Msg service.
@@ -30,7 +30,7 @@ const (
 type MsgClient interface {
 	Lock(ctx context.Context, in *MsgLock, opts ...grpc.CallOption) (*MsgLockResponse, error)
 	Unlock(ctx context.Context, in *MsgUnlock, opts ...grpc.CallOption) (*MsgUnlockResponse, error)
-	SetPause(ctx context.Context, in *MsgSetPause, opts ...grpc.CallOption) (*MsgSetPauseResponse, error)
+	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
 }
 
 type msgClient struct {
@@ -61,10 +61,10 @@ func (c *msgClient) Unlock(ctx context.Context, in *MsgUnlock, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *msgClient) SetPause(ctx context.Context, in *MsgSetPause, opts ...grpc.CallOption) (*MsgSetPauseResponse, error) {
+func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgSetPauseResponse)
-	err := c.cc.Invoke(ctx, Msg_SetPause_FullMethodName, in, out, cOpts...)
+	out := new(MsgSetPausedStateResponse)
+	err := c.cc.Invoke(ctx, Msg_SetPausedState_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *msgClient) SetPause(ctx context.Context, in *MsgSetPause, opts ...grpc.
 type MsgServer interface {
 	Lock(context.Context, *MsgLock) (*MsgLockResponse, error)
 	Unlock(context.Context, *MsgUnlock) (*MsgUnlockResponse, error)
-	SetPause(context.Context, *MsgSetPause) (*MsgSetPauseResponse, error)
+	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -94,8 +94,8 @@ func (UnimplementedMsgServer) Lock(context.Context, *MsgLock) (*MsgLockResponse,
 func (UnimplementedMsgServer) Unlock(context.Context, *MsgUnlock) (*MsgUnlockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Unlock not implemented")
 }
-func (UnimplementedMsgServer) SetPause(context.Context, *MsgSetPause) (*MsgSetPauseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetPause not implemented")
+func (UnimplementedMsgServer) SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetPausedState not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -154,20 +154,20 @@ func _Msg_Unlock_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SetPause_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetPause)
+func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetPausedState)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).SetPause(ctx, in)
+		return srv.(MsgServer).SetPausedState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Msg_SetPause_FullMethodName,
+		FullMethod: Msg_SetPausedState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetPause(ctx, req.(*MsgSetPause))
+		return srv.(MsgServer).SetPausedState(ctx, req.(*MsgSetPausedState))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -188,8 +188,8 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_Unlock_Handler,
 		},
 		{
-			MethodName: "SetPause",
-			Handler:    _Msg_SetPause_Handler,
+			MethodName: "SetPausedState",
+			Handler:    _Msg_SetPausedState_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -37,5 +37,6 @@ var (
 
 var (
 	IndexKey        = []byte("index")
+	PausedKey       = []byte("paused")
 	PrincipalPrefix = []byte("principal/")
 )
