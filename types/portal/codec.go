@@ -35,10 +35,13 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgDeliver{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgTransfer{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPeer{})
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgTransferOwnership{})
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgDeliver{},
+		&MsgDeliverInjection{},
+		&MsgTransfer{},
+		&MsgSetPeer{},
+		&MsgTransferOwnership{},
+	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
