@@ -117,20 +117,22 @@ func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 // SendRestrictionFn performs an underlying transfer of principal when executing a $USDN transfer.
 func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.AccAddress, coins sdk.Coins) (newRecipient sdk.AccAddress, err error) {
 	if amount := coins.AmountOf(k.denom); !amount.IsZero() {
-		// We don't want to perform any principal updates in the case of yield accrual.
-		// -> Transfer from Module to Yield account.
-		if sender.Equals(types.ModuleAddress) && recipient.Equals(types.YieldAddress) {
-			return recipient, nil
-		}
 		// We don't want to perform any principal updates in the case of yield payout.
 		// -> Transfer from Yield to User account.
 		if sender.Equals(types.YieldAddress) {
 			return recipient, nil
 		}
-		// We don't want to allow any transfer from a User to the Yield account.
-		// -> Transfer from User to Yield account.
-		if !sender.Equals(types.ModuleAddress) && recipient.Equals(types.YieldAddress) {
-			return recipient, errors.Wrap(err, "sending funds to the Yield account is not allowed")
+		// Handle transfers where the recipient is the yield account.
+		if recipient.Equals(types.YieldAddress) {
+			if sender.Equals(types.ModuleAddress) {
+				// We don't want to perform any principal updates in the case of yield accrual.
+				// -> Transfer from Module to Yield account.
+				return recipient, nil
+			} else {
+				// We don't want to allow any other transfers to the yield account.
+				// -> Transfer from User to Yield account.
+				return recipient, fmt.Errorf("transfers of %s to %s are not allowed", k.denom, recipient.String())
+			}
 		}
 
 		rawIndex, err := k.Index.Get(ctx)
