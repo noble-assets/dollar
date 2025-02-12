@@ -16,20 +16,20 @@ import (
 	sync "sync"
 )
 
-var _ protoreflect.Map = (*_GenesisState_4_map)(nil)
+var _ protoreflect.Map = (*_GenesisState_5_map)(nil)
 
-type _GenesisState_4_map struct {
+type _GenesisState_5_map struct {
 	m *map[string]string
 }
 
-func (x *_GenesisState_4_map) Len() int {
+func (x *_GenesisState_5_map) Len() int {
 	if x.m == nil {
 		return 0
 	}
 	return len(*x.m)
 }
 
-func (x *_GenesisState_4_map) Range(f func(protoreflect.MapKey, protoreflect.Value) bool) {
+func (x *_GenesisState_5_map) Range(f func(protoreflect.MapKey, protoreflect.Value) bool) {
 	if x.m == nil {
 		return
 	}
@@ -42,7 +42,7 @@ func (x *_GenesisState_4_map) Range(f func(protoreflect.MapKey, protoreflect.Val
 	}
 }
 
-func (x *_GenesisState_4_map) Has(key protoreflect.MapKey) bool {
+func (x *_GenesisState_5_map) Has(key protoreflect.MapKey) bool {
 	if x.m == nil {
 		return false
 	}
@@ -52,7 +52,7 @@ func (x *_GenesisState_4_map) Has(key protoreflect.MapKey) bool {
 	return ok
 }
 
-func (x *_GenesisState_4_map) Clear(key protoreflect.MapKey) {
+func (x *_GenesisState_5_map) Clear(key protoreflect.MapKey) {
 	if x.m == nil {
 		return
 	}
@@ -61,7 +61,7 @@ func (x *_GenesisState_4_map) Clear(key protoreflect.MapKey) {
 	delete(*x.m, concreteKey)
 }
 
-func (x *_GenesisState_4_map) Get(key protoreflect.MapKey) protoreflect.Value {
+func (x *_GenesisState_5_map) Get(key protoreflect.MapKey) protoreflect.Value {
 	if x.m == nil {
 		return protoreflect.Value{}
 	}
@@ -74,7 +74,7 @@ func (x *_GenesisState_4_map) Get(key protoreflect.MapKey) protoreflect.Value {
 	return protoreflect.ValueOfString(v)
 }
 
-func (x *_GenesisState_4_map) Set(key protoreflect.MapKey, value protoreflect.Value) {
+func (x *_GenesisState_5_map) Set(key protoreflect.MapKey, value protoreflect.Value) {
 	if !key.IsValid() || !value.IsValid() {
 		panic("invalid key or value provided")
 	}
@@ -85,36 +85,38 @@ func (x *_GenesisState_4_map) Set(key protoreflect.MapKey, value protoreflect.Va
 	(*x.m)[concreteKey] = concreteValue
 }
 
-func (x *_GenesisState_4_map) Mutable(key protoreflect.MapKey) protoreflect.Value {
+func (x *_GenesisState_5_map) Mutable(key protoreflect.MapKey) protoreflect.Value {
 	panic("should not call Mutable on protoreflect.Map whose value is not of type protoreflect.Message")
 }
 
-func (x *_GenesisState_4_map) NewValue() protoreflect.Value {
+func (x *_GenesisState_5_map) NewValue() protoreflect.Value {
 	v := ""
 	return protoreflect.ValueOfString(v)
 }
 
-func (x *_GenesisState_4_map) IsValid() bool {
+func (x *_GenesisState_5_map) IsValid() bool {
 	return x.m != nil
 }
 
 var (
 	md_GenesisState           protoreflect.MessageDescriptor
 	fd_GenesisState_portal    protoreflect.FieldDescriptor
-	fd_GenesisState_index     protoreflect.FieldDescriptor
-	fd_GenesisState_paused    protoreflect.FieldDescriptor
-	fd_GenesisState_principal protoreflect.FieldDescriptor
 	fd_GenesisState_vaults    protoreflect.FieldDescriptor
+	fd_GenesisState_paused    protoreflect.FieldDescriptor
+	fd_GenesisState_index     protoreflect.FieldDescriptor
+	fd_GenesisState_principal protoreflect.FieldDescriptor
+	fd_GenesisState_stats     protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_v1_genesis_proto_init()
 	md_GenesisState = File_noble_dollar_v1_genesis_proto.Messages().ByName("GenesisState")
 	fd_GenesisState_portal = md_GenesisState.Fields().ByName("portal")
-	fd_GenesisState_index = md_GenesisState.Fields().ByName("index")
-	fd_GenesisState_paused = md_GenesisState.Fields().ByName("paused")
-	fd_GenesisState_principal = md_GenesisState.Fields().ByName("principal")
 	fd_GenesisState_vaults = md_GenesisState.Fields().ByName("vaults")
+	fd_GenesisState_paused = md_GenesisState.Fields().ByName("paused")
+	fd_GenesisState_index = md_GenesisState.Fields().ByName("index")
+	fd_GenesisState_principal = md_GenesisState.Fields().ByName("principal")
+	fd_GenesisState_stats = md_GenesisState.Fields().ByName("stats")
 }
 
 var _ protoreflect.Message = (*fastReflection_GenesisState)(nil)
@@ -188,9 +190,9 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
-	if x.Index != int64(0) {
-		value := protoreflect.ValueOfInt64(x.Index)
-		if !f(fd_GenesisState_index, value) {
+	if x.Vaults != nil {
+		value := protoreflect.ValueOfMessage(x.Vaults.ProtoReflect())
+		if !f(fd_GenesisState_vaults, value) {
 			return
 		}
 	}
@@ -200,15 +202,21 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
+	if x.Index != int64(0) {
+		value := protoreflect.ValueOfInt64(x.Index)
+		if !f(fd_GenesisState_index, value) {
+			return
+		}
+	}
 	if len(x.Principal) != 0 {
-		value := protoreflect.ValueOfMap(&_GenesisState_4_map{m: &x.Principal})
+		value := protoreflect.ValueOfMap(&_GenesisState_5_map{m: &x.Principal})
 		if !f(fd_GenesisState_principal, value) {
 			return
 		}
 	}
-	if x.Vaults != nil {
-		value := protoreflect.ValueOfMessage(x.Vaults.ProtoReflect())
-		if !f(fd_GenesisState_vaults, value) {
+	if x.Stats != nil {
+		value := protoreflect.ValueOfMessage(x.Stats.ProtoReflect())
+		if !f(fd_GenesisState_stats, value) {
 			return
 		}
 	}
@@ -229,14 +237,16 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 	switch fd.FullName() {
 	case "noble.dollar.v1.GenesisState.portal":
 		return x.Portal != nil
-	case "noble.dollar.v1.GenesisState.index":
-		return x.Index != int64(0)
-	case "noble.dollar.v1.GenesisState.paused":
-		return x.Paused != false
-	case "noble.dollar.v1.GenesisState.principal":
-		return len(x.Principal) != 0
 	case "noble.dollar.v1.GenesisState.vaults":
 		return x.Vaults != nil
+	case "noble.dollar.v1.GenesisState.paused":
+		return x.Paused != false
+	case "noble.dollar.v1.GenesisState.index":
+		return x.Index != int64(0)
+	case "noble.dollar.v1.GenesisState.principal":
+		return len(x.Principal) != 0
+	case "noble.dollar.v1.GenesisState.stats":
+		return x.Stats != nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v1.GenesisState"))
@@ -255,14 +265,16 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
 	case "noble.dollar.v1.GenesisState.portal":
 		x.Portal = nil
-	case "noble.dollar.v1.GenesisState.index":
-		x.Index = int64(0)
-	case "noble.dollar.v1.GenesisState.paused":
-		x.Paused = false
-	case "noble.dollar.v1.GenesisState.principal":
-		x.Principal = nil
 	case "noble.dollar.v1.GenesisState.vaults":
 		x.Vaults = nil
+	case "noble.dollar.v1.GenesisState.paused":
+		x.Paused = false
+	case "noble.dollar.v1.GenesisState.index":
+		x.Index = int64(0)
+	case "noble.dollar.v1.GenesisState.principal":
+		x.Principal = nil
+	case "noble.dollar.v1.GenesisState.stats":
+		x.Stats = nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v1.GenesisState"))
@@ -282,20 +294,23 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 	case "noble.dollar.v1.GenesisState.portal":
 		value := x.Portal
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
-	case "noble.dollar.v1.GenesisState.index":
-		value := x.Index
-		return protoreflect.ValueOfInt64(value)
+	case "noble.dollar.v1.GenesisState.vaults":
+		value := x.Vaults
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
 	case "noble.dollar.v1.GenesisState.paused":
 		value := x.Paused
 		return protoreflect.ValueOfBool(value)
+	case "noble.dollar.v1.GenesisState.index":
+		value := x.Index
+		return protoreflect.ValueOfInt64(value)
 	case "noble.dollar.v1.GenesisState.principal":
 		if len(x.Principal) == 0 {
-			return protoreflect.ValueOfMap(&_GenesisState_4_map{})
+			return protoreflect.ValueOfMap(&_GenesisState_5_map{})
 		}
-		mapValue := &_GenesisState_4_map{m: &x.Principal}
+		mapValue := &_GenesisState_5_map{m: &x.Principal}
 		return protoreflect.ValueOfMap(mapValue)
-	case "noble.dollar.v1.GenesisState.vaults":
-		value := x.Vaults
+	case "noble.dollar.v1.GenesisState.stats":
+		value := x.Stats
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
 	default:
 		if descriptor.IsExtension() {
@@ -319,16 +334,18 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 	switch fd.FullName() {
 	case "noble.dollar.v1.GenesisState.portal":
 		x.Portal = value.Message().Interface().(*v1.GenesisState)
-	case "noble.dollar.v1.GenesisState.index":
-		x.Index = value.Int()
-	case "noble.dollar.v1.GenesisState.paused":
-		x.Paused = value.Bool()
-	case "noble.dollar.v1.GenesisState.principal":
-		mv := value.Map()
-		cmv := mv.(*_GenesisState_4_map)
-		x.Principal = *cmv.m
 	case "noble.dollar.v1.GenesisState.vaults":
 		x.Vaults = value.Message().Interface().(*v11.GenesisState)
+	case "noble.dollar.v1.GenesisState.paused":
+		x.Paused = value.Bool()
+	case "noble.dollar.v1.GenesisState.index":
+		x.Index = value.Int()
+	case "noble.dollar.v1.GenesisState.principal":
+		mv := value.Map()
+		cmv := mv.(*_GenesisState_5_map)
+		x.Principal = *cmv.m
+	case "noble.dollar.v1.GenesisState.stats":
+		x.Stats = value.Message().Interface().(*Stats)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v1.GenesisState"))
@@ -354,21 +371,26 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 			x.Portal = new(v1.GenesisState)
 		}
 		return protoreflect.ValueOfMessage(x.Portal.ProtoReflect())
-	case "noble.dollar.v1.GenesisState.principal":
-		if x.Principal == nil {
-			x.Principal = make(map[string]string)
-		}
-		value := &_GenesisState_4_map{m: &x.Principal}
-		return protoreflect.ValueOfMap(value)
 	case "noble.dollar.v1.GenesisState.vaults":
 		if x.Vaults == nil {
 			x.Vaults = new(v11.GenesisState)
 		}
 		return protoreflect.ValueOfMessage(x.Vaults.ProtoReflect())
-	case "noble.dollar.v1.GenesisState.index":
-		panic(fmt.Errorf("field index of message noble.dollar.v1.GenesisState is not mutable"))
+	case "noble.dollar.v1.GenesisState.principal":
+		if x.Principal == nil {
+			x.Principal = make(map[string]string)
+		}
+		value := &_GenesisState_5_map{m: &x.Principal}
+		return protoreflect.ValueOfMap(value)
+	case "noble.dollar.v1.GenesisState.stats":
+		if x.Stats == nil {
+			x.Stats = new(Stats)
+		}
+		return protoreflect.ValueOfMessage(x.Stats.ProtoReflect())
 	case "noble.dollar.v1.GenesisState.paused":
 		panic(fmt.Errorf("field paused of message noble.dollar.v1.GenesisState is not mutable"))
+	case "noble.dollar.v1.GenesisState.index":
+		panic(fmt.Errorf("field index of message noble.dollar.v1.GenesisState is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v1.GenesisState"))
@@ -385,15 +407,18 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 	case "noble.dollar.v1.GenesisState.portal":
 		m := new(v1.GenesisState)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
-	case "noble.dollar.v1.GenesisState.index":
-		return protoreflect.ValueOfInt64(int64(0))
-	case "noble.dollar.v1.GenesisState.paused":
-		return protoreflect.ValueOfBool(false)
-	case "noble.dollar.v1.GenesisState.principal":
-		m := make(map[string]string)
-		return protoreflect.ValueOfMap(&_GenesisState_4_map{m: &m})
 	case "noble.dollar.v1.GenesisState.vaults":
 		m := new(v11.GenesisState)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "noble.dollar.v1.GenesisState.paused":
+		return protoreflect.ValueOfBool(false)
+	case "noble.dollar.v1.GenesisState.index":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "noble.dollar.v1.GenesisState.principal":
+		m := make(map[string]string)
+		return protoreflect.ValueOfMap(&_GenesisState_5_map{m: &m})
+	case "noble.dollar.v1.GenesisState.stats":
+		m := new(Stats)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
 	default:
 		if fd.IsExtension() {
@@ -468,11 +493,15 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			l = options.Size(x.Portal)
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		if x.Index != 0 {
-			n += 1 + runtime.Sov(uint64(x.Index))
+		if x.Vaults != nil {
+			l = options.Size(x.Vaults)
+			n += 1 + l + runtime.Sov(uint64(l))
 		}
 		if x.Paused {
 			n += 2
+		}
+		if x.Index != 0 {
+			n += 1 + runtime.Sov(uint64(x.Index))
 		}
 		if len(x.Principal) > 0 {
 			SiZeMaP := func(k string, v string) {
@@ -495,8 +524,8 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 			}
 		}
-		if x.Vaults != nil {
-			l = options.Size(x.Vaults)
+		if x.Stats != nil {
+			l = options.Size(x.Stats)
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
 		if x.unknownFields != nil {
@@ -528,8 +557,8 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if x.Vaults != nil {
-			encoded, err := options.Marshal(x.Vaults)
+		if x.Stats != nil {
+			encoded, err := options.Marshal(x.Stats)
 			if err != nil {
 				return protoiface.MarshalOutput{
 					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -540,7 +569,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], encoded)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
-			dAtA[i] = 0x2a
+			dAtA[i] = 0x32
 		}
 		if len(x.Principal) > 0 {
 			MaRsHaLmAp := func(k string, v string) (protoiface.MarshalOutput, error) {
@@ -557,7 +586,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				dAtA[i] = 0xa
 				i = runtime.EncodeVarint(dAtA, i, uint64(baseI-i))
 				i--
-				dAtA[i] = 0x22
+				dAtA[i] = 0x2a
 				return protoiface.MarshalOutput{}, nil
 			}
 			if options.Deterministic {
@@ -585,6 +614,11 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 			}
 		}
+		if x.Index != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.Index))
+			i--
+			dAtA[i] = 0x20
+		}
 		if x.Paused {
 			i--
 			if x.Paused {
@@ -595,10 +629,19 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			i--
 			dAtA[i] = 0x18
 		}
-		if x.Index != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.Index))
+		if x.Vaults != nil {
+			encoded, err := options.Marshal(x.Vaults)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
-			dAtA[i] = 0x10
+			dAtA[i] = 0x12
 		}
 		if x.Portal != nil {
 			encoded, err := options.Marshal(x.Portal)
@@ -700,10 +743,10 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 				iNdEx = postIndex
 			case 2:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Vaults", wireType)
 				}
-				x.Index = 0
+				var msglen int
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
@@ -713,11 +756,28 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					x.Index |= int64(b&0x7F) << shift
+					msglen |= int(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
 				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.Vaults == nil {
+					x.Vaults = &v11.GenesisState{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Vaults); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
 			case 3:
 				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Paused", wireType)
@@ -739,6 +799,25 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 				x.Paused = bool(v != 0)
 			case 4:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+				}
+				x.Index = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.Index |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 5:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Principal", wireType)
 				}
@@ -865,9 +944,9 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				}
 				x.Principal[mapkey] = mapvalue
 				iNdEx = postIndex
-			case 5:
+			case 6:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Vaults", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Stats", wireType)
 				}
 				var msglen int
 				for shift := uint(0); ; shift += 7 {
@@ -894,10 +973,10 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				if x.Vaults == nil {
-					x.Vaults = &v11.GenesisState{}
+				if x.Stats == nil {
+					x.Stats = &Stats{}
 				}
-				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Vaults); err != nil {
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Stats); err != nil {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 				}
 				iNdEx = postIndex
@@ -957,14 +1036,16 @@ type GenesisState struct {
 
 	// portal contains the genesis state of the Noble Dollar Portal submodule.
 	Portal *v1.GenesisState `protobuf:"bytes,1,opt,name=portal,proto3" json:"portal,omitempty"`
-	// index contains the genesis index of the Noble Dollar, used for rebasing.
-	Index int64 `protobuf:"varint,2,opt,name=index,proto3" json:"index,omitempty"`
+	// vaults contains the genesis state of the Noble Dollar Vaults submodule.
+	Vaults *v11.GenesisState `protobuf:"bytes,2,opt,name=vaults,proto3" json:"vaults,omitempty"`
 	// paused contains the genesis paused state of the Noble Dollar.
 	Paused bool `protobuf:"varint,3,opt,name=paused,proto3" json:"paused,omitempty"`
+	// index contains the genesis index of the Noble Dollar, used for rebasing.
+	Index int64 `protobuf:"varint,4,opt,name=index,proto3" json:"index,omitempty"`
 	// principal contains the genesis principal amounts of Noble Dollar holders.
-	Principal map[string]string `protobuf:"bytes,4,rep,name=principal,proto3" json:"principal,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	// vaults contains the genesis state of the Noble Dollar Vaults submodule.
-	Vaults *v11.GenesisState `protobuf:"bytes,5,opt,name=vaults,proto3" json:"vaults,omitempty"`
+	Principal map[string]string `protobuf:"bytes,5,rep,name=principal,proto3" json:"principal,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// stats contains the genesis statistics around the Noble Dollar.
+	Stats *Stats `protobuf:"bytes,6,opt,name=stats,proto3" json:"stats,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -994,11 +1075,11 @@ func (x *GenesisState) GetPortal() *v1.GenesisState {
 	return nil
 }
 
-func (x *GenesisState) GetIndex() int64 {
+func (x *GenesisState) GetVaults() *v11.GenesisState {
 	if x != nil {
-		return x.Index
+		return x.Vaults
 	}
-	return 0
+	return nil
 }
 
 func (x *GenesisState) GetPaused() bool {
@@ -1008,6 +1089,13 @@ func (x *GenesisState) GetPaused() bool {
 	return false
 }
 
+func (x *GenesisState) GetIndex() int64 {
+	if x != nil {
+		return x.Index
+	}
+	return 0
+}
+
 func (x *GenesisState) GetPrincipal() map[string]string {
 	if x != nil {
 		return x.Principal
@@ -1015,9 +1103,9 @@ func (x *GenesisState) GetPrincipal() map[string]string {
 	return nil
 }
 
-func (x *GenesisState) GetVaults() *v11.GenesisState {
+func (x *GenesisState) GetStats() *Stats {
 	if x != nil {
-		return x.Vaults
+		return x.Stats
 	}
 	return nil
 }
@@ -1031,42 +1119,47 @@ var file_noble_dollar_v1_genesis_proto_rawDesc = []byte{
 	0x1a, 0x14, 0x67, 0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x24, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f,
 	0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x67,
-	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x24, 0x6e, 0x6f,
-	0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x73, 0x2f, 0x76, 0x31, 0x2f, 0x67, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x22, 0xce, 0x02, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74,
-	0x61, 0x74, 0x65, 0x12, 0x42, 0x0a, 0x06, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x6e,
-	0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52,
-	0x06, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x12, 0x14, 0x0a, 0x05, 0x69, 0x6e, 0x64, 0x65, 0x78,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x12, 0x16, 0x0a,
-	0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x70,
-	0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x4a, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70,
-	0x61, 0x6c, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2c, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
-	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x73,
-	0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x2e, 0x50, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61,
-	0x6c, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61,
-	0x6c, 0x12, 0x42, 0x0a, 0x06, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1c, 0x6e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x24, 0x6e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f,
+	0x76, 0x31, 0x2f, 0x67, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x22, 0x82, 0x03, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74,
+	0x65, 0x12, 0x42, 0x0a, 0x06, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x24, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x73,
-	0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x06, 0x76,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x1a, 0x3c, 0x0a, 0x0e, 0x50, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70,
-	0x61, 0x6c, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a,
-	0x02, 0x38, 0x01, 0x42, 0xb0, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c,
-	0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e,
-	0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x2d, 0x64, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61, 0x70,
-	0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76,
-	0x31, 0x3b, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x58,
-	0xaa, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
-	0x56, 0x31, 0xca, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x1b, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
-	0x74, 0x61, 0xea, 0x02, 0x11, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x6e, 0x65, 0x73,
+	0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x06, 0x70,
+	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x12, 0x42, 0x0a, 0x06, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x47,
+	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f,
+	0x00, 0x52, 0x06, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x61, 0x75,
+	0x73, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65,
+	0x64, 0x12, 0x14, 0x0a, 0x05, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x05, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x12, 0x4a, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63,
+	0x69, 0x70, 0x61, 0x6c, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2c, 0x2e, 0x6e, 0x6f, 0x62,
+	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x6e,
+	0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x2e, 0x50, 0x72, 0x69, 0x6e, 0x63, 0x69,
+	0x70, 0x61, 0x6c, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69,
+	0x70, 0x61, 0x6c, 0x12, 0x32, 0x0a, 0x05, 0x73, 0x74, 0x61, 0x74, 0x73, 0x18, 0x06, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x73, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00,
+	0x52, 0x05, 0x73, 0x74, 0x61, 0x74, 0x73, 0x1a, 0x3c, 0x0a, 0x0e, 0x50, 0x72, 0x69, 0x6e, 0x63,
+	0x69, 0x70, 0x61, 0x6c, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x3a, 0x02, 0x38, 0x01, 0x42, 0xb0, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47,
+	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x2d, 0x64,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f,
+	0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x2f, 0x76, 0x31, 0x3b, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e,
+	0x44, 0x58, 0xaa, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x1b, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61,
+	0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x11, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1087,16 +1180,18 @@ var file_noble_dollar_v1_genesis_proto_goTypes = []interface{}{
 	nil,                      // 1: noble.dollar.v1.GenesisState.PrincipalEntry
 	(*v1.GenesisState)(nil),  // 2: noble.dollar.portal.v1.GenesisState
 	(*v11.GenesisState)(nil), // 3: noble.dollar.vaults.v1.GenesisState
+	(*Stats)(nil),            // 4: noble.dollar.v1.Stats
 }
 var file_noble_dollar_v1_genesis_proto_depIdxs = []int32{
 	2, // 0: noble.dollar.v1.GenesisState.portal:type_name -> noble.dollar.portal.v1.GenesisState
-	1, // 1: noble.dollar.v1.GenesisState.principal:type_name -> noble.dollar.v1.GenesisState.PrincipalEntry
-	3, // 2: noble.dollar.v1.GenesisState.vaults:type_name -> noble.dollar.vaults.v1.GenesisState
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	3, // 1: noble.dollar.v1.GenesisState.vaults:type_name -> noble.dollar.vaults.v1.GenesisState
+	1, // 2: noble.dollar.v1.GenesisState.principal:type_name -> noble.dollar.v1.GenesisState.PrincipalEntry
+	4, // 3: noble.dollar.v1.GenesisState.stats:type_name -> noble.dollar.v1.Stats
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_noble_dollar_v1_genesis_proto_init() }
@@ -1104,6 +1199,7 @@ func file_noble_dollar_v1_genesis_proto_init() {
 	if File_noble_dollar_v1_genesis_proto != nil {
 		return
 	}
+	file_noble_dollar_v1_dollar_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_noble_dollar_v1_genesis_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GenesisState); i {

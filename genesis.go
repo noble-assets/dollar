@@ -38,14 +38,14 @@ import (
 func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, genesis types.GenesisState) {
 	var err error
 
-	err = k.Index.Set(ctx, genesis.Index)
-	if err != nil {
-		panic(errors.Wrap(err, "unable to set genesis index"))
-	}
-
 	err = k.Paused.Set(ctx, genesis.Paused)
 	if err != nil {
 		panic(errors.Wrap(err, "unable to set genesis paused state"))
+	}
+
+	err = k.Index.Set(ctx, genesis.Index)
+	if err != nil {
+		panic(errors.Wrap(err, "unable to set genesis index"))
 	}
 
 	for rawAccount, rawPrincipal := range genesis.Principal {
@@ -63,6 +63,11 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		if err != nil {
 			panic(errors.Wrapf(err, "unable to set genesis principal (%s:%s)", rawAccount, rawPrincipal))
 		}
+	}
+
+	err = k.Stats.Set(ctx, genesis.Stats)
+	if err != nil {
+		panic(errors.Wrap(err, "unable to set genesis stats"))
 	}
 
 	if err = k.PortalOwner.Set(ctx, genesis.Portal.Owner); err != nil {
@@ -109,15 +114,20 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis vaults paused state"))
 	}
 
+	if err = k.VaultsStats.Set(ctx, genesis.Vaults.Stats); err != nil {
+		panic(errors.Wrapf(err, "unable to set genesis vaults stats"))
+	}
+
 	if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, genesis.Vaults.TotalFlexiblePrincipal); err != nil {
 		panic(errors.Wrap(err, "unable to set total vaults flexible principal"))
 	}
 }
 
 func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
+	paused := k.GetPaused(ctx)
 	index, _ := k.Index.Get(ctx)
 	principal, _ := k.GetPrincipal(ctx)
-	paused := k.GetPaused(ctx)
+	stats, _ := k.Stats.Get(ctx)
 
 	portalOwner, _ := k.PortalOwner.Get(ctx)
 	portalPaused := k.GetPortalPaused(ctx)
@@ -128,6 +138,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	vaultsPositions, _ := k.GetVaultsPositions(ctx)
 	vaultsTotalFlexiblePrincipal, _ := k.GetVaultsTotalFlexiblePrincipal(ctx)
 	vaultsPaused := k.GetVaultsPaused(ctx)
+	vaultsStats, _ := k.GetVaultsStats(ctx)
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
@@ -136,14 +147,16 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Peers:  portalPeers,
 			Nonce:  portalNonce,
 		},
-		Index:     index,
-		Paused:    paused,
-		Principal: principal,
 		Vaults: vaults.GenesisState{
 			Positions:              vaultsPositions,
 			Rewards:                vaultsRewards,
 			TotalFlexiblePrincipal: vaultsTotalFlexiblePrincipal,
 			Paused:                 vaultsPaused,
+			Stats:                  vaultsStats,
 		},
+		Paused:    paused,
+		Index:     index,
+		Principal: principal,
+		Stats:     stats,
 	}
 }

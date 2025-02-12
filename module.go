@@ -249,6 +249,10 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 			Service: dollarv1.Query_ServiceDesc.ServiceName,
 			RpcCommandOptions: []*autocliv1.RpcCommandOptions{
 				{
+					RpcMethod: "Index",
+					Use:       "index",
+				},
+				{
 					RpcMethod:      "Principal",
 					Use:            "principal [account]",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "account"}},
@@ -257,6 +261,10 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod:      "Yield",
 					Use:            "yield [account]",
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "account"}},
+				},
+				{
+					RpcMethod: "Stats",
+					Use:       "stats",
 				},
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
@@ -287,6 +295,10 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							Short:          "List Vaults positions by a specific provider",
 							Long:           "Retrieves all the active Vaults positions attributed to provider",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "provider"}},
+						},
+						{
+							RpcMethod: "Stats",
+							Use:       "stats",
 						},
 					},
 				},

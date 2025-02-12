@@ -88,3 +88,20 @@ func (k queryServer) Yield(ctx context.Context, req *types.QueryYield) (*types.Q
 
 	return &types.QueryYieldResponse{ClaimableAmount: yield}, err
 }
+
+func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.QueryStatsResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	stats, err := k.Keeper.Stats.Get(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get stats from state")
+	}
+
+	return &types.QueryStatsResponse{
+		TotalHolders:      stats.TotalHolders,
+		TotalPrincipal:    stats.TotalPrincipal,
+		TotalYieldAccrued: stats.TotalYieldAccrued,
+	}, nil
+}

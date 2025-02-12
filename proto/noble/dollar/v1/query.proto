@@ -30,6 +30,11 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/v1/yield/{account}";
   }
+
+  rpc Stats(QueryStats) returns (QueryStatsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v1/stats";
+  }
 }
 
 message QueryIndex {}
@@ -68,6 +73,26 @@ message QueryYield {
 
 message QueryYieldResponse {
   string claimable_amount = 1 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+message QueryStats {}
+
+message QueryStatsResponse {
+  uint64 total_holders = 1 [(amino.dont_omitempty) = true];
+
+  string total_principal = 2 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string total_yield_accrued = 3 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",

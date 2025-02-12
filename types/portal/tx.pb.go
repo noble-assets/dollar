@@ -188,7 +188,7 @@ func (m *MsgTransferResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgTransferResponse proto.InternalMessageInfo
 
-// MsgSetPausedState allows the authority to configure the Noble Dollar Portal pause state.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Portal paused state.
 type MsgSetPausedState struct {
 	Signer string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
 	Paused bool   `protobuf:"varint,2,opt,name=paused,proto3" json:"paused,omitempty"`
