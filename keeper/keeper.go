@@ -170,7 +170,7 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			balance := k.bank.GetBalance(ctx, sender, k.denom)
 			if balance.IsZero() {
 				// If the sender's $USDN balance is zero, this indicates that
-				// they are a new holder, and we should decrement the
+				// they are no longer a holder, and we should decrement the
 				// statistic.
 				err = k.DecrementTotalHolders(ctx)
 				if err != nil {
