@@ -126,11 +126,11 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 	// Update Vaults stats.
 	if positions, _ := k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 1 {
 		if err = k.IncrementVaultUsers(ctx, msg.Vault); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "unable to increment vault total users")
 		}
 	}
 	if err = k.IncrementVaultTotalPrincipal(ctx, msg.Vault, amountPrincipal); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "unable to increment vault total principal")
 	}
 
 	return &vaults.MsgLockResponse{}, nil
@@ -203,7 +203,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 				return nil, err
 			}
 			if err = k.IncrementFlexibleTotalDistributedRewardsPrincipal(ctx, rewards); err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "unable to increment flexible vault total distributed rewards principal")
 			}
 
 			// Claim the yield associated to the current position.
@@ -256,11 +256,11 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	// Update Vaults stats.
 	if positions, _ = k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 0 {
 		if err = k.DecrementVaultUsers(ctx, msg.Vault); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "unable to decrement vault total users")
 		}
 	}
 	if err = k.DecrementVaultTotalPrincipal(ctx, msg.Vault, removedPrincipal); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "unable to decrement vault total principal")
 	}
 
 	return &vaults.MsgUnlockResponse{}, nil

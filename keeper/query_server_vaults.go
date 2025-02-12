@@ -23,6 +23,8 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/errors"
+
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/vaults"
 )
@@ -74,7 +76,7 @@ func (k vaultsQueryServer) Stats(ctx context.Context, req *vaults.QueryStats) (*
 
 	stats, err := k.GetVaultsStats(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "unable to get vaults stats from state")
 	}
 
 	return &vaults.QueryStatsResponse{
