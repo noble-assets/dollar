@@ -21,7 +21,9 @@
 package keeper
 
 import (
+	"bytes"
 	"context"
+	"encoding/hex"
 	"fmt"
 
 	"cosmossdk.io/collections"
@@ -37,6 +39,7 @@ import (
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
+	"dollar.noble.xyz/types/portal/ntt"
 	"dollar.noble.xyz/types/vaults"
 )
 
@@ -255,4 +258,86 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 	}
 
 	return yield, bz, nil
+}
+
+// Deliver is internal logic executed when delivering portal messages.
+func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
+	if k.GetPortalPaused(ctx) {
+		return portal.ErrPaused
+	}
+
+	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, bz)
+	if err != nil {
+		return err
+	}
+
+	peer, err := k.PortalPeers.Get(ctx, uint16(vaa.EmitterChain))
+	if err != nil {
+		return errors.Wrapf(portal.ErrInvalidPeer, "chain %d not configured", vaa.EmitterChain)
+	}
+
+	if !bytes.Equal(peer.Transceiver, vaa.EmitterAddress.Bytes()) {
+		return errors.Wrapf(
+			portal.ErrInvalidPeer,
+			"expected transceiver %s for chain %d, got %s",
+			hex.EncodeToString(peer.Transceiver), vaa.EmitterChain,
+			vaa.EmitterAddress.String(),
+		)
+	}
+
+	transceiverMessage, err := ntt.ParseTransceiverMessage(vaa.Payload)
+	if err != nil {
+		return err
+	}
+
+	if !bytes.Equal(peer.Manager, transceiverMessage.SourceManagerAddress) {
+		return errors.Wrapf(
+			portal.ErrInvalidPeer,
+			"expected manager %s for chain %d, got %s",
+			hex.EncodeToString(peer.Manager), vaa.EmitterChain,
+			hex.EncodeToString(transceiverMessage.SourceManagerAddress),
+		)
+	}
+
+	if !bytes.Equal(portal.PaddedManagerAddress, transceiverMessage.RecipientManagerAddress) {
+		return errors.Wrapf(
+			portal.ErrInvalidMessage,
+			"expected recipient manager %s, got %s",
+			hex.EncodeToString(portal.PaddedManagerAddress),
+			hex.EncodeToString(transceiverMessage.RecipientManagerAddress),
+		)
+	}
+
+	managerMessage, err := ntt.ParseManagerMessage(transceiverMessage.ManagerPayload)
+	if err != nil {
+		return err
+	}
+
+	return k.HandlePayload(ctx, managerMessage.Payload)
+}
+
+// HandlePayload is a utility that handles custom payloads when delivering portal messages.
+func (k *Keeper) HandlePayload(ctx context.Context, payload []byte) error {
+	chain, _ := k.wormhole.GetChain(ctx)
+
+	switch portal.GetPayloadType(payload) {
+	case portal.Unknown:
+		return nil
+	case portal.Token:
+		amount, index, recipient, destination := portal.DecodeTokenPayload(payload)
+		if chain != destination {
+			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
+		}
+
+		return k.Mint(ctx, recipient, amount, &index)
+	case portal.Index:
+		index, destination := portal.DecodeIndexPayload(payload)
+		if chain != destination {
+			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
+		}
+
+		return k.UpdateIndex(ctx, index)
+	}
+
+	return nil
 }

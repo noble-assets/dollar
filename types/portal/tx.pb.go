@@ -33,8 +33,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgDeliver is the entrypoint for delivering Noble Dollar Portal messages.
-// This will primarily be used by validators in a vote extension, however is
-// left public to enable permissionless manual relaying.
+// This is the public message to enable permissionless manual relaying, and
+// MsgDeliverInjection is an internal message used only by validators.
 type MsgDeliver struct {
 	Signer string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
 	Vaa    []byte `protobuf:"bytes,2,opt,name=vaa,proto3" json:"vaa,omitempty"`

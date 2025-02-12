@@ -1,5 +1,5 @@
-.PHONY: proto-format proto-lint proto-gen license format lint test-unit build
-all: proto-all format lint test-unit build
+.PHONY: proto-format proto-lint proto-gen license format lint test-unit build local-image test-e2e
+all: proto-all format lint test-unit build local-image test-e2e
 
 ###############################################################################
 ###                                  Build                                  ###
@@ -62,8 +62,22 @@ proto-lint:
 ###                                 Testing                                 ###
 ###############################################################################
 
+local-image:
+ifeq (,$(shell which heighliner))
+	@echo heighliner not found. https://github.com/strangelove-ventures/heighliner
+else
+		@echo "🤖 Building image..."
+		@heighliner build --chain noble-dollar-simd --file e2e/chains.yaml --local
+		@echo "✅ Completed build!"
+endif
+
 test-unit:
 	@echo "🤖 Running unit tests..."
 	@go test -cover -coverprofile=coverage.out -race -v ./keeper ./types/portal/ntt
 	@go tool cover -html coverage.out -o coverage.html
 	@echo "✅ Completed unit tests!"
+
+test-e2e:
+	@echo "🤖 Running e2e tests..."
+	@cd e2e && go test -timeout 15m -race -v ./...
+	@echo "✅ Completed e2e tests!"

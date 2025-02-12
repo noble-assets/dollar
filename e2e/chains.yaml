@@ -1,0 +1,6 @@
+- name: noble-dollar-simd
+  dockerfile: cosmos
+  build-target: make build
+  build-dir: simapp
+  binaries:
+    - simapp/build/simd

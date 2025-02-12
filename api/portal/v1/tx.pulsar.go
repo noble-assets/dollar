@@ -4452,8 +4452,8 @@ const (
 )
 
 // MsgDeliver is the entrypoint for delivering Noble Dollar Portal messages.
-// This will primarily be used by validators in a vote extension, however is
-// left public to enable permissionless manual relaying.
+// This is the public message to enable permissionless manual relaying, and
+// MsgDeliverInjection is an internal message used only by validators.
 type MsgDeliver struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

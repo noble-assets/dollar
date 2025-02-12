@@ -24,8 +24,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
-	"encoding/hex"
-	"fmt"
 
 	"cosmossdk.io/errors"
 
@@ -44,58 +42,11 @@ func NewPortalMsgServer(keeper *Keeper) portal.MsgServer {
 }
 
 func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*portal.MsgDeliverResponse, error) {
-	if k.GetPortalPaused(ctx) {
-		return nil, portal.ErrPaused
-	}
-
-	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, msg.Vaa)
-	if err != nil {
+	if err := k.Keeper.Deliver(ctx, msg.Vaa); err != nil {
 		return nil, err
 	}
 
-	peer, err := k.PortalPeers.Get(ctx, uint16(vaa.EmitterChain))
-	if err != nil {
-		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain %d not configured", vaa.EmitterChain)
-	}
-
-	if !bytes.Equal(peer.Transceiver, vaa.EmitterAddress.Bytes()) {
-		return nil, errors.Wrapf(
-			portal.ErrInvalidPeer,
-			"expected transceiver %s for chain %d, got %s",
-			hex.EncodeToString(peer.Transceiver), vaa.EmitterChain,
-			vaa.EmitterAddress.String(),
-		)
-	}
-
-	transceiverMessage, err := ntt.ParseTransceiverMessage(vaa.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	if !bytes.Equal(peer.Manager, transceiverMessage.SourceManagerAddress) {
-		return nil, errors.Wrapf(
-			portal.ErrInvalidPeer,
-			"expected manager %s for chain %d, got %s",
-			hex.EncodeToString(peer.Manager), vaa.EmitterChain,
-			hex.EncodeToString(transceiverMessage.SourceManagerAddress),
-		)
-	}
-
-	if !bytes.Equal(portal.PaddedManagerAddress, transceiverMessage.RecipientManagerAddress) {
-		return nil, errors.Wrapf(
-			portal.ErrInvalidMessage,
-			"expected recipient manager %s, got %s",
-			hex.EncodeToString(portal.PaddedManagerAddress),
-			hex.EncodeToString(transceiverMessage.RecipientManagerAddress),
-		)
-	}
-
-	managerMessage, err := ntt.ParseManagerMessage(transceiverMessage.ManagerPayload)
-	if err != nil {
-		return nil, err
-	}
-
-	return &portal.MsgDeliverResponse{}, k.HandlePayload(ctx, managerMessage.Payload)
+	return &portal.MsgDeliverResponse{}, nil
 }
 
 func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {
@@ -259,32 +210,6 @@ func (k portalMsgServer) EnsureOwner(ctx context.Context, signer string) error {
 
 	if signer != owner {
 		return errors.Wrapf(portal.ErrNotOwner, "expected %s, got %s", owner, signer)
-	}
-
-	return nil
-}
-
-// HandlePayload is a utility that handles custom payloads when delivering portal messages.
-func (k portalMsgServer) HandlePayload(ctx context.Context, payload []byte) error {
-	chain, _ := k.wormhole.GetChain(ctx)
-
-	switch portal.GetPayloadType(payload) {
-	case portal.Unknown:
-		return nil
-	case portal.Token:
-		amount, index, recipient, destination := portal.DecodeTokenPayload(payload)
-		if chain != destination {
-			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
-		}
-
-		return k.Mint(ctx, recipient, amount, &index)
-	case portal.Index:
-		index, destination := portal.DecodeIndexPayload(payload)
-		if chain != destination {
-			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
-		}
-
-		return k.UpdateIndex(ctx, index)
 	}
 
 	return nil
