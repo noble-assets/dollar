@@ -198,9 +198,9 @@ func (k *Keeper) IncrementVaultUsers(ctx context.Context, vault vaults.VaultType
 
 	switch vault {
 	case vaults.STAKED:
-		stats.StakedTotalUsers = stats.StakedTotalUsers.Add(math.OneInt())
+		stats.StakedTotalUsers += 1
 	case vaults.FLEXIBLE:
-		stats.FlexibleTotalUsers = stats.FlexibleTotalUsers.Add(math.OneInt())
+		stats.FlexibleTotalUsers += 1
 	}
 
 	return k.VaultsStats.Set(ctx, stats)
@@ -215,9 +215,9 @@ func (k *Keeper) DecrementVaultUsers(ctx context.Context, vault vaults.VaultType
 
 	switch vault {
 	case vaults.STAKED:
-		stats.StakedTotalUsers = stats.StakedTotalUsers.Sub(math.OneInt())
+		stats.StakedTotalUsers -= 1
 	case vaults.FLEXIBLE:
-		stats.FlexibleTotalUsers = stats.FlexibleTotalUsers.Sub(math.OneInt())
+		stats.FlexibleTotalUsers -= 1
 	}
 
 	return k.VaultsStats.Set(ctx, stats)
