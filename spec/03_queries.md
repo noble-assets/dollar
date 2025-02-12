@@ -1,5 +1,21 @@
 # Queries
 
+## Index
+
+**Endpoint**: `/noble/dollar/v1/index`
+
+Retrieves the current Noble Dollar Index from state.
+
+```json
+{
+  "index": "1.110100000000000000"
+}
+```
+
+### Response
+
+- `index`:  — The current index of $USDN.
+
 ## Paused
 
 **Endpoint**: `/noble/dollar/v1/paused`
@@ -55,7 +71,6 @@ Retrieves the latest stats of Noble Dollar.
 - `total_holders`:  — The total number of $USDN holders.
 - `total_principal`:  — The total principal amount in the system.
 - `total_yield_accrued`:  — The total amount of yield that has been accrued over time.
-
 
 ## Yield
 
