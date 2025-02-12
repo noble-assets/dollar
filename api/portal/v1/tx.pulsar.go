@@ -4452,9 +4452,8 @@ const (
 )
 
 // MsgDeliver is the entrypoint for delivering Noble Dollar Portal messages.
-// This message acts as a public wrapper around the internal MsgDeliverInjection message.
-// It is primarily used by validators for transaction injections, but is left public
-// to enable permissionless manual relaying.
+// This is the public message to enable permissionless manual relaying, and
+// MsgDeliverInjection is an internal message used only by validators.
 type MsgDeliver struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4612,7 +4611,7 @@ func (*MsgTransferResponse) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_tx_proto_rawDescGZIP(), []int{3}
 }
 
-// MsgSetPausedState allows the authority to configure the Noble Dollar Portal pause state.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Portal paused state.
 type MsgSetPausedState struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

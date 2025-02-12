@@ -186,7 +186,7 @@ func (m *MsgUnlockResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUnlockResponse proto.InternalMessageInfo
 
-// MsgSetPausedState allows the authority to configure the Vault pause state, enabling or disabling Lock and Unlock actions.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Vault paused state, enabling or disabling Lock and Unlock actions.
 type MsgSetPausedState struct {
 	Signer string     `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
 	Paused PausedType `protobuf:"varint,2,opt,name=paused,proto3,enum=noble.dollar.vaults.v1.PausedType" json:"paused,omitempty"`

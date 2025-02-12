@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestMsgDeliverInjection ensurs that MsgDeliverInjection is not public.
+// TestMsgDeliverInjection ensures that the injected message can't be executed publicly.
 func TestMsgDeliverInjection(t *testing.T) {
 	ctx, _, chain := Suite(t)
 

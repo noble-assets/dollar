@@ -21,9 +21,8 @@ service Msg {
 }
 
 // MsgDeliver is the entrypoint for delivering Noble Dollar Portal messages.
-// This message acts as a public wrapper around the internal MsgDeliverInjection message.
-// It is primarily used by validators for transaction injections, but is left public
-// to enable permissionless manual relaying.
+// This is the public message to enable permissionless manual relaying, and
+// MsgDeliverInjection is an internal message used only by validators.
 message MsgDeliver {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/portal/Deliver";

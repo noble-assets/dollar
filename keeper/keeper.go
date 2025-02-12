@@ -223,12 +223,13 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 	return yield, bz, nil
 }
 
-func (k *Keeper) DeliverInjections(ctx context.Context, msg *portal.MsgDeliverInjection) error {
+// Deliver is internal logic executed when delivering portal messages.
+func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 	if k.GetPortalPaused(ctx) {
 		return portal.ErrPaused
 	}
 
-	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, msg.Vaa)
+	vaa, err := k.wormhole.ParseAndVerifyVAA(ctx, bz)
 	if err != nil {
 		return err
 	}
@@ -276,7 +277,6 @@ func (k *Keeper) DeliverInjections(ctx context.Context, msg *portal.MsgDeliverIn
 	}
 
 	return k.HandlePayload(ctx, managerMessage.Payload)
-
 }
 
 // HandlePayload is a utility that handles custom payloads when delivering portal messages.

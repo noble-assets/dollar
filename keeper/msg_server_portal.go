@@ -42,9 +42,7 @@ func NewPortalMsgServer(keeper *Keeper) portal.MsgServer {
 }
 
 func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*portal.MsgDeliverResponse, error) {
-	if err := k.DeliverInjections(ctx, &portal.MsgDeliverInjection{
-		Vaa: msg.Vaa,
-	}); err != nil {
+	if err := k.Keeper.Deliver(ctx, msg.Vaa); err != nil {
 		return nil, err
 	}
 

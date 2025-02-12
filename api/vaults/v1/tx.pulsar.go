@@ -2787,7 +2787,7 @@ func (*MsgUnlockResponse) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v1_tx_proto_rawDescGZIP(), []int{3}
 }
 
-// MsgSetPausedState allows the authority to configure the Vault pause state, enabling or disabling Lock and Unlock actions.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Vault paused state, enabling or disabling Lock and Unlock actions.
 type MsgSetPausedState struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

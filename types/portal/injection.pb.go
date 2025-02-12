@@ -22,8 +22,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgDeliverInjection is an internal message type used for delivering Noble Dollar Portal messages.
-// It is specifically used for internal ABCI++ operations to insert VAA's into the block.
+// MsgDeliverInjection is an internal message type used for delivering Noble
+// Dollar Portal messages. It is specifically used to insert VAA's into the top
+// of a block via ABCI++.
 type MsgDeliverInjection struct {
 	Vaa []byte `protobuf:"bytes,1,opt,name=vaa,proto3" json:"vaa,omitempty"`
 }

@@ -33,9 +33,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgDeliver is the entrypoint for delivering Noble Dollar Portal messages.
-// This message acts as a public wrapper around the internal MsgDeliverInjection message.
-// It is primarily used by validators for transaction injections, but is left public
-// to enable permissionless manual relaying.
+// This is the public message to enable permissionless manual relaying, and
+// MsgDeliverInjection is an internal message used only by validators.
 type MsgDeliver struct {
 	Signer string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
 	Vaa    []byte `protobuf:"bytes,2,opt,name=vaa,proto3" json:"vaa,omitempty"`
@@ -189,7 +188,7 @@ func (m *MsgTransferResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgTransferResponse proto.InternalMessageInfo
 
-// MsgSetPausedState allows the authority to configure the Noble Dollar Portal pause state.
+// MsgSetPausedState allows the authority to configure the Noble Dollar Portal paused state.
 type MsgSetPausedState struct {
 	Signer string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
 	Paused bool   `protobuf:"varint,2,opt,name=paused,proto3" json:"paused,omitempty"`
