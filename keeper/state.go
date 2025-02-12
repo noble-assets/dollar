@@ -22,7 +22,6 @@ package keeper
 
 import (
 	"context"
-
 	"cosmossdk.io/math"
 )
 
@@ -90,7 +89,10 @@ func (k *Keeper) DecrementTotalPrincipal(ctx context.Context, amount math.Int) e
 		return err
 	}
 
-	stats.TotalPrincipal = stats.TotalPrincipal.Sub(amount)
+	stats.TotalPrincipal, err = stats.TotalPrincipal.SafeSub(amount)
+	if err != nil {
+		return err
+	}
 
 	return k.Stats.Set(ctx, stats)
 }
@@ -102,7 +104,10 @@ func (k *Keeper) IncrementTotalPrincipal(ctx context.Context, amount math.Int) e
 		return err
 	}
 
-	stats.TotalPrincipal = stats.TotalPrincipal.Add(amount)
+	stats.TotalPrincipal, err = stats.TotalPrincipal.SafeAdd(amount)
+	if err != nil {
+		return err
+	}
 
 	return k.Stats.Set(ctx, stats)
 }
