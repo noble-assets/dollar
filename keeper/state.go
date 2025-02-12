@@ -56,7 +56,9 @@ func (k *Keeper) DecrementTotalHolders(ctx context.Context) error {
 		return err
 	}
 
-	stats.TotalHolders -= 1
+	if stats.TotalHolders > 0 {
+		stats.TotalHolders -= 1
+	}
 
 	return k.Stats.Set(ctx, stats)
 }
@@ -120,7 +122,10 @@ func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int
 		return err
 	}
 
-	stats.TotalYieldAccrued = stats.TotalYieldAccrued.Add(amount)
+	stats.TotalYieldAccrued, err = stats.TotalYieldAccrued.SafeAdd(amount)
+	if err != nil {
+		return err
+	}
 
 	return k.Stats.Set(ctx, stats)
 }
