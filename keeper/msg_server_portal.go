@@ -47,7 +47,9 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 		return nil, err
 	}
 
-	return &portal.MsgDeliverResponse{}, nil
+	return &portal.MsgDeliverResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.Delivered{
+		Vaa: msg.Vaa,
+	})
 }
 
 func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {

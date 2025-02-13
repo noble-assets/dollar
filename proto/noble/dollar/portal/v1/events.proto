@@ -6,6 +6,11 @@ import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types/portal";
 
+// Delivered is the event emitted when a vaa is successfully delivered.
+message Delivered {
+  bytes vaa = 1;
+}
+
 // PeerUpdated is an event emitted whenever a peer is updated.
 message PeerUpdated {
   uint32 chain = 1 [
