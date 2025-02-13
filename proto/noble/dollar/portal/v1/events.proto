@@ -32,3 +32,8 @@ message OwnershipTransferred {
   string previous_owner = 1;
   string new_owner = 2;
 }
+
+// StatePausedUpdated is an event emitted whenever the paused state is updated.
+message StatePausedUpdated {
+  bool paused = 1;
+}

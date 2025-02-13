@@ -135,7 +135,9 @@ func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetP
 		return nil, err
 	}
 
-	return &portal.MsgSetPausedStateResponse{}, nil
+	return &portal.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.StatePausedUpdated{
+		Paused: msg.Paused,
+	})
 }
 
 func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {
