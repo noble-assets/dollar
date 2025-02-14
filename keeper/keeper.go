@@ -24,6 +24,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
+	errorsmod "errors"
 	"fmt"
 
 	"cosmossdk.io/collections"
@@ -238,7 +239,11 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 
 	principal, err := k.Principal.Get(ctx, bz)
 	if err != nil {
-		return math.ZeroInt(), nil, errors.Wrapf(err, "unable to get principal for account %s from state", account)
+		if !errorsmod.Is(err, collections.ErrNotFound) {
+			return math.ZeroInt(), nil, errors.Wrapf(err, "unable to get principal for account %s from state", account)
+		}
+
+		principal = math.ZeroInt()
 	}
 
 	rawIndex, err := k.Index.Get(ctx)

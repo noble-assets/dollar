@@ -41,7 +41,7 @@ message QueryOwnerResponse {
 message QueryPaused {}
 
 message QueryPausedResponse {
-  bool paused = 1;
+  bool paused = 1 [(amino.dont_omitempty) = true];
 }
 
 message QueryPeers {}
@@ -57,5 +57,5 @@ message QueryPeersResponse {
 message QueryNonce {}
 
 message QueryNonceResponse {
-  uint32 nonce = 1;
+  uint32 nonce = 1 [(amino.dont_omitempty) = true];
 }
