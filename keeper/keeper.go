@@ -24,7 +24,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/hex"
-	errorsmod "errors"
+	"errors"
 	"fmt"
 
 	"cosmossdk.io/collections"
@@ -32,7 +32,7 @@ import (
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/core/header"
 	"cosmossdk.io/core/store"
-	"cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -150,7 +150,7 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 
 		rawIndex, err := k.Index.Get(ctx)
 		if err != nil {
-			return recipient, errors.Wrap(err, "unable to get index from state")
+			return recipient, sdkerrors.Wrap(err, "unable to get index from state")
 		}
 		index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 		principal := amount.ToLegacyDec().Quo(index).TruncateInt()
@@ -160,15 +160,15 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		if !sender.Equals(types.ModuleAddress) {
 			senderPrincipal, err := k.Principal.Get(ctx, sender)
 			if err != nil {
-				if errors.IsOf(err, collections.ErrNotFound) {
+				if sdkerrors.IsOf(err, collections.ErrNotFound) {
 					senderPrincipal = math.ZeroInt()
 				} else {
-					return recipient, errors.Wrap(err, "unable to get sender principal from state")
+					return recipient, sdkerrors.Wrap(err, "unable to get sender principal from state")
 				}
 			}
 			err = k.Principal.Set(ctx, sender, senderPrincipal.Sub(principal))
 			if err != nil {
-				return recipient, errors.Wrap(err, "unable to set sender principal to state")
+				return recipient, sdkerrors.Wrap(err, "unable to set sender principal to state")
 			}
 
 			balance := k.bank.GetBalance(ctx, sender, k.denom)
@@ -178,13 +178,13 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 				// statistic.
 				err = k.DecrementTotalHolders(ctx)
 				if err != nil {
-					return recipient, errors.Wrap(err, "unable to decrement total holders")
+					return recipient, sdkerrors.Wrap(err, "unable to decrement total holders")
 				}
 			}
 		} else {
 			err = k.IncrementTotalPrincipal(ctx, principal)
 			if err != nil {
-				return recipient, errors.Wrap(err, "unable to increment total principal")
+				return recipient, sdkerrors.Wrap(err, "unable to increment total principal")
 			}
 		}
 
@@ -193,15 +193,15 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		if !recipient.Equals(types.ModuleAddress) {
 			recipientPrincipal, err := k.Principal.Get(ctx, recipient)
 			if err != nil {
-				if errors.IsOf(err, collections.ErrNotFound) {
+				if sdkerrors.IsOf(err, collections.ErrNotFound) {
 					recipientPrincipal = math.ZeroInt()
 				} else {
-					return recipient, errors.Wrap(err, "unable to get recipient principal from state")
+					return recipient, sdkerrors.Wrap(err, "unable to get recipient principal from state")
 				}
 			}
 			err = k.Principal.Set(ctx, recipient, recipientPrincipal.Add(principal))
 			if err != nil {
-				return recipient, errors.Wrap(err, "unable to set recipient principal to state")
+				return recipient, sdkerrors.Wrap(err, "unable to set recipient principal to state")
 			}
 
 			balance := k.bank.GetBalance(ctx, recipient, k.denom)
@@ -211,13 +211,13 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 				// statistic.
 				err = k.IncrementTotalHolders(ctx)
 				if err != nil {
-					return recipient, errors.Wrap(err, "unable to increment total holders")
+					return recipient, sdkerrors.Wrap(err, "unable to increment total holders")
 				}
 			}
 		} else {
 			err = k.DecrementTotalPrincipal(ctx, principal)
 			if err != nil {
-				return recipient, errors.Wrap(err, "unable to decrement total principal")
+				return recipient, sdkerrors.Wrap(err, "unable to decrement total principal")
 			}
 		}
 	}
@@ -234,13 +234,13 @@ func (k *Keeper) GetDenom() string {
 func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte, error) {
 	bz, err := k.address.StringToBytes(account)
 	if err != nil {
-		return math.ZeroInt(), nil, errors.Wrapf(err, "unable to decode account %s", account)
+		return math.ZeroInt(), nil, sdkerrors.Wrapf(err, "unable to decode account %s", account)
 	}
 
 	principal, err := k.Principal.Get(ctx, bz)
 	if err != nil {
-		if !errorsmod.Is(err, collections.ErrNotFound) {
-			return math.ZeroInt(), nil, errors.Wrapf(err, "unable to get principal for account %s from state", account)
+		if !errors.Is(err, collections.ErrNotFound) {
+			return math.ZeroInt(), nil, sdkerrors.Wrapf(err, "unable to get principal for account %s from state", account)
 		}
 
 		principal = math.ZeroInt()
@@ -248,7 +248,7 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 
 	rawIndex, err := k.Index.Get(ctx)
 	if err != nil {
-		return math.ZeroInt(), nil, errors.Wrap(err, "unable to get index from state")
+		return math.ZeroInt(), nil, sdkerrors.Wrap(err, "unable to get index from state")
 	}
 	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
@@ -278,11 +278,11 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 
 	peer, err := k.PortalPeers.Get(ctx, uint16(vaa.EmitterChain))
 	if err != nil {
-		return errors.Wrapf(portal.ErrInvalidPeer, "chain %d not configured", vaa.EmitterChain)
+		return sdkerrors.Wrapf(portal.ErrInvalidPeer, "chain %d not configured", vaa.EmitterChain)
 	}
 
 	if !bytes.Equal(peer.Transceiver, vaa.EmitterAddress.Bytes()) {
-		return errors.Wrapf(
+		return sdkerrors.Wrapf(
 			portal.ErrInvalidPeer,
 			"expected transceiver %s for chain %d, got %s",
 			hex.EncodeToString(peer.Transceiver), vaa.EmitterChain,
@@ -296,7 +296,7 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 	}
 
 	if !bytes.Equal(peer.Manager, transceiverMessage.SourceManagerAddress) {
-		return errors.Wrapf(
+		return sdkerrors.Wrapf(
 			portal.ErrInvalidPeer,
 			"expected manager %s for chain %d, got %s",
 			hex.EncodeToString(peer.Manager), vaa.EmitterChain,
@@ -305,7 +305,7 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 	}
 
 	if !bytes.Equal(portal.PaddedManagerAddress, transceiverMessage.RecipientManagerAddress) {
-		return errors.Wrapf(
+		return sdkerrors.Wrapf(
 			portal.ErrInvalidMessage,
 			"expected recipient manager %s, got %s",
 			hex.EncodeToString(portal.PaddedManagerAddress),
