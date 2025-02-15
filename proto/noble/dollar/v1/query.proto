@@ -51,7 +51,7 @@ message QueryIndexResponse {
 message QueryPaused {}
 
 message QueryPausedResponse {
-  bool paused = 1;
+  bool paused = 1 [(amino.dont_omitempty) = true];
 }
 
 message QueryPrincipal {
