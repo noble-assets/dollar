@@ -148,12 +148,17 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			}
 		}
 
-		rawIndex, err := k.Index.Get(ctx)
+		index, err := k.Index.Get(ctx)
 		if err != nil {
 			return recipient, sdkerrors.Wrap(err, "unable to get index from state")
 		}
-		index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
-		principal := amount.ToLegacyDec().Quo(index).TruncateInt()
+
+		// When burning and transferring, the $M token executes the
+		// `_getPrincipalAmountRoundedUp` function. As $USDN inherits the
+		// yielding properties of $M, we mimic that functionality here. When
+		// minting, there is a discrepancy in their logic, however we choose to
+		// execute the same functionality as burning and transferring.
+		principal := amount.MulRaw(1e12).AddRaw(index).SubRaw(1).QuoRaw(index)
 
 		// We don't want to update the sender's principal in the case of issuance.
 		// -> Transfer from Module to User account.
@@ -246,14 +251,13 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 		principal = math.ZeroInt()
 	}
 
-	rawIndex, err := k.Index.Get(ctx)
+	index, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), nil, sdkerrors.Wrap(err, "unable to get index from state")
 	}
-	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
 	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
-	expectedBalance := index.MulInt(principal).TruncateInt()
+	expectedBalance := principal.MulRaw(index).QuoRaw(1e12)
 
 	yield, _ := expectedBalance.SafeSub(currentBalance)
 
