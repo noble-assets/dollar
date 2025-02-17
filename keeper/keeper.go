@@ -149,14 +149,15 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		}
 
 		// When burning and transferring, the $M token executes the
-		// `_getPrincipalAmountRoundedUp` function. As $USDN inherits the
-		// yielding properties of $M, we mimic that functionality here. When
-		// minting, there is a discrepancy in their logic, however we choose to
-		// execute the same functionality as burning and transferring.
-		principal, err := k.GetPrincipalAmount(ctx, amount)
+		// `_getPrincipalAmountRoundedUp` function. When minting, the $M token
+		// executes the `_getPrincipalAmountRoundedDown` function. As $USDN
+		// inherits the yielding properties of $M, we mimic that functionality
+		// here.
+		index, err := k.Index.Get(ctx)
 		if err != nil {
-			return recipient, err
+			return recipient, sdkerrors.Wrap(err, "unable to get index from state")
 		}
+		principal := k.GetPrincipalAmountRoundedUp(amount, index)
 
 		// We don't want to update the sender's principal in the case of issuance.
 		// -> Transfer from Module to User account.
@@ -194,6 +195,10 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		// We don't want to update the recipient's principal in the case of withdrawal.
 		// -> Transfer from User to Module account.
 		if !recipient.Equals(types.ModuleAddress) {
+			if sender.Equals(types.ModuleAddress) {
+				principal = k.GetPrincipalAmountRoundedDown(amount, index)
+			}
+
 			recipientPrincipal, err := k.Principal.Get(ctx, recipient)
 			if err != nil {
 				if sdkerrors.IsOf(err, collections.ErrNotFound) {
@@ -249,11 +254,13 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 		principal = math.ZeroInt()
 	}
 
-	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
-	expectedBalance, err := k.GetPresentAmount(ctx, principal)
+	index, err := k.Index.Get(ctx)
 	if err != nil {
-		return math.ZeroInt(), nil, err
+		return math.ZeroInt(), nil, sdkerrors.Wrap(err, "unable to get index from state")
 	}
+
+	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
+	expectedBalance := k.GetPresentAmount(principal, index)
 
 	yield, _ := expectedBalance.SafeSub(currentBalance)
 

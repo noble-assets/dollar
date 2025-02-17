@@ -125,7 +125,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
-	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
+	expectedSupply := k.GetPresentAmount(totalPrincipal, rawIndex)
 
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
 	if coins.IsAllPositive() {
