@@ -31,12 +31,7 @@ enum PausedType {
 }
 
 message Reward {
-  string index = 1 [
-    (amino.dont_omitempty) = true,
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable) = false
-  ];
+  int64 index = 1;
   string total = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
@@ -58,12 +53,7 @@ message Position {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-  string index = 2 [
-    (amino.dont_omitempty) = true,
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable) = false
-  ];
+  int64 index = 2;
   string amount = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
@@ -85,12 +75,7 @@ message PositionEntry {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-  string index = 4 [
-    (amino.dont_omitempty) = true,
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable) = false
-  ];
+  int64 index = 4;
   string amount = 5 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",

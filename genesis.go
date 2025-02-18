@@ -101,12 +101,12 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	}
 
 	for _, reward := range genesis.Vaults.Rewards {
-		if err = k.VaultsRewards.Set(ctx, reward.Index.String(), vaults.Reward{
+		if err = k.VaultsRewards.Set(ctx, reward.Index, vaults.Reward{
 			Index:   reward.Index,
 			Total:   reward.Total,
 			Rewards: reward.Rewards,
 		}); err != nil {
-			panic(errors.Wrapf(err, "unable to set vaults reward (index:%s)", reward.Index))
+			panic(errors.Wrapf(err, "unable to set vaults reward (index:%d)", reward.Index))
 		}
 	}
 

@@ -68,7 +68,7 @@ type Keeper struct {
 	VaultsPaused                 collections.Item[int32]
 	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
 	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
-	VaultsRewards                collections.Map[string, vaults.Reward]
+	VaultsRewards                collections.Map[int64, vaults.Reward]
 	VaultsStats                  collections.Item[vaults.Stats]
 }
 
@@ -109,7 +109,7 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
 		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
-		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.StringKey, codec.CollValue[vaults.Reward](cdc)),
+		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
 		VaultsStats:                  collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
 	}
 

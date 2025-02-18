@@ -88,14 +88,11 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 	}
 
 	// Get the current Index.
-	rawIndex, err := k.Index.Get(ctx)
+	index, err := k.Index.Get(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get index from state")
 	}
-	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
-
-	// Calculate the amount Principal.
-	amountPrincipal := msg.Amount.ToLegacyDec().Quo(index).TruncateInt()
+	amountPrincipal := k.GetPrincipalAmountRoundedDown(msg.Amount, index)
 
 	// Create the user Vault Position.
 	if err = k.VaultsPositions.Set(ctx, key, vaults.Position{
@@ -179,7 +176,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 			positionAmountToRemove = remainingAmountToRemove
 		}
 		amountToSend := positionAmountToRemove
-		positionPrincipalToRemove := positionAmountToRemove.ToLegacyDec().Quo(position.Index).TruncateInt()
+		positionPrincipalToRemove := k.GetPrincipalAmountRoundedDown(positionAmountToRemove, position.Index)
 
 		// If the vault is Flexible, handle the additional logic.
 		if msg.Vault == vaults.FLEXIBLE {
@@ -303,34 +300,33 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	}
 
 	// Retrieve the current Index and amount Principal.
-	rawCurrentIndex, err := k.Index.Get(ctx)
+	currentIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), errors.Wrap(err, "unable to get index from state")
 	}
-	currentIndex := math.LegacyNewDec(rawCurrentIndex).QuoInt64(1e12)
-	amountPrincipal := amount.ToLegacyDec().Quo(position.Index)
+	amountPrincipal := k.GetPrincipalAmountRoundedDown(amount, position.Index)
 
 	// Iterate through the rewards to calculate the amount owed to the user, proportional to their position.
 	// NOTE: For the user to be eligible, they must have joined before and exited after a complete `UpdateIndex` cycle.
 	rewardsAmount := math.ZeroInt()
 	if err := k.VaultsRewards.Walk(
 		ctx,
-		new(collections.Range[string]).StartExclusive(position.Index.String()), // Exclude the entry point Index.
-		func(key string, record vaults.Reward) (stop bool, err error) {
+		new(collections.Range[int64]).StartExclusive(position.Index), // Exclude the entry point Index.
+		func(key int64, record vaults.Reward) (stop bool, err error) {
 			if !record.Total.IsPositive() || !record.Rewards.IsPositive() {
 				return false, nil
 			}
 
 			// Exclude the last Index.
 			userReward := math.ZeroInt()
-			if !record.Index.Equal(currentIndex) {
-				userReward = record.Rewards.ToLegacyDec().Quo(record.Total.ToLegacyDec()).Mul(amountPrincipal).TruncateInt()
+			if record.Index != currentIndex && !record.Rewards.IsNegative() {
+				userReward = record.Rewards.ToLegacyDec().Quo(record.Total.ToLegacyDec()).MulInt(amountPrincipal).TruncateInt()
 			}
 
 			// Update the Rewards entry.
 			if err = k.VaultsRewards.Set(ctx, key, vaults.Reward{
 				Index:   record.Index,
-				Total:   record.Total.Sub(amountPrincipal.TruncateInt()),
+				Total:   record.Total.Sub(amountPrincipal),
 				Rewards: record.Rewards.Sub(userReward),
 			}); err != nil {
 				return true, err
