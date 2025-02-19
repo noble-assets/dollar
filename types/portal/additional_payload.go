@@ -26,7 +26,7 @@ import "encoding/binary"
 //
 // https://github.com/m0-foundation/m-portal/blob/9c72c13d8416ef77f3ea89316167697133d1eeee/src/libs/PayloadEncoder.sol#L68-L73
 func EncodeAdditionalPayload(index int64, destinationToken []byte) (bz []byte) {
-	binary.BigEndian.PutUint64(bz, uint64(index))
+	bz = binary.BigEndian.AppendUint64(bz, uint64(index))
 	bz = append(bz, destinationToken...)
 
 	return
