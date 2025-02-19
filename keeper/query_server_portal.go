@@ -23,6 +23,9 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
+	"cosmossdk.io/errors"
+
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
 )
@@ -65,6 +68,36 @@ func (k portalQueryServer) Peers(ctx context.Context, req *portal.QueryPeers) (*
 	peers, err := k.GetPortalPeers(ctx)
 
 	return &portal.QueryPeersResponse{Peers: peers}, err
+}
+
+func (k portalQueryServer) SupportedBridgingPaths(ctx context.Context, req *portal.QuerySupportedBridgingPaths) (*portal.QuerySupportedBridgingPathsResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	// NOTE: We have to typecast here because protoc-gen-grpc-gateway doesn't
+	// support it via gogoproto.
+	destinationChainId := uint16(req.DestinationChainId)
+
+	iterator, err := k.PortalSupportedBridgingPaths.Iterate(
+		ctx,
+		collections.NewPrefixedPairRange[uint16, []byte](destinationChainId),
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to iterate over supported bridging paths")
+	}
+
+	var destinationTokens [][]byte
+	for ; iterator.Valid(); iterator.Next() {
+		key, err := iterator.Key()
+		if err != nil {
+			return nil, errors.Wrap(err, "unable to iterate over supported bridging paths")
+		}
+
+		destinationTokens = append(destinationTokens, key.K2())
+	}
+
+	return &portal.QuerySupportedBridgingPathsResponse{DestinationTokens: destinationTokens}, nil
 }
 
 func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*portal.QueryNonceResponse, error) {
