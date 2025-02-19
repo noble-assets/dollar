@@ -120,12 +120,22 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, errors.Wrap(err, "unable to burn coins")
 	}
 
-	return &portal.MsgTransferResponse{}, k.wormhole.PostMessage(
+	err = k.wormhole.PostMessage(
 		ctx,
 		portal.TransceiverAddress,
 		rawTransceiverMessage,
 		nonce,
 	)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to post transfer message")
+	}
+
+	return &portal.MsgTransferResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.TransferSent{
+		Recipient:   msg.Recipient,
+		Amount:      msg.Amount,
+		Chain:       msg.Chain,
+		MsgSequence: uint64(nonce),
+	})
 }
 
 func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetPausedState) (*portal.MsgSetPausedStateResponse, error) {

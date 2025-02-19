@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package noble.dollar.portal.v1;
 
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types/portal";
@@ -10,6 +12,25 @@ option go_package = "dollar.noble.xyz/types/portal";
 message Delivered {
   bytes vaa = 1;
 }
+
+// Ref: https://github.com/wormhole-foundation/native-token-transfers/blob/3311787ab22087f5c10ab08edb6a2a5e3f7afd77/evm/src/interfaces/INttManager.sol#L26-L33
+// NOTE: not all fields used in the original implementations are available & they also emit the digest which we
+// don't compute.
+message TransferSent {
+  bytes recipient = 1;
+  string amount = 2 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint32 chain = 3 [
+    (gogoproto.customtype) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+  uint64 msg_sequence = 4;
+}
+
 
 // PeerUpdated is an event emitted whenever a peer is updated.
 message PeerUpdated {
