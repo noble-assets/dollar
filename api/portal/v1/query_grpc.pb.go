@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Query_Owner_FullMethodName  = "/noble.dollar.portal.v1.Query/Owner"
-	Query_Paused_FullMethodName = "/noble.dollar.portal.v1.Query/Paused"
-	Query_Peers_FullMethodName  = "/noble.dollar.portal.v1.Query/Peers"
-	Query_Nonce_FullMethodName  = "/noble.dollar.portal.v1.Query/Nonce"
+	Query_Owner_FullMethodName                  = "/noble.dollar.portal.v1.Query/Owner"
+	Query_Paused_FullMethodName                 = "/noble.dollar.portal.v1.Query/Paused"
+	Query_Peers_FullMethodName                  = "/noble.dollar.portal.v1.Query/Peers"
+	Query_SupportedBridgingPaths_FullMethodName = "/noble.dollar.portal.v1.Query/SupportedBridgingPaths"
+	Query_Nonce_FullMethodName                  = "/noble.dollar.portal.v1.Query/Nonce"
 )
 
 // QueryClient is the client API for Query service.
@@ -32,6 +33,7 @@ type QueryClient interface {
 	Owner(ctx context.Context, in *QueryOwner, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
 	Peers(ctx context.Context, in *QueryPeers, opts ...grpc.CallOption) (*QueryPeersResponse, error)
+	SupportedBridgingPaths(ctx context.Context, in *QuerySupportedBridgingPaths, opts ...grpc.CallOption) (*QuerySupportedBridgingPathsResponse, error)
 	Nonce(ctx context.Context, in *QueryNonce, opts ...grpc.CallOption) (*QueryNonceResponse, error)
 }
 
@@ -73,6 +75,16 @@ func (c *queryClient) Peers(ctx context.Context, in *QueryPeers, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *queryClient) SupportedBridgingPaths(ctx context.Context, in *QuerySupportedBridgingPaths, opts ...grpc.CallOption) (*QuerySupportedBridgingPathsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QuerySupportedBridgingPathsResponse)
+	err := c.cc.Invoke(ctx, Query_SupportedBridgingPaths_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Nonce(ctx context.Context, in *QueryNonce, opts ...grpc.CallOption) (*QueryNonceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(QueryNonceResponse)
@@ -90,6 +102,7 @@ type QueryServer interface {
 	Owner(context.Context, *QueryOwner) (*QueryOwnerResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
 	Peers(context.Context, *QueryPeers) (*QueryPeersResponse, error)
+	SupportedBridgingPaths(context.Context, *QuerySupportedBridgingPaths) (*QuerySupportedBridgingPathsResponse, error)
 	Nonce(context.Context, *QueryNonce) (*QueryNonceResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
@@ -109,6 +122,9 @@ func (UnimplementedQueryServer) Paused(context.Context, *QueryPaused) (*QueryPau
 }
 func (UnimplementedQueryServer) Peers(context.Context, *QueryPeers) (*QueryPeersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Peers not implemented")
+}
+func (UnimplementedQueryServer) SupportedBridgingPaths(context.Context, *QuerySupportedBridgingPaths) (*QuerySupportedBridgingPathsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SupportedBridgingPaths not implemented")
 }
 func (UnimplementedQueryServer) Nonce(context.Context, *QueryNonce) (*QueryNonceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Nonce not implemented")
@@ -188,6 +204,24 @@ func _Query_Peers_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_SupportedBridgingPaths_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuerySupportedBridgingPaths)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).SupportedBridgingPaths(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_SupportedBridgingPaths_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).SupportedBridgingPaths(ctx, req.(*QuerySupportedBridgingPaths))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Nonce_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryNonce)
 	if err := dec(in); err != nil {
@@ -224,6 +258,10 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Peers",
 			Handler:    _Query_Peers_Handler,
+		},
+		{
+			MethodName: "SupportedBridgingPaths",
+			Handler:    _Query_SupportedBridgingPaths_Handler,
 		},
 		{
 			MethodName: "Nonce",

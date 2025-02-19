@@ -28,11 +28,11 @@ import (
 	"cosmossdk.io/core/address"
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	"dollar.noble.xyz/types/vaults"
 
 	"dollar.noble.xyz/keeper"
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
+	"dollar.noble.xyz/types/vaults"
 )
 
 func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, genesis types.GenesisState) {
@@ -85,6 +85,14 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
+	for _, supportedBridgingPath := range genesis.Portal.SupportedBridgingPaths {
+		key := collections.Join(supportedBridgingPath.DestinationChainId, supportedBridgingPath.DestinationToken)
+		err = k.PortalSupportedBridgingPaths.Set(ctx, key, true)
+		if err != nil {
+			panic(errors.Wrapf(err, "unable to set supported bridging path (%d:%s)", supportedBridgingPath.DestinationChainId, supportedBridgingPath.DestinationToken))
+		}
+	}
+
 	if err = k.PortalNonce.Set(ctx, genesis.Portal.Nonce); err != nil {
 		panic(errors.Wrap(err, "unable to set genesis portal nonce"))
 	}
@@ -132,6 +140,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	portalOwner, _ := k.PortalOwner.Get(ctx)
 	portalPaused := k.GetPortalPaused(ctx)
 	portalPeers, _ := k.GetPortalPeers(ctx)
+	portalSupportedBridgingPaths, _ := k.GetPortalSupportedBridgingPaths(ctx)
 	portalNonce, _ := k.PortalNonce.Get(ctx)
 
 	vaultsRewards, _ := k.GetVaultsRewards(ctx)
@@ -142,10 +151,11 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
-			Owner:  portalOwner,
-			Paused: portalPaused,
-			Peers:  portalPeers,
-			Nonce:  portalNonce,
+			Owner:                  portalOwner,
+			Paused:                 portalPaused,
+			Peers:                  portalPeers,
+			SupportedBridgingPaths: portalSupportedBridgingPaths,
+			Nonce:                  portalNonce,
 		},
 		Vaults: vaults.GenesisState{
 			Positions:              vaultsPositions,

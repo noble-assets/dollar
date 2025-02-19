@@ -23,10 +23,17 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 
 	"dollar.noble.xyz/types/portal"
 )
+
+// GetPortalPaused is a utility that returns the current paused state.
+func (k *Keeper) GetPortalPaused(ctx context.Context) bool {
+	paused, _ := k.PortalPaused.Get(ctx)
+	return paused
+}
 
 // GetPortalPeers is a utility that returns all peers from state.
 func (k *Keeper) GetPortalPeers(ctx context.Context) (map[uint16]portal.Peer, error) {
@@ -40,10 +47,21 @@ func (k *Keeper) GetPortalPeers(ctx context.Context) (map[uint16]portal.Peer, er
 	return peers, err
 }
 
-// GetPortalPaused is a utility that returns the current paused state.
-func (k *Keeper) GetPortalPaused(ctx context.Context) bool {
-	paused, _ := k.PortalPaused.Get(ctx)
-	return paused
+// GetPortalSupportedBridgingPaths is a utility that returns all supported bridging paths from state.
+func (k *Keeper) GetPortalSupportedBridgingPaths(ctx context.Context) ([]portal.SupportedBridgingPath, error) {
+	var supportedBridgingPaths []portal.SupportedBridgingPath
+
+	err := k.PortalSupportedBridgingPaths.Walk(ctx, nil, func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {
+		if supported {
+			supportedBridgingPaths = append(supportedBridgingPaths, portal.SupportedBridgingPath{
+				DestinationChainId: key.K1(),
+				DestinationToken:   key.K2(),
+			})
+		}
+		return false, nil
+	})
+
+	return supportedBridgingPaths, err
 }
 
 // IncrementPortalNonce is a utility that returns the next nonce and increments.
