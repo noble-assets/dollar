@@ -262,11 +262,10 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
 	expectedBalance := k.GetPresentAmount(principal, index)
 
-	yield, _ := expectedBalance.SafeSub(currentBalance)
-
-	// TODO: temporary fix for negative coin amounts
-	if yield.Abs().Equal(math.OneInt()) || yield.IsNegative() {
-		return math.ZeroInt(), nil, nil
+	// We need to make sure that the yield value is valid and > 1.
+	yield, err := expectedBalance.SafeSub(currentBalance)
+	if err != nil || yield.Equal(math.OneInt()) || yield.IsNegative() {
+		yield = math.ZeroInt()
 	}
 
 	return yield, bz, nil
