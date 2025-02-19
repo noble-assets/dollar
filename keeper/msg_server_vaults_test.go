@@ -240,7 +240,7 @@ func TestStakedVault(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	// ASSERT: Bob balance is expected to increase by the yield.
-	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt(), math.NewInt(115499999))
+	assert.Equal(t, math.NewInt(115500000), bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt())
 }
 
 func TestStakedVaultMultiPositions(t *testing.T) {
@@ -388,7 +388,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 			Address:   bob.Bytes,
 			Vault:     vaults.STAKED,
 			Principal: math.NewInt(45454545),
-			Index:     math.LegacyMustNewDecFromStr("1.1"),
+			Index:     1.1e12,
 			Amount:    math.NewInt(50 * ONE),
 			Time:      time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC),
 		},
@@ -396,7 +396,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 			Address:   bob.Bytes,
 			Vault:     vaults.STAKED,
 			Principal: math.NewInt(41322314),
-			Index:     math.LegacyMustNewDecFromStr("1.21"),
+			Index:     1.21e12,
 			Amount:    math.NewInt(50 * ONE),
 			Time:      time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
@@ -422,7 +422,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 			Address:   bob.Bytes,
 			Vault:     vaults.STAKED,
 			Principal: math.NewInt(36363636), // reduced (50-10)/1,1
-			Index:     math.LegacyMustNewDecFromStr("1.1"),
+			Index:     1.1e12,
 			Amount:    math.NewInt(40 * ONE), // reduced
 			Time:      time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC),
 		},
@@ -430,7 +430,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 			Address:   bob.Bytes,
 			Vault:     vaults.STAKED,
 			Principal: math.NewInt(41322314),
-			Index:     math.LegacyMustNewDecFromStr("1.21"),
+			Index:     1.21e12,
 			Amount:    math.NewInt(50 * ONE),
 			Time:      time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
@@ -456,7 +456,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 			Address:   bob.Bytes,
 			Vault:     vaults.STAKED,
 			Principal: math.NewInt(41322314),
-			Index:     math.LegacyMustNewDecFromStr("1.21"),
+			Index:     1.21e12,
 			Amount:    math.NewInt(50 * ONE),
 			Time:      time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		},
@@ -556,7 +556,7 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 		Signer: bob.Address,
 	})
 	assert.NoError(t, err)
-	assert.Equal(t, math.NewInt(115499999), bank.Balances[bob.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(115500000), bank.Balances[bob.Address].AmountOf("uusdn"))
 	assert.Equal(t, math.NewInt(0), bank.Balances[vaults.StakedVaultAddress.String()].AmountOf("uusdn"))
 	assert.Equal(t, math.NewInt(5499999), bank.Balances[vaults.FlexibleVaultAddress.String()].AmountOf("uusdn")) // no change
 
@@ -1092,29 +1092,29 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(990099009),
-			Rewards: math.NewInt(89108909),
+			Rewards: math.NewInt(89108911),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.21e12,
 			Total:   math.NewInt(990099009),
 			Rewards: math.NewInt(108910891),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.33"),
+			Index:   1.33e12,
 			Total:   math.NewInt(990099009),
 			Rewards: math.NewInt(118811881),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.46"),
+			Index:   1.46e12,
 			Total:   math.NewInt(1741978708),
-			Rewards: math.NewInt(128712872),
+			Rewards: math.NewInt(128712871),
 		},
 	}, rewards)
 
@@ -1128,16 +1128,16 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.Equal(t, vaults.PositionEntry{
 		Address:   bob.Bytes,
 		Vault:     vaults.FLEXIBLE,
-		Principal: math.LegacyNewDec(1000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.01")).TruncateInt(),
-		Index:     math.LegacyMustNewDecFromStr("1.01"),
+		Principal: k.GetPrincipalAmountRoundedDown(math.NewInt(1000*ONE), 1.01e12),
+		Index:     1.01e12,
 		Amount:    math.NewInt(1000 * ONE),
 		Time:      time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC),
 	}, bobPositions[1])
 	assert.Equal(t, vaults.PositionEntry{
 		Address:   alice.Bytes,
 		Vault:     vaults.FLEXIBLE,
-		Principal: math.LegacyNewDec(1000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.33")).TruncateInt(),
-		Index:     math.LegacyMustNewDecFromStr("1.33"),
+		Principal: k.GetPrincipalAmountRoundedDown(math.NewInt(1000*ONE), 1.33e12),
+		Index:     1.33e12,
 		Amount:    math.NewInt(1000 * ONE),
 		Time:      time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC),
 	}, alicePositions[0])
@@ -1155,29 +1155,29 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
+			Total:   math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
+		},
+		{
+			Index:   1.21e12,
+			Total:   math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
+		},
+		{
+			Index:   1.33e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
-			Index:   math.LegacyMustNewDecFromStr("1.33"),
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
-			Index:   math.LegacyMustNewDecFromStr("1.46"),
+			Index:   1.46e12,
 			Total:   math.NewInt(751879699),
-			Rewards: math.NewInt(128712872), // bob exited too early
+			Rewards: math.NewInt(128712871), // bob exited too early
 		},
 	}, rewards)
 
@@ -1202,29 +1202,29 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
+			Total:   math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
+		},
+		{
+			Index:   1.21e12,
+			Total:   math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
+		},
+		{
+			Index:   1.33e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.46e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
-			Index:   math.LegacyMustNewDecFromStr("1.33"),
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
-			Index:   math.LegacyMustNewDecFromStr("1.46"),
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(128712872), // bob and alice exited too early
+			Rewards: math.NewInt(128712871), // bob and alice exited too early
 		},
 	}, rewards)
 
@@ -1234,10 +1234,10 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.Equal(t, 0, len(alicePositions))
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield + boosted yield. (1000/1,0*1,46)[yield] + 330[rewards] = ~ 1762
-	assert.Equal(t, math.NewInt(1762376234), bank.Balances[bob.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(1762376235), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ASSERT: Alice balance is expected be as in the initial state + standard yield. (1000/1,33*1,46)[yield] + 0[rewards] = ~ 1153
-	assert.Equal(t, math.NewInt(1097744360), bank.Balances[alice.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(1097744362), bank.Balances[alice.Address].AmountOf("uusdn"))
 }
 
 func TestFlexibleVaultRewardsSimple(t *testing.T) {
@@ -1295,8 +1295,8 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.Equal(t, vaults.PositionEntry{
 		Address:   bob.Bytes,
 		Vault:     vaults.FLEXIBLE,
-		Principal: math.LegacyNewDec(1000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.1")).TruncateInt(),
-		Index:     math.LegacyMustNewDecFromStr("1.1"),
+		Principal: k.GetPrincipalAmountRoundedDown(math.NewInt(1000*ONE), 1.1e12),
+		Index:     1.1e12,
 		Amount:    math.NewInt(1000 * ONE),
 		Time:      time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 	}, bobPositions[1])
@@ -1328,8 +1328,8 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.Equal(t, vaults.PositionEntry{
 		Address:   alice.Bytes,
 		Vault:     vaults.FLEXIBLE,
-		Principal: math.LegacyNewDec(9000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.21")).TruncateInt(),
-		Index:     math.LegacyMustNewDecFromStr("1.21"),
+		Principal: k.GetPrincipalAmountRoundedDown(math.NewInt(9000*ONE), 1.21e12),
+		Index:     1.21e12,
 		Amount:    math.NewInt(9000 * ONE),
 		Time:      time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC),
 	}, alicePositions[0])
@@ -1345,18 +1345,18 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(89108909),
+			Rewards: math.NewInt(89108911),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
-			Total:   math.LegacyNewDec(1000 * ONE).Quo(math.LegacyMustNewDecFromStr("1.1")).TruncateInt(), // no alice yet
+			Index:   1.21e12,
+			Total:   k.GetPrincipalAmountRoundedDown(math.NewInt(1000*ONE), 1.1e12), // no alice yet
 			Rewards: math.NewInt(108910891),
 		},
 	}, rewards)
@@ -1383,22 +1383,22 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(89108909), // unclaimed, bob entered too late
+			Rewards: math.NewInt(89108911), // unclaimed, bob entered too late
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.21e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.33"),
+			Index:   1.33e12,
 			Total:   math.NewInt(7438016528),
 			Rewards: math.NewInt(118811881), // unclaimed, bob exited too early
 		},
@@ -1406,11 +1406,11 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.StakedTotalUsers, uint64(1))
-	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
-	assert.Equal(t, stats.FlexibleTotalUsers, uint64(1))
-	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(7438016528))
-	assert.Equal(t, stats.FlexibleTotalDistributedRewardsPrincipal, math.NewInt(108910891))
+	assert.Equal(t, uint64(1), stats.StakedTotalUsers)
+	assert.Equal(t, math.NewInt(990099009), stats.StakedTotalPrincipal)
+	assert.Equal(t, uint64(1), stats.FlexibleTotalUsers)
+	assert.Equal(t, math.NewInt(7438016528), stats.FlexibleTotalPrincipal)
+	assert.Equal(t, math.NewInt(108910890), stats.FlexibleTotalDistributedRewardsPrincipal)
 
 	// ACT: Alice withdraws 9000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -1430,22 +1430,22 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(89108909), // unclaimed, bob entered too late
+			Rewards: math.NewInt(89108911), // unclaimed, bob entered too late
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.21e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.33"),
+			Index:   1.33e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(118811881), // unclaimed, bob & alice exited too early
 		},
@@ -1453,17 +1453,17 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, stats.StakedTotalUsers, uint64(1))
-	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
-	assert.Equal(t, stats.FlexibleTotalUsers, uint64(0))
-	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(0))
-	assert.Equal(t, stats.FlexibleTotalDistributedRewardsPrincipal, math.NewInt(108910891+0))
+	assert.Equal(t, uint64(1), stats.StakedTotalUsers)
+	assert.Equal(t, math.NewInt(990099009), stats.StakedTotalPrincipal)
+	assert.Equal(t, uint64(0), stats.FlexibleTotalUsers)
+	assert.Equal(t, math.NewInt(0), stats.FlexibleTotalPrincipal)
+	assert.Equal(t, math.NewInt(108910890+0), stats.FlexibleTotalDistributedRewardsPrincipal)
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield + boosted yield. (1000/1,1*1,33)[yield] + 110[rewards] = ~1318
-	assert.Equal(t, math.NewInt(1318001799), bank.Balances[bob.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(1318001800), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ASSERT: Alice balance is expected be as in the initial state + standard yield + boosted yield. (9000/1,21*1,33)[yield] + 0[rewards] = ~ 9892
-	assert.Equal(t, math.NewInt(9892561982), bank.Balances[alice.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(9892561983), bank.Balances[alice.Address].AmountOf("uusdn"))
 }
 
 func TestFlexibleVaultRewardsHacky(t *testing.T) {
@@ -1527,17 +1527,17 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(990099009),
-			Rewards: math.NewInt(89108909),
+			Rewards: math.NewInt(89108911),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.21e12,
 			Total:   math.NewInt(9171917190),
 			Rewards: math.NewInt(108910891),
 		},
@@ -1564,27 +1564,27 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
+			Rewards: math.NewInt(1), // rounding leftovers
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.21e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(108910891),
 		},
 	}, rewards)
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield. (1000/1,0*1,21)[yield] + 100[rewards] = ~1287
-	assert.Equal(t, math.NewInt(1287128709), bank.Balances[bob.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(1287128712), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ASSERT: Alice balance is expected be as in the initial state + standard yield. (9000/1,1*1,21)[yield] + 0[rewards] = 9900
-	assert.Equal(t, math.NewInt(9899999999), bank.Balances[alice.Address].AmountOf("uusdn"))
+	assert.Equal(t, math.NewInt(9900000000), bank.Balances[alice.Address].AmountOf("uusdn"))
 }
 
 func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
@@ -1652,22 +1652,22 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.01"),
+			Index:   1.01e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(0),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.1"),
+			Index:   1.1e12,
 			Total:   math.NewInt(0),
-			Rewards: math.NewInt(89108909),
+			Rewards: math.NewInt(89108911),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.21"),
+			Index:   1.21e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(108910891),
 		},
 		{
-			Index:   math.LegacyMustNewDecFromStr("1.33"),
+			Index:   1.33e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(118811881),
 		},

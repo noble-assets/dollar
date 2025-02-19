@@ -10,7 +10,7 @@ const PausedKey = []byte("paused")
 
 ## Rewards
 
-The `Rewards` field is a mapping ([`collections.Map`][map]) between indexes (`string`) and a `vaults.Reward` value.
+The `Rewards` field is a mapping ([`collections.Map`][map]) between indexes (`int64`) and a `vaults.Reward` value.
 
 ```go
 const RewardPrefix = []byte("reward/")
