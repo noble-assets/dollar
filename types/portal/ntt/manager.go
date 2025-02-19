@@ -23,6 +23,8 @@ package ntt
 import (
 	"encoding/binary"
 	"errors"
+
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 // EncodeManagerMessage is a utility that encodes a manager message.
@@ -52,4 +54,11 @@ func ParseManagerMessage(bz []byte) (msg ManagerMessage, err error) {
 	}
 
 	return
+}
+
+func ManagerMessageDigest(sourceChainId uint16, msg ManagerMessage) []byte {
+	rawSourceChainId := make([]byte, 2)
+	binary.BigEndian.PutUint16(rawSourceChainId, sourceChainId)
+
+	return crypto.Keccak256(append(rawSourceChainId, EncodeManagerMessage(msg)...))
 }

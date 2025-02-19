@@ -102,11 +102,13 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	id := make([]byte, 32)
 	copy(id[32-len(rawNonce):], rawNonce)
 
-	rawManagerMessage := ntt.EncodeManagerMessage(ntt.ManagerMessage{
+	managerMessage := ntt.ManagerMessage{
 		Id:      id,
 		Sender:  rawSender,
 		Payload: rawNativeTokenTransfer,
-	})
+	}
+	rawManagerMessage := ntt.EncodeManagerMessage(managerMessage)
+	messageId := ntt.ManagerMessageDigest(msg.Chain, managerMessage)
 
 	rawTransceiverMessage := ntt.EncodeTransceiverMessage(ntt.TransceiverMessage{
 		SourceManagerAddress:    portal.PaddedManagerAddress,
@@ -130,12 +132,15 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, errors.Wrap(err, "unable to post transfer message")
 	}
 
-	return &portal.MsgTransferResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.TransferSent{
+	err = k.event.EventManager(ctx).Emit(ctx, &portal.TransferSent{
 		Recipient:   msg.Recipient,
 		Amount:      msg.Amount,
 		Chain:       msg.Chain,
 		MsgSequence: uint64(nonce),
+		MessageId:   messageId,
 	})
+
+	return &portal.MsgTransferResponse{}, nil
 }
 
 func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetPausedState) (*portal.MsgSetPausedStateResponse, error) {

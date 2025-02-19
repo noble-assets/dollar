@@ -13,9 +13,9 @@ message Delivered {
   bytes vaa = 1;
 }
 
-// Ref: https://github.com/wormhole-foundation/native-token-transfers/blob/3311787ab22087f5c10ab08edb6a2a5e3f7afd77/evm/src/interfaces/INttManager.sol#L26-L33
-// NOTE: not all fields used in the original implementations are available & they also emit the digest which we
-// don't compute.
+// NOTE: this event merges together two events with the same name in Solidity.
+// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L252-L259
+// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L260-L260
 message TransferSent {
   bytes recipient = 1;
   string amount = 2 [
@@ -29,8 +29,29 @@ message TransferSent {
     (gogoproto.nullable) = false
   ];
   uint64 msg_sequence = 4;
+  bytes message_id = 5;
 }
 
+// TODO: emit the event after merging @john branch.
+// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
+message USDNTokenSent {
+  string source_token  = 1;
+  uint32 destination_chain_id = 2 [
+    (gogoproto.customtype) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+  bytes32 destination_token = 3;
+  string sender = 4;
+  bytes recipient = 5;
+  string amount = 6 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 index = 7;
+  bytes message_id = 8;
+}
 
 // PeerUpdated is an event emitted whenever a peer is updated.
 message PeerUpdated {
