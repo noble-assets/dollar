@@ -20,15 +20,14 @@
 
 package portal
 
-import "cosmossdk.io/errors"
+import "encoding/binary"
 
-var (
-	ErrNoOwner           = errors.Register(SubmoduleName, 1, "there is no owner")
-	ErrNotOwner          = errors.Register(SubmoduleName, 2, "signer is not owner")
-	ErrSameOwner         = errors.Register(SubmoduleName, 3, "provided owner is the current owner")
-	ErrPaused            = errors.Register(SubmoduleName, 4, "portal is paused")
-	ErrInvalidPeer       = errors.Register(SubmoduleName, 5, "invalid peer")
-	ErrInvalidBridgePath = errors.Register(SubmoduleName, 6, "invalid bridge path")
-	ErrInvalidMessage    = errors.Register(SubmoduleName, 7, "invalid message")
-	ErrInvalidRecipient  = errors.Register(SubmoduleName, 8, "invalid recipient")
-)
+// EncodeAdditionalPayload is a utility for encoding an M Portal additional payload.
+//
+// https://github.com/m0-foundation/m-portal/blob/9c72c13d8416ef77f3ea89316167697133d1eeee/src/libs/PayloadEncoder.sol#L68-L73
+func EncodeAdditionalPayload(index int64, destinationToken []byte) (bz []byte) {
+	bz = binary.BigEndian.AppendUint64(bz, uint64(index))
+	bz = append(bz, destinationToken...)
+
+	return
+}

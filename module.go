@@ -184,12 +184,13 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 						},
 						{
 							RpcMethod: "Transfer",
-							Use:       "transfer [chain] [recipient] [amount]",
+							Use:       "transfer [amount] [destination-chain-id] [destination-token] [recipient]",
 							Short:     "Transfer USDN from Noble and receive M cross-chain",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "chain"},
-								{ProtoField: "recipient"},
 								{ProtoField: "amount"},
+								{ProtoField: "destination_chain_id"},
+								{ProtoField: "destination_token"},
+								{ProtoField: "recipient"},
 							},
 						},
 						{
@@ -206,6 +207,15 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 								{ProtoField: "chain"},
 								{ProtoField: "transceiver"},
 								{ProtoField: "manager"},
+							},
+						},
+						{
+							RpcMethod: "SetBridgingPath",
+							Use:       "set-bridging-path [destination-chain-id] [destination-token] [supported]",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+								{ProtoField: "destination_chain_id"},
+								{ProtoField: "destination_token"},
+								{ProtoField: "supported"},
 							},
 						},
 						{
@@ -276,8 +286,21 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							Use:       "owner",
 						},
 						{
+							RpcMethod: "Paused",
+							Use:       "paused",
+						},
+						{
 							RpcMethod: "Peers",
 							Use:       "peers",
+						},
+						{
+							RpcMethod:      "DestinationTokens",
+							Use:            "destination-tokens [chain-id]",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "chain_id"}},
+						},
+						{
+							RpcMethod: "Nonce",
+							Use:       "nonce",
 						},
 					},
 				},

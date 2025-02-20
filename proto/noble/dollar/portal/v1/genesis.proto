@@ -22,6 +22,9 @@ message GenesisState {
     (gogoproto.nullable) = false
   ];
 
+  // bridging_paths contains the genesis supported bridging paths of the Noble Dollar Portal.
+  repeated BridgingPath bridging_paths = 4 [(gogoproto.nullable) = false];
+
   // nonce contains the next available nonce used for transfers out of the Noble Dollar Portal.
-  uint32 nonce = 4;
+  uint32 nonce = 5;
 }

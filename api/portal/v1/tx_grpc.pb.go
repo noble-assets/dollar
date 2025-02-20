@@ -23,6 +23,7 @@ const (
 	Msg_Transfer_FullMethodName          = "/noble.dollar.portal.v1.Msg/Transfer"
 	Msg_SetPausedState_FullMethodName    = "/noble.dollar.portal.v1.Msg/SetPausedState"
 	Msg_SetPeer_FullMethodName           = "/noble.dollar.portal.v1.Msg/SetPeer"
+	Msg_SetBridgingPath_FullMethodName   = "/noble.dollar.portal.v1.Msg/SetBridgingPath"
 	Msg_TransferOwnership_FullMethodName = "/noble.dollar.portal.v1.Msg/TransferOwnership"
 )
 
@@ -34,6 +35,7 @@ type MsgClient interface {
 	Transfer(ctx context.Context, in *MsgTransfer, opts ...grpc.CallOption) (*MsgTransferResponse, error)
 	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
 	SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.CallOption) (*MsgSetPeerResponse, error)
+	SetBridgingPath(ctx context.Context, in *MsgSetBridgingPath, opts ...grpc.CallOption) (*MsgSetBridgingPathResponse, error)
 	TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error)
 }
 
@@ -85,6 +87,16 @@ func (c *msgClient) SetPeer(ctx context.Context, in *MsgSetPeer, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *msgClient) SetBridgingPath(ctx context.Context, in *MsgSetBridgingPath, opts ...grpc.CallOption) (*MsgSetBridgingPathResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgSetBridgingPathResponse)
+	err := c.cc.Invoke(ctx, Msg_SetBridgingPath_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) TransferOwnership(ctx context.Context, in *MsgTransferOwnership, opts ...grpc.CallOption) (*MsgTransferOwnershipResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MsgTransferOwnershipResponse)
@@ -103,6 +115,7 @@ type MsgServer interface {
 	Transfer(context.Context, *MsgTransfer) (*MsgTransferResponse, error)
 	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
 	SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error)
+	SetBridgingPath(context.Context, *MsgSetBridgingPath) (*MsgSetBridgingPathResponse, error)
 	TransferOwnership(context.Context, *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
@@ -125,6 +138,9 @@ func (UnimplementedMsgServer) SetPausedState(context.Context, *MsgSetPausedState
 }
 func (UnimplementedMsgServer) SetPeer(context.Context, *MsgSetPeer) (*MsgSetPeerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPeer not implemented")
+}
+func (UnimplementedMsgServer) SetBridgingPath(context.Context, *MsgSetBridgingPath) (*MsgSetBridgingPathResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetBridgingPath not implemented")
 }
 func (UnimplementedMsgServer) TransferOwnership(context.Context, *MsgTransferOwnership) (*MsgTransferOwnershipResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TransferOwnership not implemented")
@@ -222,6 +238,24 @@ func _Msg_SetPeer_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_SetBridgingPath_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetBridgingPath)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SetBridgingPath(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_SetBridgingPath_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SetBridgingPath(ctx, req.(*MsgSetBridgingPath))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Msg_TransferOwnership_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgTransferOwnership)
 	if err := dec(in); err != nil {
@@ -262,6 +296,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetPeer",
 			Handler:    _Msg_SetPeer_Handler,
+		},
+		{
+			MethodName: "SetBridgingPath",
+			Handler:    _Msg_SetBridgingPath_Handler,
 		},
 		{
 			MethodName: "TransferOwnership",

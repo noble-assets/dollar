@@ -26,6 +26,11 @@ service Query {
     option (google.api.http).get = "/noble/dollar/portal/v1/peers";
   }
 
+  rpc DestinationTokens(QueryDestinationTokens) returns (QueryDestinationTokensResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/portal/v1/destination_tokens/{chain_id}";
+  }
+
   rpc Nonce(QueryNonce) returns (QueryNonceResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/portal/v1/nonce";
@@ -52,6 +57,14 @@ message QueryPeersResponse {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
+}
+
+message QueryDestinationTokens {
+  uint32 chain_id = 1;
+}
+
+message QueryDestinationTokensResponse {
+  repeated bytes destination_tokens = 2 [(amino.dont_omitempty) = true];
 }
 
 message QueryNonce {}

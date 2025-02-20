@@ -25,6 +25,7 @@ import (
 	"context"
 	"encoding/binary"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 
 	"dollar.noble.xyz/types/portal"
@@ -54,9 +55,14 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, portal.ErrPaused
 	}
 
-	peer, err := k.PortalPeers.Get(ctx, msg.Chain)
+	peer, err := k.PortalPeers.Get(ctx, msg.DestinationChainId)
 	if err != nil {
-		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain %d is not configured", msg.Chain)
+		return nil, errors.Wrapf(portal.ErrInvalidPeer, "chain %d is not configured", msg.DestinationChainId)
+	}
+
+	key := collections.Join(msg.DestinationChainId, msg.DestinationToken)
+	if has, _ := k.PortalBridgingPaths.Has(ctx, key); !has {
+		return nil, errors.Wrapf(portal.ErrInvalidBridgePath, "token %s is not configured for chain %d", msg.DestinationToken, msg.DestinationChainId)
 	}
 
 	if len(msg.Recipient) != 32 {
@@ -67,14 +73,14 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get index from state")
 	}
-	additionalPayload := make([]byte, 8)
-	binary.BigEndian.PutUint64(additionalPayload, uint64(index))
+
+	additionalPayload := portal.EncodeAdditionalPayload(index, msg.DestinationToken)
 
 	rawNativeTokenTransfer := ntt.EncodeNativeTokenTransfer(ntt.NativeTokenTransfer{
 		Amount:            msg.Amount.Uint64(),
 		SourceToken:       portal.RawToken,
 		To:                msg.Recipient,
-		ToChain:           msg.Chain,
+		ToChain:           msg.DestinationChainId,
 		AdditionalPayload: additionalPayload,
 	})
 
@@ -176,6 +182,40 @@ func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*
 		NewTransceiver: msg.Transceiver,
 		OldManager:     peer.Manager,
 		NewManager:     msg.Manager,
+	})
+}
+
+func (k portalMsgServer) SetBridgingPath(ctx context.Context, msg *portal.MsgSetBridgingPath) (*portal.MsgSetBridgingPathResponse, error) {
+	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
+		return nil, err
+	}
+
+	chainID, err := k.wormhole.GetChain(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get wormhole chain id")
+	}
+	if msg.DestinationChainId == chainID {
+		return nil, errors.Wrapf(portal.ErrInvalidBridgePath, "destination chain cannot be %d", chainID)
+	}
+
+	empty := make([]byte, 32)
+	if len(msg.DestinationToken) != 32 {
+		return nil, errors.Wrap(portal.ErrInvalidBridgePath, "destination token must be 32 bytes")
+	}
+	if bytes.Equal(msg.DestinationToken, empty) {
+		return nil, errors.Wrap(portal.ErrInvalidBridgePath, "destination token must not be empty")
+	}
+
+	key := collections.Join(msg.DestinationChainId, msg.DestinationToken)
+	err = k.PortalBridgingPaths.Set(ctx, key, msg.Supported)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to set bridging path")
+	}
+
+	return &portal.MsgSetBridgingPathResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.BridgingPathSet{
+		DestinationChainId: msg.DestinationChainId,
+		DestinationToken:   msg.DestinationToken,
+		Supported:          msg.Supported,
 	})
 }
 

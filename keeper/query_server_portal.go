@@ -23,6 +23,8 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
+
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
 )
@@ -65,6 +67,30 @@ func (k portalQueryServer) Peers(ctx context.Context, req *portal.QueryPeers) (*
 	peers, err := k.GetPortalPeers(ctx)
 
 	return &portal.QueryPeersResponse{Peers: peers}, err
+}
+
+func (k portalQueryServer) DestinationTokens(ctx context.Context, req *portal.QueryDestinationTokens) (*portal.QueryDestinationTokensResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	// NOTE: We have to typecast here because protoc-gen-grpc-gateway doesn't support it via gogoproto.
+	chainID := uint16(req.ChainId)
+
+	var destinationTokens [][]byte
+	err := k.PortalBridgingPaths.Walk(
+		ctx,
+		collections.NewPrefixedPairRange[uint16, []byte](chainID),
+		func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {
+			if supported {
+				destinationTokens = append(destinationTokens, key.K2())
+			}
+
+			return false, nil
+		},
+	)
+
+	return &portal.QueryDestinationTokensResponse{DestinationTokens: destinationTokens}, err
 }
 
 func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*portal.QueryNonceResponse, error) {

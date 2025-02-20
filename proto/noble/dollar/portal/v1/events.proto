@@ -20,6 +20,13 @@ message PeerUpdated {
   bytes new_manager = 5;
 }
 
+// BridgingPathSet is an event emitted whenever a supported bridging path is set.
+message BridgingPathSet {
+  uint32 destination_chain_id = 1 [(gogoproto.casttype) = "uint16"];
+  bytes destination_token = 2;
+  bool supported = 3;
+}
+
 // OwnershipTransferred is an event emitted whenever an ownership transfer occurs.
 message OwnershipTransferred {
   string previous_owner = 1;

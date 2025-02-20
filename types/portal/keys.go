@@ -32,8 +32,9 @@ var (
 )
 
 var (
-	OwnerKey   = []byte("portal/owner")
-	PausedKey  = []byte("portal/paused")
-	PeerPrefix = []byte("portal/peer/")
-	NonceKey   = []byte("portal/nonce")
+	OwnerKey           = []byte("portal/owner")
+	PausedKey          = []byte("portal/paused")
+	PeerPrefix         = []byte("portal/peer/")
+	BridgingPathPrefix = []byte("portal/bridging_path/")
+	NonceKey           = []byte("portal/nonce")
 )

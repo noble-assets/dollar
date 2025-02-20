@@ -61,9 +61,10 @@ This message allows transferring \$USDN from Noble and receiving \$M cross-chain
       {
         "@type": "/noble.dollar.portal.v1.MsgTransfer",
         "signer": "noble1user",
-        "chain": "2",
-        "recipient": "base64_encoded_recipient_address",
-        "amount": "1000000"
+        "amount": "1000000",
+        "destination_chain_id": 2,
+        "destination_token": "base64_encoded_destination_token",
+        "recipient": "base64_encoded_recipient_address"
       }
     ],
     "memo": "",
@@ -86,9 +87,10 @@ This message allows transferring \$USDN from Noble and receiving \$M cross-chain
 
 ### Arguments
 
-- `chain` — The Wormhole Chain ID of the destination chain.
-- `recipient` — The 32-byte encoded recipient address on the destination chain.
 - `amount` — The amount of $USDN to be transferred.
+- `destination_chain_id` — The Wormhole Chain ID of the destination chain.
+- `destination_token` — The 32-byte encoded destination token on the destination chain.
+- `recipient` — The 32-byte encoded recipient address on the destination chain.
 
 ### State Changes
 
@@ -190,6 +192,55 @@ This message allows the owner of the Noble Dollar Portal to set external peers.
 
 - [`peers`](./01_state_portal.md#peers)
 
+## Set Bridging Path
+
+`noble.dollar.portal.v1.MsgSetBridgingPath`
+
+This message allows the owner of the Noble Dollar Portal to set supported bridging paths.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/noble.dollar.portal.v1.MsgSetBridgingPath",
+        "signer": "noble1owner",
+        "destination_chain_id": 2,
+        "destination_token": "base64_encoded_destination_token",
+        "supported": true
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `destination_chain_id` — The Wormhole Chain ID of the support bridging path being set.
+- `destination_token` — The 32-byte encoded destination token of the bridging path.
+- `supported` — The boolean value representing whether the path is supported or not.
+
+### Requirements
+
+- Signer must be the current [`owner`](./01_state_portal.md#owner).
+
+### State Changes
+
+- [`briding_paths`](./01_state_portal.md#bridging-paths)
 
 ## Transfer Ownership
 
