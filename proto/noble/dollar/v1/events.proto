@@ -8,14 +8,26 @@ import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types";
 
-// Event emitted when the module pause stsate is changed to
-// paused.
+// Paused is an event emitted when the module pause
+// state is changed to paused.
 message Paused {
   bool paused = 1;
 }
 
-// Event emitted when the module pause stsate is changed to
-// not paused.
+// NotPaused is an event emitted when the module pause
+// stsate is changed to not paused.
 message NotPaused {
   bool not_paused = 1;
+}
+
+// YieldClaimed is an event emitted when an used claim
+// accrued yield.
+message YieldClaimed {
+  string account = 1;
+  string amount = 6 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }

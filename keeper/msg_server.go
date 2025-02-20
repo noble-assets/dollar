@@ -57,7 +57,10 @@ func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*t
 		return nil, errors.Wrap(err, "unable to distribute yield to user")
 	}
 
-	return &types.MsgClaimYieldResponse{}, nil
+	return &types.MsgClaimYieldResponse{}, k.event.EventManager(ctx).Emit(ctx, &types.YieldClaimed{
+		Account: msg.Signer,
+		Amount:  yield,
+	})
 }
 
 func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedState) (*types.MsgSetPausedStateResponse, error) {
