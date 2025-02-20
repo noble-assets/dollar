@@ -69,7 +69,7 @@ type Keeper struct {
 	VaultsPaused                 collections.Item[int32]
 	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
 	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
-	VaultsRewards                collections.Map[string, vaults.Reward]
+	VaultsRewards                collections.Map[int64, vaults.Reward]
 	VaultsStats                  collections.Item[vaults.Stats]
 }
 
@@ -111,7 +111,7 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
 		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
-		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.StringKey, codec.CollValue[vaults.Reward](cdc)),
+		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
 		VaultsStats:                  collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
 	}
 
@@ -150,12 +150,16 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 			}
 		}
 
-		rawIndex, err := k.Index.Get(ctx)
+		// When burning and transferring, the $M token executes the
+		// `_getPrincipalAmountRoundedUp` function. When minting, the $M token
+		// executes the `_getPrincipalAmountRoundedDown` function. As $USDN
+		// inherits the yielding properties of $M, we mimic that functionality
+		// here.
+		index, err := k.Index.Get(ctx)
 		if err != nil {
 			return recipient, sdkerrors.Wrap(err, "unable to get index from state")
 		}
-		index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
-		principal := amount.ToLegacyDec().Quo(index).TruncateInt()
+		principal := k.GetPrincipalAmountRoundedUp(amount, index)
 
 		// We don't want to update the sender's principal in the case of issuance.
 		// -> Transfer from Module to User account.
@@ -193,6 +197,10 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 		// We don't want to update the recipient's principal in the case of withdrawal.
 		// -> Transfer from User to Module account.
 		if !recipient.Equals(types.ModuleAddress) {
+			if sender.Equals(types.ModuleAddress) {
+				principal = k.GetPrincipalAmountRoundedDown(amount, index)
+			}
+
 			recipientPrincipal, err := k.Principal.Get(ctx, recipient)
 			if err != nil {
 				if sdkerrors.IsOf(err, collections.ErrNotFound) {
@@ -248,20 +256,18 @@ func (k *Keeper) GetYield(ctx context.Context, account string) (math.Int, []byte
 		principal = math.ZeroInt()
 	}
 
-	rawIndex, err := k.Index.Get(ctx)
+	index, err := k.Index.Get(ctx)
 	if err != nil {
 		return math.ZeroInt(), nil, sdkerrors.Wrap(err, "unable to get index from state")
 	}
-	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 
 	currentBalance := k.bank.GetBalance(ctx, bz, k.denom).Amount
-	expectedBalance := index.MulInt(principal).TruncateInt()
+	expectedBalance := k.GetPresentAmount(principal, index)
 
-	yield, _ := expectedBalance.SafeSub(currentBalance)
-
-	// TODO: temporary fix for negative coin amounts
-	if yield.Abs().Equal(math.OneInt()) || yield.IsNegative() {
-		return math.ZeroInt(), nil, nil
+	// We need to make sure that the yield value is valid and > 1.
+	yield, err := expectedBalance.SafeSub(currentBalance)
+	if err != nil || yield.Equal(math.OneInt()) || yield.IsNegative() {
+		yield = math.ZeroInt()
 	}
 
 	return yield, bz, nil

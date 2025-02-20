@@ -104,16 +104,16 @@ func (k *Keeper) Mint(ctx context.Context, recipient []byte, amount math.Int, in
 	return nil
 }
 
-func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
+func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 	oldIndex, err := k.Index.Get(ctx)
 	if err != nil {
 		return errors.Wrap(err, "unable to get index from state")
 	}
-	if rawIndex <= oldIndex {
+	if index <= oldIndex {
 		return types.ErrDecreasingIndex
 	}
 
-	err = k.Index.Set(ctx, rawIndex)
+	err = k.Index.Set(ctx, index)
 	if err != nil {
 		return errors.Wrap(err, "unable to set index in state")
 	}
@@ -123,9 +123,8 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 		return errors.Wrap(err, "unable to get total principal from state")
 	}
 
-	index := math.LegacyNewDec(rawIndex).QuoInt64(1e12)
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
-	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
+	expectedSupply := k.GetPresentAmount(totalPrincipal, index)
 
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
 	if coins.IsAllPositive() {
@@ -167,7 +166,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	// Register the new Rewards record.
 	rewards := stakedYield.Add(flexibleYield)
-	if err = k.VaultsRewards.Set(ctx, index.String(), vaults.Reward{
+	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
 		Index:   index,
 		Total:   totalFlexiblePrincipal,
 		Rewards: rewards,
