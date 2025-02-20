@@ -134,12 +134,15 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, errors.Wrap(err, "unable to post transfer message")
 	}
 
-	if err := k.event.EventManager(ctx).Emit(ctx, &portal.TransferSent{
-		Recipient:   msg.Recipient,
-		Amount:      msg.Amount,
-		Chain:       msg.DestinationChainId,
-		MsgSequence: uint64(nonce),
-		MessageId:   messageId,
+	if err := k.event.EventManager(ctx).Emit(ctx, &portal.USDNTokenSent{
+		SourceToken:        string(portal.RawToken),
+		DestinationChainId: msg.DestinationChainId,
+		DestinationToken:   msg.DestinationToken,
+		Sender:             msg.Signer,
+		Recipient:          msg.Recipient,
+		Amount:             msg.Amount,
+		Index:              uint64(nonce),
+		MessageId:          messageId,
 	}); err != nil {
 		return nil, err
 	}
