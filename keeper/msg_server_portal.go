@@ -24,8 +24,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
+	"strconv"
 
 	"cosmossdk.io/collections"
+	"cosmossdk.io/core/event"
 	"cosmossdk.io/errors"
 
 	"dollar.noble.xyz/types/portal"
@@ -108,7 +110,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		Payload: rawNativeTokenTransfer,
 	}
 	rawManagerMessage := ntt.EncodeManagerMessage(managerMessage)
-	messageId := ntt.ManagerMessageDigest(msg.Chain, managerMessage)
+	messageId := ntt.ManagerMessageDigest(msg.DestinationChainId, managerMessage)
 
 	rawTransceiverMessage := ntt.EncodeTransceiverMessage(ntt.TransceiverMessage{
 		SourceManagerAddress:    portal.PaddedManagerAddress,
@@ -132,15 +134,36 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, errors.Wrap(err, "unable to post transfer message")
 	}
 
-	err = k.event.EventManager(ctx).Emit(ctx, &portal.TransferSent{
+	if err := k.event.EventManager(ctx).Emit(ctx, &portal.TransferSent{
 		Recipient:   msg.Recipient,
 		Amount:      msg.Amount,
-		Chain:       msg.Chain,
+		Chain:       msg.DestinationChainId,
 		MsgSequence: uint64(nonce),
 		MessageId:   messageId,
-	})
+	}); err != nil {
+		return nil, err
+	}
 
-	return &portal.MsgTransferResponse{}, nil
+	// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L252-L259
+	if err := k.event.EventManager(ctx).EmitKV(
+		ctx,
+		"transfer_sent",
+		event.Attribute{Key: "recipient", Value: string(msg.Recipient)},
+		event.Attribute{Key: "refund_address", Value: ""},
+		event.Attribute{Key: "amount", Value: strconv.Itoa(int(msg.Amount.Int64()))},
+		event.Attribute{Key: "fee", Value: ""},
+		event.Attribute{Key: "recipient_chain", Value: strconv.Itoa(int(msg.DestinationChainId))},
+		event.Attribute{Key: "msg_sequence", Value: strconv.Itoa(int(index))},
+	); err != nil {
+		return nil, err
+	}
+
+	// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L260-L260
+	return &portal.MsgTransferResponse{}, k.event.EventManager(ctx).EmitKV(
+		ctx,
+		"transfer_sent",
+		event.Attribute{Key: "digest", Value: string(messageId)},
+	)
 }
 
 func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetPausedState) (*portal.MsgSetPausedStateResponse, error) {
