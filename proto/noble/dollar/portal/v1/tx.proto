@@ -17,7 +17,7 @@ service Msg {
 
   rpc SetPausedState(MsgSetPausedState) returns (MsgSetPausedStateResponse);
   rpc SetPeer(MsgSetPeer) returns (MsgSetPeerResponse);
-  rpc SetSupportedBridgingPath(MsgSetSupportedBridgingPath) returns (MsgSetSupportedBridgingPathResponse);
+  rpc SetBridgingPath(MsgSetBridgingPath) returns (MsgSetBridgingPathResponse);
   rpc TransferOwnership(MsgTransferOwnership) returns (MsgTransferOwnershipResponse);
 }
 
@@ -96,10 +96,10 @@ message MsgSetPeer {
 // MsgSetPeerResponse is the response of the SetPeer message.
 message MsgSetPeerResponse {}
 
-// MsgSetSupportedBridgingPath allows the Noble Dollar Portal owner to set supported bridging paths.
-message MsgSetSupportedBridgingPath {
+// MsgSetBridgingPath allows the Noble Dollar Portal owner to set supported bridging paths.
+message MsgSetBridgingPath {
   option (cosmos.msg.v1.signer) = "signer";
-  option (amino.name) = "dollar/portal/SetSupportedBridgingPath";
+  option (amino.name) = "dollar/portal/SetBridgingPath";
 
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
@@ -110,8 +110,8 @@ message MsgSetSupportedBridgingPath {
   bool supported = 4;
 }
 
-// MsgSetSupportedBridgingPathResponse is the response of the SetSupportedBridgingPath message.
-message MsgSetSupportedBridgingPathResponse {}
+// MsgSetBridgingPathResponse is the response of the SetBridgingPath message.
+message MsgSetBridgingPathResponse {}
 
 // MsgTransferOwnership allows the Noble Dollar Portal ownership to be transferred.
 message MsgTransferOwnership {

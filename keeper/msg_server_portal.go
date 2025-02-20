@@ -61,7 +61,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	}
 
 	key := collections.Join(msg.DestinationChainId, msg.DestinationToken)
-	if has, _ := k.PortalSupportedBridgingPaths.Has(ctx, key); !has {
+	if has, _ := k.PortalBridgingPaths.Has(ctx, key); !has {
 		return nil, errors.Wrapf(portal.ErrInvalidBridgePath, "token %s is not configured for chain %d", msg.DestinationToken, msg.DestinationChainId)
 	}
 
@@ -185,7 +185,7 @@ func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*
 	})
 }
 
-func (k portalMsgServer) SetSupportedBridgingPath(ctx context.Context, msg *portal.MsgSetSupportedBridgingPath) (*portal.MsgSetSupportedBridgingPathResponse, error) {
+func (k portalMsgServer) SetBridgingPath(ctx context.Context, msg *portal.MsgSetBridgingPath) (*portal.MsgSetBridgingPathResponse, error) {
 	if err := k.EnsureOwner(ctx, msg.Signer); err != nil {
 		return nil, err
 	}
@@ -207,12 +207,12 @@ func (k portalMsgServer) SetSupportedBridgingPath(ctx context.Context, msg *port
 	}
 
 	key := collections.Join(msg.DestinationChainId, msg.DestinationToken)
-	err = k.PortalSupportedBridgingPaths.Set(ctx, key, msg.Supported)
+	err = k.PortalBridgingPaths.Set(ctx, key, msg.Supported)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to set supported bridging path")
+		return nil, errors.Wrap(err, "unable to set bridging path")
 	}
 
-	return &portal.MsgSetSupportedBridgingPathResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.SupportedBridgingPathSet{
+	return &portal.MsgSetBridgingPathResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.BridgingPathSet{
 		DestinationChainId: msg.DestinationChainId,
 		DestinationToken:   msg.DestinationToken,
 		Supported:          msg.Supported,

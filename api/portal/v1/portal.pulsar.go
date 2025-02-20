@@ -502,27 +502,27 @@ func (x *fastReflection_Peer) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_SupportedBridgingPath                      protoreflect.MessageDescriptor
-	fd_SupportedBridgingPath_destination_chain_id protoreflect.FieldDescriptor
-	fd_SupportedBridgingPath_destination_token    protoreflect.FieldDescriptor
+	md_BridgingPath                      protoreflect.MessageDescriptor
+	fd_BridgingPath_destination_chain_id protoreflect.FieldDescriptor
+	fd_BridgingPath_destination_token    protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_portal_v1_portal_proto_init()
-	md_SupportedBridgingPath = File_noble_dollar_portal_v1_portal_proto.Messages().ByName("SupportedBridgingPath")
-	fd_SupportedBridgingPath_destination_chain_id = md_SupportedBridgingPath.Fields().ByName("destination_chain_id")
-	fd_SupportedBridgingPath_destination_token = md_SupportedBridgingPath.Fields().ByName("destination_token")
+	md_BridgingPath = File_noble_dollar_portal_v1_portal_proto.Messages().ByName("BridgingPath")
+	fd_BridgingPath_destination_chain_id = md_BridgingPath.Fields().ByName("destination_chain_id")
+	fd_BridgingPath_destination_token = md_BridgingPath.Fields().ByName("destination_token")
 }
 
-var _ protoreflect.Message = (*fastReflection_SupportedBridgingPath)(nil)
+var _ protoreflect.Message = (*fastReflection_BridgingPath)(nil)
 
-type fastReflection_SupportedBridgingPath SupportedBridgingPath
+type fastReflection_BridgingPath BridgingPath
 
-func (x *SupportedBridgingPath) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_SupportedBridgingPath)(x)
+func (x *BridgingPath) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_BridgingPath)(x)
 }
 
-func (x *SupportedBridgingPath) slowProtoReflect() protoreflect.Message {
+func (x *BridgingPath) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_portal_v1_portal_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -534,43 +534,43 @@ func (x *SupportedBridgingPath) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_SupportedBridgingPath_messageType fastReflection_SupportedBridgingPath_messageType
-var _ protoreflect.MessageType = fastReflection_SupportedBridgingPath_messageType{}
+var _fastReflection_BridgingPath_messageType fastReflection_BridgingPath_messageType
+var _ protoreflect.MessageType = fastReflection_BridgingPath_messageType{}
 
-type fastReflection_SupportedBridgingPath_messageType struct{}
+type fastReflection_BridgingPath_messageType struct{}
 
-func (x fastReflection_SupportedBridgingPath_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_SupportedBridgingPath)(nil)
+func (x fastReflection_BridgingPath_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_BridgingPath)(nil)
 }
-func (x fastReflection_SupportedBridgingPath_messageType) New() protoreflect.Message {
-	return new(fastReflection_SupportedBridgingPath)
+func (x fastReflection_BridgingPath_messageType) New() protoreflect.Message {
+	return new(fastReflection_BridgingPath)
 }
-func (x fastReflection_SupportedBridgingPath_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_SupportedBridgingPath
+func (x fastReflection_BridgingPath_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_BridgingPath
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_SupportedBridgingPath) Descriptor() protoreflect.MessageDescriptor {
-	return md_SupportedBridgingPath
+func (x *fastReflection_BridgingPath) Descriptor() protoreflect.MessageDescriptor {
+	return md_BridgingPath
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_SupportedBridgingPath) Type() protoreflect.MessageType {
-	return _fastReflection_SupportedBridgingPath_messageType
+func (x *fastReflection_BridgingPath) Type() protoreflect.MessageType {
+	return _fastReflection_BridgingPath_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_SupportedBridgingPath) New() protoreflect.Message {
-	return new(fastReflection_SupportedBridgingPath)
+func (x *fastReflection_BridgingPath) New() protoreflect.Message {
+	return new(fastReflection_BridgingPath)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_SupportedBridgingPath) Interface() protoreflect.ProtoMessage {
-	return (*SupportedBridgingPath)(x)
+func (x *fastReflection_BridgingPath) Interface() protoreflect.ProtoMessage {
+	return (*BridgingPath)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -578,16 +578,16 @@ func (x *fastReflection_SupportedBridgingPath) Interface() protoreflect.ProtoMes
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_SupportedBridgingPath) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_BridgingPath) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.DestinationChainId != uint32(0) {
 		value := protoreflect.ValueOfUint32(x.DestinationChainId)
-		if !f(fd_SupportedBridgingPath_destination_chain_id, value) {
+		if !f(fd_BridgingPath_destination_chain_id, value) {
 			return
 		}
 	}
 	if len(x.DestinationToken) != 0 {
 		value := protoreflect.ValueOfBytes(x.DestinationToken)
-		if !f(fd_SupportedBridgingPath_destination_token, value) {
+		if !f(fd_BridgingPath_destination_token, value) {
 			return
 		}
 	}
@@ -604,17 +604,17 @@ func (x *fastReflection_SupportedBridgingPath) Range(f func(protoreflect.FieldDe
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_SupportedBridgingPath) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_BridgingPath) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.BridgingPath.destination_chain_id":
 		return x.DestinationChainId != uint32(0)
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.BridgingPath.destination_token":
 		return len(x.DestinationToken) != 0
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.SupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.BridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.SupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.BridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -624,17 +624,17 @@ func (x *fastReflection_SupportedBridgingPath) Has(fd protoreflect.FieldDescript
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_SupportedBridgingPath) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_BridgingPath) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.BridgingPath.destination_chain_id":
 		x.DestinationChainId = uint32(0)
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.BridgingPath.destination_token":
 		x.DestinationToken = nil
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.SupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.BridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.SupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.BridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -644,19 +644,19 @@ func (x *fastReflection_SupportedBridgingPath) Clear(fd protoreflect.FieldDescri
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_SupportedBridgingPath) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_BridgingPath) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.BridgingPath.destination_chain_id":
 		value := x.DestinationChainId
 		return protoreflect.ValueOfUint32(value)
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.BridgingPath.destination_token":
 		value := x.DestinationToken
 		return protoreflect.ValueOfBytes(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.SupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.BridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.SupportedBridgingPath does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.BridgingPath does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -670,17 +670,17 @@ func (x *fastReflection_SupportedBridgingPath) Get(descriptor protoreflect.Field
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_SupportedBridgingPath) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_BridgingPath) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.BridgingPath.destination_chain_id":
 		x.DestinationChainId = uint32(value.Uint())
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.BridgingPath.destination_token":
 		x.DestinationToken = value.Bytes()
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.SupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.BridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.SupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.BridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -694,44 +694,44 @@ func (x *fastReflection_SupportedBridgingPath) Set(fd protoreflect.FieldDescript
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_SupportedBridgingPath) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_BridgingPath) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_chain_id":
-		panic(fmt.Errorf("field destination_chain_id of message noble.dollar.portal.v1.SupportedBridgingPath is not mutable"))
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_token":
-		panic(fmt.Errorf("field destination_token of message noble.dollar.portal.v1.SupportedBridgingPath is not mutable"))
+	case "noble.dollar.portal.v1.BridgingPath.destination_chain_id":
+		panic(fmt.Errorf("field destination_chain_id of message noble.dollar.portal.v1.BridgingPath is not mutable"))
+	case "noble.dollar.portal.v1.BridgingPath.destination_token":
+		panic(fmt.Errorf("field destination_token of message noble.dollar.portal.v1.BridgingPath is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.SupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.BridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.SupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.BridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_SupportedBridgingPath) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_BridgingPath) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.BridgingPath.destination_chain_id":
 		return protoreflect.ValueOfUint32(uint32(0))
-	case "noble.dollar.portal.v1.SupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.BridgingPath.destination_token":
 		return protoreflect.ValueOfBytes(nil)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.SupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.BridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.SupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.BridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_SupportedBridgingPath) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_BridgingPath) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.SupportedBridgingPath", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.BridgingPath", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -739,7 +739,7 @@ func (x *fastReflection_SupportedBridgingPath) WhichOneof(d protoreflect.OneofDe
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_SupportedBridgingPath) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_BridgingPath) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -750,7 +750,7 @@ func (x *fastReflection_SupportedBridgingPath) GetUnknown() protoreflect.RawFiel
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_SupportedBridgingPath) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_BridgingPath) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -762,7 +762,7 @@ func (x *fastReflection_SupportedBridgingPath) SetUnknown(fields protoreflect.Ra
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_SupportedBridgingPath) IsValid() bool {
+func (x *fastReflection_BridgingPath) IsValid() bool {
 	return x != nil
 }
 
@@ -772,9 +772,9 @@ func (x *fastReflection_SupportedBridgingPath) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_SupportedBridgingPath) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_BridgingPath) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*SupportedBridgingPath)
+		x := input.Message.Interface().(*BridgingPath)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -803,7 +803,7 @@ func (x *fastReflection_SupportedBridgingPath) ProtoMethods() *protoiface.Method
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*SupportedBridgingPath)
+		x := input.Message.Interface().(*BridgingPath)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -845,7 +845,7 @@ func (x *fastReflection_SupportedBridgingPath) ProtoMethods() *protoiface.Method
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*SupportedBridgingPath)
+		x := input.Message.Interface().(*BridgingPath)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -877,10 +877,10 @@ func (x *fastReflection_SupportedBridgingPath) ProtoMethods() *protoiface.Method
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: SupportedBridgingPath: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BridgingPath: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: SupportedBridgingPath: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BridgingPath: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -1028,8 +1028,8 @@ func (x *Peer) GetManager() []byte {
 	return nil
 }
 
-// SupportedBridgingPath is the type that stores information about a supported bridging path.
-type SupportedBridgingPath struct {
+// BridgingPath is the type that stores information about a supported bridging path.
+type BridgingPath struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1038,8 +1038,8 @@ type SupportedBridgingPath struct {
 	DestinationToken   []byte `protobuf:"bytes,2,opt,name=destination_token,json=destinationToken,proto3" json:"destination_token,omitempty"`
 }
 
-func (x *SupportedBridgingPath) Reset() {
-	*x = SupportedBridgingPath{}
+func (x *BridgingPath) Reset() {
+	*x = BridgingPath{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_portal_v1_portal_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1047,25 +1047,25 @@ func (x *SupportedBridgingPath) Reset() {
 	}
 }
 
-func (x *SupportedBridgingPath) String() string {
+func (x *BridgingPath) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SupportedBridgingPath) ProtoMessage() {}
+func (*BridgingPath) ProtoMessage() {}
 
-// Deprecated: Use SupportedBridgingPath.ProtoReflect.Descriptor instead.
-func (*SupportedBridgingPath) Descriptor() ([]byte, []int) {
+// Deprecated: Use BridgingPath.ProtoReflect.Descriptor instead.
+func (*BridgingPath) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_portal_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SupportedBridgingPath) GetDestinationChainId() uint32 {
+func (x *BridgingPath) GetDestinationChainId() uint32 {
 	if x != nil {
 		return x.DestinationChainId
 	}
 	return 0
 }
 
-func (x *SupportedBridgingPath) GetDestinationToken() []byte {
+func (x *BridgingPath) GetDestinationToken() []byte {
 	if x != nil {
 		return x.DestinationToken
 	}
@@ -1084,30 +1084,29 @@ var file_noble_dollar_portal_v1_portal_proto_rawDesc = []byte{
 	0x72, 0x61, 0x6e, 0x73, 0x63, 0x65, 0x69, 0x76, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c,
 	0x52, 0x0b, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x63, 0x65, 0x69, 0x76, 0x65, 0x72, 0x12, 0x18, 0x0a,
 	0x07, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07,
-	0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x22, 0x82, 0x01, 0x0a, 0x15, 0x53, 0x75, 0x70, 0x70,
-	0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74,
-	0x68, 0x12, 0x3c, 0x0a, 0x14, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e,
-	0x5f, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42,
-	0x0a, 0xfa, 0xde, 0x1f, 0x06, 0x75, 0x69, 0x6e, 0x74, 0x31, 0x36, 0x52, 0x12, 0x64, 0x65, 0x73,
-	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x12,
-	0x2b, 0x0a, 0x11, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x74,
-	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x10, 0x64, 0x65, 0x73, 0x74,
-	0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x42, 0xda, 0x01, 0x0a,
-	0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x50, 0x6f, 0x72,
-	0x74, 0x61, 0x6c, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61, 0x70, 0x69,
-	0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f,
-	0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x3b, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x76, 0x31,
-	0xa2, 0x02, 0x03, 0x4e, 0x44, 0x50, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x56, 0x31, 0xca,
-	0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50,
-	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65,
-	0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56,
-	0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x50,
-	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x22, 0x79, 0x0a, 0x0c, 0x42, 0x72, 0x69, 0x64, 0x67,
+	0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x12, 0x3c, 0x0a, 0x14, 0x64, 0x65, 0x73, 0x74, 0x69,
+	0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x0a, 0xfa, 0xde, 0x1f, 0x06, 0x75, 0x69, 0x6e, 0x74, 0x31,
+	0x36, 0x52, 0x12, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68,
+	0x61, 0x69, 0x6e, 0x49, 0x64, 0x12, 0x2b, 0x0a, 0x11, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0c,
+	0x52, 0x10, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b,
+	0x65, 0x6e, 0x42, 0xda, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76,
+	0x31, 0x42, 0x0b, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01,
+	0x5a, 0x34, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78,
+	0x79, 0x7a, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x3b, 0x70, 0x6f,
+	0x72, 0x74, 0x61, 0x6c, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x50, 0xaa, 0x02, 0x16, 0x4e,
+	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x50, 0x6f, 0x72, 0x74,
+	0x61, 0x6c, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0xe2, 0x02,
+	0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f,
+	0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64,
+	0x61, 0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x3a, 0x3a, 0x56, 0x31, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1124,8 +1123,8 @@ func file_noble_dollar_portal_v1_portal_proto_rawDescGZIP() []byte {
 
 var file_noble_dollar_portal_v1_portal_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_noble_dollar_portal_v1_portal_proto_goTypes = []interface{}{
-	(*Peer)(nil),                  // 0: noble.dollar.portal.v1.Peer
-	(*SupportedBridgingPath)(nil), // 1: noble.dollar.portal.v1.SupportedBridgingPath
+	(*Peer)(nil),         // 0: noble.dollar.portal.v1.Peer
+	(*BridgingPath)(nil), // 1: noble.dollar.portal.v1.BridgingPath
 }
 var file_noble_dollar_portal_v1_portal_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1154,7 +1153,7 @@ func file_noble_dollar_portal_v1_portal_proto_init() {
 			}
 		}
 		file_noble_dollar_portal_v1_portal_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SupportedBridgingPath); i {
+			switch v := v.(*BridgingPath); i {
 			case 0:
 				return &v.state
 			case 1:

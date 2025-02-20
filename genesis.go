@@ -85,11 +85,11 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
-	for _, supportedBridgingPath := range genesis.Portal.SupportedBridgingPaths {
-		key := collections.Join(supportedBridgingPath.DestinationChainId, supportedBridgingPath.DestinationToken)
-		err = k.PortalSupportedBridgingPaths.Set(ctx, key, true)
+	for _, bridgingPath := range genesis.Portal.BridgingPaths {
+		key := collections.Join(bridgingPath.DestinationChainId, bridgingPath.DestinationToken)
+		err = k.PortalBridgingPaths.Set(ctx, key, true)
 		if err != nil {
-			panic(errors.Wrapf(err, "unable to set supported bridging path (%d:%s)", supportedBridgingPath.DestinationChainId, supportedBridgingPath.DestinationToken))
+			panic(errors.Wrapf(err, "unable to set supported bridging path (%d:%s)", bridgingPath.DestinationChainId, bridgingPath.DestinationToken))
 		}
 	}
 
@@ -140,7 +140,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	portalOwner, _ := k.PortalOwner.Get(ctx)
 	portalPaused := k.GetPortalPaused(ctx)
 	portalPeers, _ := k.GetPortalPeers(ctx)
-	portalSupportedBridgingPaths, _ := k.GetPortalSupportedBridgingPaths(ctx)
+	portalBridgingPaths, _ := k.GetPortalBridgingPaths(ctx)
 	portalNonce, _ := k.PortalNonce.Get(ctx)
 
 	vaultsRewards, _ := k.GetVaultsRewards(ctx)
@@ -151,11 +151,11 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 
 	return &types.GenesisState{
 		Portal: portal.GenesisState{
-			Owner:                  portalOwner,
-			Paused:                 portalPaused,
-			Peers:                  portalPeers,
-			SupportedBridgingPaths: portalSupportedBridgingPaths,
-			Nonce:                  portalNonce,
+			Owner:         portalOwner,
+			Paused:        portalPaused,
+			Peers:         portalPeers,
+			BridgingPaths: portalBridgingPaths,
+			Nonce:         portalNonce,
 		},
 		Vaults: vaults.GenesisState{
 			Positions:              vaultsPositions,

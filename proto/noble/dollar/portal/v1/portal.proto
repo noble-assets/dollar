@@ -12,8 +12,8 @@ message Peer {
   bytes manager = 2;
 }
 
-// SupportedBridgingPath is the type that stores information about a supported bridging path.
-message SupportedBridgingPath {
+// BridgingPath is the type that stores information about a supported bridging path.
+message BridgingPath {
   uint32 destination_chain_id = 1 [(gogoproto.casttype) = "uint16"];
   bytes destination_token = 2;
 }

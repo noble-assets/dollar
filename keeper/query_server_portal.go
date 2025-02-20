@@ -78,7 +78,7 @@ func (k portalQueryServer) DestinationTokens(ctx context.Context, req *portal.Qu
 	chainID := uint16(req.ChainId)
 
 	var destinationTokens [][]byte
-	err := k.PortalSupportedBridgingPaths.Walk(
+	err := k.PortalBridgingPaths.Walk(
 		ctx,
 		collections.NewPrefixedPairRange[uint16, []byte](chainID),
 		func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {

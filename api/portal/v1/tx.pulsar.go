@@ -3665,31 +3665,31 @@ func (x *fastReflection_MsgSetPeerResponse) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_MsgSetSupportedBridgingPath                      protoreflect.MessageDescriptor
-	fd_MsgSetSupportedBridgingPath_signer               protoreflect.FieldDescriptor
-	fd_MsgSetSupportedBridgingPath_destination_chain_id protoreflect.FieldDescriptor
-	fd_MsgSetSupportedBridgingPath_destination_token    protoreflect.FieldDescriptor
-	fd_MsgSetSupportedBridgingPath_supported            protoreflect.FieldDescriptor
+	md_MsgSetBridgingPath                      protoreflect.MessageDescriptor
+	fd_MsgSetBridgingPath_signer               protoreflect.FieldDescriptor
+	fd_MsgSetBridgingPath_destination_chain_id protoreflect.FieldDescriptor
+	fd_MsgSetBridgingPath_destination_token    protoreflect.FieldDescriptor
+	fd_MsgSetBridgingPath_supported            protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_portal_v1_tx_proto_init()
-	md_MsgSetSupportedBridgingPath = File_noble_dollar_portal_v1_tx_proto.Messages().ByName("MsgSetSupportedBridgingPath")
-	fd_MsgSetSupportedBridgingPath_signer = md_MsgSetSupportedBridgingPath.Fields().ByName("signer")
-	fd_MsgSetSupportedBridgingPath_destination_chain_id = md_MsgSetSupportedBridgingPath.Fields().ByName("destination_chain_id")
-	fd_MsgSetSupportedBridgingPath_destination_token = md_MsgSetSupportedBridgingPath.Fields().ByName("destination_token")
-	fd_MsgSetSupportedBridgingPath_supported = md_MsgSetSupportedBridgingPath.Fields().ByName("supported")
+	md_MsgSetBridgingPath = File_noble_dollar_portal_v1_tx_proto.Messages().ByName("MsgSetBridgingPath")
+	fd_MsgSetBridgingPath_signer = md_MsgSetBridgingPath.Fields().ByName("signer")
+	fd_MsgSetBridgingPath_destination_chain_id = md_MsgSetBridgingPath.Fields().ByName("destination_chain_id")
+	fd_MsgSetBridgingPath_destination_token = md_MsgSetBridgingPath.Fields().ByName("destination_token")
+	fd_MsgSetBridgingPath_supported = md_MsgSetBridgingPath.Fields().ByName("supported")
 }
 
-var _ protoreflect.Message = (*fastReflection_MsgSetSupportedBridgingPath)(nil)
+var _ protoreflect.Message = (*fastReflection_MsgSetBridgingPath)(nil)
 
-type fastReflection_MsgSetSupportedBridgingPath MsgSetSupportedBridgingPath
+type fastReflection_MsgSetBridgingPath MsgSetBridgingPath
 
-func (x *MsgSetSupportedBridgingPath) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_MsgSetSupportedBridgingPath)(x)
+func (x *MsgSetBridgingPath) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_MsgSetBridgingPath)(x)
 }
 
-func (x *MsgSetSupportedBridgingPath) slowProtoReflect() protoreflect.Message {
+func (x *MsgSetBridgingPath) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_portal_v1_tx_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3701,43 +3701,43 @@ func (x *MsgSetSupportedBridgingPath) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_MsgSetSupportedBridgingPath_messageType fastReflection_MsgSetSupportedBridgingPath_messageType
-var _ protoreflect.MessageType = fastReflection_MsgSetSupportedBridgingPath_messageType{}
+var _fastReflection_MsgSetBridgingPath_messageType fastReflection_MsgSetBridgingPath_messageType
+var _ protoreflect.MessageType = fastReflection_MsgSetBridgingPath_messageType{}
 
-type fastReflection_MsgSetSupportedBridgingPath_messageType struct{}
+type fastReflection_MsgSetBridgingPath_messageType struct{}
 
-func (x fastReflection_MsgSetSupportedBridgingPath_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_MsgSetSupportedBridgingPath)(nil)
+func (x fastReflection_MsgSetBridgingPath_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_MsgSetBridgingPath)(nil)
 }
-func (x fastReflection_MsgSetSupportedBridgingPath_messageType) New() protoreflect.Message {
-	return new(fastReflection_MsgSetSupportedBridgingPath)
+func (x fastReflection_MsgSetBridgingPath_messageType) New() protoreflect.Message {
+	return new(fastReflection_MsgSetBridgingPath)
 }
-func (x fastReflection_MsgSetSupportedBridgingPath_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_MsgSetSupportedBridgingPath
+func (x fastReflection_MsgSetBridgingPath_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_MsgSetBridgingPath
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Descriptor() protoreflect.MessageDescriptor {
-	return md_MsgSetSupportedBridgingPath
+func (x *fastReflection_MsgSetBridgingPath) Descriptor() protoreflect.MessageDescriptor {
+	return md_MsgSetBridgingPath
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Type() protoreflect.MessageType {
-	return _fastReflection_MsgSetSupportedBridgingPath_messageType
+func (x *fastReflection_MsgSetBridgingPath) Type() protoreflect.MessageType {
+	return _fastReflection_MsgSetBridgingPath_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_MsgSetSupportedBridgingPath) New() protoreflect.Message {
-	return new(fastReflection_MsgSetSupportedBridgingPath)
+func (x *fastReflection_MsgSetBridgingPath) New() protoreflect.Message {
+	return new(fastReflection_MsgSetBridgingPath)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Interface() protoreflect.ProtoMessage {
-	return (*MsgSetSupportedBridgingPath)(x)
+func (x *fastReflection_MsgSetBridgingPath) Interface() protoreflect.ProtoMessage {
+	return (*MsgSetBridgingPath)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -3745,28 +3745,28 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) Interface() protoreflect.Pr
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_MsgSetBridgingPath) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.Signer != "" {
 		value := protoreflect.ValueOfString(x.Signer)
-		if !f(fd_MsgSetSupportedBridgingPath_signer, value) {
+		if !f(fd_MsgSetBridgingPath_signer, value) {
 			return
 		}
 	}
 	if x.DestinationChainId != uint32(0) {
 		value := protoreflect.ValueOfUint32(x.DestinationChainId)
-		if !f(fd_MsgSetSupportedBridgingPath_destination_chain_id, value) {
+		if !f(fd_MsgSetBridgingPath_destination_chain_id, value) {
 			return
 		}
 	}
 	if len(x.DestinationToken) != 0 {
 		value := protoreflect.ValueOfBytes(x.DestinationToken)
-		if !f(fd_MsgSetSupportedBridgingPath_destination_token, value) {
+		if !f(fd_MsgSetBridgingPath_destination_token, value) {
 			return
 		}
 	}
 	if x.Supported != false {
 		value := protoreflect.ValueOfBool(x.Supported)
-		if !f(fd_MsgSetSupportedBridgingPath_supported, value) {
+		if !f(fd_MsgSetBridgingPath_supported, value) {
 			return
 		}
 	}
@@ -3783,21 +3783,21 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) Range(f func(protoreflect.F
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_MsgSetBridgingPath) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.signer":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.signer":
 		return x.Signer != ""
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_chain_id":
 		return x.DestinationChainId != uint32(0)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_token":
 		return len(x.DestinationToken) != 0
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.supported":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.supported":
 		return x.Supported != false
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -3807,21 +3807,21 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) Has(fd protoreflect.FieldDe
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_MsgSetBridgingPath) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.signer":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.signer":
 		x.Signer = ""
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_chain_id":
 		x.DestinationChainId = uint32(0)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_token":
 		x.DestinationToken = nil
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.supported":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.supported":
 		x.Supported = false
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -3831,25 +3831,25 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) Clear(fd protoreflect.Field
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_MsgSetBridgingPath) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.signer":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.signer":
 		value := x.Signer
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_chain_id":
 		value := x.DestinationChainId
 		return protoreflect.ValueOfUint32(value)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_token":
 		value := x.DestinationToken
 		return protoreflect.ValueOfBytes(value)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.supported":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.supported":
 		value := x.Supported
 		return protoreflect.ValueOfBool(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPath does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPath does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -3863,21 +3863,21 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) Get(descriptor protoreflect
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_MsgSetBridgingPath) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.signer":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.signer":
 		x.Signer = value.Interface().(string)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_chain_id":
 		x.DestinationChainId = uint32(value.Uint())
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_token":
 		x.DestinationToken = value.Bytes()
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.supported":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.supported":
 		x.Supported = value.Bool()
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -3891,52 +3891,52 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) Set(fd protoreflect.FieldDe
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPath) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_MsgSetBridgingPath) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.signer":
-		panic(fmt.Errorf("field signer of message noble.dollar.portal.v1.MsgSetSupportedBridgingPath is not mutable"))
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_chain_id":
-		panic(fmt.Errorf("field destination_chain_id of message noble.dollar.portal.v1.MsgSetSupportedBridgingPath is not mutable"))
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_token":
-		panic(fmt.Errorf("field destination_token of message noble.dollar.portal.v1.MsgSetSupportedBridgingPath is not mutable"))
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.supported":
-		panic(fmt.Errorf("field supported of message noble.dollar.portal.v1.MsgSetSupportedBridgingPath is not mutable"))
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.signer":
+		panic(fmt.Errorf("field signer of message noble.dollar.portal.v1.MsgSetBridgingPath is not mutable"))
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_chain_id":
+		panic(fmt.Errorf("field destination_chain_id of message noble.dollar.portal.v1.MsgSetBridgingPath is not mutable"))
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_token":
+		panic(fmt.Errorf("field destination_token of message noble.dollar.portal.v1.MsgSetBridgingPath is not mutable"))
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.supported":
+		panic(fmt.Errorf("field supported of message noble.dollar.portal.v1.MsgSetBridgingPath is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_MsgSetSupportedBridgingPath) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_MsgSetBridgingPath) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.signer":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.signer":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_chain_id":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_chain_id":
 		return protoreflect.ValueOfUint32(uint32(0))
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.destination_token":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.destination_token":
 		return protoreflect.ValueOfBytes(nil)
-	case "noble.dollar.portal.v1.MsgSetSupportedBridgingPath.supported":
+	case "noble.dollar.portal.v1.MsgSetBridgingPath.supported":
 		return protoreflect.ValueOfBool(false)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPath"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPath"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPath does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPath does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_MsgSetSupportedBridgingPath) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_MsgSetBridgingPath) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.MsgSetSupportedBridgingPath", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.MsgSetBridgingPath", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -3944,7 +3944,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) WhichOneof(d protoreflect.O
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_MsgSetSupportedBridgingPath) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_MsgSetBridgingPath) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -3955,7 +3955,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) GetUnknown() protoreflect.R
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPath) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_MsgSetBridgingPath) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -3967,7 +3967,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) SetUnknown(fields protorefl
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_MsgSetSupportedBridgingPath) IsValid() bool {
+func (x *fastReflection_MsgSetBridgingPath) IsValid() bool {
 	return x != nil
 }
 
@@ -3977,9 +3977,9 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_MsgSetSupportedBridgingPath) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_MsgSetBridgingPath) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*MsgSetSupportedBridgingPath)
+		x := input.Message.Interface().(*MsgSetBridgingPath)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -4015,7 +4015,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) ProtoMethods() *protoiface.
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*MsgSetSupportedBridgingPath)
+		x := input.Message.Interface().(*MsgSetBridgingPath)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -4074,7 +4074,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) ProtoMethods() *protoiface.
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*MsgSetSupportedBridgingPath)
+		x := input.Message.Interface().(*MsgSetBridgingPath)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -4106,10 +4106,10 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) ProtoMethods() *protoiface.
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetSupportedBridgingPath: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetBridgingPath: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetSupportedBridgingPath: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetBridgingPath: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -4253,23 +4253,23 @@ func (x *fastReflection_MsgSetSupportedBridgingPath) ProtoMethods() *protoiface.
 }
 
 var (
-	md_MsgSetSupportedBridgingPathResponse protoreflect.MessageDescriptor
+	md_MsgSetBridgingPathResponse protoreflect.MessageDescriptor
 )
 
 func init() {
 	file_noble_dollar_portal_v1_tx_proto_init()
-	md_MsgSetSupportedBridgingPathResponse = File_noble_dollar_portal_v1_tx_proto.Messages().ByName("MsgSetSupportedBridgingPathResponse")
+	md_MsgSetBridgingPathResponse = File_noble_dollar_portal_v1_tx_proto.Messages().ByName("MsgSetBridgingPathResponse")
 }
 
-var _ protoreflect.Message = (*fastReflection_MsgSetSupportedBridgingPathResponse)(nil)
+var _ protoreflect.Message = (*fastReflection_MsgSetBridgingPathResponse)(nil)
 
-type fastReflection_MsgSetSupportedBridgingPathResponse MsgSetSupportedBridgingPathResponse
+type fastReflection_MsgSetBridgingPathResponse MsgSetBridgingPathResponse
 
-func (x *MsgSetSupportedBridgingPathResponse) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_MsgSetSupportedBridgingPathResponse)(x)
+func (x *MsgSetBridgingPathResponse) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_MsgSetBridgingPathResponse)(x)
 }
 
-func (x *MsgSetSupportedBridgingPathResponse) slowProtoReflect() protoreflect.Message {
+func (x *MsgSetBridgingPathResponse) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_portal_v1_tx_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4281,43 +4281,43 @@ func (x *MsgSetSupportedBridgingPathResponse) slowProtoReflect() protoreflect.Me
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_MsgSetSupportedBridgingPathResponse_messageType fastReflection_MsgSetSupportedBridgingPathResponse_messageType
-var _ protoreflect.MessageType = fastReflection_MsgSetSupportedBridgingPathResponse_messageType{}
+var _fastReflection_MsgSetBridgingPathResponse_messageType fastReflection_MsgSetBridgingPathResponse_messageType
+var _ protoreflect.MessageType = fastReflection_MsgSetBridgingPathResponse_messageType{}
 
-type fastReflection_MsgSetSupportedBridgingPathResponse_messageType struct{}
+type fastReflection_MsgSetBridgingPathResponse_messageType struct{}
 
-func (x fastReflection_MsgSetSupportedBridgingPathResponse_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_MsgSetSupportedBridgingPathResponse)(nil)
+func (x fastReflection_MsgSetBridgingPathResponse_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_MsgSetBridgingPathResponse)(nil)
 }
-func (x fastReflection_MsgSetSupportedBridgingPathResponse_messageType) New() protoreflect.Message {
-	return new(fastReflection_MsgSetSupportedBridgingPathResponse)
+func (x fastReflection_MsgSetBridgingPathResponse_messageType) New() protoreflect.Message {
+	return new(fastReflection_MsgSetBridgingPathResponse)
 }
-func (x fastReflection_MsgSetSupportedBridgingPathResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_MsgSetSupportedBridgingPathResponse
+func (x fastReflection_MsgSetBridgingPathResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_MsgSetBridgingPathResponse
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Descriptor() protoreflect.MessageDescriptor {
-	return md_MsgSetSupportedBridgingPathResponse
+func (x *fastReflection_MsgSetBridgingPathResponse) Descriptor() protoreflect.MessageDescriptor {
+	return md_MsgSetBridgingPathResponse
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Type() protoreflect.MessageType {
-	return _fastReflection_MsgSetSupportedBridgingPathResponse_messageType
+func (x *fastReflection_MsgSetBridgingPathResponse) Type() protoreflect.MessageType {
+	return _fastReflection_MsgSetBridgingPathResponse_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) New() protoreflect.Message {
-	return new(fastReflection_MsgSetSupportedBridgingPathResponse)
+func (x *fastReflection_MsgSetBridgingPathResponse) New() protoreflect.Message {
+	return new(fastReflection_MsgSetBridgingPathResponse)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Interface() protoreflect.ProtoMessage {
-	return (*MsgSetSupportedBridgingPathResponse)(x)
+func (x *fastReflection_MsgSetBridgingPathResponse) Interface() protoreflect.ProtoMessage {
+	return (*MsgSetBridgingPathResponse)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -4325,7 +4325,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Interface() protore
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_MsgSetBridgingPathResponse) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 }
 
 // Has reports whether a field is populated.
@@ -4339,13 +4339,13 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Range(f func(protor
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_MsgSetBridgingPathResponse) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPathResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPathResponse does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -4355,13 +4355,13 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Has(fd protoreflect
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_MsgSetBridgingPathResponse) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPathResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPathResponse does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -4371,13 +4371,13 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Clear(fd protorefle
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_MsgSetBridgingPathResponse) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPathResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPathResponse does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -4391,13 +4391,13 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Get(descriptor prot
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_MsgSetBridgingPathResponse) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPathResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPathResponse does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -4411,36 +4411,36 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Set(fd protoreflect
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_MsgSetBridgingPathResponse) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPathResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPathResponse does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_MsgSetBridgingPathResponse) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.MsgSetBridgingPathResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.MsgSetBridgingPathResponse does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_MsgSetBridgingPathResponse) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.MsgSetBridgingPathResponse", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -4448,7 +4448,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) WhichOneof(d protor
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_MsgSetBridgingPathResponse) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -4459,7 +4459,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) GetUnknown() protor
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_MsgSetBridgingPathResponse) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -4471,7 +4471,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) SetUnknown(fields p
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) IsValid() bool {
+func (x *fastReflection_MsgSetBridgingPathResponse) IsValid() bool {
 	return x != nil
 }
 
@@ -4481,9 +4481,9 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_MsgSetSupportedBridgingPathResponse) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_MsgSetBridgingPathResponse) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*MsgSetSupportedBridgingPathResponse)
+		x := input.Message.Interface().(*MsgSetBridgingPathResponse)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -4505,7 +4505,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) ProtoMethods() *pro
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*MsgSetSupportedBridgingPathResponse)
+		x := input.Message.Interface().(*MsgSetBridgingPathResponse)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -4535,7 +4535,7 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) ProtoMethods() *pro
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*MsgSetSupportedBridgingPathResponse)
+		x := input.Message.Interface().(*MsgSetBridgingPathResponse)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -4567,10 +4567,10 @@ func (x *fastReflection_MsgSetSupportedBridgingPathResponse) ProtoMethods() *pro
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetSupportedBridgingPathResponse: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetBridgingPathResponse: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetSupportedBridgingPathResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: MsgSetBridgingPathResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			default:
@@ -5787,8 +5787,8 @@ func (*MsgSetPeerResponse) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_tx_proto_rawDescGZIP(), []int{7}
 }
 
-// MsgSetSupportedBridgingPath allows the Noble Dollar Portal owner to set supported bridging paths.
-type MsgSetSupportedBridgingPath struct {
+// MsgSetBridgingPath allows the Noble Dollar Portal owner to set supported bridging paths.
+type MsgSetBridgingPath struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -5799,8 +5799,8 @@ type MsgSetSupportedBridgingPath struct {
 	Supported          bool   `protobuf:"varint,4,opt,name=supported,proto3" json:"supported,omitempty"`
 }
 
-func (x *MsgSetSupportedBridgingPath) Reset() {
-	*x = MsgSetSupportedBridgingPath{}
+func (x *MsgSetBridgingPath) Reset() {
+	*x = MsgSetBridgingPath{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_portal_v1_tx_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5808,54 +5808,54 @@ func (x *MsgSetSupportedBridgingPath) Reset() {
 	}
 }
 
-func (x *MsgSetSupportedBridgingPath) String() string {
+func (x *MsgSetBridgingPath) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MsgSetSupportedBridgingPath) ProtoMessage() {}
+func (*MsgSetBridgingPath) ProtoMessage() {}
 
-// Deprecated: Use MsgSetSupportedBridgingPath.ProtoReflect.Descriptor instead.
-func (*MsgSetSupportedBridgingPath) Descriptor() ([]byte, []int) {
+// Deprecated: Use MsgSetBridgingPath.ProtoReflect.Descriptor instead.
+func (*MsgSetBridgingPath) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_tx_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *MsgSetSupportedBridgingPath) GetSigner() string {
+func (x *MsgSetBridgingPath) GetSigner() string {
 	if x != nil {
 		return x.Signer
 	}
 	return ""
 }
 
-func (x *MsgSetSupportedBridgingPath) GetDestinationChainId() uint32 {
+func (x *MsgSetBridgingPath) GetDestinationChainId() uint32 {
 	if x != nil {
 		return x.DestinationChainId
 	}
 	return 0
 }
 
-func (x *MsgSetSupportedBridgingPath) GetDestinationToken() []byte {
+func (x *MsgSetBridgingPath) GetDestinationToken() []byte {
 	if x != nil {
 		return x.DestinationToken
 	}
 	return nil
 }
 
-func (x *MsgSetSupportedBridgingPath) GetSupported() bool {
+func (x *MsgSetBridgingPath) GetSupported() bool {
 	if x != nil {
 		return x.Supported
 	}
 	return false
 }
 
-// MsgSetSupportedBridgingPathResponse is the response of the SetSupportedBridgingPath message.
-type MsgSetSupportedBridgingPathResponse struct {
+// MsgSetBridgingPathResponse is the response of the SetBridgingPath message.
+type MsgSetBridgingPathResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *MsgSetSupportedBridgingPathResponse) Reset() {
-	*x = MsgSetSupportedBridgingPathResponse{}
+func (x *MsgSetBridgingPathResponse) Reset() {
+	*x = MsgSetBridgingPathResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_portal_v1_tx_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -5863,14 +5863,14 @@ func (x *MsgSetSupportedBridgingPathResponse) Reset() {
 	}
 }
 
-func (x *MsgSetSupportedBridgingPathResponse) String() string {
+func (x *MsgSetBridgingPathResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MsgSetSupportedBridgingPathResponse) ProtoMessage() {}
+func (*MsgSetBridgingPathResponse) ProtoMessage() {}
 
-// Deprecated: Use MsgSetSupportedBridgingPathResponse.ProtoReflect.Descriptor instead.
-func (*MsgSetSupportedBridgingPathResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use MsgSetBridgingPathResponse.ProtoReflect.Descriptor instead.
+func (*MsgSetBridgingPathResponse) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_tx_proto_rawDescGZIP(), []int{9}
 }
 
@@ -6014,96 +6014,93 @@ var file_noble_dollar_portal_v1_tx_proto_rawDesc = []byte{
 	0x67, 0x6e, 0x65, 0x72, 0x8a, 0xe7, 0xb0, 0x2a, 0x15, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f,
 	0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x53, 0x65, 0x74, 0x50, 0x65, 0x65, 0x72, 0x22, 0x14,
 	0x0a, 0x12, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x50, 0x65, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x98, 0x02, 0x0a, 0x1b, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x53,
-	0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67,
-	0x50, 0x61, 0x74, 0x68, 0x12, 0x30, 0x0a, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x18, 0x01,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x86, 0x02, 0x0a, 0x12, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x42,
+	0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x12, 0x30, 0x0a, 0x06, 0x73,
+	0x69, 0x67, 0x6e, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d,
+	0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53,
+	0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x12, 0x3c, 0x0a,
+	0x14, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x63, 0x68, 0x61,
+	0x69, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x0a, 0xfa, 0xde, 0x1f,
+	0x06, 0x75, 0x69, 0x6e, 0x74, 0x31, 0x36, 0x52, 0x12, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x12, 0x2b, 0x0a, 0x11, 0x64,
+	0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x10, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x73, 0x75, 0x70, 0x70,
+	0x6f, 0x72, 0x74, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x73, 0x75, 0x70,
+	0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x3a, 0x35, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00,
+	0x82, 0xe7, 0xb0, 0x2a, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x8a, 0xe7, 0xb0, 0x2a, 0x1d,
+	0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x53, 0x65,
+	0x74, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x22, 0x1c, 0x0a,
+	0x1a, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50,
+	0x61, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xb8, 0x01, 0x0a, 0x14,
+	0x4d, 0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72,
+	0x73, 0x68, 0x69, 0x70, 0x12, 0x30, 0x0a, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
 	0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06,
-	0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x12, 0x3c, 0x0a, 0x14, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e,
-	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x0d, 0x42, 0x0a, 0xfa, 0xde, 0x1f, 0x06, 0x75, 0x69, 0x6e, 0x74, 0x31, 0x36,
-	0x52, 0x12, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61,
-	0x69, 0x6e, 0x49, 0x64, 0x12, 0x2b, 0x0a, 0x11, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52,
-	0x10, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65,
-	0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x73, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x18, 0x04,
-	0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x73, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x3a,
-	0x3e, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00, 0x82, 0xe7, 0xb0, 0x2a, 0x06, 0x73, 0x69,
-	0x67, 0x6e, 0x65, 0x72, 0x8a, 0xe7, 0xb0, 0x2a, 0x26, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f,
-	0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x53, 0x65, 0x74, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72,
-	0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x22,
-	0x25, 0x0a, 0x23, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74,
-	0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xb8, 0x01, 0x0a, 0x14, 0x4d, 0x73, 0x67, 0x54, 0x72,
-	0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x12,
-	0x30, 0x0a, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72,
-	0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65,
-	0x72, 0x12, 0x35, 0x0a, 0x09, 0x6e, 0x65, 0x77, 0x5f, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
-	0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x52, 0x08,
-	0x6e, 0x65, 0x77, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x3a, 0x37, 0x88, 0xa0, 0x1f, 0x00, 0xe8, 0xa0,
-	0x1f, 0x00, 0x82, 0xe7, 0xb0, 0x2a, 0x06, 0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x8a, 0xe7, 0xb0,
-	0x2a, 0x1f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f,
-	0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69,
-	0x70, 0x22, 0x1e, 0x0a, 0x1c, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72,
-	0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x32, 0x98, 0x05, 0x0a, 0x03, 0x4d, 0x73, 0x67, 0x12, 0x59, 0x0a, 0x07, 0x44, 0x65, 0x6c,
-	0x69, 0x76, 0x65, 0x72, 0x12, 0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73,
-	0x67, 0x44, 0x65, 0x6c, 0x69, 0x76, 0x65, 0x72, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
-	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76,
-	0x31, 0x2e, 0x4d, 0x73, 0x67, 0x44, 0x65, 0x6c, 0x69, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x5c, 0x0a, 0x08, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72,
-	0x12, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
-	0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61,
-	0x6e, 0x73, 0x66, 0x65, 0x72, 0x1a, 0x2b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d,
-	0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x6e, 0x0a, 0x0e, 0x53, 0x65, 0x74, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x53,
-	0x74, 0x61, 0x74, 0x65, 0x12, 0x29, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73,
-	0x67, 0x53, 0x65, 0x74, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x1a,
-	0x31, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70,
-	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x50,
-	0x61, 0x75, 0x73, 0x65, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x59, 0x0a, 0x07, 0x53, 0x65, 0x74, 0x50, 0x65, 0x65, 0x72, 0x12, 0x22, 0x2e,
+	0x73, 0x69, 0x67, 0x6e, 0x65, 0x72, 0x12, 0x35, 0x0a, 0x09, 0x6e, 0x65, 0x77, 0x5f, 0x6f, 0x77,
+	0x6e, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63,
+	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72,
+	0x69, 0x6e, 0x67, 0x52, 0x08, 0x6e, 0x65, 0x77, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x3a, 0x37, 0x88,
+	0xa0, 0x1f, 0x00, 0xe8, 0xa0, 0x1f, 0x00, 0x82, 0xe7, 0xb0, 0x2a, 0x06, 0x73, 0x69, 0x67, 0x6e,
+	0x65, 0x72, 0x8a, 0xe7, 0xb0, 0x2a, 0x1f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f,
+	0x72, 0x74, 0x61, 0x6c, 0x2f, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e,
+	0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x22, 0x1e, 0x0a, 0x1c, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61,
+	0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xfc, 0x04, 0x0a, 0x03, 0x4d, 0x73, 0x67, 0x12, 0x59,
+	0x0a, 0x07, 0x44, 0x65, 0x6c, 0x69, 0x76, 0x65, 0x72, 0x12, 0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e,
+	0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x44, 0x65, 0x6c, 0x69, 0x76, 0x65, 0x72, 0x1a, 0x2a, 0x2e,
 	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72,
-	0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x50, 0x65, 0x65,
-	0x72, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65,
-	0x74, 0x50, 0x65, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x8c, 0x01,
-	0x0a, 0x18, 0x53, 0x65, 0x74, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72,
-	0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x12, 0x33, 0x2e, 0x6e, 0x6f, 0x62,
+	0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x44, 0x65, 0x6c, 0x69, 0x76, 0x65,
+	0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x5c, 0x0a, 0x08, 0x54, 0x72, 0x61,
+	0x6e, 0x73, 0x66, 0x65, 0x72, 0x12, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d,
+	0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x1a, 0x2b, 0x2e, 0x6e, 0x6f, 0x62,
 	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c,
-	0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72,
-	0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x1a,
-	0x3b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70,
-	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x53,
-	0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67,
-	0x50, 0x61, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x77, 0x0a, 0x11,
-	0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69,
-	0x70, 0x12, 0x2c, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x54, 0x72,
-	0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x1a,
-	0x34, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70,
-	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61, 0x6e,
-	0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x1a, 0x05, 0x80, 0xe7, 0xb0, 0x2a, 0x01, 0x42, 0xd6, 0x01, 0x0a,
-	0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x42, 0x07, 0x54, 0x78, 0x50,
-	0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62,
-	0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c,
-	0x2f, 0x76, 0x31, 0x3b, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e,
-	0x44, 0x50, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f,
-	0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61,
-	0x6c, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50,
-	0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c,
-	0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x50, 0x6f, 0x72, 0x74, 0x61,
-	0x6c, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6e, 0x0a, 0x0e, 0x53, 0x65, 0x74, 0x50, 0x61,
+	0x75, 0x73, 0x65, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x29, 0x2e, 0x6e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e,
+	0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x53,
+	0x74, 0x61, 0x74, 0x65, 0x1a, 0x31, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73,
+	0x67, 0x53, 0x65, 0x74, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x59, 0x0a, 0x07, 0x53, 0x65, 0x74, 0x50, 0x65,
+	0x65, 0x72, 0x12, 0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53,
+	0x65, 0x74, 0x50, 0x65, 0x65, 0x72, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e,
+	0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x50, 0x65, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x71, 0x0a, 0x0f, 0x53, 0x65, 0x74, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e,
+	0x67, 0x50, 0x61, 0x74, 0x68, 0x12, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d,
+	0x73, 0x67, 0x53, 0x65, 0x74, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74,
+	0x68, 0x1a, 0x32, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x53, 0x65,
+	0x74, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x77, 0x0a, 0x11, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65,
+	0x72, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x12, 0x2c, 0x2e, 0x6e, 0x6f, 0x62,
+	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c,
+	0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f,
+	0x77, 0x6e, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x1a, 0x34, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76,
+	0x31, 0x2e, 0x4d, 0x73, 0x67, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x4f, 0x77, 0x6e,
+	0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x1a, 0x05,
+	0x80, 0xe7, 0xb0, 0x2a, 0x01, 0x42, 0xd6, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61,
+	0x6c, 0x2e, 0x76, 0x31, 0x42, 0x07, 0x54, 0x78, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a,
+	0x34, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79,
+	0x7a, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x3b, 0x70, 0x6f, 0x72,
+	0x74, 0x61, 0x6c, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x50, 0xaa, 0x02, 0x16, 0x4e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x50, 0x6f, 0x72, 0x74, 0x61,
+	0x6c, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22,
+	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72,
+	0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
+	0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x3a, 0x3a, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -6120,31 +6117,31 @@ func file_noble_dollar_portal_v1_tx_proto_rawDescGZIP() []byte {
 
 var file_noble_dollar_portal_v1_tx_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_noble_dollar_portal_v1_tx_proto_goTypes = []interface{}{
-	(*MsgDeliver)(nil),                          // 0: noble.dollar.portal.v1.MsgDeliver
-	(*MsgDeliverResponse)(nil),                  // 1: noble.dollar.portal.v1.MsgDeliverResponse
-	(*MsgTransfer)(nil),                         // 2: noble.dollar.portal.v1.MsgTransfer
-	(*MsgTransferResponse)(nil),                 // 3: noble.dollar.portal.v1.MsgTransferResponse
-	(*MsgSetPausedState)(nil),                   // 4: noble.dollar.portal.v1.MsgSetPausedState
-	(*MsgSetPausedStateResponse)(nil),           // 5: noble.dollar.portal.v1.MsgSetPausedStateResponse
-	(*MsgSetPeer)(nil),                          // 6: noble.dollar.portal.v1.MsgSetPeer
-	(*MsgSetPeerResponse)(nil),                  // 7: noble.dollar.portal.v1.MsgSetPeerResponse
-	(*MsgSetSupportedBridgingPath)(nil),         // 8: noble.dollar.portal.v1.MsgSetSupportedBridgingPath
-	(*MsgSetSupportedBridgingPathResponse)(nil), // 9: noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse
-	(*MsgTransferOwnership)(nil),                // 10: noble.dollar.portal.v1.MsgTransferOwnership
-	(*MsgTransferOwnershipResponse)(nil),        // 11: noble.dollar.portal.v1.MsgTransferOwnershipResponse
+	(*MsgDeliver)(nil),                   // 0: noble.dollar.portal.v1.MsgDeliver
+	(*MsgDeliverResponse)(nil),           // 1: noble.dollar.portal.v1.MsgDeliverResponse
+	(*MsgTransfer)(nil),                  // 2: noble.dollar.portal.v1.MsgTransfer
+	(*MsgTransferResponse)(nil),          // 3: noble.dollar.portal.v1.MsgTransferResponse
+	(*MsgSetPausedState)(nil),            // 4: noble.dollar.portal.v1.MsgSetPausedState
+	(*MsgSetPausedStateResponse)(nil),    // 5: noble.dollar.portal.v1.MsgSetPausedStateResponse
+	(*MsgSetPeer)(nil),                   // 6: noble.dollar.portal.v1.MsgSetPeer
+	(*MsgSetPeerResponse)(nil),           // 7: noble.dollar.portal.v1.MsgSetPeerResponse
+	(*MsgSetBridgingPath)(nil),           // 8: noble.dollar.portal.v1.MsgSetBridgingPath
+	(*MsgSetBridgingPathResponse)(nil),   // 9: noble.dollar.portal.v1.MsgSetBridgingPathResponse
+	(*MsgTransferOwnership)(nil),         // 10: noble.dollar.portal.v1.MsgTransferOwnership
+	(*MsgTransferOwnershipResponse)(nil), // 11: noble.dollar.portal.v1.MsgTransferOwnershipResponse
 }
 var file_noble_dollar_portal_v1_tx_proto_depIdxs = []int32{
 	0,  // 0: noble.dollar.portal.v1.Msg.Deliver:input_type -> noble.dollar.portal.v1.MsgDeliver
 	2,  // 1: noble.dollar.portal.v1.Msg.Transfer:input_type -> noble.dollar.portal.v1.MsgTransfer
 	4,  // 2: noble.dollar.portal.v1.Msg.SetPausedState:input_type -> noble.dollar.portal.v1.MsgSetPausedState
 	6,  // 3: noble.dollar.portal.v1.Msg.SetPeer:input_type -> noble.dollar.portal.v1.MsgSetPeer
-	8,  // 4: noble.dollar.portal.v1.Msg.SetSupportedBridgingPath:input_type -> noble.dollar.portal.v1.MsgSetSupportedBridgingPath
+	8,  // 4: noble.dollar.portal.v1.Msg.SetBridgingPath:input_type -> noble.dollar.portal.v1.MsgSetBridgingPath
 	10, // 5: noble.dollar.portal.v1.Msg.TransferOwnership:input_type -> noble.dollar.portal.v1.MsgTransferOwnership
 	1,  // 6: noble.dollar.portal.v1.Msg.Deliver:output_type -> noble.dollar.portal.v1.MsgDeliverResponse
 	3,  // 7: noble.dollar.portal.v1.Msg.Transfer:output_type -> noble.dollar.portal.v1.MsgTransferResponse
 	5,  // 8: noble.dollar.portal.v1.Msg.SetPausedState:output_type -> noble.dollar.portal.v1.MsgSetPausedStateResponse
 	7,  // 9: noble.dollar.portal.v1.Msg.SetPeer:output_type -> noble.dollar.portal.v1.MsgSetPeerResponse
-	9,  // 10: noble.dollar.portal.v1.Msg.SetSupportedBridgingPath:output_type -> noble.dollar.portal.v1.MsgSetSupportedBridgingPathResponse
+	9,  // 10: noble.dollar.portal.v1.Msg.SetBridgingPath:output_type -> noble.dollar.portal.v1.MsgSetBridgingPathResponse
 	11, // 11: noble.dollar.portal.v1.Msg.TransferOwnership:output_type -> noble.dollar.portal.v1.MsgTransferOwnershipResponse
 	6,  // [6:12] is the sub-list for method output_type
 	0,  // [0:6] is the sub-list for method input_type
@@ -6256,7 +6253,7 @@ func file_noble_dollar_portal_v1_tx_proto_init() {
 			}
 		}
 		file_noble_dollar_portal_v1_tx_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MsgSetSupportedBridgingPath); i {
+			switch v := v.(*MsgSetBridgingPath); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -6268,7 +6265,7 @@ func file_noble_dollar_portal_v1_tx_proto_init() {
 			}
 		}
 		file_noble_dollar_portal_v1_tx_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*MsgSetSupportedBridgingPathResponse); i {
+			switch v := v.(*MsgSetBridgingPathResponse); i {
 			case 0:
 				return &v.state
 			case 1:

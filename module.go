@@ -210,11 +210,12 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							},
 						},
 						{
-							RpcMethod: "SetSupportedBridgingPath",
-							Use:       "set-supported-bridging-path [destination-chain-id] [destination-token]",
+							RpcMethod: "SetBridgingPath",
+							Use:       "set-bridging-path [destination-chain-id] [destination-token] [supported]",
 							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
 								{ProtoField: "destination_chain_id"},
 								{ProtoField: "destination_token"},
+								{ProtoField: "supported"},
 							},
 						},
 						{

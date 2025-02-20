@@ -60,11 +60,11 @@ type Keeper struct {
 	Principal collections.Map[[]byte, math.Int]
 	Stats     collections.Item[types.Stats]
 
-	PortalOwner                  collections.Item[string]
-	PortalPaused                 collections.Item[bool]
-	PortalPeers                  collections.Map[uint16, portal.Peer]
-	PortalSupportedBridgingPaths collections.Map[collections.Pair[uint16, []byte], bool]
-	PortalNonce                  collections.Item[uint32]
+	PortalOwner         collections.Item[string]
+	PortalPaused        collections.Item[bool]
+	PortalPeers         collections.Map[uint16, portal.Peer]
+	PortalBridgingPaths collections.Map[collections.Pair[uint16, []byte], bool]
+	PortalNonce         collections.Item[uint32]
 
 	VaultsPaused                 collections.Item[int32]
 	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
@@ -102,11 +102,11 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 		Stats:     collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[types.Stats](cdc)),
 
-		PortalOwner:                  collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
-		PortalPaused:                 collections.NewItem(builder, portal.PausedKey, "portal_paused", collections.BoolValue),
-		PortalPeers:                  collections.NewMap(builder, portal.PeerPrefix, "portal_peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),
-		PortalSupportedBridgingPaths: collections.NewMap(builder, portal.SupportedBridgingPathPrefix, "portal_supported_bridging_paths", collections.PairKeyCodec(collections.Uint16Key, collections.BytesKey), collections.BoolValue),
-		PortalNonce:                  collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
+		PortalOwner:         collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
+		PortalPaused:        collections.NewItem(builder, portal.PausedKey, "portal_paused", collections.BoolValue),
+		PortalPeers:         collections.NewMap(builder, portal.PeerPrefix, "portal_peers", collections.Uint16Key, codec.CollValue[portal.Peer](cdc)),
+		PortalBridgingPaths: collections.NewMap(builder, portal.BridgingPathPrefix, "portal_bridging_paths", collections.PairKeyCodec(collections.Uint16Key, collections.BytesKey), collections.BoolValue),
+		PortalNonce:         collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
 
 		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),

@@ -47,19 +47,23 @@ func (k *Keeper) GetPortalPeers(ctx context.Context) (map[uint16]portal.Peer, er
 	return peers, err
 }
 
-// GetPortalSupportedBridgingPaths is a utility that returns all supported bridging paths from state.
-func (k *Keeper) GetPortalSupportedBridgingPaths(ctx context.Context) ([]portal.SupportedBridgingPath, error) {
-	var supportedBridgingPaths []portal.SupportedBridgingPath
+// GetPortalBridgingPaths is a utility that returns all supported bridging paths from state.
+func (k *Keeper) GetPortalBridgingPaths(ctx context.Context) ([]portal.BridgingPath, error) {
+	var supportedBridgingPaths []portal.BridgingPath
 
-	err := k.PortalSupportedBridgingPaths.Walk(ctx, nil, func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {
-		if supported {
-			supportedBridgingPaths = append(supportedBridgingPaths, portal.SupportedBridgingPath{
-				DestinationChainId: key.K1(),
-				DestinationToken:   key.K2(),
-			})
-		}
-		return false, nil
-	})
+	err := k.PortalBridgingPaths.Walk(
+		ctx,
+		nil,
+		func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {
+			if supported {
+				supportedBridgingPaths = append(supportedBridgingPaths, portal.BridgingPath{
+					DestinationChainId: key.K1(),
+					DestinationToken:   key.K2(),
+				})
+			}
+			return false, nil
+		},
+	)
 
 	return supportedBridgingPaths, err
 }
