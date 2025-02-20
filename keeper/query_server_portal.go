@@ -24,7 +24,6 @@ import (
 	"context"
 
 	"cosmossdk.io/collections"
-	"cosmossdk.io/errors"
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/portal"
@@ -79,25 +78,20 @@ func (k portalQueryServer) SupportedBridgingPaths(ctx context.Context, req *port
 	// support it via gogoproto.
 	destinationChainId := uint16(req.DestinationChainId)
 
-	iterator, err := k.PortalSupportedBridgingPaths.Iterate(
+	var destinationTokens [][]byte
+	err := k.PortalSupportedBridgingPaths.Walk(
 		ctx,
 		collections.NewPrefixedPairRange[uint16, []byte](destinationChainId),
+		func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {
+			if supported {
+				destinationTokens = append(destinationTokens, key.K2())
+			}
+
+			return false, nil
+		},
 	)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to iterate over supported bridging paths")
-	}
 
-	var destinationTokens [][]byte
-	for ; iterator.Valid(); iterator.Next() {
-		key, err := iterator.Key()
-		if err != nil {
-			return nil, errors.Wrap(err, "unable to iterate over supported bridging paths")
-		}
-
-		destinationTokens = append(destinationTokens, key.K2())
-	}
-
-	return &portal.QuerySupportedBridgingPathsResponse{DestinationTokens: destinationTokens}, nil
+	return &portal.QuerySupportedBridgingPathsResponse{DestinationTokens: destinationTokens}, err
 }
 
 func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*portal.QueryNonceResponse, error) {
