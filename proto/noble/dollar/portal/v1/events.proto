@@ -2,9 +2,38 @@ syntax = "proto3";
 
 package noble.dollar.portal.v1;
 
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types/portal";
+
+// Delivered is the event emitted when a vaa is successfully delivered.
+message Delivered {
+  bytes vaa = 1;
+}
+
+// USDNTokenSent is an event emitted after transfering USDN tokens via Wormhole.
+//
+// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
+message USDNTokenSent {
+  string source_token = 1;
+  uint32 destination_chain_id = 2 [
+    (gogoproto.customtype) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+  bytes destination_token = 3;
+  string sender = 4;
+  bytes recipient = 5;
+  string amount = 6 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 index = 7;
+  bytes message_id = 8;
+}
 
 // PeerUpdated is an event emitted whenever a peer is updated.
 message PeerUpdated {
@@ -31,4 +60,9 @@ message BridgingPathSet {
 message OwnershipTransferred {
   string previous_owner = 1;
   string new_owner = 2;
+}
+
+// StatePausedUpdated is an event emitted whenever the paused state is updated.
+message StatePausedUpdated {
+  bool paused = 1;
 }
