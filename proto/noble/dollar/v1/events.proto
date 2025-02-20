@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package noble.dollar.v1;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "dollar.noble.xyz/types";
+
+// Event emitted when the module pause stsate is changed to
+// paused.
+message Paused {
+  bool paused = 1;
+}
+
+// Event emitted when the module pause stsate is changed to
+// not paused.
+message NotPaused {
+  bool not_paused = 1;
+}

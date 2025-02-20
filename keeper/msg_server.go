@@ -26,6 +26,7 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/vaults"
@@ -69,7 +70,13 @@ func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedSt
 		return nil, err
 	}
 
-	return &types.MsgSetPausedStateResponse{}, nil
+	var event protoiface.MessageV1
+	event = &types.NotPaused{NotPaused: false}
+	if msg.Paused {
+		event = &types.Paused{Paused: true}
+	}
+
+	return &types.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
 }
 
 func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {

@@ -40,7 +40,7 @@ message USDNTokenSent {
     (gogoproto.customtype) = "uint16",
     (gogoproto.nullable) = false
   ];
-  bytes32 destination_token = 3;
+  bytes destination_token = 3;
   string sender = 4;
   bytes recipient = 5;
   string amount = 6 [
