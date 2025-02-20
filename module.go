@@ -293,11 +293,9 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							Use:       "peers",
 						},
 						{
-							RpcMethod: "SupportedBridgingPaths",
-							Use:       "supported-bridging-paths [destination-chain-id]",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "destination_chain_id"},
-							},
+							RpcMethod:      "DestinationTokens",
+							Use:            "destination-tokens [chain-id]",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "chain_id"}},
 						},
 						{
 							RpcMethod: "Nonce",

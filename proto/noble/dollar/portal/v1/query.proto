@@ -26,9 +26,9 @@ service Query {
     option (google.api.http).get = "/noble/dollar/portal/v1/peers";
   }
 
-  rpc SupportedBridgingPaths(QuerySupportedBridgingPaths) returns (QuerySupportedBridgingPathsResponse) {
+  rpc DestinationTokens(QueryDestinationTokens) returns (QueryDestinationTokensResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/noble/dollar/portal/v1/supported_bridging_paths/{destination_chain_id}";
+    option (google.api.http).get = "/noble/dollar/portal/v1/destination_tokens/{chain_id}";
   }
 
   rpc Nonce(QueryNonce) returns (QueryNonceResponse) {
@@ -59,12 +59,12 @@ message QueryPeersResponse {
   ];
 }
 
-message QuerySupportedBridgingPaths {
-  uint32 destination_chain_id = 1;
+message QueryDestinationTokens {
+  uint32 chain_id = 1;
 }
 
-message QuerySupportedBridgingPathsResponse {
-  repeated bytes destination_tokens = 2;
+message QueryDestinationTokensResponse {
+  repeated bytes destination_tokens = 2 [(amino.dont_omitempty) = true];
 }
 
 message QueryNonce {}

@@ -69,19 +69,18 @@ func (k portalQueryServer) Peers(ctx context.Context, req *portal.QueryPeers) (*
 	return &portal.QueryPeersResponse{Peers: peers}, err
 }
 
-func (k portalQueryServer) SupportedBridgingPaths(ctx context.Context, req *portal.QuerySupportedBridgingPaths) (*portal.QuerySupportedBridgingPathsResponse, error) {
+func (k portalQueryServer) DestinationTokens(ctx context.Context, req *portal.QueryDestinationTokens) (*portal.QueryDestinationTokensResponse, error) {
 	if req == nil {
 		return nil, types.ErrInvalidRequest
 	}
 
-	// NOTE: We have to typecast here because protoc-gen-grpc-gateway doesn't
-	// support it via gogoproto.
-	destinationChainId := uint16(req.DestinationChainId)
+	// NOTE: We have to typecast here because protoc-gen-grpc-gateway doesn't support it via gogoproto.
+	chainID := uint16(req.ChainId)
 
 	var destinationTokens [][]byte
 	err := k.PortalSupportedBridgingPaths.Walk(
 		ctx,
-		collections.NewPrefixedPairRange[uint16, []byte](destinationChainId),
+		collections.NewPrefixedPairRange[uint16, []byte](chainID),
 		func(key collections.Pair[uint16, []byte], supported bool) (stop bool, err error) {
 			if supported {
 				destinationTokens = append(destinationTokens, key.K2())
@@ -91,7 +90,7 @@ func (k portalQueryServer) SupportedBridgingPaths(ctx context.Context, req *port
 		},
 	)
 
-	return &portal.QuerySupportedBridgingPathsResponse{DestinationTokens: destinationTokens}, err
+	return &portal.QueryDestinationTokensResponse{DestinationTokens: destinationTokens}, err
 }
 
 func (k portalQueryServer) Nonce(ctx context.Context, req *portal.QueryNonce) (*portal.QueryNonceResponse, error) {

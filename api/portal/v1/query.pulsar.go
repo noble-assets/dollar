@@ -2584,25 +2584,25 @@ func (x *fastReflection_QueryPeersResponse) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_QuerySupportedBridgingPaths                      protoreflect.MessageDescriptor
-	fd_QuerySupportedBridgingPaths_destination_chain_id protoreflect.FieldDescriptor
+	md_QueryDestinationTokens          protoreflect.MessageDescriptor
+	fd_QueryDestinationTokens_chain_id protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_portal_v1_query_proto_init()
-	md_QuerySupportedBridgingPaths = File_noble_dollar_portal_v1_query_proto.Messages().ByName("QuerySupportedBridgingPaths")
-	fd_QuerySupportedBridgingPaths_destination_chain_id = md_QuerySupportedBridgingPaths.Fields().ByName("destination_chain_id")
+	md_QueryDestinationTokens = File_noble_dollar_portal_v1_query_proto.Messages().ByName("QueryDestinationTokens")
+	fd_QueryDestinationTokens_chain_id = md_QueryDestinationTokens.Fields().ByName("chain_id")
 }
 
-var _ protoreflect.Message = (*fastReflection_QuerySupportedBridgingPaths)(nil)
+var _ protoreflect.Message = (*fastReflection_QueryDestinationTokens)(nil)
 
-type fastReflection_QuerySupportedBridgingPaths QuerySupportedBridgingPaths
+type fastReflection_QueryDestinationTokens QueryDestinationTokens
 
-func (x *QuerySupportedBridgingPaths) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_QuerySupportedBridgingPaths)(x)
+func (x *QueryDestinationTokens) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_QueryDestinationTokens)(x)
 }
 
-func (x *QuerySupportedBridgingPaths) slowProtoReflect() protoreflect.Message {
+func (x *QueryDestinationTokens) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_portal_v1_query_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2614,43 +2614,43 @@ func (x *QuerySupportedBridgingPaths) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QuerySupportedBridgingPaths_messageType fastReflection_QuerySupportedBridgingPaths_messageType
-var _ protoreflect.MessageType = fastReflection_QuerySupportedBridgingPaths_messageType{}
+var _fastReflection_QueryDestinationTokens_messageType fastReflection_QueryDestinationTokens_messageType
+var _ protoreflect.MessageType = fastReflection_QueryDestinationTokens_messageType{}
 
-type fastReflection_QuerySupportedBridgingPaths_messageType struct{}
+type fastReflection_QueryDestinationTokens_messageType struct{}
 
-func (x fastReflection_QuerySupportedBridgingPaths_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_QuerySupportedBridgingPaths)(nil)
+func (x fastReflection_QueryDestinationTokens_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_QueryDestinationTokens)(nil)
 }
-func (x fastReflection_QuerySupportedBridgingPaths_messageType) New() protoreflect.Message {
-	return new(fastReflection_QuerySupportedBridgingPaths)
+func (x fastReflection_QueryDestinationTokens_messageType) New() protoreflect.Message {
+	return new(fastReflection_QueryDestinationTokens)
 }
-func (x fastReflection_QuerySupportedBridgingPaths_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_QuerySupportedBridgingPaths
+func (x fastReflection_QueryDestinationTokens_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_QueryDestinationTokens
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_QuerySupportedBridgingPaths) Descriptor() protoreflect.MessageDescriptor {
-	return md_QuerySupportedBridgingPaths
+func (x *fastReflection_QueryDestinationTokens) Descriptor() protoreflect.MessageDescriptor {
+	return md_QueryDestinationTokens
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_QuerySupportedBridgingPaths) Type() protoreflect.MessageType {
-	return _fastReflection_QuerySupportedBridgingPaths_messageType
+func (x *fastReflection_QueryDestinationTokens) Type() protoreflect.MessageType {
+	return _fastReflection_QueryDestinationTokens_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_QuerySupportedBridgingPaths) New() protoreflect.Message {
-	return new(fastReflection_QuerySupportedBridgingPaths)
+func (x *fastReflection_QueryDestinationTokens) New() protoreflect.Message {
+	return new(fastReflection_QueryDestinationTokens)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_QuerySupportedBridgingPaths) Interface() protoreflect.ProtoMessage {
-	return (*QuerySupportedBridgingPaths)(x)
+func (x *fastReflection_QueryDestinationTokens) Interface() protoreflect.ProtoMessage {
+	return (*QueryDestinationTokens)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -2658,10 +2658,10 @@ func (x *fastReflection_QuerySupportedBridgingPaths) Interface() protoreflect.Pr
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_QuerySupportedBridgingPaths) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.DestinationChainId != uint32(0) {
-		value := protoreflect.ValueOfUint32(x.DestinationChainId)
-		if !f(fd_QuerySupportedBridgingPaths_destination_chain_id, value) {
+func (x *fastReflection_QueryDestinationTokens) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.ChainId != uint32(0) {
+		value := protoreflect.ValueOfUint32(x.ChainId)
+		if !f(fd_QueryDestinationTokens_chain_id, value) {
 			return
 		}
 	}
@@ -2678,15 +2678,15 @@ func (x *fastReflection_QuerySupportedBridgingPaths) Range(f func(protoreflect.F
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_QuerySupportedBridgingPaths) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_QueryDestinationTokens) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPaths.destination_chain_id":
-		return x.DestinationChainId != uint32(0)
+	case "noble.dollar.portal.v1.QueryDestinationTokens.chain_id":
+		return x.ChainId != uint32(0)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPaths"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokens"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPaths does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokens does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -2696,15 +2696,15 @@ func (x *fastReflection_QuerySupportedBridgingPaths) Has(fd protoreflect.FieldDe
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPaths) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_QueryDestinationTokens) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPaths.destination_chain_id":
-		x.DestinationChainId = uint32(0)
+	case "noble.dollar.portal.v1.QueryDestinationTokens.chain_id":
+		x.ChainId = uint32(0)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPaths"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokens"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPaths does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokens does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -2714,16 +2714,16 @@ func (x *fastReflection_QuerySupportedBridgingPaths) Clear(fd protoreflect.Field
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_QuerySupportedBridgingPaths) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryDestinationTokens) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPaths.destination_chain_id":
-		value := x.DestinationChainId
+	case "noble.dollar.portal.v1.QueryDestinationTokens.chain_id":
+		value := x.ChainId
 		return protoreflect.ValueOfUint32(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPaths"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokens"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPaths does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokens does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -2737,15 +2737,15 @@ func (x *fastReflection_QuerySupportedBridgingPaths) Get(descriptor protoreflect
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPaths) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_QueryDestinationTokens) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPaths.destination_chain_id":
-		x.DestinationChainId = uint32(value.Uint())
+	case "noble.dollar.portal.v1.QueryDestinationTokens.chain_id":
+		x.ChainId = uint32(value.Uint())
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPaths"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokens"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPaths does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokens does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -2759,40 +2759,40 @@ func (x *fastReflection_QuerySupportedBridgingPaths) Set(fd protoreflect.FieldDe
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPaths) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryDestinationTokens) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPaths.destination_chain_id":
-		panic(fmt.Errorf("field destination_chain_id of message noble.dollar.portal.v1.QuerySupportedBridgingPaths is not mutable"))
+	case "noble.dollar.portal.v1.QueryDestinationTokens.chain_id":
+		panic(fmt.Errorf("field chain_id of message noble.dollar.portal.v1.QueryDestinationTokens is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPaths"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokens"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPaths does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokens does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_QuerySupportedBridgingPaths) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryDestinationTokens) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPaths.destination_chain_id":
+	case "noble.dollar.portal.v1.QueryDestinationTokens.chain_id":
 		return protoreflect.ValueOfUint32(uint32(0))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPaths"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokens"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPaths does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokens does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_QuerySupportedBridgingPaths) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_QueryDestinationTokens) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.QuerySupportedBridgingPaths", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.QueryDestinationTokens", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -2800,7 +2800,7 @@ func (x *fastReflection_QuerySupportedBridgingPaths) WhichOneof(d protoreflect.O
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_QuerySupportedBridgingPaths) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_QueryDestinationTokens) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -2811,7 +2811,7 @@ func (x *fastReflection_QuerySupportedBridgingPaths) GetUnknown() protoreflect.R
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPaths) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_QueryDestinationTokens) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -2823,7 +2823,7 @@ func (x *fastReflection_QuerySupportedBridgingPaths) SetUnknown(fields protorefl
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_QuerySupportedBridgingPaths) IsValid() bool {
+func (x *fastReflection_QueryDestinationTokens) IsValid() bool {
 	return x != nil
 }
 
@@ -2833,9 +2833,9 @@ func (x *fastReflection_QuerySupportedBridgingPaths) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_QueryDestinationTokens) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*QuerySupportedBridgingPaths)
+		x := input.Message.Interface().(*QueryDestinationTokens)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -2847,8 +2847,8 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 		var n int
 		var l int
 		_ = l
-		if x.DestinationChainId != 0 {
-			n += 1 + runtime.Sov(uint64(x.DestinationChainId))
+		if x.ChainId != 0 {
+			n += 1 + runtime.Sov(uint64(x.ChainId))
 		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
@@ -2860,7 +2860,7 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*QuerySupportedBridgingPaths)
+		x := input.Message.Interface().(*QueryDestinationTokens)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -2879,8 +2879,8 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if x.DestinationChainId != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.DestinationChainId))
+		if x.ChainId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ChainId))
 			i--
 			dAtA[i] = 0x8
 		}
@@ -2895,7 +2895,7 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*QuerySupportedBridgingPaths)
+		x := input.Message.Interface().(*QueryDestinationTokens)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -2927,17 +2927,17 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QuerySupportedBridgingPaths: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryDestinationTokens: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QuerySupportedBridgingPaths: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryDestinationTokens: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
 				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field DestinationChainId", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ChainId", wireType)
 				}
-				x.DestinationChainId = 0
+				x.ChainId = 0
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
@@ -2947,7 +2947,7 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					x.DestinationChainId |= uint32(b&0x7F) << shift
+					x.ChainId |= uint32(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
@@ -2987,72 +2987,72 @@ func (x *fastReflection_QuerySupportedBridgingPaths) ProtoMethods() *protoiface.
 	}
 }
 
-var _ protoreflect.List = (*_QuerySupportedBridgingPathsResponse_2_list)(nil)
+var _ protoreflect.List = (*_QueryDestinationTokensResponse_2_list)(nil)
 
-type _QuerySupportedBridgingPathsResponse_2_list struct {
+type _QueryDestinationTokensResponse_2_list struct {
 	list *[][]byte
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) Len() int {
+func (x *_QueryDestinationTokensResponse_2_list) Len() int {
 	if x.list == nil {
 		return 0
 	}
 	return len(*x.list)
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) Get(i int) protoreflect.Value {
+func (x *_QueryDestinationTokensResponse_2_list) Get(i int) protoreflect.Value {
 	return protoreflect.ValueOfBytes((*x.list)[i])
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) Set(i int, value protoreflect.Value) {
+func (x *_QueryDestinationTokensResponse_2_list) Set(i int, value protoreflect.Value) {
 	valueUnwrapped := value.Bytes()
 	concreteValue := valueUnwrapped
 	(*x.list)[i] = concreteValue
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) Append(value protoreflect.Value) {
+func (x *_QueryDestinationTokensResponse_2_list) Append(value protoreflect.Value) {
 	valueUnwrapped := value.Bytes()
 	concreteValue := valueUnwrapped
 	*x.list = append(*x.list, concreteValue)
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) AppendMutable() protoreflect.Value {
-	panic(fmt.Errorf("AppendMutable can not be called on message QuerySupportedBridgingPathsResponse at list field DestinationTokens as it is not of Message kind"))
+func (x *_QueryDestinationTokensResponse_2_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message QueryDestinationTokensResponse at list field DestinationTokens as it is not of Message kind"))
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) Truncate(n int) {
+func (x *_QueryDestinationTokensResponse_2_list) Truncate(n int) {
 	*x.list = (*x.list)[:n]
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) NewElement() protoreflect.Value {
+func (x *_QueryDestinationTokensResponse_2_list) NewElement() protoreflect.Value {
 	var v []byte
 	return protoreflect.ValueOfBytes(v)
 }
 
-func (x *_QuerySupportedBridgingPathsResponse_2_list) IsValid() bool {
+func (x *_QueryDestinationTokensResponse_2_list) IsValid() bool {
 	return x.list != nil
 }
 
 var (
-	md_QuerySupportedBridgingPathsResponse                    protoreflect.MessageDescriptor
-	fd_QuerySupportedBridgingPathsResponse_destination_tokens protoreflect.FieldDescriptor
+	md_QueryDestinationTokensResponse                    protoreflect.MessageDescriptor
+	fd_QueryDestinationTokensResponse_destination_tokens protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_portal_v1_query_proto_init()
-	md_QuerySupportedBridgingPathsResponse = File_noble_dollar_portal_v1_query_proto.Messages().ByName("QuerySupportedBridgingPathsResponse")
-	fd_QuerySupportedBridgingPathsResponse_destination_tokens = md_QuerySupportedBridgingPathsResponse.Fields().ByName("destination_tokens")
+	md_QueryDestinationTokensResponse = File_noble_dollar_portal_v1_query_proto.Messages().ByName("QueryDestinationTokensResponse")
+	fd_QueryDestinationTokensResponse_destination_tokens = md_QueryDestinationTokensResponse.Fields().ByName("destination_tokens")
 }
 
-var _ protoreflect.Message = (*fastReflection_QuerySupportedBridgingPathsResponse)(nil)
+var _ protoreflect.Message = (*fastReflection_QueryDestinationTokensResponse)(nil)
 
-type fastReflection_QuerySupportedBridgingPathsResponse QuerySupportedBridgingPathsResponse
+type fastReflection_QueryDestinationTokensResponse QueryDestinationTokensResponse
 
-func (x *QuerySupportedBridgingPathsResponse) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_QuerySupportedBridgingPathsResponse)(x)
+func (x *QueryDestinationTokensResponse) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_QueryDestinationTokensResponse)(x)
 }
 
-func (x *QuerySupportedBridgingPathsResponse) slowProtoReflect() protoreflect.Message {
+func (x *QueryDestinationTokensResponse) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_portal_v1_query_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3064,43 +3064,43 @@ func (x *QuerySupportedBridgingPathsResponse) slowProtoReflect() protoreflect.Me
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QuerySupportedBridgingPathsResponse_messageType fastReflection_QuerySupportedBridgingPathsResponse_messageType
-var _ protoreflect.MessageType = fastReflection_QuerySupportedBridgingPathsResponse_messageType{}
+var _fastReflection_QueryDestinationTokensResponse_messageType fastReflection_QueryDestinationTokensResponse_messageType
+var _ protoreflect.MessageType = fastReflection_QueryDestinationTokensResponse_messageType{}
 
-type fastReflection_QuerySupportedBridgingPathsResponse_messageType struct{}
+type fastReflection_QueryDestinationTokensResponse_messageType struct{}
 
-func (x fastReflection_QuerySupportedBridgingPathsResponse_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_QuerySupportedBridgingPathsResponse)(nil)
+func (x fastReflection_QueryDestinationTokensResponse_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_QueryDestinationTokensResponse)(nil)
 }
-func (x fastReflection_QuerySupportedBridgingPathsResponse_messageType) New() protoreflect.Message {
-	return new(fastReflection_QuerySupportedBridgingPathsResponse)
+func (x fastReflection_QueryDestinationTokensResponse_messageType) New() protoreflect.Message {
+	return new(fastReflection_QueryDestinationTokensResponse)
 }
-func (x fastReflection_QuerySupportedBridgingPathsResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_QuerySupportedBridgingPathsResponse
+func (x fastReflection_QueryDestinationTokensResponse_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_QueryDestinationTokensResponse
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Descriptor() protoreflect.MessageDescriptor {
-	return md_QuerySupportedBridgingPathsResponse
+func (x *fastReflection_QueryDestinationTokensResponse) Descriptor() protoreflect.MessageDescriptor {
+	return md_QueryDestinationTokensResponse
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Type() protoreflect.MessageType {
-	return _fastReflection_QuerySupportedBridgingPathsResponse_messageType
+func (x *fastReflection_QueryDestinationTokensResponse) Type() protoreflect.MessageType {
+	return _fastReflection_QueryDestinationTokensResponse_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) New() protoreflect.Message {
-	return new(fastReflection_QuerySupportedBridgingPathsResponse)
+func (x *fastReflection_QueryDestinationTokensResponse) New() protoreflect.Message {
+	return new(fastReflection_QueryDestinationTokensResponse)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Interface() protoreflect.ProtoMessage {
-	return (*QuerySupportedBridgingPathsResponse)(x)
+func (x *fastReflection_QueryDestinationTokensResponse) Interface() protoreflect.ProtoMessage {
+	return (*QueryDestinationTokensResponse)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -3108,10 +3108,10 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) Interface() protore
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_QueryDestinationTokensResponse) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if len(x.DestinationTokens) != 0 {
-		value := protoreflect.ValueOfList(&_QuerySupportedBridgingPathsResponse_2_list{list: &x.DestinationTokens})
-		if !f(fd_QuerySupportedBridgingPathsResponse_destination_tokens, value) {
+		value := protoreflect.ValueOfList(&_QueryDestinationTokensResponse_2_list{list: &x.DestinationTokens})
+		if !f(fd_QueryDestinationTokensResponse_destination_tokens, value) {
 			return
 		}
 	}
@@ -3128,15 +3128,15 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) Range(f func(protor
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_QueryDestinationTokensResponse) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse.destination_tokens":
+	case "noble.dollar.portal.v1.QueryDestinationTokensResponse.destination_tokens":
 		return len(x.DestinationTokens) != 0
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokensResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokensResponse does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -3146,15 +3146,15 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) Has(fd protoreflect
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_QueryDestinationTokensResponse) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse.destination_tokens":
+	case "noble.dollar.portal.v1.QueryDestinationTokensResponse.destination_tokens":
 		x.DestinationTokens = nil
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokensResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokensResponse does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -3164,19 +3164,19 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) Clear(fd protorefle
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryDestinationTokensResponse) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse.destination_tokens":
+	case "noble.dollar.portal.v1.QueryDestinationTokensResponse.destination_tokens":
 		if len(x.DestinationTokens) == 0 {
-			return protoreflect.ValueOfList(&_QuerySupportedBridgingPathsResponse_2_list{})
+			return protoreflect.ValueOfList(&_QueryDestinationTokensResponse_2_list{})
 		}
-		listValue := &_QuerySupportedBridgingPathsResponse_2_list{list: &x.DestinationTokens}
+		listValue := &_QueryDestinationTokensResponse_2_list{list: &x.DestinationTokens}
 		return protoreflect.ValueOfList(listValue)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokensResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokensResponse does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -3190,17 +3190,17 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) Get(descriptor prot
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_QueryDestinationTokensResponse) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse.destination_tokens":
+	case "noble.dollar.portal.v1.QueryDestinationTokensResponse.destination_tokens":
 		lv := value.List()
-		clv := lv.(*_QuerySupportedBridgingPathsResponse_2_list)
+		clv := lv.(*_QueryDestinationTokensResponse_2_list)
 		x.DestinationTokens = *clv.list
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokensResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokensResponse does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -3214,45 +3214,45 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) Set(fd protoreflect
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryDestinationTokensResponse) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse.destination_tokens":
+	case "noble.dollar.portal.v1.QueryDestinationTokensResponse.destination_tokens":
 		if x.DestinationTokens == nil {
 			x.DestinationTokens = [][]byte{}
 		}
-		value := &_QuerySupportedBridgingPathsResponse_2_list{list: &x.DestinationTokens}
+		value := &_QueryDestinationTokensResponse_2_list{list: &x.DestinationTokens}
 		return protoreflect.ValueOfList(value)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokensResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokensResponse does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryDestinationTokensResponse) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse.destination_tokens":
+	case "noble.dollar.portal.v1.QueryDestinationTokensResponse.destination_tokens":
 		list := [][]byte{}
-		return protoreflect.ValueOfList(&_QuerySupportedBridgingPathsResponse_2_list{list: &list})
+		return protoreflect.ValueOfList(&_QueryDestinationTokensResponse_2_list{list: &list})
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.portal.v1.QueryDestinationTokensResponse"))
 		}
-		panic(fmt.Errorf("message noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.portal.v1.QueryDestinationTokensResponse does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_QueryDestinationTokensResponse) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.portal.v1.QueryDestinationTokensResponse", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -3260,7 +3260,7 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) WhichOneof(d protor
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_QueryDestinationTokensResponse) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -3271,7 +3271,7 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) GetUnknown() protor
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_QueryDestinationTokensResponse) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -3283,7 +3283,7 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) SetUnknown(fields p
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) IsValid() bool {
+func (x *fastReflection_QueryDestinationTokensResponse) IsValid() bool {
 	return x != nil
 }
 
@@ -3293,9 +3293,9 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_QuerySupportedBridgingPathsResponse) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_QueryDestinationTokensResponse) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*QuerySupportedBridgingPathsResponse)
+		x := input.Message.Interface().(*QueryDestinationTokensResponse)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -3323,7 +3323,7 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) ProtoMethods() *pro
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*QuerySupportedBridgingPathsResponse)
+		x := input.Message.Interface().(*QueryDestinationTokensResponse)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -3362,7 +3362,7 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) ProtoMethods() *pro
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*QuerySupportedBridgingPathsResponse)
+		x := input.Message.Interface().(*QueryDestinationTokensResponse)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -3394,10 +3394,10 @@ func (x *fastReflection_QuerySupportedBridgingPathsResponse) ProtoMethods() *pro
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QuerySupportedBridgingPathsResponse: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryDestinationTokensResponse: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QuerySupportedBridgingPathsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryDestinationTokensResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 2:
@@ -4423,16 +4423,16 @@ func (x *QueryPeersResponse) GetPeers() map[uint32]*Peer {
 	return nil
 }
 
-type QuerySupportedBridgingPaths struct {
+type QueryDestinationTokens struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	DestinationChainId uint32 `protobuf:"varint,1,opt,name=destination_chain_id,json=destinationChainId,proto3" json:"destination_chain_id,omitempty"`
+	ChainId uint32 `protobuf:"varint,1,opt,name=chain_id,json=chainId,proto3" json:"chain_id,omitempty"`
 }
 
-func (x *QuerySupportedBridgingPaths) Reset() {
-	*x = QuerySupportedBridgingPaths{}
+func (x *QueryDestinationTokens) Reset() {
+	*x = QueryDestinationTokens{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_portal_v1_query_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4440,25 +4440,25 @@ func (x *QuerySupportedBridgingPaths) Reset() {
 	}
 }
 
-func (x *QuerySupportedBridgingPaths) String() string {
+func (x *QueryDestinationTokens) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QuerySupportedBridgingPaths) ProtoMessage() {}
+func (*QueryDestinationTokens) ProtoMessage() {}
 
-// Deprecated: Use QuerySupportedBridgingPaths.ProtoReflect.Descriptor instead.
-func (*QuerySupportedBridgingPaths) Descriptor() ([]byte, []int) {
+// Deprecated: Use QueryDestinationTokens.ProtoReflect.Descriptor instead.
+func (*QueryDestinationTokens) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_query_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *QuerySupportedBridgingPaths) GetDestinationChainId() uint32 {
+func (x *QueryDestinationTokens) GetChainId() uint32 {
 	if x != nil {
-		return x.DestinationChainId
+		return x.ChainId
 	}
 	return 0
 }
 
-type QuerySupportedBridgingPathsResponse struct {
+type QueryDestinationTokensResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -4466,8 +4466,8 @@ type QuerySupportedBridgingPathsResponse struct {
 	DestinationTokens [][]byte `protobuf:"bytes,2,rep,name=destination_tokens,json=destinationTokens,proto3" json:"destination_tokens,omitempty"`
 }
 
-func (x *QuerySupportedBridgingPathsResponse) Reset() {
-	*x = QuerySupportedBridgingPathsResponse{}
+func (x *QueryDestinationTokensResponse) Reset() {
+	*x = QueryDestinationTokensResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_portal_v1_query_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -4475,18 +4475,18 @@ func (x *QuerySupportedBridgingPathsResponse) Reset() {
 	}
 }
 
-func (x *QuerySupportedBridgingPathsResponse) String() string {
+func (x *QueryDestinationTokensResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QuerySupportedBridgingPathsResponse) ProtoMessage() {}
+func (*QueryDestinationTokensResponse) ProtoMessage() {}
 
-// Deprecated: Use QuerySupportedBridgingPathsResponse.ProtoReflect.Descriptor instead.
-func (*QuerySupportedBridgingPathsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use QueryDestinationTokensResponse.ProtoReflect.Descriptor instead.
+func (*QueryDestinationTokensResponse) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_portal_v1_query_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *QuerySupportedBridgingPathsResponse) GetDestinationTokens() [][]byte {
+func (x *QueryDestinationTokensResponse) GetDestinationTokens() [][]byte {
 	if x != nil {
 		return x.DestinationTokens
 	}
@@ -4591,84 +4591,81 @@ var file_noble_dollar_portal_v1_query_proto_rawDesc = []byte{
 	0x65, 0x79, 0x12, 0x32, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x1c, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
 	0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x65, 0x65, 0x72, 0x52,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x4f, 0x0a, 0x1b, 0x51, 0x75,
-	0x65, 0x72, 0x79, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64,
-	0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x73, 0x12, 0x30, 0x0a, 0x14, 0x64, 0x65, 0x73,
-	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x12, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61,
-	0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x22, 0x54, 0x0a, 0x23, 0x51,
-	0x75, 0x65, 0x72, 0x79, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69,
-	0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x2d, 0x0a, 0x12, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f,
-	0x6e, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x52, 0x11,
-	0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
-	0x73, 0x22, 0x0c, 0x0a, 0x0a, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x22,
-	0x31, 0x0a, 0x12, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1b, 0x0a, 0x05, 0x6e, 0x6f, 0x6e, 0x63, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0d, 0x42, 0x05, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x05, 0x6e, 0x6f, 0x6e,
-	0x63, 0x65, 0x32, 0x86, 0x06, 0x0a, 0x05, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x83, 0x01, 0x0a,
-	0x05, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e,
-	0x51, 0x75, 0x65, 0x72, 0x79, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62,
-	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c,
-	0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2a, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4,
-	0x93, 0x02, 0x1f, 0x12, 0x1d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x6f, 0x77, 0x6e,
-	0x65, 0x72, 0x12, 0x87, 0x01, 0x0a, 0x06, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x23, 0x2e,
-	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72,
-	0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x61, 0x75, 0x73,
-	0x65, 0x64, 0x1a, 0x2b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72,
-	0x79, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x2b, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x20, 0x12, 0x1e, 0x2f, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74,
-	0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x12, 0x83, 0x01, 0x0a,
-	0x05, 0x50, 0x65, 0x65, 0x72, 0x73, 0x12, 0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e,
-	0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x65, 0x65, 0x72, 0x73, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62,
-	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c,
-	0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x65, 0x65, 0x72, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2a, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4,
-	0x93, 0x02, 0x1f, 0x12, 0x1d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x65, 0x65,
-	0x72, 0x73, 0x12, 0xe0, 0x01, 0x0a, 0x16, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64,
-	0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x73, 0x12, 0x33, 0x2e,
-	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72,
-	0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x75, 0x70, 0x70,
-	0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x74,
-	0x68, 0x73, 0x1a, 0x3b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72,
-	0x79, 0x53, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x42, 0x72, 0x69, 0x64, 0x67, 0x69,
-	0x6e, 0x67, 0x50, 0x61, 0x74, 0x68, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x54, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x49, 0x12, 0x47, 0x2f, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74,
-	0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x73, 0x75, 0x70, 0x70, 0x6f, 0x72, 0x74, 0x65, 0x64, 0x5f,
-	0x62, 0x72, 0x69, 0x64, 0x67, 0x69, 0x6e, 0x67, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x73, 0x2f, 0x7b,
-	0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x63, 0x68, 0x61, 0x69,
-	0x6e, 0x5f, 0x69, 0x64, 0x7d, 0x12, 0x83, 0x01, 0x0a, 0x05, 0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x12,
-	0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70,
-	0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4e, 0x6f,
-	0x6e, 0x63, 0x65, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x33, 0x0a, 0x16, 0x51, 0x75,
+	0x65, 0x72, 0x79, 0x44, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x73, 0x12, 0x19, 0x0a, 0x08, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x07, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x22,
+	0x56, 0x0a, 0x1e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x44, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x34, 0x0a, 0x12, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0c, 0x42, 0x05, 0xa8,
+	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x11, 0x64, 0x65, 0x73, 0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x22, 0x0c, 0x0a, 0x0a, 0x51, 0x75, 0x65, 0x72, 0x79,
+	0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x22, 0x31, 0x0a, 0x12, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4e, 0x6f,
+	0x6e, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1b, 0x0a, 0x05, 0x6e,
+	0x6f, 0x6e, 0x63, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x05, 0xa8, 0xe7, 0xb0, 0x2a,
+	0x01, 0x52, 0x05, 0x6e, 0x6f, 0x6e, 0x63, 0x65, 0x32, 0xe5, 0x05, 0x0a, 0x05, 0x51, 0x75, 0x65,
+	0x72, 0x79, 0x12, 0x83, 0x01, 0x0a, 0x05, 0x4f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x22, 0x2e, 0x6e,
+	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74,
+	0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4f, 0x77, 0x6e, 0x65, 0x72,
+	0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
+	0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4f,
+	0x77, 0x6e, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2a, 0x88, 0xe7,
+	0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1f, 0x12, 0x1d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f,
+	0x76, 0x31, 0x2f, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x87, 0x01, 0x0a, 0x06, 0x50, 0x61, 0x75,
+	0x73, 0x65, 0x64, 0x12, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
 	0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65,
-	0x72, 0x79, 0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x2a, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1f, 0x12, 0x1d, 0x2f, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74,
-	0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x6e, 0x6f, 0x6e, 0x63, 0x65, 0x42, 0xd9, 0x01, 0x0a, 0x1a,
-	0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x42, 0x0a, 0x51, 0x75, 0x65, 0x72,
-	0x79, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74,
-	0x61, 0x6c, 0x2f, 0x76, 0x31, 0x3b, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x76, 0x31, 0xa2, 0x02,
-	0x03, 0x4e, 0x44, 0x50, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72,
-	0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0x5c,
-	0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f,
-	0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x50, 0x6f, 0x72,
-	0x74, 0x61, 0x6c, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x79, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x1a, 0x2b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76,
+	0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x61, 0x75, 0x73, 0x65, 0x64, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2b, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93,
+	0x02, 0x20, 0x12, 0x1e, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x61, 0x75, 0x73,
+	0x65, 0x64, 0x12, 0x83, 0x01, 0x0a, 0x05, 0x50, 0x65, 0x65, 0x72, 0x73, 0x12, 0x22, 0x2e, 0x6e,
+	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74,
+	0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x65, 0x65, 0x72, 0x73,
+	0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
+	0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50,
+	0x65, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2a, 0x88, 0xe7,
+	0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1f, 0x12, 0x1d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f,
+	0x76, 0x31, 0x2f, 0x70, 0x65, 0x65, 0x72, 0x73, 0x12, 0xbf, 0x01, 0x0a, 0x11, 0x44, 0x65, 0x73,
+	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x12, 0x2e,
+	0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f,
+	0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x44, 0x65, 0x73,
+	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x1a, 0x36,
+	0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f,
+	0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x44, 0x65, 0x73,
+	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x42, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4,
+	0x93, 0x02, 0x37, 0x12, 0x35, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x65, 0x73,
+	0x74, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x73, 0x2f,
+	0x7b, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64, 0x7d, 0x12, 0x83, 0x01, 0x0a, 0x05, 0x4e,
+	0x6f, 0x6e, 0x63, 0x65, 0x12, 0x22, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x51, 0x75,
+	0x65, 0x72, 0x79, 0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x1a, 0x2a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76,
+	0x31, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4e, 0x6f, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2a, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x1f, 0x12, 0x1d, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x6e, 0x6f, 0x6e, 0x63, 0x65,
+	0x42, 0xd9, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e, 0x76, 0x31, 0x42,
+	0x0a, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f,
+	0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x2f, 0x70, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2f, 0x76, 0x31, 0x3b, 0x70, 0x6f, 0x72, 0x74, 0x61,
+	0x6c, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x50, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c,
+	0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x2e,
+	0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f,
+	0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x50, 0x6f, 0x72, 0x74, 0x61,
+	0x6c, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61,
+	0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x3a, 0x3a, 0x50, 0x6f, 0x72, 0x74, 0x61, 0x6c, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -4685,18 +4682,18 @@ func file_noble_dollar_portal_v1_query_proto_rawDescGZIP() []byte {
 
 var file_noble_dollar_portal_v1_query_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_noble_dollar_portal_v1_query_proto_goTypes = []interface{}{
-	(*QueryOwner)(nil),                          // 0: noble.dollar.portal.v1.QueryOwner
-	(*QueryOwnerResponse)(nil),                  // 1: noble.dollar.portal.v1.QueryOwnerResponse
-	(*QueryPaused)(nil),                         // 2: noble.dollar.portal.v1.QueryPaused
-	(*QueryPausedResponse)(nil),                 // 3: noble.dollar.portal.v1.QueryPausedResponse
-	(*QueryPeers)(nil),                          // 4: noble.dollar.portal.v1.QueryPeers
-	(*QueryPeersResponse)(nil),                  // 5: noble.dollar.portal.v1.QueryPeersResponse
-	(*QuerySupportedBridgingPaths)(nil),         // 6: noble.dollar.portal.v1.QuerySupportedBridgingPaths
-	(*QuerySupportedBridgingPathsResponse)(nil), // 7: noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse
-	(*QueryNonce)(nil),                          // 8: noble.dollar.portal.v1.QueryNonce
-	(*QueryNonceResponse)(nil),                  // 9: noble.dollar.portal.v1.QueryNonceResponse
-	nil,                                         // 10: noble.dollar.portal.v1.QueryPeersResponse.PeersEntry
-	(*Peer)(nil),                                // 11: noble.dollar.portal.v1.Peer
+	(*QueryOwner)(nil),                     // 0: noble.dollar.portal.v1.QueryOwner
+	(*QueryOwnerResponse)(nil),             // 1: noble.dollar.portal.v1.QueryOwnerResponse
+	(*QueryPaused)(nil),                    // 2: noble.dollar.portal.v1.QueryPaused
+	(*QueryPausedResponse)(nil),            // 3: noble.dollar.portal.v1.QueryPausedResponse
+	(*QueryPeers)(nil),                     // 4: noble.dollar.portal.v1.QueryPeers
+	(*QueryPeersResponse)(nil),             // 5: noble.dollar.portal.v1.QueryPeersResponse
+	(*QueryDestinationTokens)(nil),         // 6: noble.dollar.portal.v1.QueryDestinationTokens
+	(*QueryDestinationTokensResponse)(nil), // 7: noble.dollar.portal.v1.QueryDestinationTokensResponse
+	(*QueryNonce)(nil),                     // 8: noble.dollar.portal.v1.QueryNonce
+	(*QueryNonceResponse)(nil),             // 9: noble.dollar.portal.v1.QueryNonceResponse
+	nil,                                    // 10: noble.dollar.portal.v1.QueryPeersResponse.PeersEntry
+	(*Peer)(nil),                           // 11: noble.dollar.portal.v1.Peer
 }
 var file_noble_dollar_portal_v1_query_proto_depIdxs = []int32{
 	10, // 0: noble.dollar.portal.v1.QueryPeersResponse.peers:type_name -> noble.dollar.portal.v1.QueryPeersResponse.PeersEntry
@@ -4704,12 +4701,12 @@ var file_noble_dollar_portal_v1_query_proto_depIdxs = []int32{
 	0,  // 2: noble.dollar.portal.v1.Query.Owner:input_type -> noble.dollar.portal.v1.QueryOwner
 	2,  // 3: noble.dollar.portal.v1.Query.Paused:input_type -> noble.dollar.portal.v1.QueryPaused
 	4,  // 4: noble.dollar.portal.v1.Query.Peers:input_type -> noble.dollar.portal.v1.QueryPeers
-	6,  // 5: noble.dollar.portal.v1.Query.SupportedBridgingPaths:input_type -> noble.dollar.portal.v1.QuerySupportedBridgingPaths
+	6,  // 5: noble.dollar.portal.v1.Query.DestinationTokens:input_type -> noble.dollar.portal.v1.QueryDestinationTokens
 	8,  // 6: noble.dollar.portal.v1.Query.Nonce:input_type -> noble.dollar.portal.v1.QueryNonce
 	1,  // 7: noble.dollar.portal.v1.Query.Owner:output_type -> noble.dollar.portal.v1.QueryOwnerResponse
 	3,  // 8: noble.dollar.portal.v1.Query.Paused:output_type -> noble.dollar.portal.v1.QueryPausedResponse
 	5,  // 9: noble.dollar.portal.v1.Query.Peers:output_type -> noble.dollar.portal.v1.QueryPeersResponse
-	7,  // 10: noble.dollar.portal.v1.Query.SupportedBridgingPaths:output_type -> noble.dollar.portal.v1.QuerySupportedBridgingPathsResponse
+	7,  // 10: noble.dollar.portal.v1.Query.DestinationTokens:output_type -> noble.dollar.portal.v1.QueryDestinationTokensResponse
 	9,  // 11: noble.dollar.portal.v1.Query.Nonce:output_type -> noble.dollar.portal.v1.QueryNonceResponse
 	7,  // [7:12] is the sub-list for method output_type
 	2,  // [2:7] is the sub-list for method input_type
@@ -4798,7 +4795,7 @@ func file_noble_dollar_portal_v1_query_proto_init() {
 			}
 		}
 		file_noble_dollar_portal_v1_query_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*QuerySupportedBridgingPaths); i {
+			switch v := v.(*QueryDestinationTokens); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4810,7 +4807,7 @@ func file_noble_dollar_portal_v1_query_proto_init() {
 			}
 		}
 		file_noble_dollar_portal_v1_query_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*QuerySupportedBridgingPathsResponse); i {
+			switch v := v.(*QueryDestinationTokensResponse); i {
 			case 0:
 				return &v.state
 			case 1:
