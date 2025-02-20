@@ -206,7 +206,8 @@ This message allows the owner of the Noble Dollar Portal to set supported bridgi
         "@type": "/noble.dollar.portal.v1.MsgSetBridgingPath",
         "signer": "noble1owner",
         "destination_chain_id": 2,
-        "destination_token": "base64_encoded_destination_token"
+        "destination_token": "base64_encoded_destination_token",
+        "supported": true
       }
     ],
     "memo": "",
@@ -231,6 +232,7 @@ This message allows the owner of the Noble Dollar Portal to set supported bridgi
 
 - `destination_chain_id` — The Wormhole Chain ID of the support bridging path being set.
 - `destination_token` — The 32-byte encoded destination token of the bridging path.
+- `supported` — The boolean value representing whether the path is supported or not.
 
 ### Requirements
 
