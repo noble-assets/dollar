@@ -619,7 +619,7 @@ type Module struct {
 	Authority string `protobuf:"bytes,2,opt,name=authority,proto3" json:"authority,omitempty"`
 	// vaults_minimum_lock defines the minimum required amount to lock into a Noble Dollar Vault.
 	VaultsMinimumLock int64 `protobuf:"varint,3,opt,name=vaults_minimum_lock,json=vaultsMinimumLock,proto3" json:"vaults_minimum_lock,omitempty"`
-	// vaults_minimum_unlock defines the minimum required amount to unlock from a vault.
+	// vaults_minimum_unlock defines the minimum required amount to unlock from a Noble Dollar Vault.
 	VaultsMinimumUnlock int64 `protobuf:"varint,4,opt,name=vaults_minimum_unlock,json=vaultsMinimumUnlock,proto3" json:"vaults_minimum_unlock,omitempty"`
 }
 

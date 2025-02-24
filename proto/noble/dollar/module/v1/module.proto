@@ -18,6 +18,6 @@ message Module {
   // vaults_minimum_lock defines the minimum required amount to lock into a Noble Dollar Vault.
   int64 vaults_minimum_lock = 3;
 
-  // vaults_minimum_unlock defines the minimum required amount to unlock from a vault.
+  // vaults_minimum_unlock defines the minimum required amount to unlock from a Noble Dollar Vault.
   int64 vaults_minimum_unlock = 4;
 }
