@@ -15,9 +15,9 @@ message Module {
   // authority defines the custom module authority.
   string authority = 2;
 
-  // vaults_minimum_lock specifies the minimum amount of tokens required to lock into a Vault.
+  // vaults_minimum_lock defines the minimum required amount to lock into a Noble Dollar Vault.
   int64 vaults_minimum_lock = 3;
 
-  // vaults_minimum_unlock specifies the minimum amount of tokens required to unlock from a Vault.
+  // vaults_minimum_unlock defines the minimum required amount to unlock from a vault.
   int64 vaults_minimum_unlock = 4;
 }
