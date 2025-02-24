@@ -617,9 +617,9 @@ type Module struct {
 	Denom string `protobuf:"bytes,1,opt,name=denom,proto3" json:"denom,omitempty"`
 	// authority defines the custom module authority.
 	Authority string `protobuf:"bytes,2,opt,name=authority,proto3" json:"authority,omitempty"`
-	// vaults_minimum_lock specifies the minimum amount of tokens required to lock into a Vault.
+	// vaults_minimum_lock defines the minimum required amount to lock into a Noble Dollar Vault.
 	VaultsMinimumLock int64 `protobuf:"varint,3,opt,name=vaults_minimum_lock,json=vaultsMinimumLock,proto3" json:"vaults_minimum_lock,omitempty"`
-	// vaults_minimum_unlock specifies the minimum amount of tokens required to unlock from a Vault.
+	// vaults_minimum_unlock defines the minimum required amount to unlock from a vault.
 	VaultsMinimumUnlock int64 `protobuf:"varint,4,opt,name=vaults_minimum_unlock,json=vaultsMinimumUnlock,proto3" json:"vaults_minimum_unlock,omitempty"`
 }
 
