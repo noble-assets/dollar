@@ -52,6 +52,8 @@ modules:
       denom: "uusdn"
       # occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon
       authority: noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69
+      vaults_minimum_lock: 1e6
+      vaults_minimum_unlock: 1e6
   - name: wormhole
     config:
       "@type": wormhole.module.v1.Module

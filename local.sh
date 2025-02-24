@@ -21,7 +21,7 @@ if ! [ -f .dollar/data/priv_validator_state.json ]; then
   dollard keys add authority --recover --home .dollar --keyring-backend test <<< "occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon" &> /dev/null
   dollard genesis add-genesis-account authority 1000000uusdn --home .dollar --keyring-backend test
   dollard keys add user --recover --home .dollar --keyring-backend test --output json <<< "dice hill prepare foam tiny album cart steel pact say never hen" &> /dev/null
-  dollard genesis add-genesis-account noble1zlxkchy77rp2tmknx5n8kckntyj3wp6h6c2edm 1000000uusdn --home .dollar --keyring-backend test
+  dollard genesis add-genesis-account noble1zlxkchy77rp2tmknx5n8kckntyj3wp6h6c2edm 10000000uusdn --home .dollar --keyring-backend test
 
 
 

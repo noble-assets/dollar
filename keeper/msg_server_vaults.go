@@ -55,6 +55,16 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 		return nil, fmt.Errorf("unable to decode user address: %s", msg.Signer)
 	}
 
+	// Ensure that the amount is at least the `vaultsMinimumLock`.
+	if msg.Amount.LT(math.NewInt(k.vaultsMinimumLock)) {
+		return nil, errors.Wrapf(
+			vaults.ErrInvalidAmount,
+			"must lock at least %d%s",
+			k.vaultsMinimumLock,
+			k.denom,
+		)
+	}
+
 	// Ensure that the Vault type does exist.
 	_, vaultTypeExists := vaults.VaultType_value[msg.Vault.String()]
 	if !vaultTypeExists || msg.Vault == vaults.UNSPECIFIED {
@@ -159,6 +169,43 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 	positions, err := k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()])
 	if err != nil {
 		return nil, err
+	}
+
+	// Calculate the total user positions amount.
+	totalPositions := math.ZeroInt()
+	for _, position := range positions {
+		totalPositions = totalPositions.Add(position.Amount)
+	}
+
+	// Early check to ensure that the user has a sufficient locked amount.
+	if msg.Amount.GT(totalPositions) {
+		return nil, errors.Wrapf(
+			vaults.ErrInvalidAmount,
+			"%s%s is greater than the total amount left of %s%s",
+			msg.Amount,
+			k.denom,
+			totalPositions.String(),
+			k.denom,
+		)
+	}
+
+	// Ensure that the amount to unlock is at least `vaultsMinimumUnlock`
+	// or the total remaining position when the remaining amount is less than `vaultsMinimumUnlock`.
+	if msg.Amount.LT(math.NewInt(k.vaultsMinimumUnlock)) && !totalPositions.Equal(msg.Amount) {
+		if !msg.Amount.Equal(totalPositions) && totalPositions.LT(math.NewInt(k.vaultsMinimumUnlock)) {
+			return nil, errors.Wrapf(
+				vaults.ErrInvalidAmount,
+				"must unlock the total amount left of %s%s",
+				totalPositions.String(),
+				k.denom,
+			)
+		}
+		return nil, errors.Wrapf(
+			vaults.ErrInvalidAmount,
+			"must unlock at least %d%s",
+			k.vaultsMinimumUnlock,
+			k.denom,
+		)
 	}
 
 	// Iterate through the user's positions until the required principal amount for removal is reached.
