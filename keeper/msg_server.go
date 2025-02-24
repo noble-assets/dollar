@@ -166,12 +166,14 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 
 	// Register the new Rewards record.
 	rewards := stakedYield.Add(flexibleYield)
-	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
-		Index:   index,
-		Total:   totalFlexiblePrincipal,
-		Rewards: rewards,
-	}); err != nil {
-		return err
+	if rewards.IsPositive() || totalFlexiblePrincipal.IsPositive() {
+		if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
+			Index:   index,
+			Total:   totalFlexiblePrincipal,
+			Rewards: rewards,
+		}); err != nil {
+			return err
+		}
 	}
 	return nil
 }

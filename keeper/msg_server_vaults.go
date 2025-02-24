@@ -323,13 +323,22 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 				userReward = record.Rewards.ToLegacyDec().Quo(record.Total.ToLegacyDec()).MulInt(amountPrincipal).TruncateInt()
 			}
 
-			// Update the Rewards entry.
-			if err = k.VaultsRewards.Set(ctx, key, vaults.Reward{
-				Index:   record.Index,
-				Total:   record.Total.Sub(amountPrincipal),
-				Rewards: record.Rewards.Sub(userReward),
-			}); err != nil {
-				return true, err
+			updatedTotal := record.Total.Sub(amountPrincipal)
+			updatedRewards := record.Rewards.Sub(userReward)
+			if !updatedRewards.IsPositive() && !updatedTotal.IsPositive() {
+				// Delete the Rewards entry.
+				if err = k.VaultsRewards.Remove(ctx, key); err != nil {
+					return true, err
+				}
+			} else {
+				// Update the Rewards entry.
+				if err = k.VaultsRewards.Set(ctx, key, vaults.Reward{
+					Index:   record.Index,
+					Total:   updatedTotal,
+					Rewards: updatedRewards,
+				}); err != nil {
+					return true, err
+				}
 			}
 			rewardsAmount = rewardsAmount.Add(userReward)
 			return false, nil

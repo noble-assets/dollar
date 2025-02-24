@@ -1092,11 +1092,6 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
 			Index:   1.1e12,
 			Total:   math.NewInt(990099009),
 			Rewards: math.NewInt(89108911),
@@ -1155,11 +1150,6 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(1), // rounding leftovers
@@ -1168,11 +1158,6 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 			Index:   1.21e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(1), // rounding leftovers
-		},
-		{
-			Index:   1.33e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
 		},
 		{
 			Index:   1.46e12,
@@ -1202,11 +1187,6 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(1), // rounding leftovers
@@ -1215,11 +1195,6 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 			Index:   1.21e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(1), // rounding leftovers
-		},
-		{
-			Index:   1.33e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
 		},
 		{
 			Index:   1.46e12,
@@ -1345,11 +1320,6 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
 			Rewards: math.NewInt(89108911),
@@ -1382,11 +1352,6 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
-		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
 		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
@@ -1429,11 +1394,6 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
-		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
 		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
@@ -1527,11 +1487,6 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
 		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
-		{
 			Index:   1.1e12,
 			Total:   math.NewInt(990099009),
 			Rewards: math.NewInt(89108911),
@@ -1563,11 +1518,6 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	rewards, err = k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
-		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
 		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
@@ -1651,11 +1601,6 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	rewards, err := k.GetVaultsRewards(ctx)
 	assert.NoError(t, err)
 	assert.Equal(t, []vaults.Reward{
-		{
-			Index:   1.01e12,
-			Total:   math.NewInt(0),
-			Rewards: math.NewInt(0),
-		},
 		{
 			Index:   1.1e12,
 			Total:   math.NewInt(0),
