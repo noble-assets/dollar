@@ -16,9 +16,33 @@ Retrieves the current Pause state of the Noble Dollar Vaults.
 
 - `paused` — The Pause state Noble Dollar Vaults module.
 
+## PendingRewards
+
+**Endpoint**: `/noble/dollar/vaults/v1/pending-rewards`
+
+Retrieves the total amount of rewards pending distribution.
+
+```json
+{
+  "pending_rewards": "10000000"
+}
+```
+
+## PendingRewardsByProvider
+
+**Endpoint**: `/noble/dollar/vaults/v1/pending-rewards/{address}`
+
+Retrieves the total amount of pending rewards for a specified provider.
+
+```json
+{
+  "pending_rewards": "4000000"
+}
+```
+
 ## PositionsByProvider
 
-**Endpoint**: `/noble/dollar/portal/v1/positions/{address}`
+**Endpoint**: `/noble/dollar/vaults/v1/positions/{address}`
 
 Retrieves all the current Noble Dollar Vaults positions, filtered by a Provider address.
 

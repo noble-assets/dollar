@@ -17,6 +17,16 @@ service Query {
     option (google.api.http).get = "/noble/dollar/vaults/v1/positions/{provider}";
   }
 
+  rpc PendingRewards(QueryPendingRewards) returns (QueryPendingRewardsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/vaults/v1/pending-rewards";
+  }
+
+  rpc PendingRewardsByProvider(QueryPendingRewardsByProvider) returns (QueryPendingRewardsByProviderResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/vaults/v1/pending-rewards/{provider}";
+  }
+
   rpc Paused(QueryPaused) returns (QueryPausedResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/vaults/v1/paused";
@@ -40,6 +50,30 @@ message QueryPaused {}
 
 message QueryPausedResponse {
   vaults.v1.PausedType paused = 1;
+}
+
+message QueryPendingRewards {}
+
+message QueryPendingRewardsResponse {
+  string pending_rewards = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+message QueryPendingRewardsByProvider {
+  string provider = 1;
+}
+
+message QueryPendingRewardsByProviderResponse {
+  string pending_rewards = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
 }
 
 message QueryStats {}

@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Query_PositionsByProvider_FullMethodName = "/noble.dollar.vaults.v1.Query/PositionsByProvider"
-	Query_Paused_FullMethodName              = "/noble.dollar.vaults.v1.Query/Paused"
-	Query_Stats_FullMethodName               = "/noble.dollar.vaults.v1.Query/Stats"
+	Query_PositionsByProvider_FullMethodName      = "/noble.dollar.vaults.v1.Query/PositionsByProvider"
+	Query_PendingRewards_FullMethodName           = "/noble.dollar.vaults.v1.Query/PendingRewards"
+	Query_PendingRewardsByProvider_FullMethodName = "/noble.dollar.vaults.v1.Query/PendingRewardsByProvider"
+	Query_Paused_FullMethodName                   = "/noble.dollar.vaults.v1.Query/Paused"
+	Query_Stats_FullMethodName                    = "/noble.dollar.vaults.v1.Query/Stats"
 )
 
 // QueryClient is the client API for Query service.
@@ -29,6 +31,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QueryClient interface {
 	PositionsByProvider(ctx context.Context, in *QueryPositionsByProvider, opts ...grpc.CallOption) (*QueryPositionsByProviderResponse, error)
+	PendingRewards(ctx context.Context, in *QueryPendingRewards, opts ...grpc.CallOption) (*QueryPendingRewardsResponse, error)
+	PendingRewardsByProvider(ctx context.Context, in *QueryPendingRewardsByProvider, opts ...grpc.CallOption) (*QueryPendingRewardsByProviderResponse, error)
 	Paused(ctx context.Context, in *QueryPaused, opts ...grpc.CallOption) (*QueryPausedResponse, error)
 	Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error)
 }
@@ -45,6 +49,26 @@ func (c *queryClient) PositionsByProvider(ctx context.Context, in *QueryPosition
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(QueryPositionsByProviderResponse)
 	err := c.cc.Invoke(ctx, Query_PositionsByProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) PendingRewards(ctx context.Context, in *QueryPendingRewards, opts ...grpc.CallOption) (*QueryPendingRewardsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryPendingRewardsResponse)
+	err := c.cc.Invoke(ctx, Query_PendingRewards_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) PendingRewardsByProvider(ctx context.Context, in *QueryPendingRewardsByProvider, opts ...grpc.CallOption) (*QueryPendingRewardsByProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryPendingRewardsByProviderResponse)
+	err := c.cc.Invoke(ctx, Query_PendingRewardsByProvider_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,6 +100,8 @@ func (c *queryClient) Stats(ctx context.Context, in *QueryStats, opts ...grpc.Ca
 // for forward compatibility.
 type QueryServer interface {
 	PositionsByProvider(context.Context, *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error)
+	PendingRewards(context.Context, *QueryPendingRewards) (*QueryPendingRewardsResponse, error)
+	PendingRewardsByProvider(context.Context, *QueryPendingRewardsByProvider) (*QueryPendingRewardsByProviderResponse, error)
 	Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error)
 	Stats(context.Context, *QueryStats) (*QueryStatsResponse, error)
 	mustEmbedUnimplementedQueryServer()
@@ -90,6 +116,12 @@ type UnimplementedQueryServer struct{}
 
 func (UnimplementedQueryServer) PositionsByProvider(context.Context, *QueryPositionsByProvider) (*QueryPositionsByProviderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PositionsByProvider not implemented")
+}
+func (UnimplementedQueryServer) PendingRewards(context.Context, *QueryPendingRewards) (*QueryPendingRewardsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PendingRewards not implemented")
+}
+func (UnimplementedQueryServer) PendingRewardsByProvider(context.Context, *QueryPendingRewardsByProvider) (*QueryPendingRewardsByProviderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PendingRewardsByProvider not implemented")
 }
 func (UnimplementedQueryServer) Paused(context.Context, *QueryPaused) (*QueryPausedResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Paused not implemented")
@@ -132,6 +164,42 @@ func _Query_PositionsByProvider_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).PositionsByProvider(ctx, req.(*QueryPositionsByProvider))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_PendingRewards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPendingRewards)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).PendingRewards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_PendingRewards_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).PendingRewards(ctx, req.(*QueryPendingRewards))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_PendingRewardsByProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPendingRewardsByProvider)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).PendingRewardsByProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_PendingRewardsByProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).PendingRewardsByProvider(ctx, req.(*QueryPendingRewardsByProvider))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -182,6 +250,14 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PositionsByProvider",
 			Handler:    _Query_PositionsByProvider_Handler,
+		},
+		{
+			MethodName: "PendingRewards",
+			Handler:    _Query_PendingRewards_Handler,
+		},
+		{
+			MethodName: "PendingRewardsByProvider",
+			Handler:    _Query_PendingRewardsByProvider_Handler,
 		},
 		{
 			MethodName: "Paused",
