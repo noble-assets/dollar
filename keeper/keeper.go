@@ -45,8 +45,10 @@ import (
 )
 
 type Keeper struct {
-	denom     string
-	authority string
+	denom               string
+	authority           string
+	vaultsMinimumLock   int64
+	vaultsMinimumUnlock int64
 
 	header   header.Service
 	event    event.Service
@@ -73,7 +75,7 @@ type Keeper struct {
 	VaultsStats                  collections.Item[vaults.Stats]
 }
 
-func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
+func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMinimumUnlock int64, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
 	transceiverAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/transceiver", portal.SubmoduleName))
 	copy(portal.PaddedTransceiverAddress[12:], transceiverAddress)
 	portal.TransceiverAddress, _ = address.BytesToString(transceiverAddress)
@@ -88,14 +90,16 @@ func NewKeeper(denom string, authority string, cdc codec.Codec, store store.KVSt
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
-		denom:     denom,
-		authority: authority,
-		header:    header,
-		event:     event,
-		address:   address,
-		bank:      bank,
-		wormhole:  wormhole,
-		account:   account,
+		denom:               denom,
+		authority:           authority,
+		vaultsMinimumLock:   vaultsMinimumLock,
+		vaultsMinimumUnlock: vaultsMinimumUnlock,
+		header:              header,
+		event:               event,
+		address:             address,
+		bank:                bank,
+		wormhole:            wormhole,
+		account:             account,
 
 		Paused:    collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
 		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),

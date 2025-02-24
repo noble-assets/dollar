@@ -40,6 +40,10 @@ This message allows Noble Dollar users to lock a specified amount of $USDN into 
 - `amount` — The amount of $USDN to lock in the Vault.
 - `vault` — The Vault Type where to lock $USDN (`Staked | Flexible`).
 
+### Requirements
+
+- The `amount` must be at least the `vaults_minimum_lock` value.
+
 ### State Changes
 
 - The specified amount of $USDN is locked in the selected Vault account.
@@ -89,6 +93,7 @@ This message allows Noble Dollar users to unlock a specified amount of $USDN fro
 ### Requirements
 
 - The user must have one or more active position in the specified `vault` with an `amount` equal to or greater than the specified value.
+- The `amount` must be at least the `vaults_minimum_unlock` value or the total value if the remaining amount is less than `vaults_minimum_unlock`.
 
 ### State Changes
 

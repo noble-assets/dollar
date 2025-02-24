@@ -370,6 +370,8 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 	k := keeper.NewKeeper(
 		in.Config.Denom,
 		authority.String(),
+		in.Config.VaultsMinimumLock,
+		in.Config.VaultsMinimumUnlock,
 		in.Cdc,
 		in.StoreService,
 		in.HeaderService,

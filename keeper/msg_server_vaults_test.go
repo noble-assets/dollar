@@ -175,8 +175,17 @@ func TestStakedVault(t *testing.T) {
 	// ARRANGE: Bob mints 100 USDN.
 	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
 
-	// ACT: Bob deposits 50 USDN into the Staked Vault.
+	// ACT: Bob attempts to lock < `vaultsMinimumLock` USDN into the Staked Vault.
 	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(500000),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "must lock at least 1000000uusdn: invalid amount", err.Error())
+
+	// ACT: Bob deposits 50 USDN into the Staked Vault.
+	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
 		Signer: bob.Address,
 		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
 		Amount: math.NewInt(50 * ONE),
@@ -207,11 +216,46 @@ func TestStakedVault(t *testing.T) {
 	})
 	assert.Error(t, err)
 
+	// ACT: Bob attempts to unlock < `vaultsMinimumUnlock` USDN from the Staked Vault.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(500000),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "must unlock at least 1000000uusdn: invalid amount", err.Error())
+
 	// ACT: Bob withdraws everything from the Staked Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
 		Signer: bob.Address,
 		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
-		Amount: math.NewInt(50 * ONE),
+		Amount: math.NewInt(49100000),
+	})
+	assert.NoError(t, err)
+
+	// ACT: Bob attempts to unlock > `vaultsMinimumUnlock` with < 1 USDN left and > total left.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(ONE),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "1000000uusdn is greater than the total amount left of 900000uusdn: invalid amount", err.Error())
+
+	// ACT: Bob attempts to unlock < `vaultsMinimumUnlock` with < 1 USDN left and < total left.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(500000),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "must unlock the total amount left of 900000uusdn: invalid amount", err.Error())
+
+	// ACT: Bob attempts to unlock < `vaultsMinimumUnlock` with < 1 USDN left and = total left.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(900000),
 	})
 	assert.NoError(t, err)
 
