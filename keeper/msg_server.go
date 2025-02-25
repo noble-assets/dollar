@@ -73,10 +73,9 @@ func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedSt
 		return nil, err
 	}
 
-	var event protoiface.MessageV1
-	event = &types.NotPaused{NotPaused: false}
+	event := protoiface.MessageV1(&types.NotPaused{})
 	if msg.Paused {
-		event = &types.Paused{Paused: true}
+		event = &types.Paused{}
 	}
 
 	return &types.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
@@ -137,6 +136,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
 	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
 
+	//
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
 	if coins.IsAllPositive() {
 		err = k.bank.MintCoins(ctx, types.ModuleName, coins)
@@ -184,7 +184,12 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	}); err != nil {
 		return err
 	}
-	return nil
+	return k.event.EventManager(ctx).Emit(ctx, &types.IndexUpdated{
+		OldIndex:       oldIndex,
+		NewIndex:       rawIndex,
+		TotalPrincipal: totalPrincipal,
+		YieldAccrued:   coins[0].Amount,
+	})
 }
 
 func (k *Keeper) claimModuleYield(ctx context.Context, addr sdk.Address) (math.Int, error) {

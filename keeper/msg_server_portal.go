@@ -29,6 +29,7 @@ import (
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 
 	"dollar.noble.xyz/types/portal"
 	"dollar.noble.xyz/types/portal/ntt"
@@ -50,7 +51,8 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 	}
 
 	return &portal.MsgDeliverResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.Delivered{
-		Vaa: msg.Vaa,
+		Signer: msg.Signer,
+		Vaa:    msg.Vaa,
 	})
 }
 
@@ -109,8 +111,13 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		Sender:  rawSender,
 		Payload: rawNativeTokenTransfer,
 	}
+
+	chain, err := k.wormhole.GetChain(ctx)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "unable to get wormhole chain id")
+	}
 	rawManagerMessage := ntt.EncodeManagerMessage(managerMessage)
-	messageId := ntt.ManagerMessageDigest(msg.DestinationChainId, managerMessage)
+	messageId := ntt.ManagerMessageDigest(chain, managerMessage)
 
 	rawTransceiverMessage := ntt.EncodeTransceiverMessage(ntt.TransceiverMessage{
 		SourceManagerAddress:    portal.PaddedManagerAddress,
@@ -141,7 +148,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		Sender:             msg.Signer,
 		Recipient:          msg.Recipient,
 		Amount:             msg.Amount,
-		Index:              uint64(nonce),
+		Index:              index,
 		MessageId:          messageId,
 	}); err != nil {
 		return nil, err

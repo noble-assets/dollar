@@ -320,7 +320,15 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 		return err
 	}
 
-	return k.HandlePayload(ctx, managerMessage.Payload)
+	if err := k.HandlePayload(ctx, managerMessage.Payload); err != nil {
+		return err
+	}
+
+	messageId := ntt.ManagerMessageDigest(uint16(vaa.EmitterChain), managerMessage)
+
+	return k.event.EventManager(ctx).Emit(ctx, &portal.TransferRedeemed{
+		MessageId: messageId,
+	})
 }
 
 // HandlePayload is a utility that handles custom payloads when delivering portal messages.
@@ -337,6 +345,19 @@ func (k *Keeper) HandlePayload(ctx context.Context, payload []byte) error {
 		amount, index, recipient, destination := portal.DecodeTokenPayload(payload)
 		if chain != destination {
 			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
+		}
+
+		// TODO: missing info here that are present in the calling function
+		if err := k.event.EventManager(ctx).Emit(ctx, &portal.MTokenReceived{
+			SourceChainId:    0,        // nope
+			DestinationToken: []byte{}, // nope
+			Sender:           []byte{}, // nope
+			Recipient:        string(recipient),
+			Amount:           amount,
+			Index:            index,
+			MessageId:        []byte{}, // nope
+		}); err != nil {
+			return err
 		}
 
 		return k.Mint(ctx, recipient, amount, &index)
