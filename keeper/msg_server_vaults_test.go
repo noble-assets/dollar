@@ -329,6 +329,13 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Bob does not have any yield or rewards to claim.
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt(), math.NewInt(100*ONE))
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(10000000), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
 }
 
 func TestStakedPartialRemoval(t *testing.T) {
@@ -489,6 +496,13 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Bob does not have any yield or rewards to claim.
 	assert.Equal(t, math.NewInt(100*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(5000000), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
 }
 
 func TestStakedVaultRewardsMigration(t *testing.T) {
