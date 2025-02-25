@@ -15,16 +15,16 @@ message Paused {
 }
 
 // NotPaused is an event emitted when the module pause
-// stsate is changed to not paused.
+// state is changed to not paused.
 message NotPaused {
   bool not_paused = 1;
 }
 
-// YieldClaimed is an event emitted when an used claim
+// YieldClaimed is an event emitted when an user claim
 // accrued yield.
 message YieldClaimed {
   string account = 1;
-  string amount = 6 [
+  string amount = 2 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
