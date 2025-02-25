@@ -138,6 +138,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 
 	//
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
+	yield := math.ZeroInt()
 	if coins.IsAllPositive() {
 		err = k.bank.MintCoins(ctx, types.ModuleName, coins)
 		if err != nil {
@@ -147,7 +148,8 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 		if err != nil {
 			return errors.Wrap(err, "unable to send coins")
 		}
-		err = k.IncrementTotalYieldAccrued(ctx, coins.AmountOf(k.denom))
+		yield = coins.AmountOf(k.denom)
+		err = k.IncrementTotalYieldAccrued(ctx, yield)
 		if err != nil {
 			return errors.Wrap(err, "unable to increment total yield accrued")
 		}
@@ -188,7 +190,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 		OldIndex:       oldIndex,
 		NewIndex:       rawIndex,
 		TotalPrincipal: totalPrincipal,
-		YieldAccrued:   coins[0].Amount,
+		YieldAccrued:   yield,
 	})
 }
 
