@@ -43,13 +43,16 @@ message QueryPositionsByProvider {
 }
 
 message QueryPositionsByProviderResponse {
-  repeated vaults.v1.PositionEntry positions = 1 [(gogoproto.nullable) = false];
+  repeated vaults.v1.PositionEntry positions = 1 [
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
 }
 
 message QueryPaused {}
 
 message QueryPausedResponse {
-  vaults.v1.PausedType paused = 1;
+  vaults.v1.PausedType paused = 1 [(amino.dont_omitempty) = true];
 }
 
 message QueryPendingRewards {}
