@@ -320,63 +320,63 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 		return err
 	}
 
-	tokenPayload, err := k.HandlePayload(ctx, managerMessage.Payload)
-	if err != nil {
-		return err
+	messageId := ntt.ManagerMessageDigest(uint16(vaa.EmitterChain), managerMessage)
+	eventPayload := portal.EventsPayaload{
+		SourceChainId: uint32(vaa.EmitterChain),
+		Sender:        managerMessage.Sender,
+		MessageId:     messageId,
 	}
 
-	if tokenPayload != nil {
-		messageId := ntt.ManagerMessageDigest(uint16(vaa.EmitterChain), managerMessage)
-
-		if err := k.event.EventManager(ctx).Emit(ctx, &portal.MTokenReceived{
-			SourceChainId: uint32(vaa.EmitterChain),
-			Sender:        vaa.EmitterAddress[:],
-			Recipient:     string(tokenPayload.Recipient),
-			Amount:        tokenPayload.Amount,
-			Index:         tokenPayload.Index,
-			MessageId:     messageId,
-		}); err != nil {
-			return err
-		}
-		if err = k.event.EventManager(ctx).Emit(ctx, &portal.TransferRedeemed{
-			MessageId: messageId,
-		}); err != nil {
-			return err
-		}
+	if err := k.HandlePayload(ctx, managerMessage.Payload, eventPayload); err != nil {
+		return err
 	}
 
 	return nil
 }
 
 // HandlePayload is a utility that handles custom payloads when delivering portal messages.
-func (k *Keeper) HandlePayload(ctx context.Context, payload []byte) (*portal.TokenPayload, error) {
+func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayload portal.EventsPayaload) error {
 	chain, err := k.wormhole.GetChain(ctx)
 	if err != nil {
-		return nil, sdkerrors.Wrap(err, "unable to get wormhole chain id")
+		return sdkerrors.Wrap(err, "unable to get wormhole chain id")
 	}
 
 	switch portal.GetPayloadType(payload) {
 	case portal.Unknown:
-		return nil, nil
+		return nil
 	case portal.Token:
-		// amount, index, recipient, destination := portal.DecodeTokenPayload(payload)
 		tokenPayload := portal.DecodeTokenPayload(payload)
 		if chain != tokenPayload.DestinationChainId {
-			return nil, fmt.Errorf("not destination chain: expected %d, got %d", chain, tokenPayload.DestinationChainId)
+			return fmt.Errorf("not destination chain: expected %d, got %d", chain, tokenPayload.DestinationChainId)
 		}
 
 		if err := k.Mint(ctx, tokenPayload.Recipient, tokenPayload.Amount, &tokenPayload.Index); err != nil {
-			return nil, err
+			return err
 		}
-		return &tokenPayload, nil
+
+		if err := k.event.EventManager(ctx).Emit(ctx, &portal.MTokenReceived{
+			SourceChainId: eventsPayload.SourceChainId,
+			Sender:        eventsPayload.Sender,
+			// NOTE: do we want to use the bech32 repr here?
+			Recipient: string(tokenPayload.Recipient),
+			Amount:    tokenPayload.Amount,
+			Index:     tokenPayload.Index,
+			MessageId: eventsPayload.MessageId,
+		}); err != nil {
+			return err
+		}
+
+		return k.event.EventManager(ctx).Emit(ctx, &portal.TransferRedeemed{
+			MessageId: eventsPayload.MessageId,
+		})
 	case portal.Index:
 		index, destination := portal.DecodeIndexPayload(payload)
 		if chain != destination {
-			return nil, fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
+			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
 		}
 
-		return nil, k.UpdateIndex(ctx, index)
+		return k.UpdateIndex(ctx, index)
 	}
 
-	return nil, nil
+	return nil
 }

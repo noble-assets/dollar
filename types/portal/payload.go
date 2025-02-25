@@ -58,6 +58,8 @@ func GetPayloadType(payload []byte) PayloadType {
 	return Unknown
 }
 
+// TokenPayload is a data structure that holds the fields decoded from
+// a token transfer payload.
 type TokenPayload struct {
 	Amount             math.Int
 	Index              int64
@@ -85,4 +87,12 @@ func DecodeIndexPayload(payload []byte) (index int64, destination uint16) {
 	destination = binary.BigEndian.Uint16(payload[12:14])
 
 	return
+}
+
+// EventsPayaload is a data structure used to hold information required to emit complete
+// events during the handling of a vaa.
+type EventsPayaload struct {
+	SourceChainId uint32
+	Sender        []byte
+	MessageId     []byte
 }
