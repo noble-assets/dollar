@@ -100,13 +100,13 @@ func (k vaultsQueryServer) PendingRewardsByProvider(ctx context.Context, req *va
 
 	addr, err := k.address.StringToBytes(req.Provider)
 	if err != nil {
-		return nil, types.ErrInvalidRequest
+		return nil, errors.Wrapf(err, "unable to decode account %s", req.Account)
 	}
 
 	// Retrieve all the user positions in the Flexible Vault.
 	positions, err := k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[vaults.FLEXIBLE.String()])
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "unable to get provider positions from state")
 	}
 
 	// Retrieve the current Index.

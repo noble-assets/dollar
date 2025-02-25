@@ -18,7 +18,7 @@ Retrieves the current Pause state of the Noble Dollar Vaults.
 
 ## PendingRewards
 
-**Endpoint**: `/noble/dollar/vaults/v1/pending-rewards`
+**Endpoint**: `/noble/dollar/vaults/v1/pending_rewards`
 
 Retrieves the total amount of rewards pending distribution.
 
@@ -30,7 +30,7 @@ Retrieves the total amount of rewards pending distribution.
 
 ## PendingRewardsByProvider
 
-**Endpoint**: `/noble/dollar/vaults/v1/pending-rewards/{address}`
+**Endpoint**: `/noble/dollar/vaults/v1/pending_rewards/{provider}`
 
 Retrieves the total amount of pending rewards for a specified provider.
 

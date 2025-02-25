@@ -19,12 +19,12 @@ service Query {
 
   rpc PendingRewards(QueryPendingRewards) returns (QueryPendingRewardsResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/noble/dollar/vaults/v1/pending-rewards";
+    option (google.api.http).get = "/noble/dollar/vaults/v1/pending_rewards";
   }
 
   rpc PendingRewardsByProvider(QueryPendingRewardsByProvider) returns (QueryPendingRewardsByProviderResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/noble/dollar/vaults/v1/pending-rewards/{provider}";
+    option (google.api.http).get = "/noble/dollar/vaults/v1/pending_rewards/{provider}";
   }
 
   rpc Paused(QueryPaused) returns (QueryPausedResponse) {
