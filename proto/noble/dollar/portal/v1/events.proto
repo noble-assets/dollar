@@ -52,7 +52,7 @@ message USDNTokenSent {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
-  uint64 index = 7;
+  int64 index = 7;
   bytes message_id = 8;
 }
 

@@ -1827,8 +1827,8 @@ func (x *fastReflection_USDNTokenSent) Range(f func(protoreflect.FieldDescriptor
 			return
 		}
 	}
-	if x.Index != uint64(0) {
-		value := protoreflect.ValueOfUint64(x.Index)
+	if x.Index != int64(0) {
+		value := protoreflect.ValueOfInt64(x.Index)
 		if !f(fd_USDNTokenSent_index, value) {
 			return
 		}
@@ -1867,7 +1867,7 @@ func (x *fastReflection_USDNTokenSent) Has(fd protoreflect.FieldDescriptor) bool
 	case "noble.dollar.portal.v1.USDNTokenSent.amount":
 		return x.Amount != ""
 	case "noble.dollar.portal.v1.USDNTokenSent.index":
-		return x.Index != uint64(0)
+		return x.Index != int64(0)
 	case "noble.dollar.portal.v1.USDNTokenSent.message_id":
 		return len(x.MessageId) != 0
 	default:
@@ -1899,7 +1899,7 @@ func (x *fastReflection_USDNTokenSent) Clear(fd protoreflect.FieldDescriptor) {
 	case "noble.dollar.portal.v1.USDNTokenSent.amount":
 		x.Amount = ""
 	case "noble.dollar.portal.v1.USDNTokenSent.index":
-		x.Index = uint64(0)
+		x.Index = int64(0)
 	case "noble.dollar.portal.v1.USDNTokenSent.message_id":
 		x.MessageId = nil
 	default:
@@ -1938,7 +1938,7 @@ func (x *fastReflection_USDNTokenSent) Get(descriptor protoreflect.FieldDescript
 		return protoreflect.ValueOfString(value)
 	case "noble.dollar.portal.v1.USDNTokenSent.index":
 		value := x.Index
-		return protoreflect.ValueOfUint64(value)
+		return protoreflect.ValueOfInt64(value)
 	case "noble.dollar.portal.v1.USDNTokenSent.message_id":
 		value := x.MessageId
 		return protoreflect.ValueOfBytes(value)
@@ -1975,7 +1975,7 @@ func (x *fastReflection_USDNTokenSent) Set(fd protoreflect.FieldDescriptor, valu
 	case "noble.dollar.portal.v1.USDNTokenSent.amount":
 		x.Amount = value.Interface().(string)
 	case "noble.dollar.portal.v1.USDNTokenSent.index":
-		x.Index = value.Uint()
+		x.Index = value.Int()
 	case "noble.dollar.portal.v1.USDNTokenSent.message_id":
 		x.MessageId = value.Bytes()
 	default:
@@ -2040,7 +2040,7 @@ func (x *fastReflection_USDNTokenSent) NewField(fd protoreflect.FieldDescriptor)
 	case "noble.dollar.portal.v1.USDNTokenSent.amount":
 		return protoreflect.ValueOfString("")
 	case "noble.dollar.portal.v1.USDNTokenSent.index":
-		return protoreflect.ValueOfUint64(uint64(0))
+		return protoreflect.ValueOfInt64(int64(0))
 	case "noble.dollar.portal.v1.USDNTokenSent.message_id":
 		return protoreflect.ValueOfBytes(nil)
 	default:
@@ -2469,7 +2469,7 @@ func (x *fastReflection_USDNTokenSent) ProtoMethods() *protoiface.Methods {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					x.Index |= uint64(b&0x7F) << shift
+					x.Index |= int64(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
@@ -4819,7 +4819,7 @@ type USDNTokenSent struct {
 	Sender             string `protobuf:"bytes,4,opt,name=sender,proto3" json:"sender,omitempty"`
 	Recipient          []byte `protobuf:"bytes,5,opt,name=recipient,proto3" json:"recipient,omitempty"`
 	Amount             string `protobuf:"bytes,6,opt,name=amount,proto3" json:"amount,omitempty"`
-	Index              uint64 `protobuf:"varint,7,opt,name=index,proto3" json:"index,omitempty"`
+	Index              int64  `protobuf:"varint,7,opt,name=index,proto3" json:"index,omitempty"`
 	MessageId          []byte `protobuf:"bytes,8,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
 }
 
@@ -4885,7 +4885,7 @@ func (x *USDNTokenSent) GetAmount() string {
 	return ""
 }
 
-func (x *USDNTokenSent) GetIndex() uint64 {
+func (x *USDNTokenSent) GetIndex() int64 {
 	if x != nil {
 		return x.Index
 	}
@@ -5153,7 +5153,7 @@ var file_noble_dollar_portal_v1_events_proto_rawDesc = []byte{
 	0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e,
 	0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8,
 	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x14, 0x0a, 0x05,
-	0x69, 0x6e, 0x64, 0x65, 0x78, 0x18, 0x07, 0x20, 0x01, 0x28, 0x04, 0x52, 0x05, 0x69, 0x6e, 0x64,
+	0x69, 0x6e, 0x64, 0x65, 0x78, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x69, 0x6e, 0x64,
 	0x65, 0x78, 0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x5f, 0x69, 0x64,
 	0x18, 0x08, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x09, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x49,
 	0x64, 0x22, 0xc7, 0x01, 0x0a, 0x0b, 0x50, 0x65, 0x65, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
