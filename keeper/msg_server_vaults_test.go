@@ -373,6 +373,13 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Bob does not have any yield or rewards to claim.
 	assert.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt(), math.NewInt(100*ONE))
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(10000000), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
 }
 
 func TestStakedPartialRemoval(t *testing.T) {
@@ -533,6 +540,13 @@ func TestStakedPartialRemoval(t *testing.T) {
 	assert.NoError(t, err)
 	// ASSERT: Bob does not have any yield or rewards to claim.
 	assert.Equal(t, math.NewInt(100*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(5000000), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
 }
 
 func TestStakedVaultRewardsMigration(t *testing.T) {
@@ -1007,6 +1021,7 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 	k.SetBankKeeper(bank)
 
 	vaultsServer := keeper.NewVaultsMsgServer(k)
+	vaultsQueryServer := keeper.NewVaultsQueryServer(k)
 	bob, alice := utils.TestAccount(), utils.TestAccount()
 
 	// ARRANGE: Set the default index to 1.0 .
@@ -1023,6 +1038,9 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	assert.Equal(t, math.ZeroInt(), pendingRewards.PendingRewards)
 
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	_ = k.UpdateIndex(ctx, 1.1e12)
@@ -1039,6 +1057,9 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, math.NewInt(0), bank.Balances[alice.Address].AmountOf("uusdn"))
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	assert.Equal(t, math.ZeroInt(), pendingRewards.PendingRewards)
 
 	// ACT: Bob attempts to withdraw from the Flexible Vault with an invalid amount.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -1048,6 +1069,9 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	assert.Equal(t, math.NewInt(1100*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	assert.Equal(t, math.ZeroInt(), pendingRewards.PendingRewards)
 
 	// ACT: Alice withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -1056,6 +1080,9 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	assert.Equal(t, math.ZeroInt(), pendingRewards.PendingRewards)
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield.
 	assert.Equal(t, math.NewInt(1100*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))
@@ -1318,9 +1345,25 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.Equal(t, stats.StakedTotalUsers, uint64(1))
 	assert.Equal(t, stats.StakedTotalPrincipal, math.NewInt(990099009))
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.ZeroInt(), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
+
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 	_ = k.UpdateIndex(ctx, 1.1e12)
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
 
 	// ARRANGE: Bob mints 1000 USDN.
 	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
@@ -1351,9 +1394,25 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	assert.Equal(t, stats.FlexibleTotalUsers, uint64(1))
 	assert.Equal(t, stats.FlexibleTotalPrincipal, math.NewInt(909090909))
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
+
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	_ = k.UpdateIndex(ctx, 1.21e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+108910891), pendingRewards.PendingRewards)
+	assert.Equal(t, math.ZeroInt(), pendingBobRewards.PendingRewards)
 
 	// ARRANGE: Alice mints 9000 USDN.
 	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE), nil)
@@ -1409,6 +1468,18 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	_ = k.UpdateIndex(ctx, 1.33e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC)})
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	pendingAliceRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: alice.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+108910891+118811881), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingAliceRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(108910890), pendingBobRewards.PendingRewards) // bob is entitled only for the 1.1e12 rewards (rounded down)
+
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
 		Signer: bob.Address,
@@ -1416,6 +1487,18 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 		Amount: math.NewInt(1000 * ONE),
 	})
 	assert.NoError(t, err)
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	pendingAliceRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: alice.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+1+118811881), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingAliceRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards) // bob claimed the rewards
 
 	// ASSERT: Matching Positions state.
 	bobPositions, err = k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
@@ -1463,6 +1546,18 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 		Amount: math.NewInt(9000 * ONE),
 	})
 	assert.NoError(t, err)
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	pendingAliceRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: alice.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+1+118811881), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingAliceRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
 
 	// ASSERT: Matching Positions state.
 	alicePositions, err = k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
@@ -1522,6 +1617,7 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	k.SetBankKeeper(bank)
 
 	vaultsServer := keeper.NewVaultsMsgServer(k)
+	vaultsQueryServer := keeper.NewVaultsQueryServer(k)
 	bob, alice := utils.TestAccount(), utils.TestAccount()
 
 	// ARRANGE: Set the default index to 1.01 .
@@ -1551,6 +1647,18 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 	_ = k.UpdateIndex(ctx, 1.1e12)
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	pendingAliceRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: alice.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingAliceRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
+
 	// ARRANGE: Alice mints 9000 USDN.
 	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE), nil)
 
@@ -1565,6 +1673,18 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	_ = k.UpdateIndex(ctx, 1.21e12)
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	pendingAliceRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: alice.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+108910891), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingAliceRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(89108910), pendingBobRewards.PendingRewards)
 
 	// ASSERT: Matching Rewards state.
 	rewards, err := k.GetVaultsRewards(ctx)
@@ -1602,6 +1722,18 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 		Amount: math.NewInt(9000 * ONE),
 	})
 	assert.NoError(t, err)
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	pendingAliceRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: alice.Address,
+	})
+	assert.Equal(t, math.NewInt(1+108910891), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingAliceRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
 
 	// ASSERT: Rewards Positions state.
 	rewards, err = k.GetVaultsRewards(ctx)
@@ -1643,6 +1775,7 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	k.SetBankKeeper(bank)
 
 	vaultsServer := keeper.NewVaultsMsgServer(k)
+	vaultsQueryServer := keeper.NewVaultsQueryServer(k)
 	bob := utils.TestAccount()
 
 	// ARRANGE: Set the default index to 1.01 .
@@ -1660,9 +1793,25 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ := vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ := vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(0), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
+
 	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
 	_ = k.UpdateIndex(ctx, 1.1e12)
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
@@ -1676,6 +1825,14 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+108910891), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
+
 	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
 		Signer: bob.Address,
@@ -1684,9 +1841,25 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+108910891), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
+
 	// ARRANGE: Increase the index from 1.21 to 1.33 (~10%).
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC)})
 	_ = k.UpdateIndex(ctx, 1.33e12)
+
+	// ASSERT: Matching pending rewards.
+	pendingRewards, _ = vaultsQueryServer.PendingRewards(ctx, &vaults.QueryPendingRewards{})
+	pendingBobRewards, _ = vaultsQueryServer.PendingRewardsByProvider(ctx, &vaults.QueryPendingRewardsByProvider{
+		Provider: bob.Address,
+	})
+	assert.Equal(t, math.NewInt(89108911+108910891+118811881), pendingRewards.PendingRewards)
+	assert.Equal(t, math.NewInt(0), pendingBobRewards.PendingRewards)
 
 	// ASSERT: Bob balance is expected be as in the initial state + standard yield.
 	assert.Equal(t, math.NewInt(1000*ONE), bank.Balances[bob.Address].AmountOf("uusdn"))

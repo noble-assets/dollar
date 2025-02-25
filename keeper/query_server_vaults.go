@@ -23,7 +23,9 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
+	"cosmossdk.io/math"
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/vaults"
@@ -66,6 +68,82 @@ func (k vaultsQueryServer) PositionsByProvider(ctx context.Context, req *vaults.
 
 	return &vaults.QueryPositionsByProviderResponse{
 		Positions: positions,
+	}, nil
+}
+
+func (k vaultsQueryServer) PendingRewards(ctx context.Context, req *vaults.QueryPendingRewards) (*vaults.QueryPendingRewardsResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	rewards, err := k.GetVaultsRewards(ctx)
+	if err != nil {
+		return &vaults.QueryPendingRewardsResponse{
+			PendingRewards: math.ZeroInt(),
+		}, nil
+	}
+
+	totalPendingRewards := math.ZeroInt()
+	for _, reward := range rewards {
+		totalPendingRewards = totalPendingRewards.Add(reward.Rewards)
+	}
+
+	return &vaults.QueryPendingRewardsResponse{
+		PendingRewards: totalPendingRewards,
+	}, nil
+}
+
+func (k vaultsQueryServer) PendingRewardsByProvider(ctx context.Context, req *vaults.QueryPendingRewardsByProvider) (*vaults.QueryPendingRewardsByProviderResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	addr, err := k.address.StringToBytes(req.Provider)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to decode account %s", req.Provider)
+	}
+
+	// Retrieve all the user positions in the Flexible Vault.
+	positions, err := k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[vaults.FLEXIBLE.String()])
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get provider positions from state")
+	}
+
+	// Retrieve the current Index.
+	currentIndex, err := k.Index.Get(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get index from state")
+	}
+
+	totalUserPendingRewards := math.ZeroInt()
+	for _, position := range positions {
+		amountPrincipal := k.GetPrincipalAmountRoundedDown(position.Amount, position.Index)
+
+		// Iterate through the rewards to calculate the amount owed to the user, proportional to their position.
+		// NOTE: For the user to be eligible, they must have joined before and exited after a complete `UpdateIndex` cycle.
+		if err := k.VaultsRewards.Walk(
+			ctx,
+			new(collections.Range[int64]).StartExclusive(position.Index), // Exclude the entry point Index.
+			func(key int64, record vaults.Reward) (stop bool, err error) {
+				if !record.Total.IsPositive() || !record.Rewards.IsPositive() {
+					return false, nil
+				}
+
+				// Exclude the last Index.
+				userReward := math.ZeroInt()
+				if record.Index != currentIndex && !record.Rewards.IsNegative() {
+					userReward = record.Rewards.ToLegacyDec().Quo(record.Total.ToLegacyDec()).MulInt(amountPrincipal).TruncateInt()
+				}
+
+				totalUserPendingRewards = totalUserPendingRewards.Add(userReward)
+				return false, nil
+			}); err != nil {
+			return nil, err
+		}
+	}
+
+	return &vaults.QueryPendingRewardsByProviderResponse{
+		PendingRewards: totalUserPendingRewards,
 	}, nil
 }
 

@@ -313,6 +313,17 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 							Short:     "Retrieves the current pausing state of the Vault module",
 						},
 						{
+							RpcMethod: "PendingRewards",
+							Use:       "pending-rewards",
+							Short:     "Retrieves the total amount of rewards pending distribution",
+						},
+						{
+							RpcMethod:      "PendingRewardsByProvider",
+							Use:            "pending-rewards-by-provider [provider]",
+							Short:          "Retrieves the total amount of pending rewards for a specified provider",
+							PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "provider"}},
+						},
+						{
 							RpcMethod:      "PositionsByProvider",
 							Use:            "positions-by-provider [provider]",
 							Short:          "List Vaults positions by a specific provider",
