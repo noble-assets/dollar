@@ -58,16 +58,23 @@ func GetPayloadType(payload []byte) PayloadType {
 	return Unknown
 }
 
+type TokenPayload struct {
+	Amount             math.Int
+	Index              int64
+	Recipient          []byte
+	DestinationChainId uint16
+}
+
 // DecodeTokenPayload is a utility for decoding a custom payload of type Token.
 //
 // https://github.com/m0-foundation/m-portal/blob/ddf583b9bef971752ec1360f9b089e6fefa9c526/src/libs/PayloadEncoder.sol#L45-L62
-func DecodeTokenPayload(payload []byte) (amount math.Int, index int64, recipient []byte, destination uint16) {
+func DecodeTokenPayload(payload []byte) TokenPayload {
 	ntt, _ := ntt.ParseNativeTokenTransfer(payload)
 
-	amount = math.NewIntFromUint64(ntt.Amount)
-	index = int64(binary.BigEndian.Uint64(ntt.AdditionalPayload))
+	amount := math.NewIntFromUint64(ntt.Amount)
+	index := int64(binary.BigEndian.Uint64(ntt.AdditionalPayload))
 
-	return amount, index, ntt.To[12:], ntt.ToChain
+	return TokenPayload{amount, index, ntt.To[12:], ntt.ToChain}
 }
 
 // DecodeIndexPayload is a utility for decoding a custom payload of type Index.
