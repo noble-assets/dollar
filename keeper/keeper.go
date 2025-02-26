@@ -321,7 +321,7 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 	}
 
 	messageId := ntt.ManagerMessageDigest(uint16(vaa.EmitterChain), managerMessage)
-	eventPayload := portal.EventsPayaload{
+	eventPayload := portal.EventsPayload{
 		SourceChainId: uint32(vaa.EmitterChain),
 		Sender:        managerMessage.Sender,
 		MessageId:     messageId,
@@ -335,7 +335,7 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 }
 
 // HandlePayload is a utility that handles custom payloads when delivering portal messages.
-func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayload portal.EventsPayaload) error {
+func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayload portal.EventsPayload) error {
 	chain, err := k.wormhole.GetChain(ctx)
 	if err != nil {
 		return sdkerrors.Wrap(err, "unable to get wormhole chain id")

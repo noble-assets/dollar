@@ -89,9 +89,9 @@ func DecodeIndexPayload(payload []byte) (index int64, destination uint16) {
 	return
 }
 
-// EventsPayaload is a data structure used to hold information required to emit complete
+// EventsPayload is a data structure used to hold information required to emit complete
 // events during the handling of a vaa.
-type EventsPayaload struct {
+type EventsPayload struct {
 	SourceChainId uint32
 	Sender        []byte
 	MessageId     []byte
