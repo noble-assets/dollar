@@ -79,6 +79,9 @@ func (m *Delivered) GetVaa() []byte {
 	return nil
 }
 
+// MTokenReceived is the event emitted when M tokens are received in Noble.
+//
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L382-L382
 type MTokenReceived struct {
 	SourceChainId    uint32                `protobuf:"varint,1,opt,name=source_chain_id,json=sourceChainId,proto3" json:"source_chain_id,omitempty"`
 	DestinationToken []byte                `protobuf:"bytes,2,opt,name=destination_token,json=destinationToken,proto3" json:"destination_token,omitempty"`
@@ -164,7 +167,7 @@ func (m *MTokenReceived) GetMessageId() []byte {
 	return nil
 }
 
-// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
 type TransferRedeemed struct {
 	MessageId []byte `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
 }
@@ -211,7 +214,7 @@ func (m *TransferRedeemed) GetMessageId() []byte {
 
 // USDNTokenSent is an event emitted after transfering USDN tokens via Wormhole.
 //
-// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
 type USDNTokenSent struct {
 	SourceToken        string                `protobuf:"bytes,1,opt,name=source_token,json=sourceToken,proto3" json:"source_token,omitempty"`
 	DestinationChainId uint16                `protobuf:"varint,2,opt,name=destination_chain_id,json=destinationChainId,proto3,customtype=uint16" json:"destination_chain_id"`

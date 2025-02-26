@@ -29,7 +29,6 @@ import (
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/errors"
-	sdkerrors "cosmossdk.io/errors"
 
 	"dollar.noble.xyz/types/portal"
 	"dollar.noble.xyz/types/portal/ntt"
@@ -114,7 +113,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 
 	chain, err := k.wormhole.GetChain(ctx)
 	if err != nil {
-		return nil, sdkerrors.Wrap(err, "unable to get wormhole chain id")
+		return nil, errors.Wrap(err, "unable to get wormhole chain id")
 	}
 	rawManagerMessage := ntt.EncodeManagerMessage(managerMessage)
 	messageId := ntt.ManagerMessageDigest(chain, managerMessage)
@@ -154,7 +153,6 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, err
 	}
 
-	// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L252-L259
 	if err := k.event.EventManager(ctx).EmitKV(
 		ctx,
 		"transfer_sent",
@@ -168,7 +166,6 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, err
 	}
 
-	// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L260-L260
 	return &portal.MsgTransferResponse{}, k.event.EventManager(ctx).EmitKV(
 		ctx,
 		"transfer_sent",

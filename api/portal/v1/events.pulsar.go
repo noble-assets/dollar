@@ -4686,6 +4686,9 @@ func (x *Delivered) GetVaa() []byte {
 	return nil
 }
 
+// MTokenReceived is the event emitted when M tokens are received in Noble.
+//
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L382-L382
 type MTokenReceived struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4769,7 +4772,7 @@ func (x *MTokenReceived) GetMessageId() []byte {
 	return nil
 }
 
-// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
 type TransferRedeemed struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -4807,7 +4810,7 @@ func (x *TransferRedeemed) GetMessageId() []byte {
 
 // USDNTokenSent is an event emitted after transfering USDN tokens via Wormhole.
 //
-// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
 type USDNTokenSent struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

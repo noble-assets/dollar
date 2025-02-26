@@ -14,6 +14,9 @@ message Delivered {
   bytes vaa = 2;
 }
 
+// MTokenReceived is the event emitted when M tokens are received in Noble.
+//
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L382-L382
 message MTokenReceived {
   uint32 source_chain_id = 1;
   bytes destination_token = 2;
@@ -29,14 +32,14 @@ message MTokenReceived {
   bytes message_id = 7;
 }
 
-// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
 message TransferRedeemed {
   bytes message_id = 1;
 }
 
 // USDNTokenSent is an event emitted after transfering USDN tokens via Wormhole.
 //
-// Ref: https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
 message USDNTokenSent {
   string source_token = 1;
   uint32 destination_chain_id = 2 [
