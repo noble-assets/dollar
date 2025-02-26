@@ -36,7 +36,7 @@ func EncodeAdditionalPayload(index int64, destinationToken []byte) (bz []byte) {
 }
 
 func DecodeAdditionalPayload(bz []byte) (index int64, destinationToken []byte, err error) {
-	indexLen := 2
+	indexLen := 8
 	destinationTokenLen := 32
 
 	if len(bz) < indexLen+destinationTokenLen {
@@ -44,7 +44,7 @@ func DecodeAdditionalPayload(bz []byte) (index int64, destinationToken []byte, e
 	}
 
 	offset := 0
-	index = int64(binary.BigEndian.Uint64(bz[offset : offset+2]))
+	index = int64(binary.BigEndian.Uint64(bz[offset : offset+indexLen]))
 
 	offset += indexLen
 	destinationToken = bz[offset : offset+destinationTokenLen]
