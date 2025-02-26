@@ -349,25 +349,28 @@ func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayloa
 		if chain != tokenPayload.DestinationChainId {
 			return fmt.Errorf("not destination chain: expected %d, got %d", chain, tokenPayload.DestinationChainId)
 		}
+		if !bytes.Equal(portal.RawToken, tokenPayload.DestinationToken) {
+			return fmt.Errorf("not destination token: expected %d, got %d", portal.Token, tokenPayload.DestinationChainId)
+		}
 
 		if err := k.Mint(ctx, tokenPayload.Recipient, tokenPayload.Amount, &tokenPayload.Index); err != nil {
 			return err
 		}
 
 		if err := k.event.EventManager(ctx).Emit(ctx, &portal.MTokenReceived{
-			SourceChainId: eventsPayload.SourceChainId,
-			Sender:        eventsPayload.Sender,
-			// NOTE: do we want to use the bech32 repr here?
-			Recipient: string(tokenPayload.Recipient),
-			Amount:    tokenPayload.Amount,
-			Index:     tokenPayload.Index,
-			MessageId: eventsPayload.MessageId,
+			SourceChainId:    eventsPayload.SourceChainId,
+			DestinationToken: tokenPayload.DestinationToken,
+			Sender:           eventsPayload.Sender,
+			Recipient:        sdk.AccAddress(tokenPayload.Recipient[12:]).String(),
+			Amount:           tokenPayload.Amount,
+			Index:            tokenPayload.Index,
+			MessageId:        eventsPayload.MessageId,
 		}); err != nil {
 			return err
 		}
 
 		return k.event.EventManager(ctx).Emit(ctx, &portal.TransferRedeemed{
-			MessageId: eventsPayload.MessageId,
+			Digest: eventsPayload.MessageId,
 		})
 	case portal.Index:
 		index, destination := portal.DecodeIndexPayload(payload)

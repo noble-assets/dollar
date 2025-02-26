@@ -73,7 +73,7 @@ func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedSt
 		return nil, err
 	}
 
-	event := protoiface.MessageV1(&types.NotPaused{})
+	event := protoiface.MessageV1(&types.Unpaused{})
 	if msg.Paused {
 		event = &types.Paused{}
 	}
@@ -136,7 +136,6 @@ func (k *Keeper) UpdateIndex(ctx context.Context, rawIndex int64) error {
 	currentSupply := k.bank.GetSupply(ctx, k.denom).Amount
 	expectedSupply := index.MulInt(totalPrincipal).TruncateInt()
 
-	//
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
 	yield := math.ZeroInt()
 	if coins.IsAllPositive() {

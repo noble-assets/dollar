@@ -8,7 +8,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types/vaults";
 
-// Lock is an event emitted when a user lock $USDN into a Vault.
+// Lock is an event emitted when a user locks $USDN into a Vault.
 message Lock {
   string account = 1;
   string vault_type = 2;
@@ -32,7 +32,7 @@ message Lock {
   ];
 }
 
-// Unlock is an event emitted when a user unlock their $USDN from a Vault.
+// Unlock is an event emitted when a user unlocks their $USDN from a Vault.
 message Unlock {
   string account = 1;
   string vault_type = 2;
@@ -44,13 +44,13 @@ message Unlock {
   ];
 }
 
-// StatePaused is an event emitted when the module pause
+// PausedStateUpdated is an event emitted when the module pause
 // state is changed.
-message StatePaused {
+message PausedStateUpdated {
   string paused = 1;
 }
 
-// RewardClaimed is an event emitted when an user claim their rewards.
+// RewardClaimed is an event emitted whenever a user claim their rewards.
 message RewardClaimed {
   string account = 1;
   string amount = 2 [

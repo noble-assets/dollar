@@ -65,6 +65,7 @@ type TokenPayload struct {
 	Index              int64
 	Recipient          []byte
 	DestinationChainId uint16
+	DestinationToken   []byte
 }
 
 // DecodeTokenPayload is a utility for decoding a custom payload of type Token.
@@ -74,9 +75,11 @@ func DecodeTokenPayload(payload []byte) TokenPayload {
 	ntt, _ := ntt.ParseNativeTokenTransfer(payload)
 
 	amount := math.NewIntFromUint64(ntt.Amount)
-	index := int64(binary.BigEndian.Uint64(ntt.AdditionalPayload))
 
-	return TokenPayload{amount, index, ntt.To[12:], ntt.ToChain}
+	// NOTE: the error here is ignored like in the parsing of ntt.
+	index, destinationToken, _ := DecodeAdditionPayload(ntt.AdditionalPayload)
+
+	return TokenPayload{amount, index, ntt.To[12:], ntt.ToChain, destinationToken}
 }
 
 // DecodeIndexPayload is a utility for decoding a custom payload of type Index.

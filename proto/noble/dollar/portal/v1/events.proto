@@ -10,11 +10,10 @@ option go_package = "dollar.noble.xyz/types/portal";
 
 // Delivered is the event emitted when a vaa is successfully delivered.
 message Delivered {
-  string signer = 1;
-  bytes vaa = 2;
+  bytes vaa = 1;
 }
 
-// MTokenReceived is the event emitted when M tokens are received in Noble.
+// MTokenReceived is the event emitted when M tokens are received on Noble.
 //
 // https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L382-L382
 message MTokenReceived {
@@ -32,9 +31,11 @@ message MTokenReceived {
   bytes message_id = 7;
 }
 
+// TransferRedeemed is an event emitted when a transfer has been redeemed.
+//
 // https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
 message TransferRedeemed {
-  bytes message_id = 1;
+  bytes digest = 1;
 }
 
 // USDNTokenSent is an event emitted after transfering USDN tokens via Wormhole.
@@ -86,7 +87,10 @@ message OwnershipTransferred {
   string new_owner = 2;
 }
 
-// StatePausedUpdated is an event emitted whenever the paused state is updated.
-message StatePausedUpdated {
-  bool paused = 1;
-}
+// Paused is an event emitted when the portal pause
+// state is changed to paused.
+message Paused {}
+
+// Unpaused is an event emitted when the portal pause
+// state is changed to unpaused.
+message Unpaused {}

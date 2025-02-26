@@ -29,6 +29,7 @@ import (
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/event"
 	"cosmossdk.io/errors"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/types/portal"
 	"dollar.noble.xyz/types/portal/ntt"
@@ -50,8 +51,7 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 	}
 
 	return &portal.MsgDeliverResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.Delivered{
-		Signer: msg.Signer,
-		Vaa:    msg.Vaa,
+		Vaa: msg.Vaa,
 	})
 }
 
@@ -161,7 +161,7 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		event.Attribute{Key: "amount", Value: strconv.Itoa(int(msg.Amount.Int64()))},
 		event.Attribute{Key: "fee", Value: ""},
 		event.Attribute{Key: "recipient_chain", Value: strconv.Itoa(int(msg.DestinationChainId))},
-		event.Attribute{Key: "msg_sequence", Value: strconv.Itoa(int(index))},
+		event.Attribute{Key: "msg_sequence", Value: strconv.Itoa(int(nonce))},
 	); err != nil {
 		return nil, err
 	}
@@ -182,9 +182,11 @@ func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetP
 		return nil, err
 	}
 
-	return &portal.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.StatePausedUpdated{
-		Paused: msg.Paused,
-	})
+	event := protoiface.MessageV1(&portal.Unpaused{})
+	if msg.Paused {
+		event = &portal.Paused{}
+	}
+	return &portal.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
 }
 
 func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {

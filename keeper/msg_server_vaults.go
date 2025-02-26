@@ -293,7 +293,7 @@ func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetP
 		return nil, err
 	}
 
-	return &vaults.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.StatePaused{
+	return &vaults.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.PausedStateUpdated{
 		Paused: msg.Paused.String(),
 	})
 }

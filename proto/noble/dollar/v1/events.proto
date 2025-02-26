@@ -12,11 +12,11 @@ option go_package = "dollar.noble.xyz/types";
 // state is changed to paused.
 message Paused {}
 
-// NotPaused is an event emitted when the module pause
-// state is changed to not paused.
-message NotPaused {}
+// Unpaused is an event emitted when the module pause
+// state is changed to unpaused.
+message Unpaused {}
 
-// YieldClaimed is an event emitted when an user claim
+// YieldClaimed is an event emitted whenever a user claims
 // accrued yield.
 message YieldClaimed {
   string account = 1;
