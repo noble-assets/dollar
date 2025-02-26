@@ -16,33 +16,33 @@ import (
 )
 
 var (
-	md_Lock            protoreflect.MessageDescriptor
-	fd_Lock_account    protoreflect.FieldDescriptor
-	fd_Lock_vault_type protoreflect.FieldDescriptor
-	fd_Lock_index      protoreflect.FieldDescriptor
-	fd_Lock_amount     protoreflect.FieldDescriptor
-	fd_Lock_principal  protoreflect.FieldDescriptor
+	md_PositionLocked            protoreflect.MessageDescriptor
+	fd_PositionLocked_account    protoreflect.FieldDescriptor
+	fd_PositionLocked_vault_type protoreflect.FieldDescriptor
+	fd_PositionLocked_index      protoreflect.FieldDescriptor
+	fd_PositionLocked_amount     protoreflect.FieldDescriptor
+	fd_PositionLocked_principal  protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_vaults_v1_events_proto_init()
-	md_Lock = File_noble_dollar_vaults_v1_events_proto.Messages().ByName("Lock")
-	fd_Lock_account = md_Lock.Fields().ByName("account")
-	fd_Lock_vault_type = md_Lock.Fields().ByName("vault_type")
-	fd_Lock_index = md_Lock.Fields().ByName("index")
-	fd_Lock_amount = md_Lock.Fields().ByName("amount")
-	fd_Lock_principal = md_Lock.Fields().ByName("principal")
+	md_PositionLocked = File_noble_dollar_vaults_v1_events_proto.Messages().ByName("PositionLocked")
+	fd_PositionLocked_account = md_PositionLocked.Fields().ByName("account")
+	fd_PositionLocked_vault_type = md_PositionLocked.Fields().ByName("vault_type")
+	fd_PositionLocked_index = md_PositionLocked.Fields().ByName("index")
+	fd_PositionLocked_amount = md_PositionLocked.Fields().ByName("amount")
+	fd_PositionLocked_principal = md_PositionLocked.Fields().ByName("principal")
 }
 
-var _ protoreflect.Message = (*fastReflection_Lock)(nil)
+var _ protoreflect.Message = (*fastReflection_PositionLocked)(nil)
 
-type fastReflection_Lock Lock
+type fastReflection_PositionLocked PositionLocked
 
-func (x *Lock) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_Lock)(x)
+func (x *PositionLocked) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_PositionLocked)(x)
 }
 
-func (x *Lock) slowProtoReflect() protoreflect.Message {
+func (x *PositionLocked) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_vaults_v1_events_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,43 +54,43 @@ func (x *Lock) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_Lock_messageType fastReflection_Lock_messageType
-var _ protoreflect.MessageType = fastReflection_Lock_messageType{}
+var _fastReflection_PositionLocked_messageType fastReflection_PositionLocked_messageType
+var _ protoreflect.MessageType = fastReflection_PositionLocked_messageType{}
 
-type fastReflection_Lock_messageType struct{}
+type fastReflection_PositionLocked_messageType struct{}
 
-func (x fastReflection_Lock_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_Lock)(nil)
+func (x fastReflection_PositionLocked_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_PositionLocked)(nil)
 }
-func (x fastReflection_Lock_messageType) New() protoreflect.Message {
-	return new(fastReflection_Lock)
+func (x fastReflection_PositionLocked_messageType) New() protoreflect.Message {
+	return new(fastReflection_PositionLocked)
 }
-func (x fastReflection_Lock_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_Lock
+func (x fastReflection_PositionLocked_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_PositionLocked
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_Lock) Descriptor() protoreflect.MessageDescriptor {
-	return md_Lock
+func (x *fastReflection_PositionLocked) Descriptor() protoreflect.MessageDescriptor {
+	return md_PositionLocked
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_Lock) Type() protoreflect.MessageType {
-	return _fastReflection_Lock_messageType
+func (x *fastReflection_PositionLocked) Type() protoreflect.MessageType {
+	return _fastReflection_PositionLocked_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_Lock) New() protoreflect.Message {
-	return new(fastReflection_Lock)
+func (x *fastReflection_PositionLocked) New() protoreflect.Message {
+	return new(fastReflection_PositionLocked)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_Lock) Interface() protoreflect.ProtoMessage {
-	return (*Lock)(x)
+func (x *fastReflection_PositionLocked) Interface() protoreflect.ProtoMessage {
+	return (*PositionLocked)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -98,34 +98,34 @@ func (x *fastReflection_Lock) Interface() protoreflect.ProtoMessage {
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_Lock) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_PositionLocked) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.Account != "" {
 		value := protoreflect.ValueOfString(x.Account)
-		if !f(fd_Lock_account, value) {
+		if !f(fd_PositionLocked_account, value) {
 			return
 		}
 	}
 	if x.VaultType != "" {
 		value := protoreflect.ValueOfString(x.VaultType)
-		if !f(fd_Lock_vault_type, value) {
+		if !f(fd_PositionLocked_vault_type, value) {
 			return
 		}
 	}
 	if x.Index != "" {
 		value := protoreflect.ValueOfString(x.Index)
-		if !f(fd_Lock_index, value) {
+		if !f(fd_PositionLocked_index, value) {
 			return
 		}
 	}
 	if x.Amount != "" {
 		value := protoreflect.ValueOfString(x.Amount)
-		if !f(fd_Lock_amount, value) {
+		if !f(fd_PositionLocked_amount, value) {
 			return
 		}
 	}
 	if x.Principal != "" {
 		value := protoreflect.ValueOfString(x.Principal)
-		if !f(fd_Lock_principal, value) {
+		if !f(fd_PositionLocked_principal, value) {
 			return
 		}
 	}
@@ -142,23 +142,23 @@ func (x *fastReflection_Lock) Range(f func(protoreflect.FieldDescriptor, protore
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_Lock) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_PositionLocked) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Lock.account":
+	case "noble.dollar.vaults.v1.PositionLocked.account":
 		return x.Account != ""
-	case "noble.dollar.vaults.v1.Lock.vault_type":
+	case "noble.dollar.vaults.v1.PositionLocked.vault_type":
 		return x.VaultType != ""
-	case "noble.dollar.vaults.v1.Lock.index":
+	case "noble.dollar.vaults.v1.PositionLocked.index":
 		return x.Index != ""
-	case "noble.dollar.vaults.v1.Lock.amount":
+	case "noble.dollar.vaults.v1.PositionLocked.amount":
 		return x.Amount != ""
-	case "noble.dollar.vaults.v1.Lock.principal":
+	case "noble.dollar.vaults.v1.PositionLocked.principal":
 		return x.Principal != ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Lock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionLocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Lock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionLocked does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -168,23 +168,23 @@ func (x *fastReflection_Lock) Has(fd protoreflect.FieldDescriptor) bool {
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Lock) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_PositionLocked) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Lock.account":
+	case "noble.dollar.vaults.v1.PositionLocked.account":
 		x.Account = ""
-	case "noble.dollar.vaults.v1.Lock.vault_type":
+	case "noble.dollar.vaults.v1.PositionLocked.vault_type":
 		x.VaultType = ""
-	case "noble.dollar.vaults.v1.Lock.index":
+	case "noble.dollar.vaults.v1.PositionLocked.index":
 		x.Index = ""
-	case "noble.dollar.vaults.v1.Lock.amount":
+	case "noble.dollar.vaults.v1.PositionLocked.amount":
 		x.Amount = ""
-	case "noble.dollar.vaults.v1.Lock.principal":
+	case "noble.dollar.vaults.v1.PositionLocked.principal":
 		x.Principal = ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Lock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionLocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Lock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionLocked does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -194,28 +194,28 @@ func (x *fastReflection_Lock) Clear(fd protoreflect.FieldDescriptor) {
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_Lock) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_PositionLocked) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v1.Lock.account":
+	case "noble.dollar.vaults.v1.PositionLocked.account":
 		value := x.Account
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.vaults.v1.Lock.vault_type":
+	case "noble.dollar.vaults.v1.PositionLocked.vault_type":
 		value := x.VaultType
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.vaults.v1.Lock.index":
+	case "noble.dollar.vaults.v1.PositionLocked.index":
 		value := x.Index
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.vaults.v1.Lock.amount":
+	case "noble.dollar.vaults.v1.PositionLocked.amount":
 		value := x.Amount
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.vaults.v1.Lock.principal":
+	case "noble.dollar.vaults.v1.PositionLocked.principal":
 		value := x.Principal
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Lock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionLocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Lock does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionLocked does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -229,23 +229,23 @@ func (x *fastReflection_Lock) Get(descriptor protoreflect.FieldDescriptor) proto
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Lock) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_PositionLocked) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Lock.account":
+	case "noble.dollar.vaults.v1.PositionLocked.account":
 		x.Account = value.Interface().(string)
-	case "noble.dollar.vaults.v1.Lock.vault_type":
+	case "noble.dollar.vaults.v1.PositionLocked.vault_type":
 		x.VaultType = value.Interface().(string)
-	case "noble.dollar.vaults.v1.Lock.index":
+	case "noble.dollar.vaults.v1.PositionLocked.index":
 		x.Index = value.Interface().(string)
-	case "noble.dollar.vaults.v1.Lock.amount":
+	case "noble.dollar.vaults.v1.PositionLocked.amount":
 		x.Amount = value.Interface().(string)
-	case "noble.dollar.vaults.v1.Lock.principal":
+	case "noble.dollar.vaults.v1.PositionLocked.principal":
 		x.Principal = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Lock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionLocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Lock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionLocked does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -259,56 +259,56 @@ func (x *fastReflection_Lock) Set(fd protoreflect.FieldDescriptor, value protore
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Lock) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_PositionLocked) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Lock.account":
-		panic(fmt.Errorf("field account of message noble.dollar.vaults.v1.Lock is not mutable"))
-	case "noble.dollar.vaults.v1.Lock.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v1.Lock is not mutable"))
-	case "noble.dollar.vaults.v1.Lock.index":
-		panic(fmt.Errorf("field index of message noble.dollar.vaults.v1.Lock is not mutable"))
-	case "noble.dollar.vaults.v1.Lock.amount":
-		panic(fmt.Errorf("field amount of message noble.dollar.vaults.v1.Lock is not mutable"))
-	case "noble.dollar.vaults.v1.Lock.principal":
-		panic(fmt.Errorf("field principal of message noble.dollar.vaults.v1.Lock is not mutable"))
+	case "noble.dollar.vaults.v1.PositionLocked.account":
+		panic(fmt.Errorf("field account of message noble.dollar.vaults.v1.PositionLocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionLocked.vault_type":
+		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v1.PositionLocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionLocked.index":
+		panic(fmt.Errorf("field index of message noble.dollar.vaults.v1.PositionLocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionLocked.amount":
+		panic(fmt.Errorf("field amount of message noble.dollar.vaults.v1.PositionLocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionLocked.principal":
+		panic(fmt.Errorf("field principal of message noble.dollar.vaults.v1.PositionLocked is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Lock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionLocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Lock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionLocked does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_Lock) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_PositionLocked) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Lock.account":
+	case "noble.dollar.vaults.v1.PositionLocked.account":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.vaults.v1.Lock.vault_type":
+	case "noble.dollar.vaults.v1.PositionLocked.vault_type":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.vaults.v1.Lock.index":
+	case "noble.dollar.vaults.v1.PositionLocked.index":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.vaults.v1.Lock.amount":
+	case "noble.dollar.vaults.v1.PositionLocked.amount":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.vaults.v1.Lock.principal":
+	case "noble.dollar.vaults.v1.PositionLocked.principal":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Lock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionLocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Lock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionLocked does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_Lock) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_PositionLocked) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.vaults.v1.Lock", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.vaults.v1.PositionLocked", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -316,7 +316,7 @@ func (x *fastReflection_Lock) WhichOneof(d protoreflect.OneofDescriptor) protore
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_Lock) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_PositionLocked) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -327,7 +327,7 @@ func (x *fastReflection_Lock) GetUnknown() protoreflect.RawFields {
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Lock) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_PositionLocked) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -339,7 +339,7 @@ func (x *fastReflection_Lock) SetUnknown(fields protoreflect.RawFields) {
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_Lock) IsValid() bool {
+func (x *fastReflection_PositionLocked) IsValid() bool {
 	return x != nil
 }
 
@@ -349,9 +349,9 @@ func (x *fastReflection_Lock) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_Lock) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_PositionLocked) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*Lock)
+		x := input.Message.Interface().(*PositionLocked)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -393,7 +393,7 @@ func (x *fastReflection_Lock) ProtoMethods() *protoiface.Methods {
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*Lock)
+		x := input.Message.Interface().(*PositionLocked)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -458,7 +458,7 @@ func (x *fastReflection_Lock) ProtoMethods() *protoiface.Methods {
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*Lock)
+		x := input.Message.Interface().(*PositionLocked)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -490,10 +490,10 @@ func (x *fastReflection_Lock) ProtoMethods() *protoiface.Methods {
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Lock: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PositionLocked: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Lock: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PositionLocked: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -692,29 +692,33 @@ func (x *fastReflection_Lock) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_Unlock            protoreflect.MessageDescriptor
-	fd_Unlock_account    protoreflect.FieldDescriptor
-	fd_Unlock_vault_type protoreflect.FieldDescriptor
-	fd_Unlock_amount     protoreflect.FieldDescriptor
+	md_PositionUnlocked            protoreflect.MessageDescriptor
+	fd_PositionUnlocked_account    protoreflect.FieldDescriptor
+	fd_PositionUnlocked_vault_type protoreflect.FieldDescriptor
+	fd_PositionUnlocked_index      protoreflect.FieldDescriptor
+	fd_PositionUnlocked_amount     protoreflect.FieldDescriptor
+	fd_PositionUnlocked_principal  protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_vaults_v1_events_proto_init()
-	md_Unlock = File_noble_dollar_vaults_v1_events_proto.Messages().ByName("Unlock")
-	fd_Unlock_account = md_Unlock.Fields().ByName("account")
-	fd_Unlock_vault_type = md_Unlock.Fields().ByName("vault_type")
-	fd_Unlock_amount = md_Unlock.Fields().ByName("amount")
+	md_PositionUnlocked = File_noble_dollar_vaults_v1_events_proto.Messages().ByName("PositionUnlocked")
+	fd_PositionUnlocked_account = md_PositionUnlocked.Fields().ByName("account")
+	fd_PositionUnlocked_vault_type = md_PositionUnlocked.Fields().ByName("vault_type")
+	fd_PositionUnlocked_index = md_PositionUnlocked.Fields().ByName("index")
+	fd_PositionUnlocked_amount = md_PositionUnlocked.Fields().ByName("amount")
+	fd_PositionUnlocked_principal = md_PositionUnlocked.Fields().ByName("principal")
 }
 
-var _ protoreflect.Message = (*fastReflection_Unlock)(nil)
+var _ protoreflect.Message = (*fastReflection_PositionUnlocked)(nil)
 
-type fastReflection_Unlock Unlock
+type fastReflection_PositionUnlocked PositionUnlocked
 
-func (x *Unlock) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_Unlock)(x)
+func (x *PositionUnlocked) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_PositionUnlocked)(x)
 }
 
-func (x *Unlock) slowProtoReflect() protoreflect.Message {
+func (x *PositionUnlocked) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_vaults_v1_events_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -726,43 +730,43 @@ func (x *Unlock) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_Unlock_messageType fastReflection_Unlock_messageType
-var _ protoreflect.MessageType = fastReflection_Unlock_messageType{}
+var _fastReflection_PositionUnlocked_messageType fastReflection_PositionUnlocked_messageType
+var _ protoreflect.MessageType = fastReflection_PositionUnlocked_messageType{}
 
-type fastReflection_Unlock_messageType struct{}
+type fastReflection_PositionUnlocked_messageType struct{}
 
-func (x fastReflection_Unlock_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_Unlock)(nil)
+func (x fastReflection_PositionUnlocked_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_PositionUnlocked)(nil)
 }
-func (x fastReflection_Unlock_messageType) New() protoreflect.Message {
-	return new(fastReflection_Unlock)
+func (x fastReflection_PositionUnlocked_messageType) New() protoreflect.Message {
+	return new(fastReflection_PositionUnlocked)
 }
-func (x fastReflection_Unlock_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_Unlock
+func (x fastReflection_PositionUnlocked_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_PositionUnlocked
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_Unlock) Descriptor() protoreflect.MessageDescriptor {
-	return md_Unlock
+func (x *fastReflection_PositionUnlocked) Descriptor() protoreflect.MessageDescriptor {
+	return md_PositionUnlocked
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_Unlock) Type() protoreflect.MessageType {
-	return _fastReflection_Unlock_messageType
+func (x *fastReflection_PositionUnlocked) Type() protoreflect.MessageType {
+	return _fastReflection_PositionUnlocked_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_Unlock) New() protoreflect.Message {
-	return new(fastReflection_Unlock)
+func (x *fastReflection_PositionUnlocked) New() protoreflect.Message {
+	return new(fastReflection_PositionUnlocked)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_Unlock) Interface() protoreflect.ProtoMessage {
-	return (*Unlock)(x)
+func (x *fastReflection_PositionUnlocked) Interface() protoreflect.ProtoMessage {
+	return (*PositionUnlocked)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -770,22 +774,34 @@ func (x *fastReflection_Unlock) Interface() protoreflect.ProtoMessage {
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_Unlock) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_PositionUnlocked) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.Account != "" {
 		value := protoreflect.ValueOfString(x.Account)
-		if !f(fd_Unlock_account, value) {
+		if !f(fd_PositionUnlocked_account, value) {
 			return
 		}
 	}
 	if x.VaultType != "" {
 		value := protoreflect.ValueOfString(x.VaultType)
-		if !f(fd_Unlock_vault_type, value) {
+		if !f(fd_PositionUnlocked_vault_type, value) {
+			return
+		}
+	}
+	if x.Index != "" {
+		value := protoreflect.ValueOfString(x.Index)
+		if !f(fd_PositionUnlocked_index, value) {
 			return
 		}
 	}
 	if x.Amount != "" {
 		value := protoreflect.ValueOfString(x.Amount)
-		if !f(fd_Unlock_amount, value) {
+		if !f(fd_PositionUnlocked_amount, value) {
+			return
+		}
+	}
+	if x.Principal != "" {
+		value := protoreflect.ValueOfString(x.Principal)
+		if !f(fd_PositionUnlocked_principal, value) {
 			return
 		}
 	}
@@ -802,19 +818,23 @@ func (x *fastReflection_Unlock) Range(f func(protoreflect.FieldDescriptor, proto
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_Unlock) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_PositionUnlocked) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Unlock.account":
+	case "noble.dollar.vaults.v1.PositionUnlocked.account":
 		return x.Account != ""
-	case "noble.dollar.vaults.v1.Unlock.vault_type":
+	case "noble.dollar.vaults.v1.PositionUnlocked.vault_type":
 		return x.VaultType != ""
-	case "noble.dollar.vaults.v1.Unlock.amount":
+	case "noble.dollar.vaults.v1.PositionUnlocked.index":
+		return x.Index != ""
+	case "noble.dollar.vaults.v1.PositionUnlocked.amount":
 		return x.Amount != ""
+	case "noble.dollar.vaults.v1.PositionUnlocked.principal":
+		return x.Principal != ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Unlock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionUnlocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Unlock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionUnlocked does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -824,19 +844,23 @@ func (x *fastReflection_Unlock) Has(fd protoreflect.FieldDescriptor) bool {
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Unlock) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_PositionUnlocked) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Unlock.account":
+	case "noble.dollar.vaults.v1.PositionUnlocked.account":
 		x.Account = ""
-	case "noble.dollar.vaults.v1.Unlock.vault_type":
+	case "noble.dollar.vaults.v1.PositionUnlocked.vault_type":
 		x.VaultType = ""
-	case "noble.dollar.vaults.v1.Unlock.amount":
+	case "noble.dollar.vaults.v1.PositionUnlocked.index":
+		x.Index = ""
+	case "noble.dollar.vaults.v1.PositionUnlocked.amount":
 		x.Amount = ""
+	case "noble.dollar.vaults.v1.PositionUnlocked.principal":
+		x.Principal = ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Unlock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionUnlocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Unlock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionUnlocked does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -846,22 +870,28 @@ func (x *fastReflection_Unlock) Clear(fd protoreflect.FieldDescriptor) {
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_Unlock) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_PositionUnlocked) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v1.Unlock.account":
+	case "noble.dollar.vaults.v1.PositionUnlocked.account":
 		value := x.Account
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.vaults.v1.Unlock.vault_type":
+	case "noble.dollar.vaults.v1.PositionUnlocked.vault_type":
 		value := x.VaultType
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.vaults.v1.Unlock.amount":
+	case "noble.dollar.vaults.v1.PositionUnlocked.index":
+		value := x.Index
+		return protoreflect.ValueOfString(value)
+	case "noble.dollar.vaults.v1.PositionUnlocked.amount":
 		value := x.Amount
+		return protoreflect.ValueOfString(value)
+	case "noble.dollar.vaults.v1.PositionUnlocked.principal":
+		value := x.Principal
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Unlock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionUnlocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Unlock does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionUnlocked does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -875,19 +905,23 @@ func (x *fastReflection_Unlock) Get(descriptor protoreflect.FieldDescriptor) pro
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Unlock) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_PositionUnlocked) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Unlock.account":
+	case "noble.dollar.vaults.v1.PositionUnlocked.account":
 		x.Account = value.Interface().(string)
-	case "noble.dollar.vaults.v1.Unlock.vault_type":
+	case "noble.dollar.vaults.v1.PositionUnlocked.vault_type":
 		x.VaultType = value.Interface().(string)
-	case "noble.dollar.vaults.v1.Unlock.amount":
+	case "noble.dollar.vaults.v1.PositionUnlocked.index":
+		x.Index = value.Interface().(string)
+	case "noble.dollar.vaults.v1.PositionUnlocked.amount":
 		x.Amount = value.Interface().(string)
+	case "noble.dollar.vaults.v1.PositionUnlocked.principal":
+		x.Principal = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Unlock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionUnlocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Unlock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionUnlocked does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -901,48 +935,56 @@ func (x *fastReflection_Unlock) Set(fd protoreflect.FieldDescriptor, value proto
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Unlock) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_PositionUnlocked) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Unlock.account":
-		panic(fmt.Errorf("field account of message noble.dollar.vaults.v1.Unlock is not mutable"))
-	case "noble.dollar.vaults.v1.Unlock.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v1.Unlock is not mutable"))
-	case "noble.dollar.vaults.v1.Unlock.amount":
-		panic(fmt.Errorf("field amount of message noble.dollar.vaults.v1.Unlock is not mutable"))
+	case "noble.dollar.vaults.v1.PositionUnlocked.account":
+		panic(fmt.Errorf("field account of message noble.dollar.vaults.v1.PositionUnlocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionUnlocked.vault_type":
+		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v1.PositionUnlocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionUnlocked.index":
+		panic(fmt.Errorf("field index of message noble.dollar.vaults.v1.PositionUnlocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionUnlocked.amount":
+		panic(fmt.Errorf("field amount of message noble.dollar.vaults.v1.PositionUnlocked is not mutable"))
+	case "noble.dollar.vaults.v1.PositionUnlocked.principal":
+		panic(fmt.Errorf("field principal of message noble.dollar.vaults.v1.PositionUnlocked is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Unlock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionUnlocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Unlock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionUnlocked does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_Unlock) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_PositionUnlocked) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v1.Unlock.account":
+	case "noble.dollar.vaults.v1.PositionUnlocked.account":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.vaults.v1.Unlock.vault_type":
+	case "noble.dollar.vaults.v1.PositionUnlocked.vault_type":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.vaults.v1.Unlock.amount":
+	case "noble.dollar.vaults.v1.PositionUnlocked.index":
+		return protoreflect.ValueOfString("")
+	case "noble.dollar.vaults.v1.PositionUnlocked.amount":
+		return protoreflect.ValueOfString("")
+	case "noble.dollar.vaults.v1.PositionUnlocked.principal":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.Unlock"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.PositionUnlocked"))
 		}
-		panic(fmt.Errorf("message noble.dollar.vaults.v1.Unlock does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.vaults.v1.PositionUnlocked does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_Unlock) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_PositionUnlocked) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.vaults.v1.Unlock", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.vaults.v1.PositionUnlocked", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -950,7 +992,7 @@ func (x *fastReflection_Unlock) WhichOneof(d protoreflect.OneofDescriptor) proto
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_Unlock) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_PositionUnlocked) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -961,7 +1003,7 @@ func (x *fastReflection_Unlock) GetUnknown() protoreflect.RawFields {
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Unlock) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_PositionUnlocked) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -973,7 +1015,7 @@ func (x *fastReflection_Unlock) SetUnknown(fields protoreflect.RawFields) {
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_Unlock) IsValid() bool {
+func (x *fastReflection_PositionUnlocked) IsValid() bool {
 	return x != nil
 }
 
@@ -983,9 +1025,9 @@ func (x *fastReflection_Unlock) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_PositionUnlocked) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*Unlock)
+		x := input.Message.Interface().(*PositionUnlocked)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1005,7 +1047,15 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
+		l = len(x.Index)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		l = len(x.Amount)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.Principal)
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
@@ -1019,7 +1069,7 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*Unlock)
+		x := input.Message.Interface().(*PositionUnlocked)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1038,10 +1088,24 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
+		if len(x.Principal) > 0 {
+			i -= len(x.Principal)
+			copy(dAtA[i:], x.Principal)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Principal)))
+			i--
+			dAtA[i] = 0x2a
+		}
 		if len(x.Amount) > 0 {
 			i -= len(x.Amount)
 			copy(dAtA[i:], x.Amount)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Amount)))
+			i--
+			dAtA[i] = 0x22
+		}
+		if len(x.Index) > 0 {
+			i -= len(x.Index)
+			copy(dAtA[i:], x.Index)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Index)))
 			i--
 			dAtA[i] = 0x1a
 		}
@@ -1070,7 +1134,7 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*Unlock)
+		x := input.Message.Interface().(*PositionUnlocked)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1102,10 +1166,10 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Unlock: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PositionUnlocked: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Unlock: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PositionUnlocked: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -1174,6 +1238,38 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 				iNdEx = postIndex
 			case 3:
 				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Index = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
 				}
 				var stringLen uint64
@@ -1203,6 +1299,38 @@ func (x *fastReflection_Unlock) ProtoMethods() *protoiface.Methods {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
 				x.Amount = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 5:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Principal", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Principal = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -2156,8 +2284,8 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Lock is an event emitted when a user locks $USDN into a Vault.
-type Lock struct {
+// PositionLocked is an event emitted when a user locks $USDN into a Vault.
+type PositionLocked struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2169,8 +2297,8 @@ type Lock struct {
 	Principal string `protobuf:"bytes,5,opt,name=principal,proto3" json:"principal,omitempty"`
 }
 
-func (x *Lock) Reset() {
-	*x = Lock{}
+func (x *PositionLocked) Reset() {
+	*x = PositionLocked{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_vaults_v1_events_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2178,65 +2306,67 @@ func (x *Lock) Reset() {
 	}
 }
 
-func (x *Lock) String() string {
+func (x *PositionLocked) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Lock) ProtoMessage() {}
+func (*PositionLocked) ProtoMessage() {}
 
-// Deprecated: Use Lock.ProtoReflect.Descriptor instead.
-func (*Lock) Descriptor() ([]byte, []int) {
+// Deprecated: Use PositionLocked.ProtoReflect.Descriptor instead.
+func (*PositionLocked) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v1_events_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Lock) GetAccount() string {
+func (x *PositionLocked) GetAccount() string {
 	if x != nil {
 		return x.Account
 	}
 	return ""
 }
 
-func (x *Lock) GetVaultType() string {
+func (x *PositionLocked) GetVaultType() string {
 	if x != nil {
 		return x.VaultType
 	}
 	return ""
 }
 
-func (x *Lock) GetIndex() string {
+func (x *PositionLocked) GetIndex() string {
 	if x != nil {
 		return x.Index
 	}
 	return ""
 }
 
-func (x *Lock) GetAmount() string {
+func (x *PositionLocked) GetAmount() string {
 	if x != nil {
 		return x.Amount
 	}
 	return ""
 }
 
-func (x *Lock) GetPrincipal() string {
+func (x *PositionLocked) GetPrincipal() string {
 	if x != nil {
 		return x.Principal
 	}
 	return ""
 }
 
-// Unlock is an event emitted when a user unlocks their $USDN from a Vault.
-type Unlock struct {
+// PositionUnlocked is an event emitted when a user unlocks their $USDN from a Vault.
+type PositionUnlocked struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	Account   string `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
 	VaultType string `protobuf:"bytes,2,opt,name=vault_type,json=vaultType,proto3" json:"vault_type,omitempty"`
-	Amount    string `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	Index     string `protobuf:"bytes,3,opt,name=index,proto3" json:"index,omitempty"`
+	Amount    string `protobuf:"bytes,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	Principal string `protobuf:"bytes,5,opt,name=principal,proto3" json:"principal,omitempty"`
 }
 
-func (x *Unlock) Reset() {
-	*x = Unlock{}
+func (x *PositionUnlocked) Reset() {
+	*x = PositionUnlocked{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_vaults_v1_events_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2244,34 +2374,48 @@ func (x *Unlock) Reset() {
 	}
 }
 
-func (x *Unlock) String() string {
+func (x *PositionUnlocked) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Unlock) ProtoMessage() {}
+func (*PositionUnlocked) ProtoMessage() {}
 
-// Deprecated: Use Unlock.ProtoReflect.Descriptor instead.
-func (*Unlock) Descriptor() ([]byte, []int) {
+// Deprecated: Use PositionUnlocked.ProtoReflect.Descriptor instead.
+func (*PositionUnlocked) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v1_events_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Unlock) GetAccount() string {
+func (x *PositionUnlocked) GetAccount() string {
 	if x != nil {
 		return x.Account
 	}
 	return ""
 }
 
-func (x *Unlock) GetVaultType() string {
+func (x *PositionUnlocked) GetVaultType() string {
 	if x != nil {
 		return x.VaultType
 	}
 	return ""
 }
 
-func (x *Unlock) GetAmount() string {
+func (x *PositionUnlocked) GetIndex() string {
+	if x != nil {
+		return x.Index
+	}
+	return ""
+}
+
+func (x *PositionUnlocked) GetAmount() string {
 	if x != nil {
 		return x.Amount
+	}
+	return ""
+}
+
+func (x *PositionUnlocked) GetPrincipal() string {
+	if x != nil {
+		return x.Principal
 	}
 	return ""
 }
@@ -2368,7 +2512,27 @@ var file_noble_dollar_vaults_v1_events_proto_rawDesc = []byte{
 	0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x63,
 	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67, 0x6f, 0x67,
 	0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x22, 0xa7, 0x02, 0x0a, 0x04, 0x4c, 0x6f, 0x63, 0x6b, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63,
+	0x6f, 0x22, 0xb1, 0x02, 0x0a, 0x0e, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x4c, 0x6f,
+	0x63, 0x6b, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x1d,
+	0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x4c, 0x0a,
+	0x05, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde,
+	0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e,
+	0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65,
+	0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8,
+	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x05, 0x69, 0x6e, 0x64, 0x65, 0x78, 0x12, 0x48, 0x0a, 0x06, 0x61,
+	0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f,
+	0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69,
+	0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f,
+	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x61,
+	0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x4e, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70,
+	0x61, 0x6c, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde,
+	0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d,
+	0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
+	0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x09, 0x70, 0x72, 0x69, 0x6e,
+	0x63, 0x69, 0x70, 0x61, 0x6c, 0x22, 0xb3, 0x02, 0x0a, 0x10, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69,
+	0x6f, 0x6e, 0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63,
 	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x63, 0x63,
 	0x6f, 0x75, 0x6e, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x74, 0x79,
 	0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54,
@@ -2386,41 +2550,32 @@ var file_noble_dollar_vaults_v1_events_proto_rawDesc = []byte{
 	0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64,
 	0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d,
 	0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01,
-	0x52, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x22, 0x8b, 0x01, 0x0a, 0x06,
-	0x55, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e,
-	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
-	0x12, 0x1d, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
-	0x48, 0x0a, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73,
-	0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4,
-	0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a,
-	0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x2c, 0x0a, 0x12, 0x50, 0x61, 0x75,
-	0x73, 0x65, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x12,
-	0x16, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x22, 0x73, 0x0a, 0x0d, 0x52, 0x65, 0x77, 0x61, 0x72,
-	0x64, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75,
-	0x6e, 0x74, 0x12, 0x48, 0x0a, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d,
-	0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e,
-	0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8,
-	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0xda, 0x01, 0x0a,
-	0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x45, 0x76, 0x65,
-	0x6e, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61, 0x70, 0x69,
-	0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x61,
-	0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x76, 0x31,
-	0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x31, 0xca,
-	0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65,
-	0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56,
-	0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x52, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x22, 0x2c, 0x0a, 0x12, 0x50,
+	0x61, 0x75, 0x73, 0x65, 0x64, 0x53, 0x74, 0x61, 0x74, 0x65, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x64, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x70, 0x61, 0x75, 0x73, 0x65, 0x64, 0x22, 0x73, 0x0a, 0x0d, 0x52, 0x65, 0x77,
+	0x61, 0x72, 0x64, 0x43, 0x6c, 0x61, 0x69, 0x6d, 0x65, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x63, 0x63,
+	0x6f, 0x75, 0x6e, 0x74, 0x12, 0x48, 0x0a, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f,
+	0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e,
+	0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e,
+	0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0xda,
+	0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x42, 0x0b, 0x45,
+	0x76, 0x65, 0x6e, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x34, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x61,
+	0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f,
+	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73,
+	0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56,
+	0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62,
+	0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73,
+	0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea,
+	0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a,
+	0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2437,8 +2592,8 @@ func file_noble_dollar_vaults_v1_events_proto_rawDescGZIP() []byte {
 
 var file_noble_dollar_vaults_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_noble_dollar_vaults_v1_events_proto_goTypes = []interface{}{
-	(*Lock)(nil),               // 0: noble.dollar.vaults.v1.Lock
-	(*Unlock)(nil),             // 1: noble.dollar.vaults.v1.Unlock
+	(*PositionLocked)(nil),     // 0: noble.dollar.vaults.v1.PositionLocked
+	(*PositionUnlocked)(nil),   // 1: noble.dollar.vaults.v1.PositionUnlocked
 	(*PausedStateUpdated)(nil), // 2: noble.dollar.vaults.v1.PausedStateUpdated
 	(*RewardClaimed)(nil),      // 3: noble.dollar.vaults.v1.RewardClaimed
 }
@@ -2457,7 +2612,7 @@ func file_noble_dollar_vaults_v1_events_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_noble_dollar_vaults_v1_events_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Lock); i {
+			switch v := v.(*PositionLocked); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2469,7 +2624,7 @@ func file_noble_dollar_vaults_v1_events_proto_init() {
 			}
 		}
 		file_noble_dollar_vaults_v1_events_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Unlock); i {
+			switch v := v.(*PositionUnlocked); i {
 			case 0:
 				return &v.state
 			case 1:

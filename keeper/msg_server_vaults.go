@@ -133,7 +133,7 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 		return nil, errors.Wrap(err, "unable to increment vault total principal")
 	}
 
-	return &vaults.MsgLockResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.Lock{
+	return &vaults.MsgLockResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.PositionLocked{
 		Account:   msg.Signer,
 		VaultType: msg.Vault.String(),
 		Index:     index,
@@ -249,6 +249,17 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 				return nil, errors.Wrapf(err, "unable to update position")
 			}
 		}
+
+		if err = k.event.EventManager(ctx).Emit(ctx, &vaults.PositionUnlocked{
+			Account:   msg.Signer,
+			VaultType: msg.Vault.String(),
+			Index:     position.Index,
+			Amount:    amountToSend,
+			Principal: positionPrincipalToRemove,
+		}); err != nil {
+			return nil, errors.Wrap(err, "unable to emit position unlocked event")
+		}
+
 		removedPrincipal = removedPrincipal.Add(positionPrincipalToRemove)
 
 		// Update the remaining amount to be removed.
@@ -269,11 +280,7 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 		return nil, errors.Wrap(err, "unable to decrement vault total principal")
 	}
 
-	return &vaults.MsgUnlockResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.Unlock{
-		Account:   msg.Signer,
-		VaultType: msg.Vault.String(),
-		Amount:    msg.Amount,
-	})
+	return &vaults.MsgUnlockResponse{}, nil
 }
 
 func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetPausedState) (*vaults.MsgSetPausedStateResponse, error) {

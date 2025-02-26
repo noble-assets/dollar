@@ -8,8 +8,8 @@ import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types/vaults";
 
-// Lock is an event emitted when a user locks $USDN into a Vault.
-message Lock {
+// PositionLocked is an event emitted when a user locks $USDN into a Vault.
+message PositionLocked {
   string account = 1;
   string vault_type = 2;
   string index = 3 [
@@ -32,11 +32,23 @@ message Lock {
   ];
 }
 
-// Unlock is an event emitted when a user unlocks their $USDN from a Vault.
-message Unlock {
+// PositionUnlocked is an event emitted when a user unlocks their $USDN from a Vault.
+message PositionUnlocked {
   string account = 1;
   string vault_type = 2;
-  string amount = 3 [
+  string index = 3 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  string amount = 4 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string principal = 5 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
