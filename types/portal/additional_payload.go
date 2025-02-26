@@ -35,7 +35,7 @@ func EncodeAdditionalPayload(index int64, destinationToken []byte) (bz []byte) {
 	return
 }
 
-func DecodeAdditionPayload(bz []byte) (index int64, destinationToken []byte, err error) {
+func DecodeAdditionalPayload(bz []byte) (index int64, destinationToken []byte, err error) {
 	indexLen := 2
 	destinationTokenLen := 32
 

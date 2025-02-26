@@ -77,7 +77,7 @@ func DecodeTokenPayload(payload []byte) TokenPayload {
 	amount := math.NewIntFromUint64(ntt.Amount)
 
 	// NOTE: the error here is ignored like in the parsing of ntt.
-	index, destinationToken, _ := DecodeAdditionPayload(ntt.AdditionalPayload)
+	index, destinationToken, _ := DecodeAdditionalPayload(ntt.AdditionalPayload)
 
 	return TokenPayload{amount, index, ntt.To[12:], ntt.ToChain, destinationToken}
 }
