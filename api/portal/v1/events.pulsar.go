@@ -5040,7 +5040,7 @@ func (x *TransferRedeemed) GetDigest() []byte {
 	return nil
 }
 
-// USDNTokenSent is an event emitted after transfering USDN tokens via Wormhole.
+// USDNTokenSent is an event emitted after transferring USDN tokens via Wormhole.
 //
 // https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
 type USDNTokenSent struct {
