@@ -35,6 +35,9 @@ func EncodeAdditionalPayload(index int64, destinationToken []byte) (bz []byte) {
 	return
 }
 
+// DecodeAdditionalPayload is a utility for decoding an M Portal additional payload.
+//
+// https://github.com/m0-foundation/m-portal/blob/9c72c13d8416ef77f3ea89316167697133d1eeee/src/libs/PayloadEncoder.sol#L75-L86
 func DecodeAdditionalPayload(bz []byte) (index int64, destinationToken []byte, err error) {
 	indexLen := 8
 	destinationTokenLen := 32

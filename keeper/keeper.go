@@ -359,7 +359,7 @@ func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayloa
 
 		recipient, err := k.address.BytesToString(tokenPayload.Recipient[12:])
 		if err != nil {
-			return fmt.Errorf("error decoding the recipient address: %w", err)
+			return fmt.Errorf("error encoding the recipient address: %w", err)
 		}
 
 		if err := k.event.EventManager(ctx).Emit(ctx, &portal.MTokenReceived{
