@@ -347,10 +347,10 @@ func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayloa
 	case portal.Token:
 		tokenPayload := portal.DecodeTokenPayload(payload)
 		if chain != tokenPayload.DestinationChainId {
-			return fmt.Errorf("not destination chain: expected %d, got %d", chain, tokenPayload.DestinationChainId)
+			return fmt.Errorf("wrong destination chain: expected %d, got %d", chain, tokenPayload.DestinationChainId)
 		}
 		if !bytes.Equal(portal.RawToken, tokenPayload.DestinationToken) {
-			return fmt.Errorf("not destination token: expected %d, got %d", portal.Token, tokenPayload.DestinationChainId)
+			return fmt.Errorf("wrong destination token: expected %d, got %d", portal.RawToken, tokenPayload.DestinationToken)
 		}
 
 		if err := k.Mint(ctx, tokenPayload.Recipient, tokenPayload.Amount, &tokenPayload.Index); err != nil {
