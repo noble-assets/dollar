@@ -20,7 +20,10 @@
 
 package portal
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"errors"
+)
 
 // EncodeAdditionalPayload is a utility for encoding an M Portal additional payload.
 //
@@ -30,4 +33,24 @@ func EncodeAdditionalPayload(index int64, destinationToken []byte) (bz []byte) {
 	bz = append(bz, destinationToken...)
 
 	return
+}
+
+// DecodeAdditionalPayload is a utility for decoding an M Portal additional payload.
+//
+// https://github.com/m0-foundation/m-portal/blob/9c72c13d8416ef77f3ea89316167697133d1eeee/src/libs/PayloadEncoder.sol#L75-L86
+func DecodeAdditionalPayload(bz []byte) (index int64, destinationToken []byte, err error) {
+	indexLen := 8
+	destinationTokenLen := 32
+
+	if len(bz) < indexLen+destinationTokenLen {
+		return 0, []byte{}, errors.New("native token transfer additional payload is invalid length")
+	}
+
+	offset := 0
+	index = int64(binary.BigEndian.Uint64(bz[offset : offset+indexLen]))
+
+	offset += indexLen
+	destinationToken = bz[offset : offset+destinationTokenLen]
+
+	return index, destinationToken, nil
 }

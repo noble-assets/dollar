@@ -26,6 +26,7 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/types"
 	"dollar.noble.xyz/types/vaults"
@@ -56,7 +57,10 @@ func (k msgServer) ClaimYield(ctx context.Context, msg *types.MsgClaimYield) (*t
 		return nil, errors.Wrap(err, "unable to distribute yield to user")
 	}
 
-	return &types.MsgClaimYieldResponse{}, nil
+	return &types.MsgClaimYieldResponse{}, k.event.EventManager(ctx).Emit(ctx, &types.YieldClaimed{
+		Account: msg.Signer,
+		Amount:  yield,
+	})
 }
 
 func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedState) (*types.MsgSetPausedStateResponse, error) {
@@ -69,7 +73,12 @@ func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedSt
 		return nil, err
 	}
 
-	return &types.MsgSetPausedStateResponse{}, nil
+	event := protoiface.MessageV1(&types.Unpaused{})
+	if msg.Paused {
+		event = &types.Paused{}
+	}
+
+	return &types.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
 }
 
 func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {
@@ -127,6 +136,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 	expectedSupply := k.GetPresentAmount(totalPrincipal, index)
 
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, expectedSupply.Sub(currentSupply)))
+	yield := math.ZeroInt()
 	if coins.IsAllPositive() {
 		err = k.bank.MintCoins(ctx, types.ModuleName, coins)
 		if err != nil {
@@ -136,7 +146,8 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		if err != nil {
 			return errors.Wrap(err, "unable to send coins")
 		}
-		err = k.IncrementTotalYieldAccrued(ctx, coins.AmountOf(k.denom))
+		yield = coins.AmountOf(k.denom)
+		err = k.IncrementTotalYieldAccrued(ctx, yield)
 		if err != nil {
 			return errors.Wrap(err, "unable to increment total yield accrued")
 		}
@@ -173,7 +184,12 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 	}); err != nil {
 		return err
 	}
-	return nil
+	return k.event.EventManager(ctx).Emit(ctx, &types.IndexUpdated{
+		OldIndex:       oldIndex,
+		NewIndex:       rawIndex,
+		TotalPrincipal: totalPrincipal,
+		YieldAccrued:   yield,
+	})
 }
 
 func (k *Keeper) claimModuleYield(ctx context.Context, addr sdk.Address) (math.Int, error) {

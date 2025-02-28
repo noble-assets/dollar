@@ -24,9 +24,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
+	"strconv"
 
 	"cosmossdk.io/collections"
+	"cosmossdk.io/core/event"
 	"cosmossdk.io/errors"
+	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/types/portal"
 	"dollar.noble.xyz/types/portal/ntt"
@@ -47,7 +50,9 @@ func (k portalMsgServer) Deliver(ctx context.Context, msg *portal.MsgDeliver) (*
 		return nil, err
 	}
 
-	return &portal.MsgDeliverResponse{}, nil
+	return &portal.MsgDeliverResponse{}, k.event.EventManager(ctx).Emit(ctx, &portal.Delivered{
+		Vaa: msg.Vaa,
+	})
 }
 
 func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) (*portal.MsgTransferResponse, error) {
@@ -100,11 +105,18 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 	id := make([]byte, 32)
 	copy(id[32-len(rawNonce):], rawNonce)
 
-	rawManagerMessage := ntt.EncodeManagerMessage(ntt.ManagerMessage{
+	managerMessage := ntt.ManagerMessage{
 		Id:      id,
 		Sender:  rawSender,
 		Payload: rawNativeTokenTransfer,
-	})
+	}
+
+	chain, err := k.wormhole.GetChain(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get wormhole chain id")
+	}
+	rawManagerMessage := ntt.EncodeManagerMessage(managerMessage)
+	messageId := ntt.ManagerMessageDigest(chain, managerMessage)
 
 	rawTransceiverMessage := ntt.EncodeTransceiverMessage(ntt.TransceiverMessage{
 		SourceManagerAddress:    portal.PaddedManagerAddress,
@@ -118,11 +130,46 @@ func (k portalMsgServer) Transfer(ctx context.Context, msg *portal.MsgTransfer) 
 		return nil, errors.Wrap(err, "unable to burn coins")
 	}
 
-	return &portal.MsgTransferResponse{}, k.wormhole.PostMessage(
+	err = k.wormhole.PostMessage(
 		ctx,
 		portal.TransceiverAddress,
 		rawTransceiverMessage,
 		nonce,
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to post transfer message")
+	}
+
+	if err := k.event.EventManager(ctx).Emit(ctx, &portal.USDNTokenSent{
+		SourceToken:        string(portal.RawToken),
+		DestinationChainId: msg.DestinationChainId,
+		DestinationToken:   msg.DestinationToken,
+		Sender:             msg.Signer,
+		Recipient:          msg.Recipient,
+		Amount:             msg.Amount,
+		Index:              index,
+		MessageId:          messageId,
+	}); err != nil {
+		return nil, err
+	}
+
+	if err := k.event.EventManager(ctx).EmitKV(
+		ctx,
+		"transfer_sent",
+		event.Attribute{Key: "recipient", Value: string(msg.Recipient)},
+		event.Attribute{Key: "refund_address", Value: ""},
+		event.Attribute{Key: "amount", Value: strconv.Itoa(int(msg.Amount.Int64()))},
+		event.Attribute{Key: "fee", Value: ""},
+		event.Attribute{Key: "recipient_chain", Value: strconv.Itoa(int(msg.DestinationChainId))},
+		event.Attribute{Key: "msg_sequence", Value: strconv.Itoa(int(nonce))},
+	); err != nil {
+		return nil, err
+	}
+
+	return &portal.MsgTransferResponse{}, k.event.EventManager(ctx).EmitKV(
+		ctx,
+		"transfer_sent",
+		event.Attribute{Key: "digest", Value: string(messageId)},
 	)
 }
 
@@ -135,7 +182,11 @@ func (k portalMsgServer) SetPausedState(ctx context.Context, msg *portal.MsgSetP
 		return nil, err
 	}
 
-	return &portal.MsgSetPausedStateResponse{}, nil
+	event := protoiface.MessageV1(&portal.Unpaused{})
+	if msg.Paused {
+		event = &portal.Paused{}
+	}
+	return &portal.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
 }
 
 func (k portalMsgServer) SetPeer(ctx context.Context, msg *portal.MsgSetPeer) (*portal.MsgSetPeerResponse, error) {

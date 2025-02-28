@@ -330,11 +330,22 @@ func (k *Keeper) Deliver(ctx context.Context, bz []byte) error {
 		return err
 	}
 
-	return k.HandlePayload(ctx, managerMessage.Payload)
+	messageId := ntt.ManagerMessageDigest(uint16(vaa.EmitterChain), managerMessage)
+	eventPayload := portal.EventsPayload{
+		SourceChainId: uint32(vaa.EmitterChain),
+		Sender:        managerMessage.Sender,
+		MessageId:     messageId,
+	}
+
+	if err := k.HandlePayload(ctx, managerMessage.Payload, eventPayload); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // HandlePayload is a utility that handles custom payloads when delivering portal messages.
-func (k *Keeper) HandlePayload(ctx context.Context, payload []byte) error {
+func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayload portal.EventsPayload) error {
 	chain, err := k.wormhole.GetChain(ctx)
 	if err != nil {
 		return sdkerrors.Wrap(err, "unable to get wormhole chain id")
@@ -344,12 +355,38 @@ func (k *Keeper) HandlePayload(ctx context.Context, payload []byte) error {
 	case portal.Unknown:
 		return nil
 	case portal.Token:
-		amount, index, recipient, destination := portal.DecodeTokenPayload(payload)
-		if chain != destination {
-			return fmt.Errorf("not destination chain: expected %d, got %d", chain, destination)
+		tokenPayload := portal.DecodeTokenPayload(payload)
+		if chain != tokenPayload.DestinationChainId {
+			return fmt.Errorf("wrong destination chain: expected %d, got %d", chain, tokenPayload.DestinationChainId)
+		}
+		if !bytes.Equal(portal.RawToken, tokenPayload.DestinationToken) {
+			return fmt.Errorf("wrong destination token: expected %d, got %d", portal.RawToken, tokenPayload.DestinationToken)
 		}
 
-		return k.Mint(ctx, recipient, amount, &index)
+		if err := k.Mint(ctx, tokenPayload.Recipient, tokenPayload.Amount, &tokenPayload.Index); err != nil {
+			return err
+		}
+
+		recipient, err := k.address.BytesToString(tokenPayload.Recipient[12:])
+		if err != nil {
+			return fmt.Errorf("error encoding the recipient address: %w", err)
+		}
+
+		if err := k.event.EventManager(ctx).Emit(ctx, &portal.MTokenReceived{
+			SourceChainId:    eventsPayload.SourceChainId,
+			DestinationToken: tokenPayload.DestinationToken,
+			Sender:           eventsPayload.Sender,
+			Recipient:        recipient,
+			Amount:           tokenPayload.Amount,
+			Index:            tokenPayload.Index,
+			MessageId:        eventsPayload.MessageId,
+		}); err != nil {
+			return err
+		}
+
+		return k.event.EventManager(ctx).Emit(ctx, &portal.TransferRedeemed{
+			Digest: eventsPayload.MessageId,
+		})
 	case portal.Index:
 		index, destination := portal.DecodeIndexPayload(payload)
 		if chain != destination {

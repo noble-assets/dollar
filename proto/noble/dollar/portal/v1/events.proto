@@ -2,9 +2,63 @@ syntax = "proto3";
 
 package noble.dollar.portal.v1;
 
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/types/portal";
+
+// Delivered is the event emitted when a vaa is successfully delivered.
+message Delivered {
+  bytes vaa = 1;
+}
+
+// MTokenReceived is the event emitted when M tokens are received on Noble.
+//
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L382-L382
+message MTokenReceived {
+  uint32 source_chain_id = 1;
+  bytes destination_token = 2;
+  bytes sender = 3;
+  string recipient = 4;
+  string amount = 5 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  int64 index = 6;
+  bytes message_id = 7;
+}
+
+// TransferRedeemed is an event emitted when a transfer has been redeemed.
+//
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L384-L385
+message TransferRedeemed {
+  bytes digest = 1;
+}
+
+// USDNTokenSent is an event emitted after transferring USDN tokens via Wormhole.
+//
+// https://github.com/m0-foundation/m-portal/blob/682481178808005a160e41d5318242c1abc2f88f/src/Portal.sol#L240-L249
+message USDNTokenSent {
+  string source_token = 1;
+  uint32 destination_chain_id = 2 [
+    (gogoproto.customtype) = "uint16",
+    (gogoproto.nullable) = false
+  ];
+  bytes destination_token = 3;
+  string sender = 4;
+  bytes recipient = 5;
+  string amount = 6 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  int64 index = 7;
+  bytes message_id = 8;
+}
 
 // PeerUpdated is an event emitted whenever a peer is updated.
 message PeerUpdated {
@@ -32,3 +86,11 @@ message OwnershipTransferred {
   string previous_owner = 1;
   string new_owner = 2;
 }
+
+// Paused is an event emitted when the portal pause
+// state is changed to paused.
+message Paused {}
+
+// Unpaused is an event emitted when the portal pause
+// state is changed to unpaused.
+message Unpaused {}

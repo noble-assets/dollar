@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package noble.dollar.v1;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "dollar.noble.xyz/types";
+
+// Paused is an event emitted when the module pause
+// state is changed to paused.
+message Paused {}
+
+// Unpaused is an event emitted when the module pause
+// state is changed to unpaused.
+message Unpaused {}
+
+// YieldClaimed is an event emitted whenever a user claims
+// accrued yield.
+message YieldClaimed {
+  string account = 1;
+  string amount = 2 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// IndexUpdated is an event emitted when the index is updated.
+message IndexUpdated {
+  int64 old_index = 1;
+  int64 new_index = 2;
+  string total_principal = 3 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  string yield_accrued = 4 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}

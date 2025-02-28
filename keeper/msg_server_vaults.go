@@ -140,7 +140,13 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 		return nil, errors.Wrap(err, "unable to increment vault total principal")
 	}
 
-	return &vaults.MsgLockResponse{}, nil
+	return &vaults.MsgLockResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.PositionLocked{
+		Account:   msg.Signer,
+		VaultType: msg.Vault.String(),
+		Index:     index,
+		Amount:    msg.Amount,
+		Principal: amountPrincipal,
+	})
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
@@ -287,6 +293,17 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 				return nil, errors.Wrapf(err, "unable to update position")
 			}
 		}
+
+		if err = k.event.EventManager(ctx).Emit(ctx, &vaults.PositionUnlocked{
+			Account:   msg.Signer,
+			VaultType: msg.Vault.String(),
+			Index:     position.Index,
+			Amount:    amountToSend,
+			Principal: positionPrincipalToRemove,
+		}); err != nil {
+			return nil, errors.Wrap(err, "unable to emit position unlocked event")
+		}
+
 		removedPrincipal = removedPrincipal.Add(positionPrincipalToRemove)
 
 		// Update the remaining amount to be removed.
@@ -327,7 +344,9 @@ func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetP
 		return nil, err
 	}
 
-	return &vaults.MsgSetPausedStateResponse{}, nil
+	return &vaults.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.PausedStateUpdated{
+		Paused: msg.Paused.String(),
+	})
 }
 
 func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry, amount math.Int) (math.Int, error) {
@@ -394,7 +413,10 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 		return math.ZeroInt(), err
 	}
 
-	return rewardsAmount, nil
+	return rewardsAmount, k.event.EventManager(ctx).Emit(ctx, &vaults.RewardClaimed{
+		Account: string(position.Address),
+		Amount:  amount,
+	})
 }
 
 func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaults.VaultType, timestamp int64) string {
