@@ -243,7 +243,11 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 				totalVaultUsersPrincipal = totalVaultUsersPrincipal.Add(current)
 			}
 			// Deduct the relative position's principal amount from the TotalVaultUsersPrincipal.
-			if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, totalVaultUsersPrincipal.Sub(positionPrincipalToRemove)); err != nil {
+			newVaultTotalFlexiblePrincipal, err := totalVaultUsersPrincipal.SafeSub(positionPrincipalToRemove)
+			if err != nil {
+				return nil, errors.Wrapf(err, "invalid new vault total flexible principal value")
+			}
+			if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, newVaultTotalFlexiblePrincipal); err != nil {
 				return nil, errors.Wrapf(err, "unable to set position for %s", msg.Vault)
 			}
 
@@ -283,11 +287,18 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 				return nil, errors.Wrapf(err, "unable to remove position")
 			}
 		} else {
-			updatedPrincipal := position.Principal.Sub(positionPrincipalToRemove)
+			updatedPrincipal, err := position.Principal.SafeSub(positionPrincipalToRemove)
+			if err != nil {
+				return nil, errors.Wrapf(err, "invalid updated principal value")
+			}
+			updatedAmount, err := position.Amount.SafeSub(positionAmountToRemove)
+			if err != nil {
+				return nil, errors.Wrapf(err, "invalid new user amount value")
+			}
 			if err = k.VaultsPositions.Set(ctx, collections.Join3(position.Address, int32(position.Vault), position.Time.Unix()), vaults.Position{
 				Principal: updatedPrincipal,
 				Index:     position.Index,
-				Amount:    position.Amount.Sub(positionAmountToRemove),
+				Amount:    updatedAmount,
 				Time:      position.Time,
 			}); err != nil {
 				return nil, errors.Wrapf(err, "unable to update position")
@@ -307,7 +318,10 @@ func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*va
 		removedPrincipal = removedPrincipal.Add(positionPrincipalToRemove)
 
 		// Update the remaining amount to be removed.
-		remainingAmountToRemove = remainingAmountToRemove.Sub(positionAmountToRemove)
+		remainingAmountToRemove, err = remainingAmountToRemove.SafeSub(positionAmountToRemove)
+		if err != nil {
+			return nil, errors.Wrapf(err, "invalid new user amount value")
+		}
 	}
 
 	if !remainingAmountToRemove.IsZero() || !remainingAmountToRemove.Abs().Equal(math.ZeroInt()) {
@@ -390,10 +404,18 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 			}
 
 			// Update the Rewards entry.
+			newTotal, err := record.Total.SafeSub(amountPrincipal)
+			if err != nil {
+				return true, errors.Wrapf(err, "invalid new rewards total value")
+			}
+			newRewards, err := record.Rewards.SafeSub(userReward)
+			if err != nil {
+				return true, errors.Wrapf(err, "invalid new rewards value")
+			}
 			if err = k.VaultsRewards.Set(ctx, key, vaults.Reward{
 				Index:   record.Index,
-				Total:   record.Total.Sub(amountPrincipal),
-				Rewards: record.Rewards.Sub(userReward),
+				Total:   newTotal,
+				Rewards: newRewards,
 			}); err != nil {
 				return true, err
 			}
