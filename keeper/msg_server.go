@@ -186,7 +186,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 	}
 	return k.event.EventManager(ctx).Emit(ctx, &types.IndexUpdated{
 		OldIndex:       oldIndex,
-		NewIndex:       rawIndex,
+		NewIndex:       index,
 		TotalPrincipal: totalPrincipal,
 		YieldAccrued:   yield,
 	})

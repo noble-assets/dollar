@@ -12,12 +12,7 @@ option go_package = "dollar.noble.xyz/types/vaults";
 message PositionLocked {
   string account = 1;
   string vault_type = 2;
-  string index = 3 [
-    (amino.dont_omitempty) = true,
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable) = false
-  ];
+  int64 index = 3;
   string amount = 4 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
@@ -36,12 +31,7 @@ message PositionLocked {
 message PositionUnlocked {
   string account = 1;
   string vault_type = 2;
-  string index = 3 [
-    (amino.dont_omitempty) = true,
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable) = false
-  ];
+  int64 index = 3;
   string amount = 4 [
     (amino.dont_omitempty) = true,
     (cosmos_proto.scalar) = "cosmos.Int",
