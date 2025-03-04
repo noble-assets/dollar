@@ -1,0 +1,1 @@
+- Correctly encode the recipient address in the `MTokenReceived` event. ([#27](https://github.com/noble-assets/dollar/pull/27))

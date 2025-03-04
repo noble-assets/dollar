@@ -367,7 +367,7 @@ func (k *Keeper) HandlePayload(ctx context.Context, payload []byte, eventsPayloa
 			return err
 		}
 
-		recipient, err := k.address.BytesToString(tokenPayload.Recipient[12:])
+		recipient, err := k.address.BytesToString(tokenPayload.Recipient)
 		if err != nil {
 			return fmt.Errorf("error encoding the recipient address: %w", err)
 		}
