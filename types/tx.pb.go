@@ -182,25 +182,25 @@ func (m *MsgSetPausedStateResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSetPausedStateResponse proto.InternalMessageInfo
 
-// MsgEnableChannel ... TODO
-type MsgEnableChannel struct {
+// MsgSetYieldRecipient allows the authority to set a yield recipient for an IBC channel.
+type MsgSetYieldRecipient struct {
 	Signer         string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
-	Channel        string `protobuf:"bytes,2,opt,name=channel,proto3" json:"channel,omitempty"`
+	ChannelId      string `protobuf:"bytes,2,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
 	YieldRecipient string `protobuf:"bytes,3,opt,name=yield_recipient,json=yieldRecipient,proto3" json:"yield_recipient,omitempty"`
 }
 
-func (m *MsgEnableChannel) Reset()         { *m = MsgEnableChannel{} }
-func (m *MsgEnableChannel) String() string { return proto.CompactTextString(m) }
-func (*MsgEnableChannel) ProtoMessage()    {}
-func (*MsgEnableChannel) Descriptor() ([]byte, []int) {
+func (m *MsgSetYieldRecipient) Reset()         { *m = MsgSetYieldRecipient{} }
+func (m *MsgSetYieldRecipient) String() string { return proto.CompactTextString(m) }
+func (*MsgSetYieldRecipient) ProtoMessage()    {}
+func (*MsgSetYieldRecipient) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cda63894d37623a5, []int{4}
 }
-func (m *MsgEnableChannel) XXX_Unmarshal(b []byte) error {
+func (m *MsgSetYieldRecipient) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgEnableChannel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSetYieldRecipient) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgEnableChannel.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSetYieldRecipient.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -210,34 +210,34 @@ func (m *MsgEnableChannel) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-func (m *MsgEnableChannel) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgEnableChannel.Merge(m, src)
+func (m *MsgSetYieldRecipient) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetYieldRecipient.Merge(m, src)
 }
-func (m *MsgEnableChannel) XXX_Size() int {
+func (m *MsgSetYieldRecipient) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgEnableChannel) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgEnableChannel.DiscardUnknown(m)
+func (m *MsgSetYieldRecipient) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetYieldRecipient.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgEnableChannel proto.InternalMessageInfo
+var xxx_messageInfo_MsgSetYieldRecipient proto.InternalMessageInfo
 
-// MsgEnableChannelResponse is the response of the EnableChannel message.
-type MsgEnableChannelResponse struct {
+// MsgSetYieldRecipientResponse is the response of the SetYieldRecipient message.
+type MsgSetYieldRecipientResponse struct {
 }
 
-func (m *MsgEnableChannelResponse) Reset()         { *m = MsgEnableChannelResponse{} }
-func (m *MsgEnableChannelResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgEnableChannelResponse) ProtoMessage()    {}
-func (*MsgEnableChannelResponse) Descriptor() ([]byte, []int) {
+func (m *MsgSetYieldRecipientResponse) Reset()         { *m = MsgSetYieldRecipientResponse{} }
+func (m *MsgSetYieldRecipientResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgSetYieldRecipientResponse) ProtoMessage()    {}
+func (*MsgSetYieldRecipientResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cda63894d37623a5, []int{5}
 }
-func (m *MsgEnableChannelResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgSetYieldRecipientResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgEnableChannelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSetYieldRecipientResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgEnableChannelResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSetYieldRecipientResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -247,31 +247,31 @@ func (m *MsgEnableChannelResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *MsgEnableChannelResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgEnableChannelResponse.Merge(m, src)
+func (m *MsgSetYieldRecipientResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetYieldRecipientResponse.Merge(m, src)
 }
-func (m *MsgEnableChannelResponse) XXX_Size() int {
+func (m *MsgSetYieldRecipientResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgEnableChannelResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgEnableChannelResponse.DiscardUnknown(m)
+func (m *MsgSetYieldRecipientResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetYieldRecipientResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgEnableChannelResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgSetYieldRecipientResponse proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*MsgClaimYield)(nil), "noble.dollar.v1.MsgClaimYield")
 	proto.RegisterType((*MsgClaimYieldResponse)(nil), "noble.dollar.v1.MsgClaimYieldResponse")
 	proto.RegisterType((*MsgSetPausedState)(nil), "noble.dollar.v1.MsgSetPausedState")
 	proto.RegisterType((*MsgSetPausedStateResponse)(nil), "noble.dollar.v1.MsgSetPausedStateResponse")
-	proto.RegisterType((*MsgEnableChannel)(nil), "noble.dollar.v1.MsgEnableChannel")
-	proto.RegisterType((*MsgEnableChannelResponse)(nil), "noble.dollar.v1.MsgEnableChannelResponse")
+	proto.RegisterType((*MsgSetYieldRecipient)(nil), "noble.dollar.v1.MsgSetYieldRecipient")
+	proto.RegisterType((*MsgSetYieldRecipientResponse)(nil), "noble.dollar.v1.MsgSetYieldRecipientResponse")
 }
 
 func init() { proto.RegisterFile("noble/dollar/v1/tx.proto", fileDescriptor_cda63894d37623a5) }
 
 var fileDescriptor_cda63894d37623a5 = []byte{
-	// 469 bytes of a gzipped FileDescriptorProto
+	// 466 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xc8, 0xcb, 0x4f, 0xca,
 	0x49, 0xd5, 0x4f, 0xc9, 0xcf, 0xc9, 0x49, 0x2c, 0xd2, 0x2f, 0x33, 0xd4, 0x2f, 0xa9, 0xd0, 0x2b,
 	0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x07, 0xcb, 0xe8, 0x41, 0x64, 0xf4, 0xca, 0x0c, 0xa5, 0x04,
@@ -287,21 +287,21 @@ var fileDescriptor_cda63894d37623a5 = []byte{
 	0xf3, 0x8a, 0x53, 0x95, 0x7a, 0x18, 0xb9, 0x04, 0x7d, 0x8b, 0xd3, 0x83, 0x53, 0x4b, 0x02, 0x12,
 	0x4b, 0x8b, 0x53, 0x53, 0x82, 0x4b, 0x12, 0x4b, 0x52, 0x49, 0x77, 0x8b, 0x90, 0x18, 0x17, 0x5b,
 	0x01, 0xd8, 0x00, 0x09, 0x26, 0x05, 0x46, 0x0d, 0x8e, 0x20, 0x28, 0xcf, 0x4a, 0x17, 0x87, 0x1b,
-	0x45, 0xa1, 0x6e, 0x44, 0xb5, 0x58, 0x49, 0x9a, 0x4b, 0x12, 0xc3, 0x35, 0x70, 0xb7, 0x6e, 0x65,
-	0xe4, 0x12, 0xf0, 0x2d, 0x4e, 0x77, 0xcd, 0x4b, 0x4c, 0xca, 0x49, 0x75, 0xce, 0x48, 0xcc, 0xcb,
-	0x4b, 0xcd, 0x21, 0xc3, 0xa9, 0x12, 0x5c, 0xec, 0xc9, 0x10, 0xcd, 0x60, 0xb7, 0x72, 0x06, 0xc1,
-	0xb8, 0x42, 0xea, 0x5c, 0xfc, 0x95, 0xa0, 0xd0, 0x89, 0x2f, 0x4a, 0x4d, 0xce, 0x2c, 0xc8, 0x4c,
-	0xcd, 0x2b, 0x91, 0x60, 0x06, 0xab, 0xe0, 0xab, 0x84, 0x04, 0x1a, 0x54, 0xd4, 0x4a, 0x07, 0x87,
-	0xaf, 0x44, 0xa0, 0xbe, 0x42, 0x71, 0xa2, 0x92, 0x14, 0x97, 0x04, 0xba, 0xb3, 0x61, 0x7e, 0x32,
-	0x5a, 0xcc, 0xc4, 0xc5, 0xec, 0x5b, 0x9c, 0x2e, 0x14, 0xc2, 0xc5, 0x85, 0x94, 0x16, 0xe4, 0xf4,
-	0xd0, 0xd2, 0xa2, 0x1e, 0x4a, 0xec, 0x49, 0xa9, 0xe1, 0x97, 0x87, 0x99, 0x2e, 0x94, 0xc0, 0xc5,
-	0x87, 0x16, 0xb3, 0x4a, 0xd8, 0x74, 0xa2, 0xaa, 0x91, 0xd2, 0x22, 0xac, 0x06, 0x6e, 0x43, 0x2c,
-	0x17, 0x2f, 0x6a, 0x7c, 0x28, 0x62, 0xd3, 0x8c, 0xa2, 0x44, 0x4a, 0x93, 0xa0, 0x12, 0x98, 0xf1,
-	0x52, 0xac, 0x0d, 0xcf, 0x37, 0x68, 0x31, 0x3a, 0x19, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91,
-	0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3,
-	0xb1, 0x1c, 0x43, 0x94, 0x18, 0xd4, 0x10, 0x88, 0x89, 0x15, 0x95, 0x55, 0xfa, 0x25, 0x95, 0x05,
-	0xa9, 0xc5, 0x49, 0x6c, 0xe0, 0x5c, 0x66, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x62, 0x28, 0x28,
-	0x1b, 0xef, 0x03, 0x00, 0x00,
+	0x45, 0xa1, 0x6e, 0x44, 0xb5, 0x58, 0x49, 0x9a, 0x4b, 0x12, 0xc3, 0x35, 0x70, 0xb7, 0x1e, 0x62,
+	0xe4, 0x12, 0x81, 0xc8, 0x42, 0xfd, 0x90, 0x9c, 0x59, 0x90, 0x99, 0x9a, 0x57, 0x42, 0x86, 0x73,
+	0x65, 0xb9, 0xb8, 0x92, 0x33, 0x12, 0xf3, 0xf2, 0x52, 0x73, 0xe2, 0x33, 0x21, 0x4e, 0xe6, 0x0c,
+	0xe2, 0x84, 0x8a, 0x78, 0xa6, 0x08, 0xa9, 0x73, 0xf1, 0x57, 0x82, 0xac, 0x88, 0x2f, 0x82, 0xd9,
+	0x21, 0xc1, 0x0c, 0x56, 0xc3, 0x57, 0x89, 0x62, 0xb3, 0x95, 0x01, 0x0e, 0xef, 0x49, 0x20, 0xbc,
+	0x87, 0xea, 0x56, 0x25, 0x39, 0x2e, 0x19, 0x6c, 0x7e, 0x80, 0x79, 0xd2, 0x68, 0x3d, 0x13, 0x17,
+	0xb3, 0x6f, 0x71, 0xba, 0x50, 0x08, 0x17, 0x17, 0x52, 0xe2, 0x90, 0xd3, 0x43, 0x4b, 0x9c, 0x7a,
+	0x28, 0xd1, 0x29, 0xa5, 0x86, 0x5f, 0x1e, 0x66, 0xba, 0x50, 0x02, 0x17, 0x1f, 0x5a, 0x54, 0x2b,
+	0x61, 0xd3, 0x89, 0xaa, 0x46, 0x4a, 0x8b, 0xb0, 0x1a, 0xb8, 0x0d, 0x99, 0x5c, 0x82, 0x98, 0x11,
+	0xa4, 0x8a, 0xc3, 0x00, 0x54, 0x65, 0x52, 0xba, 0x44, 0x29, 0x83, 0x59, 0x25, 0xc5, 0xda, 0xf0,
+	0x7c, 0x83, 0x16, 0xa3, 0x93, 0xc1, 0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78,
+	0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0xc3, 0x85, 0xc7, 0x72, 0x0c, 0x37, 0x1e, 0xcb, 0x31, 0x44,
+	0x89, 0x41, 0x0d, 0x82, 0x98, 0x5a, 0x51, 0x59, 0xa5, 0x5f, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4,
+	0x06, 0xce, 0x82, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xe5, 0xd0, 0x8b, 0x37, 0x0c, 0x04,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -318,7 +318,7 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	ClaimYield(ctx context.Context, in *MsgClaimYield, opts ...grpc.CallOption) (*MsgClaimYieldResponse, error)
 	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
-	EnableChannel(ctx context.Context, in *MsgEnableChannel, opts ...grpc.CallOption) (*MsgEnableChannelResponse, error)
+	SetYieldRecipient(ctx context.Context, in *MsgSetYieldRecipient, opts ...grpc.CallOption) (*MsgSetYieldRecipientResponse, error)
 }
 
 type msgClient struct {
@@ -347,9 +347,9 @@ func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, o
 	return out, nil
 }
 
-func (c *msgClient) EnableChannel(ctx context.Context, in *MsgEnableChannel, opts ...grpc.CallOption) (*MsgEnableChannelResponse, error) {
-	out := new(MsgEnableChannelResponse)
-	err := c.cc.Invoke(ctx, "/noble.dollar.v1.Msg/EnableChannel", in, out, opts...)
+func (c *msgClient) SetYieldRecipient(ctx context.Context, in *MsgSetYieldRecipient, opts ...grpc.CallOption) (*MsgSetYieldRecipientResponse, error) {
+	out := new(MsgSetYieldRecipientResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.v1.Msg/SetYieldRecipient", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -360,7 +360,7 @@ func (c *msgClient) EnableChannel(ctx context.Context, in *MsgEnableChannel, opt
 type MsgServer interface {
 	ClaimYield(context.Context, *MsgClaimYield) (*MsgClaimYieldResponse, error)
 	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
-	EnableChannel(context.Context, *MsgEnableChannel) (*MsgEnableChannelResponse, error)
+	SetYieldRecipient(context.Context, *MsgSetYieldRecipient) (*MsgSetYieldRecipientResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -373,8 +373,8 @@ func (*UnimplementedMsgServer) ClaimYield(ctx context.Context, req *MsgClaimYiel
 func (*UnimplementedMsgServer) SetPausedState(ctx context.Context, req *MsgSetPausedState) (*MsgSetPausedStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPausedState not implemented")
 }
-func (*UnimplementedMsgServer) EnableChannel(ctx context.Context, req *MsgEnableChannel) (*MsgEnableChannelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EnableChannel not implemented")
+func (*UnimplementedMsgServer) SetYieldRecipient(ctx context.Context, req *MsgSetYieldRecipient) (*MsgSetYieldRecipientResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetYieldRecipient not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -417,20 +417,20 @@ func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_EnableChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgEnableChannel)
+func _Msg_SetYieldRecipient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetYieldRecipient)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).EnableChannel(ctx, in)
+		return srv.(MsgServer).SetYieldRecipient(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/noble.dollar.v1.Msg/EnableChannel",
+		FullMethod: "/noble.dollar.v1.Msg/SetYieldRecipient",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).EnableChannel(ctx, req.(*MsgEnableChannel))
+		return srv.(MsgServer).SetYieldRecipient(ctx, req.(*MsgSetYieldRecipient))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -449,8 +449,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_SetPausedState_Handler,
 		},
 		{
-			MethodName: "EnableChannel",
-			Handler:    _Msg_EnableChannel_Handler,
+			MethodName: "SetYieldRecipient",
+			Handler:    _Msg_SetYieldRecipient_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -573,7 +573,7 @@ func (m *MsgSetPausedStateResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgEnableChannel) Marshal() (dAtA []byte, err error) {
+func (m *MsgSetYieldRecipient) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -583,12 +583,12 @@ func (m *MsgEnableChannel) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgEnableChannel) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSetYieldRecipient) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgEnableChannel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSetYieldRecipient) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -600,10 +600,10 @@ func (m *MsgEnableChannel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Channel) > 0 {
-		i -= len(m.Channel)
-		copy(dAtA[i:], m.Channel)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Channel)))
+	if len(m.ChannelId) > 0 {
+		i -= len(m.ChannelId)
+		copy(dAtA[i:], m.ChannelId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChannelId)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -617,7 +617,7 @@ func (m *MsgEnableChannel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgEnableChannelResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgSetYieldRecipientResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -627,12 +627,12 @@ func (m *MsgEnableChannelResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgEnableChannelResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSetYieldRecipientResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgEnableChannelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSetYieldRecipientResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -698,7 +698,7 @@ func (m *MsgSetPausedStateResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgEnableChannel) Size() (n int) {
+func (m *MsgSetYieldRecipient) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -708,7 +708,7 @@ func (m *MsgEnableChannel) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Channel)
+	l = len(m.ChannelId)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -719,7 +719,7 @@ func (m *MsgEnableChannel) Size() (n int) {
 	return n
 }
 
-func (m *MsgEnableChannelResponse) Size() (n int) {
+func (m *MsgSetYieldRecipientResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1018,7 +1018,7 @@ func (m *MsgSetPausedStateResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgEnableChannel) Unmarshal(dAtA []byte) error {
+func (m *MsgSetYieldRecipient) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1041,10 +1041,10 @@ func (m *MsgEnableChannel) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgEnableChannel: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSetYieldRecipient: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgEnableChannel: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSetYieldRecipient: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1081,7 +1081,7 @@ func (m *MsgEnableChannel) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Channel", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1109,7 +1109,7 @@ func (m *MsgEnableChannel) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Channel = string(dAtA[iNdEx:postIndex])
+			m.ChannelId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -1164,7 +1164,7 @@ func (m *MsgEnableChannel) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgEnableChannelResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgSetYieldRecipientResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1187,10 +1187,10 @@ func (m *MsgEnableChannelResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgEnableChannelResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSetYieldRecipientResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgEnableChannelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSetYieldRecipientResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

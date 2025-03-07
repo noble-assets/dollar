@@ -46,8 +46,8 @@ message IndexUpdated {
   ];
 }
 
-// ChannelEnabled is an event emitted when a channel is enabled.
-message ChannelEnabled {
-  string channel = 1;
+// ChannelEnabled is an event emitted when the yield recipient for an IBC channel is set.
+message YieldRecipientSet {
+  string channel_id = 1;
   string yield_recipient = 2;
 }

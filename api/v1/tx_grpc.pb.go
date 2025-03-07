@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_ClaimYield_FullMethodName     = "/noble.dollar.v1.Msg/ClaimYield"
-	Msg_SetPausedState_FullMethodName = "/noble.dollar.v1.Msg/SetPausedState"
-	Msg_EnableChannel_FullMethodName  = "/noble.dollar.v1.Msg/EnableChannel"
+	Msg_ClaimYield_FullMethodName        = "/noble.dollar.v1.Msg/ClaimYield"
+	Msg_SetPausedState_FullMethodName    = "/noble.dollar.v1.Msg/SetPausedState"
+	Msg_SetYieldRecipient_FullMethodName = "/noble.dollar.v1.Msg/SetYieldRecipient"
 )
 
 // MsgClient is the client API for Msg service.
@@ -30,7 +30,7 @@ const (
 type MsgClient interface {
 	ClaimYield(ctx context.Context, in *MsgClaimYield, opts ...grpc.CallOption) (*MsgClaimYieldResponse, error)
 	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
-	EnableChannel(ctx context.Context, in *MsgEnableChannel, opts ...grpc.CallOption) (*MsgEnableChannelResponse, error)
+	SetYieldRecipient(ctx context.Context, in *MsgSetYieldRecipient, opts ...grpc.CallOption) (*MsgSetYieldRecipientResponse, error)
 }
 
 type msgClient struct {
@@ -61,10 +61,10 @@ func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, o
 	return out, nil
 }
 
-func (c *msgClient) EnableChannel(ctx context.Context, in *MsgEnableChannel, opts ...grpc.CallOption) (*MsgEnableChannelResponse, error) {
+func (c *msgClient) SetYieldRecipient(ctx context.Context, in *MsgSetYieldRecipient, opts ...grpc.CallOption) (*MsgSetYieldRecipientResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgEnableChannelResponse)
-	err := c.cc.Invoke(ctx, Msg_EnableChannel_FullMethodName, in, out, cOpts...)
+	out := new(MsgSetYieldRecipientResponse)
+	err := c.cc.Invoke(ctx, Msg_SetYieldRecipient_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *msgClient) EnableChannel(ctx context.Context, in *MsgEnableChannel, opt
 type MsgServer interface {
 	ClaimYield(context.Context, *MsgClaimYield) (*MsgClaimYieldResponse, error)
 	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
-	EnableChannel(context.Context, *MsgEnableChannel) (*MsgEnableChannelResponse, error)
+	SetYieldRecipient(context.Context, *MsgSetYieldRecipient) (*MsgSetYieldRecipientResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -94,8 +94,8 @@ func (UnimplementedMsgServer) ClaimYield(context.Context, *MsgClaimYield) (*MsgC
 func (UnimplementedMsgServer) SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPausedState not implemented")
 }
-func (UnimplementedMsgServer) EnableChannel(context.Context, *MsgEnableChannel) (*MsgEnableChannelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EnableChannel not implemented")
+func (UnimplementedMsgServer) SetYieldRecipient(context.Context, *MsgSetYieldRecipient) (*MsgSetYieldRecipientResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetYieldRecipient not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -154,20 +154,20 @@ func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_EnableChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgEnableChannel)
+func _Msg_SetYieldRecipient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetYieldRecipient)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).EnableChannel(ctx, in)
+		return srv.(MsgServer).SetYieldRecipient(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Msg_EnableChannel_FullMethodName,
+		FullMethod: Msg_SetYieldRecipient_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).EnableChannel(ctx, req.(*MsgEnableChannel))
+		return srv.(MsgServer).SetYieldRecipient(ctx, req.(*MsgSetYieldRecipient))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -188,8 +188,8 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_SetPausedState_Handler,
 		},
 		{
-			MethodName: "EnableChannel",
-			Handler:    _Msg_EnableChannel_Handler,
+			MethodName: "SetYieldRecipient",
+			Handler:    _Msg_SetYieldRecipient_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -70,10 +70,10 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis stats"))
 	}
 
-	for channel, yieldRecipient := range genesis.Channels {
-		err = k.Channels.Set(ctx, channel, yieldRecipient)
+	for channelId, yieldRecipient := range genesis.YieldRecipients {
+		err = k.YieldRecipients.Set(ctx, channelId, yieldRecipient)
 		if err != nil {
-			panic(errors.Wrapf(err, "unable to set genesis channel (%s:%s)", channel, yieldRecipient))
+			panic(errors.Wrapf(err, "unable to set genesis yield recipient (%s:%s)", channelId, yieldRecipient))
 		}
 	}
 
@@ -143,7 +143,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	index, _ := k.Index.Get(ctx)
 	principal, _ := k.GetPrincipal(ctx)
 	stats, _ := k.Stats.Get(ctx)
-	channels, _ := k.GetChannels(ctx)
+	yieldRecipients, _ := k.GetYieldRecipients(ctx)
 
 	portalOwner, _ := k.PortalOwner.Get(ctx)
 	portalPaused := k.GetPortalPaused(ctx)
@@ -172,10 +172,10 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Paused:                 vaultsPaused,
 			Stats:                  vaultsStats,
 		},
-		Paused:    paused,
-		Index:     index,
-		Principal: principal,
-		Stats:     stats,
-		Channels:  channels,
+		Paused:          paused,
+		Index:           index,
+		Principal:       principal,
+		Stats:           stats,
+		YieldRecipients: yieldRecipients,
 	}
 }

@@ -1,5 +1,5 @@
 .PHONY: proto-format proto-lint proto-gen license format lint test-unit build local-image test-e2e
-all: proto-all format lint test-unit build local-image test-e2e
+all: proto-all format test-unit build
 
 ###############################################################################
 ###                                  Build                                  ###

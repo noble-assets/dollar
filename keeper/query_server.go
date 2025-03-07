@@ -106,25 +106,25 @@ func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.Q
 	}, nil
 }
 
-func (k queryServer) Channels(ctx context.Context, req *types.QueryChannels) (*types.QueryChannelsResponse, error) {
+func (k queryServer) YieldRecipients(ctx context.Context, req *types.QueryYieldRecipients) (*types.QueryYieldRecipientsResponse, error) {
 	if req == nil {
 		return nil, types.ErrInvalidRequest
 	}
 
-	yieldRecipients, err := k.GetChannels(ctx)
+	yieldRecipients, err := k.GetYieldRecipients(ctx)
 
-	return &types.QueryChannelsResponse{YieldRecipients: yieldRecipients}, err
+	return &types.QueryYieldRecipientsResponse{YieldRecipients: yieldRecipients}, err
 }
 
-func (k queryServer) Channel(ctx context.Context, req *types.QueryChannel) (*types.QueryChannelResponse, error) {
+func (k queryServer) YieldRecipient(ctx context.Context, req *types.QueryYieldRecipient) (*types.QueryYieldRecipientResponse, error) {
 	if req == nil {
 		return nil, types.ErrInvalidRequest
 	}
 
-	yieldRecipient, err := k.Keeper.Channels.Get(ctx, req.Id)
+	yieldRecipient, err := k.Keeper.YieldRecipients.Get(ctx, req.ChannelId)
 	if err != nil {
 		// TODO(@john): Return an error!
 	}
 
-	return &types.QueryChannelResponse{YieldRecipient: yieldRecipient}, nil
+	return &types.QueryYieldRecipientResponse{YieldRecipient: yieldRecipient}, nil
 }

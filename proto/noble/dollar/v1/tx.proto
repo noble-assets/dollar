@@ -14,7 +14,7 @@ service Msg {
 
   rpc ClaimYield(MsgClaimYield) returns (MsgClaimYieldResponse);
   rpc SetPausedState(MsgSetPausedState) returns (MsgSetPausedStateResponse);
-  rpc EnableChannel(MsgEnableChannel) returns (MsgEnableChannelResponse);
+  rpc SetYieldRecipient(MsgSetYieldRecipient) returns (MsgSetYieldRecipientResponse);
 }
 
 // MsgClaimYield is a message holders of the Noble Dollar can use to claim their yield.
@@ -46,18 +46,18 @@ message MsgSetPausedState {
 // MsgSetPausedStateResponse is the response of the SetPausedState message.
 message MsgSetPausedStateResponse {}
 
-// MsgEnableChannel ... TODO
-message MsgEnableChannel {
+// MsgSetYieldRecipient allows the authority to set a yield recipient for an IBC channel.
+message MsgSetYieldRecipient {
   option (cosmos.msg.v1.signer) = "signer";
-  option (amino.name) = "dollar/EnableChannel";
+  option (amino.name) = "dollar/SetYieldRecipient";
 
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
   string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  string channel = 2;
+  string channel_id = 2;
   string yield_recipient = 3;
 }
 
-// MsgEnableChannelResponse is the response of the EnableChannel message.
-message MsgEnableChannelResponse {}
+// MsgSetYieldRecipientResponse is the response of the SetYieldRecipient message.
+message MsgSetYieldRecipientResponse {}

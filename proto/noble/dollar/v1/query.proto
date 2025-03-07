@@ -36,13 +36,13 @@ service Query {
     option (google.api.http).get = "/noble/dollar/v1/stats";
   }
 
-  rpc Channels(QueryChannels) returns (QueryChannelsResponse) {
+  rpc YieldRecipients(QueryYieldRecipients) returns (QueryYieldRecipientsResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/noble/dollar/v1/channels";
+    option (google.api.http).get = "/noble/dollar/v1/yield_recipients";
   }
-  rpc Channel(QueryChannel) returns (QueryChannelResponse) {
+  rpc YieldRecipient(QueryYieldRecipient) returns (QueryYieldRecipientResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/noble/dollar/v1/channel/{id}";
+    option (google.api.http).get = "/noble/dollar/v1/yield_recipients/{channel_id}";
   }
 }
 
@@ -109,16 +109,16 @@ message QueryStatsResponse {
   ];
 }
 
-message QueryChannels {}
+message QueryYieldRecipients {}
 
-message QueryChannelsResponse {
+message QueryYieldRecipientsResponse {
   map<string, string> yield_recipients = 1;
 }
 
-message QueryChannel {
-  string id = 1;
+message QueryYieldRecipient {
+  string channel_id = 1;
 }
 
-message QueryChannelResponse {
+message QueryYieldRecipientResponse {
   string yield_recipient = 1;
 }

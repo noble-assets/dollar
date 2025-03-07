@@ -130,14 +130,14 @@ func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int
 	return k.Stats.Set(ctx, stats)
 }
 
-// GetChannels is a utility that returns all channels from state.
-func (k *Keeper) GetChannels(ctx context.Context) (map[string]string, error) {
-	channels := make(map[string]string)
+// GetYieldRecipients is a utility that returns all yield recipients from state.
+func (k *Keeper) GetYieldRecipients(ctx context.Context) (map[string]string, error) {
+	yieldRecipients := make(map[string]string)
 
-	err := k.Channels.Walk(ctx, nil, func(channel string, yieldRecipient string) (stop bool, err error) {
-		channels[channel] = yieldRecipient
+	err := k.YieldRecipients.Walk(ctx, nil, func(channelId string, yieldRecipient string) (stop bool, err error) {
+		yieldRecipients[channelId] = yieldRecipient
 		return false, nil
 	})
 
-	return channels, err
+	return yieldRecipients, err
 }
