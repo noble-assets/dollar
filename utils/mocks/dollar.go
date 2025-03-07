@@ -23,12 +23,8 @@ package mocks
 import (
 	"testing"
 
-	dollar "dollar.noble.xyz"
-	wormholekeeper "github.com/noble-assets/wormhole/keeper"
-
+	"cosmossdk.io/log"
 	storetypes "cosmossdk.io/store/types"
-	"dollar.noble.xyz/keeper"
-	"dollar.noble.xyz/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/address"
 	codectestutil "github.com/cosmos/cosmos-sdk/codec/testutil"
@@ -39,6 +35,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	wormholekeeper "github.com/noble-assets/wormhole/keeper"
+
+	"dollar.noble.xyz"
+	"dollar.noble.xyz/keeper"
+	"dollar.noble.xyz/types"
 )
 
 func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeeper) (*keeper.Keeper, sdk.Context) {
@@ -72,11 +73,14 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 		1e6,
 		cfg.Codec,
 		storeService,
+		log.NewTestLogger(t),
 		headerService,
 		eventService,
 		addressCdc,
-		bank,
 		account,
+		bank,
+		nil,
+		nil,
 		wormholeKeeper,
 	)
 

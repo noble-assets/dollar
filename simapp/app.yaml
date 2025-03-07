@@ -5,7 +5,7 @@ modules:
       app_name: SimApp
       begin_blockers: [ capability, staking, ibc ]
       end_blockers: [ staking ]
-      init_genesis: [ capability, auth, bank, staking, ibc, genutil, upgrade, wormhole, dollar ]
+      init_genesis: [ capability, transfer, auth, bank, staking, ibc, genutil, upgrade, wormhole, dollar ]
       override_store_keys:
         - module_name: auth
           kv_store_key: acc
@@ -19,6 +19,8 @@ modules:
           permissions: [ burner, staking ]
         - account: not_bonded_tokens_pool
           permissions: [ burner, staking ]
+        - account: transfer
+          permissions: [ burner, minter ]
         - account: dollar
           permissions: [ burner, minter ]
         - account: dollar/yield

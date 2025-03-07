@@ -130,6 +130,25 @@ func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int
 	return k.Stats.Set(ctx, stats)
 }
 
+// IncrementTotalChannelYield is a utility that increments the total channel yield stat.
+func (k *Keeper) IncrementTotalChannelYield(ctx context.Context, channelId string, amount math.Int) error {
+	stats, err := k.Stats.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	totalChannelYield := math.ZeroInt()
+	rawTotalChannelYield, exists := stats.TotalChannelYield[channelId]
+	if exists {
+		totalChannelYield, _ = math.NewIntFromString(rawTotalChannelYield)
+	}
+
+	totalChannelYield = totalChannelYield.Add(amount)
+	stats.TotalChannelYield[channelId] = totalChannelYield.String()
+
+	return k.Stats.Set(ctx, stats)
+}
+
 // GetYieldRecipients is a utility that returns all yield recipients from state.
 func (k *Keeper) GetYieldRecipients(ctx context.Context) (map[string]string, error) {
 	yieldRecipients := make(map[string]string)

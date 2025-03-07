@@ -92,6 +92,16 @@ message QueryYieldResponse {
 message QueryStats {}
 
 message QueryStatsResponse {
+  message ChannelYield {
+    string chain_id = 1;
+    string amount = 2 [
+      (amino.dont_omitempty) = true,
+      (cosmos_proto.scalar) = "cosmos.Int",
+      (gogoproto.customtype) = "cosmossdk.io/math.Int",
+      (gogoproto.nullable) = false
+    ];
+  }
+
   uint64 total_holders = 1 [(amino.dont_omitempty) = true];
 
   string total_principal = 2 [
@@ -107,6 +117,8 @@ message QueryStatsResponse {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
+
+  map<string, ChannelYield> total_channel_yield = 4 [(gogoproto.nullable) = false];
 }
 
 message QueryYieldRecipients {}

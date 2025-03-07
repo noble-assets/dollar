@@ -26,6 +26,8 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/types"
@@ -87,6 +89,10 @@ func (k msgServer) SetYieldRecipient(ctx context.Context, msg *types.MsgSetYield
 	}
 
 	if has, _ := k.YieldRecipients.Has(ctx, msg.ChannelId); has {
+		// TODO(@john): Return an error!
+	}
+	_, found := k.channel.GetChannel(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, msg.ChannelId)
+	if !found {
 		// TODO(@john): Return an error!
 	}
 
@@ -204,6 +210,13 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 	}); err != nil {
 		return err
 	}
+
+	// Claim and transfer the yield of IBC channels.
+	err = k.claimChannelYield(ctx)
+	if err != nil {
+		return err
+	}
+
 	return k.event.EventManager(ctx).Emit(ctx, &types.IndexUpdated{
 		OldIndex:       oldIndex,
 		NewIndex:       index,
@@ -273,4 +286,46 @@ func (k *Keeper) claimStakedVaultYield(ctx context.Context) (math.Int, error) {
 		return math.ZeroInt(), err
 	}
 	return yield, nil
+}
+
+func (k *Keeper) claimChannelYield(ctx context.Context) error {
+	yieldRecipients, err := k.GetYieldRecipients(ctx)
+	if err != nil {
+		return errors.Wrap(err, "unable to get yield recipients from state")
+	}
+
+	for channelId, yieldRecipient := range yieldRecipients {
+		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelId)
+		yield, err := k.claimModuleYield(ctx, escrowAddress)
+		if err != nil {
+			return errors.Wrapf(err, "unable to claim yield for %s", channelId)
+		}
+		if !yield.IsPositive() {
+			continue
+		}
+
+		timeout := uint64(k.header.GetHeaderInfo(ctx).Time.UnixNano()) + transfertypes.DefaultRelativePacketTimeoutTimestamp
+		res, err := k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
+			SourcePort:       transfertypes.PortID,
+			SourceChannel:    channelId,
+			Token:            sdk.NewCoin(k.denom, yield),
+			Sender:           escrowAddress.String(),
+			Receiver:         yieldRecipient,
+			TimeoutHeight:    clienttypes.ZeroHeight(),
+			TimeoutTimestamp: timeout,
+			Memo:             "",
+		})
+		if err != nil {
+			return errors.Wrapf(err, "unable to transfer yield for %s", channelId)
+		}
+
+		err = k.IncrementTotalChannelYield(ctx, channelId, yield)
+		if err != nil {
+			return errors.Wrapf(err, "unable to increment total yield for %s", channelId)
+		}
+
+		k.logger.Info("claimed and transferred ibc channel yield", "amount", yield, "channel", channelId, "sequence", res.Sequence)
+	}
+
+	return nil
 }

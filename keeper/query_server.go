@@ -25,6 +25,8 @@ import (
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
 	"dollar.noble.xyz/types"
 )
@@ -99,10 +101,22 @@ func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.Q
 		return nil, errors.Wrap(err, "unable to get stats from state")
 	}
 
+	totalChannelYield := make(map[string]types.QueryStatsResponse_ChannelYield)
+	for channelId, rawAmount := range stats.TotalChannelYield {
+		_, clientState, _ := k.channel.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, channelId)
+		amount, _ := math.NewIntFromString(rawAmount)
+
+		totalChannelYield[channelId] = types.QueryStatsResponse_ChannelYield{
+			ChainId: types.ParseChainId(clientState),
+			Amount:  amount,
+		}
+	}
+
 	return &types.QueryStatsResponse{
 		TotalHolders:      stats.TotalHolders,
 		TotalPrincipal:    stats.TotalPrincipal,
 		TotalYieldAccrued: stats.TotalYieldAccrued,
+		TotalChannelYield: totalChannelYield,
 	}, nil
 }
 

@@ -32,6 +32,7 @@ import (
 	"cosmossdk.io/core/header"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
+	"cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -294,7 +295,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					RpcMethod:      "YieldRecipient",
 					Use:            "yield-recipient [channel-id]",
 					Short:          "Query the yield recipient for an IBC channel",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "id"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "channel_id"}},
 				},
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
@@ -374,6 +375,7 @@ type ModuleInputs struct {
 
 	Config        *modulev1.Module
 	StoreService  store.KVStoreService
+	Logger        log.Logger
 	HeaderService header.Service
 	EventService  event.Service
 
@@ -405,11 +407,14 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.Config.VaultsMinimumUnlock,
 		in.Cdc,
 		in.StoreService,
+		in.Logger,
 		in.HeaderService,
 		in.EventService,
 		in.AddressCodec,
-		in.BankKeeper,
 		in.AccountKeeper,
+		in.BankKeeper,
+		nil,
+		nil,
 		in.WormholeKeeper,
 	)
 	m := NewAppModule(in.AddressCodec, k)

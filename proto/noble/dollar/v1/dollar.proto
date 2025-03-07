@@ -24,4 +24,6 @@ message Stats {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
+
+  map<string, string> total_channel_yield = 4;
 }
