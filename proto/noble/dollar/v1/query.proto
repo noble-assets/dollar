@@ -35,6 +35,15 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/v1/stats";
   }
+
+  rpc Channels(QueryChannels) returns (QueryChannelsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v1/channels";
+  }
+  rpc Channel(QueryChannel) returns (QueryChannelResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v1/channel/{id}";
+  }
 }
 
 message QueryIndex {}
@@ -98,4 +107,18 @@ message QueryStatsResponse {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
+}
+
+message QueryChannels {}
+
+message QueryChannelsResponse {
+  map<string, string> yield_recipients = 1;
+}
+
+message QueryChannel {
+  string id = 1;
+}
+
+message QueryChannelResponse {
+  string yield_recipient = 1;
 }

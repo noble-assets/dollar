@@ -40,4 +40,5 @@ var (
 	IndexKey        = []byte("index")
 	PrincipalPrefix = []byte("principal/")
 	StatsKey        = []byte("stats")
+	ChannelPrefix   = []byte("channel/")
 )

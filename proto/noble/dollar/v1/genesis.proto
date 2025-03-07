@@ -28,4 +28,7 @@ message GenesisState {
 
   // stats contains the genesis statistics around the Noble Dollar.
   noble.dollar.v1.Stats stats = 6 [(gogoproto.nullable) = false];
+
+  // channels ... TODO
+  map<string, string> channels = 7;
 }

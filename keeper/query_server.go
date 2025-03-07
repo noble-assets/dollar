@@ -105,3 +105,26 @@ func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.Q
 		TotalYieldAccrued: stats.TotalYieldAccrued,
 	}, nil
 }
+
+func (k queryServer) Channels(ctx context.Context, req *types.QueryChannels) (*types.QueryChannelsResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	yieldRecipients, err := k.GetChannels(ctx)
+
+	return &types.QueryChannelsResponse{YieldRecipients: yieldRecipients}, err
+}
+
+func (k queryServer) Channel(ctx context.Context, req *types.QueryChannel) (*types.QueryChannelResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	yieldRecipient, err := k.Keeper.Channels.Get(ctx, req.Id)
+	if err != nil {
+		// TODO(@john): Return an error!
+	}
+
+	return &types.QueryChannelResponse{YieldRecipient: yieldRecipient}, nil
+}

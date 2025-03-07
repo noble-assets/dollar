@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	Msg_ClaimYield_FullMethodName     = "/noble.dollar.v1.Msg/ClaimYield"
 	Msg_SetPausedState_FullMethodName = "/noble.dollar.v1.Msg/SetPausedState"
+	Msg_EnableChannel_FullMethodName  = "/noble.dollar.v1.Msg/EnableChannel"
 )
 
 // MsgClient is the client API for Msg service.
@@ -29,6 +30,7 @@ const (
 type MsgClient interface {
 	ClaimYield(ctx context.Context, in *MsgClaimYield, opts ...grpc.CallOption) (*MsgClaimYieldResponse, error)
 	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
+	EnableChannel(ctx context.Context, in *MsgEnableChannel, opts ...grpc.CallOption) (*MsgEnableChannelResponse, error)
 }
 
 type msgClient struct {
@@ -59,12 +61,23 @@ func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, o
 	return out, nil
 }
 
+func (c *msgClient) EnableChannel(ctx context.Context, in *MsgEnableChannel, opts ...grpc.CallOption) (*MsgEnableChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgEnableChannelResponse)
+	err := c.cc.Invoke(ctx, Msg_EnableChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
 type MsgServer interface {
 	ClaimYield(context.Context, *MsgClaimYield) (*MsgClaimYieldResponse, error)
 	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
+	EnableChannel(context.Context, *MsgEnableChannel) (*MsgEnableChannelResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedMsgServer) ClaimYield(context.Context, *MsgClaimYield) (*MsgC
 }
 func (UnimplementedMsgServer) SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPausedState not implemented")
+}
+func (UnimplementedMsgServer) EnableChannel(context.Context, *MsgEnableChannel) (*MsgEnableChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EnableChannel not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -138,6 +154,24 @@ func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_EnableChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgEnableChannel)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).EnableChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_EnableChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).EnableChannel(ctx, req.(*MsgEnableChannel))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetPausedState",
 			Handler:    _Msg_SetPausedState_Handler,
+		},
+		{
+			MethodName: "EnableChannel",
+			Handler:    _Msg_EnableChannel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

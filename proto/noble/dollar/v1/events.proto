@@ -45,3 +45,9 @@ message IndexUpdated {
     (gogoproto.nullable) = false
   ];
 }
+
+// ChannelEnabled is an event emitted when a channel is enabled.
+message ChannelEnabled {
+  string channel = 1;
+  string yield_recipient = 2;
+}

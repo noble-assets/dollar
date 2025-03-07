@@ -24,6 +24,8 @@ const (
 	Query_Principal_FullMethodName = "/noble.dollar.v1.Query/Principal"
 	Query_Yield_FullMethodName     = "/noble.dollar.v1.Query/Yield"
 	Query_Stats_FullMethodName     = "/noble.dollar.v1.Query/Stats"
+	Query_Channels_FullMethodName  = "/noble.dollar.v1.Query/Channels"
+	Query_Channel_FullMethodName   = "/noble.dollar.v1.Query/Channel"
 )
 
 // QueryClient is the client API for Query service.
@@ -35,6 +37,8 @@ type QueryClient interface {
 	Principal(ctx context.Context, in *QueryPrincipal, opts ...grpc.CallOption) (*QueryPrincipalResponse, error)
 	Yield(ctx context.Context, in *QueryYield, opts ...grpc.CallOption) (*QueryYieldResponse, error)
 	Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error)
+	Channels(ctx context.Context, in *QueryChannels, opts ...grpc.CallOption) (*QueryChannelsResponse, error)
+	Channel(ctx context.Context, in *QueryChannel, opts ...grpc.CallOption) (*QueryChannelResponse, error)
 }
 
 type queryClient struct {
@@ -95,6 +99,26 @@ func (c *queryClient) Stats(ctx context.Context, in *QueryStats, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *queryClient) Channels(ctx context.Context, in *QueryChannels, opts ...grpc.CallOption) (*QueryChannelsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryChannelsResponse)
+	err := c.cc.Invoke(ctx, Query_Channels_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Channel(ctx context.Context, in *QueryChannel, opts ...grpc.CallOption) (*QueryChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryChannelResponse)
+	err := c.cc.Invoke(ctx, Query_Channel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
@@ -104,6 +128,8 @@ type QueryServer interface {
 	Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error)
 	Yield(context.Context, *QueryYield) (*QueryYieldResponse, error)
 	Stats(context.Context, *QueryStats) (*QueryStatsResponse, error)
+	Channels(context.Context, *QueryChannels) (*QueryChannelsResponse, error)
+	Channel(context.Context, *QueryChannel) (*QueryChannelResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -128,6 +154,12 @@ func (UnimplementedQueryServer) Yield(context.Context, *QueryYield) (*QueryYield
 }
 func (UnimplementedQueryServer) Stats(context.Context, *QueryStats) (*QueryStatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Stats not implemented")
+}
+func (UnimplementedQueryServer) Channels(context.Context, *QueryChannels) (*QueryChannelsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Channels not implemented")
+}
+func (UnimplementedQueryServer) Channel(context.Context, *QueryChannel) (*QueryChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Channel not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 func (UnimplementedQueryServer) testEmbeddedByValue()               {}
@@ -240,6 +272,42 @@ func _Query_Stats_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Channels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryChannels)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Channels(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Channels_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Channels(ctx, req.(*QueryChannels))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_Channel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryChannel)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Channel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_Channel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Channel(ctx, req.(*QueryChannel))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +334,14 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Stats",
 			Handler:    _Query_Stats_Handler,
+		},
+		{
+			MethodName: "Channels",
+			Handler:    _Query_Channels_Handler,
+		},
+		{
+			MethodName: "Channel",
+			Handler:    _Query_Channel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

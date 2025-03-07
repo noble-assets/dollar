@@ -172,6 +172,15 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 						{ProtoField: "paused"},
 					},
 				},
+				{
+					RpcMethod: "EnableChannel",
+					Use:       "enable-channel [channel] [yield-recipient]",
+					Short:     "Enable and set a yield recipient for an IBC channel",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{
+						{ProtoField: "channel"},
+						{ProtoField: "yield_recipient"},
+					},
+				},
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
 				"portal": {
@@ -275,6 +284,17 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				{
 					RpcMethod: "Stats",
 					Use:       "stats",
+				},
+				{
+					RpcMethod: "Channels",
+					Use:       "channels",
+					Short:     "Query all yield recipients of enabled IBC channels",
+				},
+				{
+					RpcMethod:      "Channel",
+					Use:            "channel [id]",
+					Short:          "Query yield recipient of an enabled IBC channel",
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "id"}},
 				},
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{

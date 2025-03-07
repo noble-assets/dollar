@@ -61,6 +61,7 @@ type Keeper struct {
 	Index     collections.Item[int64]
 	Principal collections.Map[[]byte, math.Int]
 	Stats     collections.Item[types.Stats]
+	Channels  collections.Map[string, string]
 
 	PortalOwner         collections.Item[string]
 	PortalPaused        collections.Item[bool]
@@ -105,6 +106,7 @@ func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMi
 		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 		Stats:     collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[types.Stats](cdc)),
+		Channels:  collections.NewMap(builder, types.ChannelPrefix, "channels", collections.StringKey, collections.StringValue),
 
 		PortalOwner:         collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
 		PortalPaused:        collections.NewItem(builder, portal.PausedKey, "portal_paused", collections.BoolValue),

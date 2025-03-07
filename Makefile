@@ -66,9 +66,9 @@ local-image:
 ifeq (,$(shell which heighliner))
 	@echo heighliner not found. https://github.com/strangelove-ventures/heighliner
 else
-		@echo "🤖 Building image..."
-		@heighliner build --chain noble-dollar-simd --file e2e/chains.yaml --local
-		@echo "✅ Completed build!"
+	@echo "🤖 Building image..."
+	@heighliner build --chain noble-dollar-simd --file e2e/chains.yaml --local
+	@echo "✅ Completed build!"
 endif
 
 test-unit:

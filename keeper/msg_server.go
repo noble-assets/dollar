@@ -81,6 +81,26 @@ func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedSt
 	return &types.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
 }
 
+func (k msgServer) EnableChannel(ctx context.Context, msg *types.MsgEnableChannel) (*types.MsgEnableChannelResponse, error) {
+	if msg.Signer != k.authority {
+		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
+	}
+
+	if has, _ := k.Channels.Has(ctx, msg.Channel); has {
+		// TODO(@john): Return an error!
+	}
+
+	err := k.Channels.Set(ctx, msg.Channel, msg.YieldRecipient)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to enable channel in state")
+	}
+
+	return &types.MsgEnableChannelResponse{}, k.event.EventManager(ctx).Emit(ctx, &types.ChannelEnabled{
+		Channel:        msg.Channel,
+		YieldRecipient: msg.YieldRecipient,
+	})
+}
+
 func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, amount))
 	err := k.bank.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, coins)
