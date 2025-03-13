@@ -46,7 +46,7 @@ func TestPausing(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -161,7 +161,7 @@ func TestStakedVault(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -294,7 +294,7 @@ func TestStakedVaultMultiPositions(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -389,7 +389,7 @@ func TestStakedPartialRemoval(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -556,7 +556,7 @@ func TestStakedVaultRewardsMigration(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -638,7 +638,7 @@ func TestFlexibleVaultMultiUser(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -741,7 +741,7 @@ func TestFlexibleVaultMultiUserEarlyExit(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -832,7 +832,7 @@ func TestFlexibleVaultMultiUserEarlyExitCase2(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -873,7 +873,7 @@ func TestFlexibleVaultMultiUserEarlyExitCase3(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -926,7 +926,7 @@ func TestFlexibleVaultBaseLockUnlock(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -970,7 +970,7 @@ func TestFlexibleVaultSimpleNoRewards(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -1016,7 +1016,7 @@ func TestFlexibleVaultMultiUserFlexibleNoRewards(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -1101,7 +1101,7 @@ func TestFlexibleVaultMultiUserMultiEntry(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -1318,7 +1318,7 @@ func TestFlexibleVaultRewardsSimple(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -1612,7 +1612,7 @@ func TestFlexibleVaultRewardsHacky(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 
@@ -1770,7 +1770,7 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	bank := mocks.BankKeeper{
 		Balances: make(map[string]sdk.Coins),
 	}
-	k, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
 	bank.Restriction = k.SendRestrictionFn
 	k.SetBankKeeper(bank)
 

@@ -36,28 +36,28 @@ import (
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	wormholekeeper "github.com/noble-assets/wormhole/keeper"
+	wormholetypes "github.com/noble-assets/wormhole/types"
+	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 
 	"dollar.noble.xyz"
 	"dollar.noble.xyz/keeper"
 	"dollar.noble.xyz/types"
 )
 
-func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeeper) (*keeper.Keeper, sdk.Context) {
-	key := storetypes.NewKVStoreKey(types.ModuleName)
-	tkey := storetypes.NewTransientStoreKey("transient_authority")
-	wrapper := testutil.DefaultContextWithDB(t, key, tkey)
+func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeeper) (*keeper.Keeper, *wormholekeeper.Keeper, sdk.Context) {
+	keys := storetypes.NewKVStoreKeys(types.ModuleName, wormholetypes.ModuleName)
+	ctx := testutil.DefaultContextWithKeys(keys, nil, nil)
 
 	cfg := MakeTestEncodingConfig("noble")
 	types.RegisterInterfaces(cfg.InterfaceRegistry)
 
-	storeService := runtime.NewKVStoreService(key)
 	headerService := runtime.ProvideHeaderInfoService(&runtime.AppBuilder{})
 	eventService := runtime.ProvideEventService()
 	addressCdc := address.NewBech32Codec("noble")
 
 	wormholeKeeper := wormholekeeper.NewKeeper(
 		cfg.Codec,
-		storeService,
+		runtime.NewKVStoreService(keys[wormholetypes.ModuleName]),
 		headerService,
 		eventService,
 		addressCdc,
@@ -72,7 +72,7 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 		1e6,
 		1e6,
 		cfg.Codec,
-		storeService,
+		runtime.NewKVStoreService(keys[types.ModuleName]),
 		log.NewTestLogger(t),
 		headerService,
 		eventService,
@@ -84,8 +84,17 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 		wormholeKeeper,
 	)
 
-	dollar.InitGenesis(wrapper.Ctx, k, address.NewBech32Codec("noble"), *types.DefaultGenesisState())
-	return k, wrapper.Ctx
+	bank = bank.WithSendCoinsRestriction(k.SendRestrictionFn)
+	k.SetBankKeeper(bank)
+
+	wormholeKeeper.Config.Set(ctx, wormholetypes.Config{
+		ChainId:    uint16(vaautils.ChainIDNoble),
+		GovChain:   uint16(vaautils.GovernanceChain),
+		GovAddress: vaautils.GovernanceEmitter.Bytes(),
+	})
+	dollar.InitGenesis(ctx, k, addressCdc, *types.DefaultGenesisState())
+
+	return k, wormholeKeeper, ctx
 }
 
 // MakeTestEncodingConfig is a modified testutil.MakeTestEncodingConfig that

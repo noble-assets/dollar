@@ -33,6 +33,7 @@ type Account struct {
 	Address string
 	Invalid string
 	Bytes   []byte
+	Padded  []byte
 }
 
 func TestAccount() Account {
@@ -44,11 +45,15 @@ func TestAccount() Account {
 	address, _ := sdk.Bech32ifyAddressBytes("noble", bytes)
 	invalid, _ := sdk.Bech32ifyAddressBytes("cosmos", bytes)
 
+	padded := make([]byte, 32)
+	copy(padded[32-len(bytes):], bytes)
+
 	return Account{
 		Key:     key,
 		PubKey:  pubKey,
 		Address: address,
 		Invalid: invalid,
 		Bytes:   bytes,
+		Padded:  padded,
 	}
 }

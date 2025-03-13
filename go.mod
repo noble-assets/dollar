@@ -21,7 +21,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/golangci/golangci-lint v1.61.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/noble-assets/wormhole v1.0.0-alpha.2
+	github.com/noble-assets/wormhole v1.0.0
 	github.com/stretchr/testify v1.10.0
 	github.com/wormhole-foundation/wormhole/sdk v0.0.0-20241218143724-3797ed082150
 	google.golang.org/genproto/googleapis/api v0.0.0-20241202173237-19429a94021a

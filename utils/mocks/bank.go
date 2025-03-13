@@ -22,14 +22,15 @@ package mocks
 
 import (
 	"context"
-
-	"cosmossdk.io/math"
+	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
-	"dollar.noble.xyz/types"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
+	"dollar.noble.xyz/types"
 )
 
 var _ types.BankKeeper = BankKeeper{}
@@ -103,6 +104,14 @@ func (k BankKeeper) SendCoinsFromModuleToModule(ctx context.Context, senderModul
 
 type SendRestrictionFn func(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error)
 
+func NoOpSendRestrictionFn(_ context.Context, _, toAddr sdk.AccAddress, _ sdk.Coins) (sdk.AccAddress, error) {
+	return toAddr, nil
+}
+
+func FailingSendRestrictionFn(_ context.Context, _, toAddr sdk.AccAddress, _ sdk.Coins) (sdk.AccAddress, error) {
+	return nil, fmt.Errorf("%s is blocked from sending/receiving", toAddr.String())
+}
+
 func (k BankKeeper) WithSendCoinsRestriction(check SendRestrictionFn) BankKeeper {
 	oldRestriction := k.Restriction
 	k.Restriction = func(ctx context.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) (newToAddr sdk.AccAddress, err error) {
@@ -132,6 +141,8 @@ func (k BankKeeper) SendCoins(ctx context.Context, fromAddr sdk.AccAddress, toAd
 
 	return nil
 }
+
+//
 
 func init() {
 	config := sdk.GetConfig()

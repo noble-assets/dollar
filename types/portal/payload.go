@@ -24,6 +24,8 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 
+	"github.com/ethereum/go-ethereum/common"
+
 	"cosmossdk.io/math"
 
 	"dollar.noble.xyz/types/portal/ntt"
@@ -88,6 +90,23 @@ func DecodeTokenPayload(payload []byte) TokenPayload {
 func DecodeIndexPayload(payload []byte) (index int64, destination uint16) {
 	index = int64(binary.BigEndian.Uint64(payload[4:12]))
 	destination = binary.BigEndian.Uint16(payload[12:14])
+
+	return
+}
+
+// EncodeIndexPayload is a utility for encoding a custom payload of type Index.
+//
+// https://github.com/m0-foundation/m-portal/blob/ddf583b9bef971752ec1360f9b089e6fefa9c526/src/libs/PayloadEncoder.sol#L64-L66
+func EncodeIndexPayload(index int64, destination uint16) (bz []byte) {
+	bz = append(bz, common.FromHex("4d304954")...)
+
+	indexBz := make([]byte, 8)
+	binary.BigEndian.PutUint64(indexBz, uint64(index))
+	bz = append(bz, indexBz...)
+
+	destinationBz := make([]byte, 2)
+	binary.BigEndian.PutUint16(destinationBz, destination)
+	bz = append(bz, destinationBz...)
 
 	return
 }
