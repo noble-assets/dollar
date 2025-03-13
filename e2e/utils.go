@@ -29,26 +29,30 @@ import (
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
 	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/strangelove-ventures/interchaintest/v8/relayer/rly"
+	"github.com/strangelove-ventures/interchaintest/v8/testreporter"
 	"github.com/stretchr/testify/require"
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
-	"go.uber.org/zap"
 	"go.uber.org/zap/zaptest"
 
 	portaltypes "dollar.noble.xyz/types/portal"
 	"dollar.noble.xyz/utils"
 )
 
-// Suite sets up a test suite with a single chain.
-func Suite(t *testing.T) (ctx context.Context, logger *zap.Logger, chain *cosmos.CosmosChain, guardians []utils.Guardian) {
+// Suite ... TODO
+func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, guardians []utils.Guardian) {
 	ctx = context.Background()
-	logger = zaptest.NewLogger(t)
-
-	numValidators, numFullNodes := 1, 0
+	logger := zaptest.NewLogger(t)
+	reporter := testreporter.NewNopReporter()
+	execReporter := reporter.RelayerExecReporter(t)
+	client, network := interchaintest.DockerSetup(t)
 
 	guardian := utils.NewGuardian()
 	guardians = []utils.Guardian{guardian}
 
-	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
+	numValidators, numFullNodes := 1, 0
+
+	specs := []*interchaintest.ChainSpec{
 		{
 			Name:          "dollar",
 			Version:       "local",
@@ -105,27 +109,49 @@ func Suite(t *testing.T) (ctx context.Context, logger *zap.Logger, chain *cosmos
 				},
 			},
 		},
-	})
+	}
+	if ibcEnabled {
+		specs = append(specs, &interchaintest.ChainSpec{
+			Name:          "ibc-go-simd",
+			Version:       "v8.7.0",
+			NumValidators: &numValidators,
+			NumFullNodes:  &numFullNodes,
+		})
+	}
+	factory := interchaintest.NewBuiltinChainFactory(logger, specs)
 
-	chains, err := cf.Chains(t.Name())
+	chains, err := factory.Chains(t.Name())
 	require.NoError(t, err)
 
-	chain = chains[0].(*cosmos.CosmosChain)
+	noble = chains[0].(*cosmos.CosmosChain)
 
-	ic := interchaintest.NewInterchain().
-		AddChain(chain)
+	interchain := interchaintest.NewInterchain().AddChain(noble)
+	if ibcEnabled {
+		relayer := interchaintest.NewBuiltinRelayerFactory(
+			ibc.CosmosRly,
+			logger,
+		).Build(t, client, network).(*rly.CosmosRelayer)
 
-	client, network := interchaintest.DockerSetup(t)
-
-	require.NoError(t, ic.Build(ctx, nil, interchaintest.InterchainBuildOptions{
+		interchain = interchain.
+			AddChain(chains[1].(*cosmos.CosmosChain)).
+			AddRelayer(relayer, "relayer").
+			AddLink(interchaintest.InterchainLink{
+				Chain1:  noble,
+				Chain2:  chains[1].(*cosmos.CosmosChain),
+				Relayer: relayer,
+				Path:    "transfer",
+			})
+	}
+	require.NoError(t, interchain.Build(ctx, execReporter, interchaintest.InterchainBuildOptions{
 		TestName:         t.Name(),
 		Client:           client,
 		NetworkID:        network,
 		SkipPathCreation: true,
 	}))
+
 	t.Cleanup(func() {
-		_ = ic.Close()
+		_ = interchain.Close()
 	})
 
-	return ctx, logger, chain, guardians
+	return
 }
