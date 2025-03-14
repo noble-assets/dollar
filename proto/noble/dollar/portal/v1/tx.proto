@@ -7,7 +7,7 @@ import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "dollar.noble.xyz/types/portal";
+option go_package = "dollar.noble.xyz/v2/types/portal";
 
 service Msg {
   option (cosmos.msg.v1.service) = true;

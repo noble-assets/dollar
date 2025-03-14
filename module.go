@@ -42,14 +42,14 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 
-	modulev1 "dollar.noble.xyz/api/module/v1"
-	portalv1 "dollar.noble.xyz/api/portal/v1"
-	dollarv1 "dollar.noble.xyz/api/v1"
-	vaultsv1 "dollar.noble.xyz/api/vaults/v1"
-	"dollar.noble.xyz/keeper"
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/vaults"
+	modulev1 "dollar.noble.xyz/v2/api/module/v1"
+	portalv1 "dollar.noble.xyz/v2/api/portal/v1"
+	dollarv1 "dollar.noble.xyz/v2/api/v1"
+	vaultsv1 "dollar.noble.xyz/v2/api/vaults/v1"
+	"dollar.noble.xyz/v2/keeper"
+	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 // ConsensusVersion defines the current Noble Dollar module consensus version.

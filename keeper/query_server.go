@@ -28,7 +28,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
-	"dollar.noble.xyz/types"
+	"dollar.noble.xyz/v2/types"
 )
 
 var _ types.QueryServer = &queryServer{}

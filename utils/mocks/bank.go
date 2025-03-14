@@ -30,7 +30,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"dollar.noble.xyz/types"
+	"dollar.noble.xyz/v2/types"
 )
 
 var _ types.BankKeeper = BankKeeper{}

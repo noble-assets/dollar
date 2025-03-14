@@ -37,10 +37,10 @@ import (
 	"github.com/stretchr/testify/require"
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 
-	dollartypes "dollar.noble.xyz/types"
-	portaltypes "dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/portal/ntt"
-	"dollar.noble.xyz/utils"
+	dollartypes "dollar.noble.xyz/v2/types"
+	portaltypes "dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/portal/ntt"
+	"dollar.noble.xyz/v2/utils"
 )
 
 var (

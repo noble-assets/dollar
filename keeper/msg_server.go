@@ -30,8 +30,8 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	"google.golang.org/protobuf/runtime/protoiface"
 
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 var _ types.MsgServer = &msgServer{}

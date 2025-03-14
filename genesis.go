@@ -29,10 +29,10 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/keeper"
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/keeper"
+	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, genesis types.GenesisState) {

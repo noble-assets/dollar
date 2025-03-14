@@ -39,9 +39,9 @@ import (
 	wormholetypes "github.com/noble-assets/wormhole/types"
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 
-	"dollar.noble.xyz"
-	"dollar.noble.xyz/keeper"
-	"dollar.noble.xyz/types"
+	"dollar.noble.xyz/v2"
+	"dollar.noble.xyz/v2/keeper"
+	"dollar.noble.xyz/v2/types"
 )
 
 func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeeper) (*keeper.Keeper, *wormholekeeper.Keeper, sdk.Context) {

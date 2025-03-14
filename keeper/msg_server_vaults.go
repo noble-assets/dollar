@@ -31,7 +31,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 var _ vaults.MsgServer = &vaultsMsgServer{}
