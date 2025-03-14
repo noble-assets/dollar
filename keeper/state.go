@@ -136,6 +136,9 @@ func (k *Keeper) IncrementTotalChannelYield(ctx context.Context, channelId strin
 	if err != nil {
 		return err
 	}
+	if stats.TotalChannelYield == nil {
+		stats.TotalChannelYield = make(map[string]string)
+	}
 
 	totalChannelYield := math.ZeroInt()
 	rawTotalChannelYield, exists := stats.TotalChannelYield[channelId]

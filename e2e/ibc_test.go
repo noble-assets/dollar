@@ -20,9 +20,192 @@
 
 package e2e
 
-import "testing"
+import (
+	"context"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"testing"
 
-// TestIBCYieldDistribution ... TODO
+	"cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/codec/address"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/strangelove-ventures/interchaintest/v8"
+	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
+	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/strangelove-ventures/interchaintest/v8/testutil"
+	"github.com/stretchr/testify/require"
+	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
+
+	dollartypes "dollar.noble.xyz/types"
+	portaltypes "dollar.noble.xyz/types/portal"
+	"dollar.noble.xyz/types/portal/ntt"
+	"dollar.noble.xyz/utils"
+)
+
+var (
+	// sourceToken is the 32-byte representation of the $M token on Ethereum Mainnet.
+	// https://github.com/m0-foundation/m-portal/blob/dbe93da561c94dfc04beec8a144b11b287957b7a/deployments/1.json#L2
+	sourceToken = common.FromHex("0x000000000000000000000000866a2bf4e572cbcf37d5071a7a58503bfb36be1b")
+	// destinationToken is the 32-byte representation of the "uusdn" denom.
+	destinationToken = common.FromHex("0x000000000000000000000000000000000000000000000000000000757573646e")
+
+	// sourceManagerAddress is the 32-byte representation of the Noble Portal on Ethereum Mainnet.
+	// https://github.com/m0-foundation/m-portal/blob/dbe93da561c94dfc04beec8a144b11b287957b7a/deployments/noble/1.json#L2
+	sourceManagerAddress = common.FromHex("0x00000000000000000000000083ae82bd4054e815fb7b189c39d9ce670369ea16")
+	// recipientManagerAddress is the 32-byte representation of the "dollar/manager" module account.
+	recipientManagerAddress = common.FromHex("0x0000000000000000000000002e859506ba229c183f8985d54fe7210923fb9bca")
+
+	// channelID is the IBC channel identifier of ibc-go-simd.
+	channelID = "channel-0"
+	// yieldRecipient is the "gov" module account on ibc-go-simd.
+	yieldRecipient = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
+)
+
+// TestIBCYieldDistribution tests $USDN yield distribution across IBC channels.
 func TestIBCYieldDistribution(t *testing.T) {
-	Suite(t, true)
+	ctx, chain, externalChain, guardians := Suite(t, true)
+	validator := chain.Validators[0]
+
+	// ARRANGE: Recover the authority wallet in order to perform gated actions.
+	// This mnemonic must be for the authority account set in simapp/app.yaml!
+	authority, err := interchaintest.GetAndFundTestUserWithMnemonic(ctx, "authority", "occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon", math.OneInt(), chain)
+	require.NoError(t, err)
+
+	// ARRANGE: Create and fund test user accounts on both Noble and the external chain.
+	wallets := interchaintest.GetAndFundTestUsers(t, ctx, "user", math.OneInt(), chain, externalChain)
+	user, externalUser := wallets[0], wallets[1]
+
+	// ARRANGE: Pad the user address to be compatible with Wormhole's NTT standard.
+	paddedAddress := make([]byte, 32)
+	copy(paddedAddress[12:], user.Address())
+
+	// ARRANGE: Prepare a VAA to be delivered that mints the user 1,000,000 $USDN.
+	additionalPayload := portaltypes.EncodeAdditionalPayload(1e12, destinationToken)
+	payload := ntt.EncodeNativeTokenTransfer(ntt.NativeTokenTransfer{
+		Amount:            1_000_000 * 1e6,
+		SourceToken:       sourceToken,
+		To:                paddedAddress,
+		ToChain:           uint16(vaautils.ChainIDNoble),
+		AdditionalPayload: additionalPayload,
+	})
+
+	transceiverMessage := buildTransceiverMessage(payload)
+	vaa := utils.NewVAA(guardians, transceiverMessage)
+
+	bz, err := vaa.Marshal()
+	require.NoError(t, err)
+
+	// ACT: Deliver the prepared VAA that mints 1,000,000 $USDN.
+	_, err = validator.ExecTx(
+		ctx, authority.KeyName(),
+		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+	)
+	require.NoError(t, err)
+
+	// ASSERT: The user should now have 1,000,000 $USDN.
+	balance, err := chain.BankQueryBalance(ctx, user.FormattedAddress(), "uusdn")
+	require.NoError(t, err)
+	require.Equal(t, math.NewInt(1_000_000*1e6), balance)
+
+	// ACT: Query all yield recipients.
+	yieldRecipients := getYieldRecipients(t, ctx, validator)
+
+	// ASSERT: There are no yield recipients.
+	require.Empty(t, yieldRecipients)
+
+	// TODO: Once NobleICS4Wrapper has been migrated, ensure that transfers are blocked at first!
+
+	// ACT: Set the yield recipient for the external chain.
+	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", channelID, yieldRecipient)
+	require.NoError(t, err)
+
+	// ASSERT: There is one yield recipient.
+	yieldRecipients = getYieldRecipients(t, ctx, validator)
+	require.Equal(t, yieldRecipient, yieldRecipients[channelID])
+
+	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
+	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{
+		Address: externalUser.FormattedAddress(),
+		Denom:   "uusdn",
+		Amount:  math.NewInt(500_000 * 1e6),
+	}, ibc.TransferOptions{})
+	require.NoError(t, err)
+
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
+
+	// ASSERT: The escrow account should now have 500,000 $USDN.
+	rawEscrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelID)
+	escrowAddress, _ := address.NewBech32Codec(chain.Config().Bech32Prefix).BytesToString(rawEscrowAddress)
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
+	require.NoError(t, err)
+	require.Equal(t, math.NewInt(500_000*1e6), balance)
+	// ASSERT: The total supply should be 500,000 $USDN on the external chain.
+	ibcDenom := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(transfertypes.PortID, channelID, "uusdn")).IBCDenom()
+	totalSupply, err := externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
+	require.NoError(t, err)
+	require.Equal(t, math.NewInt(500_000*1e6), totalSupply.Amount)
+
+	// ARRANGE: Prepare a VAA to be delivered that accrues 4.15% yield.
+	payload = portaltypes.EncodeIndexPayload(
+		1041500000000,
+		uint16(vaautils.ChainIDNoble),
+	)
+
+	transceiverMessage = buildTransceiverMessage(payload)
+	vaa = utils.NewVAA(guardians, transceiverMessage)
+
+	bz, err = vaa.Marshal()
+	require.NoError(t, err)
+
+	// ACT: Deliver the prepared VAA that accrues 4.15% yield.
+	hash, err := validator.ExecTx(
+		ctx, user.KeyName(),
+		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+	)
+	require.NoError(t, err)
+
+	stdout, _, _ := validator.ExecQuery(ctx, "tx", hash)
+	fmt.Println(string(stdout))
+
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
+
+	// ASSERT: The escrow account should now have 520,750 $USDN.
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
+	require.NoError(t, err)
+	require.Equal(t, math.NewInt(520_750*1e6), balance)
+	// ASSERT: The total supply should be 520,750 $USDN on the external chain.
+	totalSupply, err = externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
+	require.NoError(t, err)
+	require.Equal(t, math.NewInt(520_750*1e6), totalSupply.Amount)
+}
+
+// buildTransceiverMessage is a utility that builds a transceiver message.
+func buildTransceiverMessage(payload []byte) []byte {
+	managerMessage := ntt.ManagerMessage{
+		Id:      make([]byte, 32),
+		Sender:  make([]byte, 32),
+		Payload: payload,
+	}
+
+	transceiverMessage := ntt.TransceiverMessage{
+		SourceManagerAddress:    sourceManagerAddress,
+		RecipientManagerAddress: recipientManagerAddress,
+		ManagerPayload:          ntt.EncodeManagerMessage(managerMessage),
+		TransceiverPayload:      nil,
+	}
+
+	return ntt.EncodeTransceiverMessage(transceiverMessage)
+}
+
+// getYieldRecipients is a utility that queries the yield recipients.
+func getYieldRecipients(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) map[string]string {
+	raw, _, err := validator.ExecQuery(ctx, "dollar", "yield-recipients")
+	require.NoError(t, err)
+
+	var res dollartypes.QueryYieldRecipientsResponse
+	require.NoError(t, json.Unmarshal(raw, &res))
+
+	return res.YieldRecipients
 }

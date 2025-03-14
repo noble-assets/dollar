@@ -39,13 +39,14 @@ import (
 	"dollar.noble.xyz/utils"
 )
 
-// Suite ... TODO
-func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, guardians []utils.Guardian) {
+// Suite is a utility for spinning up a new E2E testing suite.
+func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, guardians []utils.Guardian) {
 	ctx = context.Background()
 	logger := zaptest.NewLogger(t)
 	reporter := testreporter.NewNopReporter()
 	execReporter := reporter.RelayerExecReporter(t)
 	client, network := interchaintest.DockerSetup(t)
+	var relayer *rly.CosmosRelayer
 
 	guardian := utils.NewGuardian()
 	guardians = []utils.Guardian{guardian}
@@ -116,6 +117,9 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 			Version:       "v8.7.0",
 			NumValidators: &numValidators,
 			NumFullNodes:  &numFullNodes,
+			ChainConfig: ibc.ChainConfig{
+				ChainID: "ibc-go-simd-1",
+			},
 		})
 	}
 	factory := interchaintest.NewBuiltinChainFactory(logger, specs)
@@ -124,34 +128,38 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 	require.NoError(t, err)
 
 	noble = chains[0].(*cosmos.CosmosChain)
-
 	interchain := interchaintest.NewInterchain().AddChain(noble)
 	if ibcEnabled {
-		relayer := interchaintest.NewBuiltinRelayerFactory(
+		relayer = interchaintest.NewBuiltinRelayerFactory(
 			ibc.CosmosRly,
 			logger,
 		).Build(t, client, network).(*rly.CosmosRelayer)
 
+		ibcSimapp = chains[1].(*cosmos.CosmosChain)
+
 		interchain = interchain.
-			AddChain(chains[1].(*cosmos.CosmosChain)).
+			AddChain(ibcSimapp).
 			AddRelayer(relayer, "relayer").
 			AddLink(interchaintest.InterchainLink{
 				Chain1:  noble,
-				Chain2:  chains[1].(*cosmos.CosmosChain),
+				Chain2:  ibcSimapp,
 				Relayer: relayer,
 				Path:    "transfer",
 			})
 	}
 	require.NoError(t, interchain.Build(ctx, execReporter, interchaintest.InterchainBuildOptions{
-		TestName:         t.Name(),
-		Client:           client,
-		NetworkID:        network,
-		SkipPathCreation: true,
+		TestName:  t.Name(),
+		Client:    client,
+		NetworkID: network,
 	}))
 
 	t.Cleanup(func() {
 		_ = interchain.Close()
 	})
+
+	if ibcEnabled {
+		require.NoError(t, relayer.StartRelayer(ctx, execReporter))
+	}
 
 	return
 }

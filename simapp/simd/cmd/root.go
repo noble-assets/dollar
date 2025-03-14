@@ -24,6 +24,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
+	"github.com/cosmos/ibc-go/v8/modules/apps/transfer"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
 	solomachine "github.com/cosmos/ibc-go/v8/modules/light-clients/06-solomachine"
@@ -110,6 +112,7 @@ func NewRootCmd() *cobra.Command {
 	modules := map[string]appmodule.AppModule{
 		capabilitytypes.ModuleName: capability.AppModule{},
 		exported.ModuleName:        ibc.AppModule{},
+		transfertypes.ModuleName:   transfer.AppModule{},
 		tendermint.ModuleName:      tendermint.AppModule{},
 		solomachine.ModuleName:     solomachine.AppModule{},
 	}
