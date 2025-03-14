@@ -24,7 +24,6 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"cosmossdk.io/math"
@@ -160,14 +159,11 @@ func TestIBCYieldDistribution(t *testing.T) {
 	require.NoError(t, err)
 
 	// ACT: Deliver the prepared VAA that accrues 4.15% yield.
-	hash, err := validator.ExecTx(
+	_, err = validator.ExecTx(
 		ctx, user.KeyName(),
 		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
 	)
 	require.NoError(t, err)
-
-	stdout, _, _ := validator.ExecQuery(ctx, "tx", hash)
-	fmt.Println(string(stdout))
 
 	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
 
