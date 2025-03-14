@@ -5,6 +5,8 @@ go 1.22.11
 require (
 	cosmossdk.io/math v1.4.0
 	dollar.noble.xyz v1.0.0
+	github.com/cosmos/cosmos-sdk v0.50.13
+	github.com/cosmos/ibc-go/v8 v8.7.0
 	github.com/ethereum/go-ethereum v1.14.13
 	github.com/noble-assets/wormhole v1.0.0
 	github.com/strangelove-ventures/interchaintest/v8 v8.8.1
@@ -96,18 +98,16 @@ require (
 	github.com/consensys/bavard v0.1.13 // indirect
 	github.com/consensys/gnark-crypto v0.12.1 // indirect
 	github.com/cosmos/btcutil v1.0.5 // indirect
-	github.com/cosmos/cosmos-db v1.1.0 // indirect
+	github.com/cosmos/cosmos-db v1.1.1 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5 // indirect
-	github.com/cosmos/cosmos-sdk v0.50.11 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gogogateway v1.2.0 // indirect
 	github.com/cosmos/gogoproto v1.7.0 // indirect
 	github.com/cosmos/iavl v1.2.2 // indirect
 	github.com/cosmos/ibc-go/modules/capability v1.0.1 // indirect
-	github.com/cosmos/ibc-go/v8 v8.6.1 // indirect
 	github.com/cosmos/ics23/go v0.11.0 // indirect
 	github.com/cosmos/interchain-security/v5 v5.1.1 // indirect
-	github.com/cosmos/ledger-cosmos-go v0.13.3 // indirect
+	github.com/cosmos/ledger-cosmos-go v0.14.0 // indirect
 	github.com/crate-crypto/go-ipa v0.0.0-20240223125850-b1e8a79f509c // indirect
 	github.com/crate-crypto/go-kzg-4844 v1.0.0 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
@@ -329,7 +329,7 @@ require (
 	github.com/sourcegraph/go-diff v0.7.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/spf13/cast v1.7.0 // indirect
+	github.com/spf13/cast v1.7.1 // indirect
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
