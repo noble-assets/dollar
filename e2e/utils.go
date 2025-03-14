@@ -24,7 +24,7 @@ import (
 	"context"
 	"testing"
 
-	portaltypes "dollar.noble.xyz/types/portal"
+	portaltypes "dollar.noble.xyz/v2/types/portal"
 	wormholetypes "github.com/noble-assets/wormhole/types"
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"

@@ -7,7 +7,7 @@ import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "dollar.noble.xyz/types/vaults";
+option go_package = "dollar.noble.xyz/v2/types/vaults";
 
 // buf:lint:ignore ENUM_VALUE_PREFIX
 enum VaultType {

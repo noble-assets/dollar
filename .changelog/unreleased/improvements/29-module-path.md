@@ -1,0 +1,1 @@
+- Update module path for v2 release line. ([#29](https://github.com/noble-assets/dollar/pull/29))

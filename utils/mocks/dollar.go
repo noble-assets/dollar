@@ -23,12 +23,12 @@ package mocks
 import (
 	"testing"
 
-	dollar "dollar.noble.xyz"
+	dollar "dollar.noble.xyz/v2"
 	wormholekeeper "github.com/noble-assets/wormhole/keeper"
 
 	storetypes "cosmossdk.io/store/types"
-	"dollar.noble.xyz/keeper"
-	"dollar.noble.xyz/types"
+	"dollar.noble.xyz/v2/keeper"
+	"dollar.noble.xyz/v2/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/address"
 	codectestutil "github.com/cosmos/cosmos-sdk/codec/testutil"

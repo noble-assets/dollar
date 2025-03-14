@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package noble.dollar.portal.v1;
 
-option go_package = "dollar.noble.xyz/types/portal";
+option go_package = "dollar.noble.xyz/v2/types/portal";
 
 // MsgDeliverInjection is an internal message type used for delivering Noble
 // Dollar Portal messages. It is specifically used to insert VAA's into the top

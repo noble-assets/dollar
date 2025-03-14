@@ -28,8 +28,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/protobuf/runtime/protoiface"
 
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 var _ types.MsgServer = &msgServer{}

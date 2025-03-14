@@ -26,7 +26,7 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/types"
+	"dollar.noble.xyz/v2/types"
 )
 
 var _ types.QueryServer = &queryServer{}
