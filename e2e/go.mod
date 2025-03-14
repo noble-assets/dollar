@@ -4,7 +4,7 @@ go 1.22.11
 
 require (
 	cosmossdk.io/math v1.4.0
-	dollar.noble.xyz v1.0.0
+	dollar.noble.xyz/v2 v2.0.0
 	github.com/noble-assets/wormhole v1.0.0-alpha.2
 	github.com/strangelove-ventures/interchaintest/v8 v8.8.1
 	github.com/stretchr/testify v1.10.0
@@ -285,7 +285,7 @@ require (
 )
 
 replace (
-	dollar.noble.xyz => ../
+	dollar.noble.xyz/v2 => ../
 	github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d
 	github.com/ChainSafe/go-schnorrkel/1 => github.com/ChainSafe/go-schnorrkel v1.0.0
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1

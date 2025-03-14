@@ -31,8 +31,8 @@ import (
 	"cosmossdk.io/errors"
 	"google.golang.org/protobuf/runtime/protoiface"
 
-	"dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/portal/ntt"
+	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/portal/ntt"
 )
 
 var _ portal.MsgServer = &portalMsgServer{}
