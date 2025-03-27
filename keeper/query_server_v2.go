@@ -22,6 +22,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"cosmossdk.io/collections"
@@ -101,7 +102,7 @@ func (k queryServerV2) YieldRecipient(ctx context.Context, req *v2.QueryYieldRec
 	key := collections.Join(int32(req.Provider), req.Identifier)
 	yieldRecipient, err := k.Keeper.YieldRecipients.Get(ctx, key)
 	if err != nil {
-		// TODO(@john): Return an error!
+		return nil, fmt.Errorf("unable to find yield recipient for provider %s with identifier %s", req.Provider, req.Identifier)
 	}
 
 	return &v2.QueryYieldRecipientResponse{YieldRecipient: yieldRecipient}, nil

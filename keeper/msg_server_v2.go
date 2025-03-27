@@ -22,14 +22,15 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
+	"dollar.noble.xyz/v2/types"
 	"dollar.noble.xyz/v2/types/v2"
-	"dollar.noble.xyz/v2/types/vaults"
 )
 
 var _ v2.MsgServer = &msgServerV2{}
@@ -44,23 +45,18 @@ func NewMsgServerV2(keeper *Keeper) v2.MsgServer {
 
 func (k msgServerV2) SetYieldRecipient(ctx context.Context, msg *v2.MsgSetYieldRecipient) (*v2.MsgSetYieldRecipientResponse, error) {
 	if msg.Signer != k.authority {
-		// TODO(@john): Move this error type!
-		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
-	}
-
-	key := collections.Join(int32(msg.Provider), msg.Identifier)
-	if has, _ := k.YieldRecipients.Has(ctx, key); has {
-		// TODO(@john): Return an error!
+		return nil, errors.Wrapf(types.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
 	}
 
 	switch msg.Provider {
 	case v2.Provider_IBC:
 		_, found := k.channel.GetChannel(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, msg.Identifier)
 		if !found {
-			// TODO(@john): Return an error!
+			return nil, fmt.Errorf("ibc identifier does not exist: %s", msg.Identifier)
 		}
 	}
 
+	key := collections.Join(int32(msg.Provider), msg.Identifier)
 	err := k.YieldRecipients.Set(ctx, key, msg.Recipient)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to set yield recipient in state")

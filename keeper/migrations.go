@@ -22,6 +22,7 @@ package keeper
 
 import (
 	"cosmossdk.io/collections"
+	"cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -49,8 +50,7 @@ func NewMigrator(keeper *Keeper) Migrator {
 func (m Migrator) Migrate1to2(ctx sdk.Context) error {
 	v1Stats, err := m.v1Stats.Get(ctx)
 	if err != nil {
-		// TODO: Maybe wrap this error?
-		return err
+		return errors.Wrap(err, "failed to get noble dollar v1 stats")
 	}
 
 	stats := v2.Stats{
@@ -62,8 +62,7 @@ func (m Migrator) Migrate1to2(ctx sdk.Context) error {
 
 	err = m.keeper.Stats.Set(ctx, stats)
 	if err != nil {
-		// TODO: Maybe wrap this error?
-		return err
+		return errors.Wrap(err, "failed to set noble dollar v2 stats")
 	}
 
 	return nil
