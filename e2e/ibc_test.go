@@ -51,9 +51,6 @@ var (
 	// destinationToken is the 32-byte representation of the "uusdn" denom.
 	destinationToken = common.FromHex("0x000000000000000000000000000000000000000000000000000000757573646e")
 
-	// sourceManagerAddress is the 32-byte representation of the Noble Portal on Ethereum Mainnet.
-	// https://github.com/m0-foundation/m-portal/blob/dbe93da561c94dfc04beec8a144b11b287957b7a/deployments/noble/1.json#L2
-	sourceManagerAddress = common.FromHex("0x00000000000000000000000083ae82bd4054e815fb7b189c39d9ce670369ea16")
 	// recipientManagerAddress is the 32-byte representation of the "dollar/manager" module account.
 	recipientManagerAddress = common.FromHex("0x0000000000000000000000002e859506ba229c183f8985d54fe7210923fb9bca")
 
@@ -107,7 +104,7 @@ func TestIBCYieldDistribution(t *testing.T) {
 	// ASSERT: The user should now have 1,000,000 $USDN.
 	balance, err := chain.BankQueryBalance(ctx, user.FormattedAddress(), "uusdn")
 	require.NoError(t, err)
-	require.Equal(t, math.NewInt(1_000_000*1e6), balance)
+	require.True(t, math.NewInt(1_000_000*1e6).Equal(balance))
 
 	// ACT: Query all yield recipients.
 	yieldRecipients := getYieldRecipients(t, ctx, validator)
@@ -141,12 +138,12 @@ func TestIBCYieldDistribution(t *testing.T) {
 	escrowAddress, _ := address.NewBech32Codec(chain.Config().Bech32Prefix).BytesToString(rawEscrowAddress)
 	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
 	require.NoError(t, err)
-	require.Equal(t, math.NewInt(500_000*1e6), balance)
+	require.True(t, math.NewInt(500_000*1e6).Equal(balance))
 	// ASSERT: The total supply should be 500,000 $USDN on the external chain.
 	ibcDenom := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(transfertypes.PortID, channelID, "uusdn")).IBCDenom()
 	totalSupply, err := externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
 	require.NoError(t, err)
-	require.Equal(t, math.NewInt(500_000*1e6), totalSupply.Amount)
+	require.True(t, math.NewInt(500_000*1e6).Equal(totalSupply.Amount))
 
 	// ARRANGE: Prepare a VAA to be delivered that accrues 4.15% yield.
 	payload = portaltypes.EncodeIndexPayload(
@@ -172,11 +169,11 @@ func TestIBCYieldDistribution(t *testing.T) {
 	// ASSERT: The escrow account should now have 520,750 $USDN.
 	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
 	require.NoError(t, err)
-	require.Equal(t, math.NewInt(520_750*1e6), balance)
+	require.True(t, math.NewInt(520_750*1e6).Equal(balance))
 	// ASSERT: The total supply should be 520,750 $USDN on the external chain.
 	totalSupply, err = externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
 	require.NoError(t, err)
-	require.Equal(t, math.NewInt(520_750*1e6), totalSupply.Amount)
+	require.True(t, math.NewInt(520_750*1e6).Equal(totalSupply.Amount))
 }
 
 // buildTransceiverMessage is a utility that builds a transceiver message.
@@ -188,7 +185,7 @@ func buildTransceiverMessage(payload []byte) []byte {
 	}
 
 	transceiverMessage := ntt.TransceiverMessage{
-		SourceManagerAddress:    sourceManagerAddress,
+		SourceManagerAddress:    utils.SourceManagerAddress,
 		RecipientManagerAddress: recipientManagerAddress,
 		ManagerPayload:          ntt.EncodeManagerMessage(managerMessage),
 		TransceiverPayload:      nil,

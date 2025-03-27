@@ -27,21 +27,22 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+	"github.com/stretchr/testify/require"
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 )
 
 var sequence = uint64(0)
 
-// Guardian defines the structure of a guardian for unit testing.
+// Guardian defines the structure of a guardian for testing.
 type Guardian struct {
 	Key     *ecdsa.PrivateKey
 	Address common.Address
 }
 
-// NewGuardian creates a new Guardian for unit testing.
-func NewGuardian() Guardian {
-	ethcrypto.S256()
-	key, _ := ecdsa.GenerateKey(ethcrypto.S256(), rand.Reader)
+// NewGuardian creates a new Guardian for testing.
+func NewGuardian(t require.TestingT) Guardian {
+	key, err := ecdsa.GenerateKey(ethcrypto.S256(), rand.Reader)
+	require.NoError(t, err)
 
 	return Guardian{
 		Key:     key,
@@ -56,22 +57,14 @@ func NewVAA(guardians []Guardian, payload []byte) vaautils.VAA {
 		GuardianSetIndex: 0,
 		Timestamp:        time.Now().Local().Truncate(time.Second),
 		Sequence:         sequence,
+		EmitterChain:     vaautils.ChainIDEthereum,
+		EmitterAddress:   vaautils.Address(SourceTransceiverAddress),
 		Payload:          payload,
-
-		// For testing purposes, we assume that VAAs are emitted by the
-		// Wormhole Transceiver contract for the Noble Portal deployed on
-		// Ethereum Mainnet.
-		//
-		// https://github.com/m0-foundation/m-portal/blob/dbe93da561c94dfc04beec8a144b11b287957b7a/deployments/noble/1.json#L3
-		EmitterChain:   vaautils.ChainIDEthereum,
-		EmitterAddress: vaautils.Address(common.FromHex("0x000000000000000000000000c7dd372c39e38bf11451ab4a8427b4ae38cef644")),
 	}
 	sequence += 1
 
-	var addresses []common.Address
 	for idx, guardian := range guardians {
 		vaa.AddSignature(guardian.Key, uint8(idx))
-		addresses = append(addresses, guardian.Address)
 	}
 
 	return vaa

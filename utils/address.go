@@ -45,6 +45,8 @@ func TestAccount() Account {
 	address, _ := sdk.Bech32ifyAddressBytes("noble", bytes)
 	invalid, _ := sdk.Bech32ifyAddressBytes("cosmos", bytes)
 
+	// NOTE: We pad to 32-bytes to be compatible with Wormhole's universal address format.
+	// https://wormhole.com/docs/build/reference/wormhole-formatted-addresses
 	padded := make([]byte, 32)
 	copy(padded[32-len(bytes):], bytes)
 

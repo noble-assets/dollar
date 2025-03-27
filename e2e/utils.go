@@ -24,7 +24,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common"
 	wormholetypes "github.com/noble-assets/wormhole/types"
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
@@ -48,7 +47,7 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 	client, network := interchaintest.DockerSetup(t)
 	var relayer *rly.CosmosRelayer
 
-	guardian := utils.NewGuardian()
+	guardian := utils.NewGuardian(t)
 	guardians = []utils.Guardian{guardian}
 
 	numValidators, numFullNodes := 1, 0
@@ -79,10 +78,8 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 				ModifyGenesis: func(cc ibc.ChainConfig, genesis []byte) ([]byte, error) {
 					peers := make(map[uint16]portaltypes.Peer)
 					peers[uint16(vaautils.ChainIDEthereum)] = portaltypes.Peer{
-						// https://github.com/m0-foundation/m-portal/blob/dbe93da561c94dfc04beec8a144b11b287957b7a/deployments/noble/1.json#L3
-						Transceiver: common.FromHex("0x000000000000000000000000c7dd372c39e38bf11451ab4a8427b4ae38cef644"),
-						// https://github.com/m0-foundation/m-portal/blob/dbe93da561c94dfc04beec8a144b11b287957b7a/deployments/noble/1.json#L2
-						Manager: common.FromHex("0x00000000000000000000000083ae82bd4054e815fb7b189c39d9ce670369ea16"),
+						Transceiver: utils.SourceTransceiverAddress,
+						Manager:     utils.SourceManagerAddress,
 					}
 
 					guardianSets := make(map[uint16]wormholetypes.GuardianSet)
