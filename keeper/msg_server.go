@@ -83,30 +83,6 @@ func (k msgServer) SetPausedState(ctx context.Context, msg *types.MsgSetPausedSt
 	return &types.MsgSetPausedStateResponse{}, k.event.EventManager(ctx).Emit(ctx, event)
 }
 
-func (k msgServer) SetYieldRecipient(ctx context.Context, msg *types.MsgSetYieldRecipient) (*types.MsgSetYieldRecipientResponse, error) {
-	if msg.Signer != k.authority {
-		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
-	}
-
-	if has, _ := k.YieldRecipients.Has(ctx, msg.ChannelId); has {
-		// TODO(@john): Return an error!
-	}
-	_, found := k.channel.GetChannel(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, msg.ChannelId)
-	if !found {
-		// TODO(@john): Return an error!
-	}
-
-	err := k.YieldRecipients.Set(ctx, msg.ChannelId, msg.YieldRecipient)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to set yield recipient in state")
-	}
-
-	return &types.MsgSetYieldRecipientResponse{}, k.event.EventManager(ctx).Emit(ctx, &types.YieldRecipientSet{
-		ChannelId:      msg.ChannelId,
-		YieldRecipient: msg.YieldRecipient,
-	})
-}
-
 func (k *Keeper) Burn(ctx context.Context, sender []byte, amount math.Int) error {
 	coins := sdk.NewCoins(sdk.NewCoin(k.denom, amount))
 	err := k.bank.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, coins)

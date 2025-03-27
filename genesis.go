@@ -30,8 +30,8 @@ import (
 	"cosmossdk.io/math"
 
 	"dollar.noble.xyz/v2/keeper"
-	"dollar.noble.xyz/v2/types"
 	"dollar.noble.xyz/v2/types/portal"
+	types "dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 

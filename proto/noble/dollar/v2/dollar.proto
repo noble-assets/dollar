@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package noble.dollar.v1;
+package noble.dollar.v2;
 
 import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "dollar.noble.xyz/v2/types";
+option go_package = "dollar.noble.xyz/v2/types/v2";
 
 message Stats {
   uint64 total_holders = 1;
@@ -24,4 +24,6 @@ message Stats {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
+
+  map<string, string> total_channel_yield = 4;
 }

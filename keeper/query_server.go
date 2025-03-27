@@ -25,8 +25,6 @@ import (
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
 	"dollar.noble.xyz/v2/types"
 )
@@ -101,44 +99,9 @@ func (k queryServer) Stats(ctx context.Context, req *types.QueryStats) (*types.Q
 		return nil, errors.Wrap(err, "unable to get stats from state")
 	}
 
-	totalChannelYield := make(map[string]types.QueryStatsResponse_ChannelYield)
-	for channelId, rawAmount := range stats.TotalChannelYield {
-		_, clientState, _ := k.channel.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, channelId)
-		amount, _ := math.NewIntFromString(rawAmount)
-
-		totalChannelYield[channelId] = types.QueryStatsResponse_ChannelYield{
-			ChainId: types.ParseChainId(clientState),
-			Amount:  amount,
-		}
-	}
-
 	return &types.QueryStatsResponse{
 		TotalHolders:      stats.TotalHolders,
 		TotalPrincipal:    stats.TotalPrincipal,
 		TotalYieldAccrued: stats.TotalYieldAccrued,
-		TotalChannelYield: totalChannelYield,
 	}, nil
-}
-
-func (k queryServer) YieldRecipients(ctx context.Context, req *types.QueryYieldRecipients) (*types.QueryYieldRecipientsResponse, error) {
-	if req == nil {
-		return nil, types.ErrInvalidRequest
-	}
-
-	yieldRecipients, err := k.GetYieldRecipients(ctx)
-
-	return &types.QueryYieldRecipientsResponse{YieldRecipients: yieldRecipients}, err
-}
-
-func (k queryServer) YieldRecipient(ctx context.Context, req *types.QueryYieldRecipient) (*types.QueryYieldRecipientResponse, error) {
-	if req == nil {
-		return nil, types.ErrInvalidRequest
-	}
-
-	yieldRecipient, err := k.Keeper.YieldRecipients.Get(ctx, req.ChannelId)
-	if err != nil {
-		// TODO(@john): Return an error!
-	}
-
-	return &types.QueryYieldRecipientResponse{YieldRecipient: yieldRecipient}, nil
 }

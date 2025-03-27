@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package noble.dollar.v1;
+package noble.dollar.v2;
 
 import "gogoproto/gogo.proto";
 import "noble/dollar/portal/v1/genesis.proto";
-import "noble/dollar/v1/dollar.proto";
+import "noble/dollar/v2/dollar.proto";
 import "noble/dollar/vaults/v1/genesis.proto";
 
-option go_package = "dollar.noble.xyz/v2/types";
+option go_package = "dollar.noble.xyz/v2/types/v2";
 
 // GenesisState defines the genesis state of the Noble Dollar module.
 message GenesisState {
@@ -27,5 +27,8 @@ message GenesisState {
   map<string, string> principal = 5;
 
   // stats contains the genesis statistics around the Noble Dollar.
-  noble.dollar.v1.Stats stats = 6 [(gogoproto.nullable) = false];
+  noble.dollar.v2.Stats stats = 6 [(gogoproto.nullable) = false];
+
+  // yield_recipients contains the genesis yield recipients for IBC channels.
+  map<string, string> yield_recipients = 7;
 }

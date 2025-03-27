@@ -45,9 +45,3 @@ message IndexUpdated {
     (gogoproto.nullable) = false
   ];
 }
-
-// ChannelEnabled is an event emitted when the yield recipient for an IBC channel is set.
-message YieldRecipientSet {
-  string channel_id = 1;
-  string yield_recipient = 2;
-}

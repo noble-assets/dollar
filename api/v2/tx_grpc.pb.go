@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: noble/dollar/v1/tx.proto
+// source: noble/dollar/v2/tx.proto
 
-package dollarv1
+package dollarv2
 
 import (
 	context "context"
@@ -19,16 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_ClaimYield_FullMethodName     = "/noble.dollar.v1.Msg/ClaimYield"
-	Msg_SetPausedState_FullMethodName = "/noble.dollar.v1.Msg/SetPausedState"
+	Msg_SetYieldRecipient_FullMethodName = "/noble.dollar.v2.Msg/SetYieldRecipient"
 )
 
 // MsgClient is the client API for Msg service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MsgClient interface {
-	ClaimYield(ctx context.Context, in *MsgClaimYield, opts ...grpc.CallOption) (*MsgClaimYieldResponse, error)
-	SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error)
+	SetYieldRecipient(ctx context.Context, in *MsgSetYieldRecipient, opts ...grpc.CallOption) (*MsgSetYieldRecipientResponse, error)
 }
 
 type msgClient struct {
@@ -39,20 +37,10 @@ func NewMsgClient(cc grpc.ClientConnInterface) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) ClaimYield(ctx context.Context, in *MsgClaimYield, opts ...grpc.CallOption) (*MsgClaimYieldResponse, error) {
+func (c *msgClient) SetYieldRecipient(ctx context.Context, in *MsgSetYieldRecipient, opts ...grpc.CallOption) (*MsgSetYieldRecipientResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgClaimYieldResponse)
-	err := c.cc.Invoke(ctx, Msg_ClaimYield_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, opts ...grpc.CallOption) (*MsgSetPausedStateResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgSetPausedStateResponse)
-	err := c.cc.Invoke(ctx, Msg_SetPausedState_FullMethodName, in, out, cOpts...)
+	out := new(MsgSetYieldRecipientResponse)
+	err := c.cc.Invoke(ctx, Msg_SetYieldRecipient_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +51,7 @@ func (c *msgClient) SetPausedState(ctx context.Context, in *MsgSetPausedState, o
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
 type MsgServer interface {
-	ClaimYield(context.Context, *MsgClaimYield) (*MsgClaimYieldResponse, error)
-	SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error)
+	SetYieldRecipient(context.Context, *MsgSetYieldRecipient) (*MsgSetYieldRecipientResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -75,11 +62,8 @@ type MsgServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMsgServer struct{}
 
-func (UnimplementedMsgServer) ClaimYield(context.Context, *MsgClaimYield) (*MsgClaimYieldResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ClaimYield not implemented")
-}
-func (UnimplementedMsgServer) SetPausedState(context.Context, *MsgSetPausedState) (*MsgSetPausedStateResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetPausedState not implemented")
+func (UnimplementedMsgServer) SetYieldRecipient(context.Context, *MsgSetYieldRecipient) (*MsgSetYieldRecipientResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetYieldRecipient not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -102,38 +86,20 @@ func RegisterMsgServer(s grpc.ServiceRegistrar, srv MsgServer) {
 	s.RegisterService(&Msg_ServiceDesc, srv)
 }
 
-func _Msg_ClaimYield_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgClaimYield)
+func _Msg_SetYieldRecipient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetYieldRecipient)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).ClaimYield(ctx, in)
+		return srv.(MsgServer).SetYieldRecipient(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Msg_ClaimYield_FullMethodName,
+		FullMethod: Msg_SetYieldRecipient_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).ClaimYield(ctx, req.(*MsgClaimYield))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSetPausedState)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).SetPausedState(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Msg_SetPausedState_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SetPausedState(ctx, req.(*MsgSetPausedState))
+		return srv.(MsgServer).SetYieldRecipient(ctx, req.(*MsgSetYieldRecipient))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -142,18 +108,14 @@ func _Msg_SetPausedState_Handler(srv interface{}, ctx context.Context, dec func(
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Msg_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "noble.dollar.v1.Msg",
+	ServiceName: "noble.dollar.v2.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ClaimYield",
-			Handler:    _Msg_ClaimYield_Handler,
-		},
-		{
-			MethodName: "SetPausedState",
-			Handler:    _Msg_SetPausedState_Handler,
+			MethodName: "SetYieldRecipient",
+			Handler:    _Msg_SetYieldRecipient_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "noble/dollar/v1/tx.proto",
+	Metadata: "noble/dollar/v2/tx.proto",
 }

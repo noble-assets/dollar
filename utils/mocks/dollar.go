@@ -42,6 +42,7 @@ import (
 	"dollar.noble.xyz/v2"
 	"dollar.noble.xyz/v2/keeper"
 	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/v2"
 )
 
 func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeeper) (*keeper.Keeper, *wormholekeeper.Keeper, sdk.Context) {
@@ -92,7 +93,7 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 		GovChain:   uint16(vaautils.GovernanceChain),
 		GovAddress: vaautils.GovernanceEmitter.Bytes(),
 	})
-	dollar.InitGenesis(ctx, k, addressCdc, *types.DefaultGenesisState())
+	dollar.InitGenesis(ctx, k, addressCdc, *v2.DefaultGenesisState())
 
 	return k, wormholeKeeper, ctx
 }

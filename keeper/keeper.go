@@ -42,6 +42,7 @@ import (
 	"dollar.noble.xyz/v2/types"
 	"dollar.noble.xyz/v2/types/portal"
 	"dollar.noble.xyz/v2/types/portal/ntt"
+	"dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 
@@ -50,6 +51,9 @@ type Keeper struct {
 	authority           string
 	vaultsMinimumLock   int64
 	vaultsMinimumUnlock int64
+
+	cdc   codec.Codec
+	store store.KVStoreService
 
 	logger   log.Logger
 	header   header.Service
@@ -64,7 +68,7 @@ type Keeper struct {
 	Paused          collections.Item[bool]
 	Index           collections.Item[int64]
 	Principal       collections.Map[[]byte, math.Int]
-	Stats           collections.Item[types.Stats]
+	Stats           collections.Item[v2.Stats]
 	YieldRecipients collections.Map[string, string]
 
 	PortalOwner         collections.Item[string]
@@ -100,6 +104,9 @@ func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMi
 		vaultsMinimumLock:   vaultsMinimumLock,
 		vaultsMinimumUnlock: vaultsMinimumUnlock,
 
+		cdc:   cdc,
+		store: store,
+
 		logger:   logger.With("module", types.ModuleName),
 		header:   header,
 		event:    event,
@@ -113,7 +120,7 @@ func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMi
 		Paused:          collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
 		Index:           collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
 		Principal:       collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
-		Stats:           collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[types.Stats](cdc)),
+		Stats:           collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[v2.Stats](cdc)),
 		YieldRecipients: collections.NewMap(builder, types.YieldRecipientPrefix, "yield_recipients", collections.StringKey, collections.StringValue),
 
 		PortalOwner:         collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),

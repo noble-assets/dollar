@@ -19,13 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Query_Index_FullMethodName           = "/noble.dollar.v1.Query/Index"
-	Query_Paused_FullMethodName          = "/noble.dollar.v1.Query/Paused"
-	Query_Principal_FullMethodName       = "/noble.dollar.v1.Query/Principal"
-	Query_Yield_FullMethodName           = "/noble.dollar.v1.Query/Yield"
-	Query_Stats_FullMethodName           = "/noble.dollar.v1.Query/Stats"
-	Query_YieldRecipients_FullMethodName = "/noble.dollar.v1.Query/YieldRecipients"
-	Query_YieldRecipient_FullMethodName  = "/noble.dollar.v1.Query/YieldRecipient"
+	Query_Index_FullMethodName     = "/noble.dollar.v1.Query/Index"
+	Query_Paused_FullMethodName    = "/noble.dollar.v1.Query/Paused"
+	Query_Principal_FullMethodName = "/noble.dollar.v1.Query/Principal"
+	Query_Yield_FullMethodName     = "/noble.dollar.v1.Query/Yield"
+	Query_Stats_FullMethodName     = "/noble.dollar.v1.Query/Stats"
 )
 
 // QueryClient is the client API for Query service.
@@ -37,8 +35,6 @@ type QueryClient interface {
 	Principal(ctx context.Context, in *QueryPrincipal, opts ...grpc.CallOption) (*QueryPrincipalResponse, error)
 	Yield(ctx context.Context, in *QueryYield, opts ...grpc.CallOption) (*QueryYieldResponse, error)
 	Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error)
-	YieldRecipients(ctx context.Context, in *QueryYieldRecipients, opts ...grpc.CallOption) (*QueryYieldRecipientsResponse, error)
-	YieldRecipient(ctx context.Context, in *QueryYieldRecipient, opts ...grpc.CallOption) (*QueryYieldRecipientResponse, error)
 }
 
 type queryClient struct {
@@ -99,26 +95,6 @@ func (c *queryClient) Stats(ctx context.Context, in *QueryStats, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *queryClient) YieldRecipients(ctx context.Context, in *QueryYieldRecipients, opts ...grpc.CallOption) (*QueryYieldRecipientsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryYieldRecipientsResponse)
-	err := c.cc.Invoke(ctx, Query_YieldRecipients_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryClient) YieldRecipient(ctx context.Context, in *QueryYieldRecipient, opts ...grpc.CallOption) (*QueryYieldRecipientResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(QueryYieldRecipientResponse)
-	err := c.cc.Invoke(ctx, Query_YieldRecipient_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
@@ -128,8 +104,6 @@ type QueryServer interface {
 	Principal(context.Context, *QueryPrincipal) (*QueryPrincipalResponse, error)
 	Yield(context.Context, *QueryYield) (*QueryYieldResponse, error)
 	Stats(context.Context, *QueryStats) (*QueryStatsResponse, error)
-	YieldRecipients(context.Context, *QueryYieldRecipients) (*QueryYieldRecipientsResponse, error)
-	YieldRecipient(context.Context, *QueryYieldRecipient) (*QueryYieldRecipientResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -154,12 +128,6 @@ func (UnimplementedQueryServer) Yield(context.Context, *QueryYield) (*QueryYield
 }
 func (UnimplementedQueryServer) Stats(context.Context, *QueryStats) (*QueryStatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Stats not implemented")
-}
-func (UnimplementedQueryServer) YieldRecipients(context.Context, *QueryYieldRecipients) (*QueryYieldRecipientsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method YieldRecipients not implemented")
-}
-func (UnimplementedQueryServer) YieldRecipient(context.Context, *QueryYieldRecipient) (*QueryYieldRecipientResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method YieldRecipient not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 func (UnimplementedQueryServer) testEmbeddedByValue()               {}
@@ -272,42 +240,6 @@ func _Query_Stats_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_YieldRecipients_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryYieldRecipients)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).YieldRecipients(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Query_YieldRecipients_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).YieldRecipients(ctx, req.(*QueryYieldRecipients))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_YieldRecipient_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryYieldRecipient)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).YieldRecipient(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Query_YieldRecipient_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).YieldRecipient(ctx, req.(*QueryYieldRecipient))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -334,14 +266,6 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Stats",
 			Handler:    _Query_Stats_Handler,
-		},
-		{
-			MethodName: "YieldRecipients",
-			Handler:    _Query_YieldRecipients_Handler,
-		},
-		{
-			MethodName: "YieldRecipient",
-			Handler:    _Query_YieldRecipient_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

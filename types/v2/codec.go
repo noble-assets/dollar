@@ -18,18 +18,28 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND
 // TITLE.
 
-package types
+package v2
 
 import (
-	"github.com/cosmos/ibc-go/v8/modules/core/exported"
-	tendermint "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
+	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
-func ParseChainId(rawClientState exported.ClientState) string {
-	switch clientState := rawClientState.(type) {
-	case *tendermint.ClientState:
-		return clientState.ChainId
-	default:
-		return "UNKNOWN"
-	}
+func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	cdc.RegisterConcrete(&MsgSetYieldRecipientResponse{}, "dollar/SetYieldRecipient", nil)
+}
+
+func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetYieldRecipientResponse{})
+
+	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+}
+
+var amino = codec.NewLegacyAmino()
+
+func init() {
+	RegisterLegacyAminoCodec(amino)
+	amino.Seal()
 }
