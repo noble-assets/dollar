@@ -91,6 +91,9 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
+	if err := v2.RegisterQueryHandlerClient(context.Background(), mux, v2.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
 
 	if err := portal.RegisterQueryHandlerClient(context.Background(), mux, portal.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
