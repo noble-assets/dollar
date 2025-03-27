@@ -99,11 +99,11 @@ func (x *_Stats_4_map) IsValid() bool {
 }
 
 var (
-	md_Stats                     protoreflect.MessageDescriptor
-	fd_Stats_total_holders       protoreflect.FieldDescriptor
-	fd_Stats_total_principal     protoreflect.FieldDescriptor
-	fd_Stats_total_yield_accrued protoreflect.FieldDescriptor
-	fd_Stats_total_channel_yield protoreflect.FieldDescriptor
+	md_Stats                      protoreflect.MessageDescriptor
+	fd_Stats_total_holders        protoreflect.FieldDescriptor
+	fd_Stats_total_principal      protoreflect.FieldDescriptor
+	fd_Stats_total_yield_accrued  protoreflect.FieldDescriptor
+	fd_Stats_total_external_yield protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -112,7 +112,7 @@ func init() {
 	fd_Stats_total_holders = md_Stats.Fields().ByName("total_holders")
 	fd_Stats_total_principal = md_Stats.Fields().ByName("total_principal")
 	fd_Stats_total_yield_accrued = md_Stats.Fields().ByName("total_yield_accrued")
-	fd_Stats_total_channel_yield = md_Stats.Fields().ByName("total_channel_yield")
+	fd_Stats_total_external_yield = md_Stats.Fields().ByName("total_external_yield")
 }
 
 var _ protoreflect.Message = (*fastReflection_Stats)(nil)
@@ -198,9 +198,9 @@ func (x *fastReflection_Stats) Range(f func(protoreflect.FieldDescriptor, protor
 			return
 		}
 	}
-	if len(x.TotalChannelYield) != 0 {
-		value := protoreflect.ValueOfMap(&_Stats_4_map{m: &x.TotalChannelYield})
-		if !f(fd_Stats_total_channel_yield, value) {
+	if len(x.TotalExternalYield) != 0 {
+		value := protoreflect.ValueOfMap(&_Stats_4_map{m: &x.TotalExternalYield})
+		if !f(fd_Stats_total_external_yield, value) {
 			return
 		}
 	}
@@ -225,8 +225,8 @@ func (x *fastReflection_Stats) Has(fd protoreflect.FieldDescriptor) bool {
 		return x.TotalPrincipal != ""
 	case "noble.dollar.v2.Stats.total_yield_accrued":
 		return x.TotalYieldAccrued != ""
-	case "noble.dollar.v2.Stats.total_channel_yield":
-		return len(x.TotalChannelYield) != 0
+	case "noble.dollar.v2.Stats.total_external_yield":
+		return len(x.TotalExternalYield) != 0
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.Stats"))
@@ -249,8 +249,8 @@ func (x *fastReflection_Stats) Clear(fd protoreflect.FieldDescriptor) {
 		x.TotalPrincipal = ""
 	case "noble.dollar.v2.Stats.total_yield_accrued":
 		x.TotalYieldAccrued = ""
-	case "noble.dollar.v2.Stats.total_channel_yield":
-		x.TotalChannelYield = nil
+	case "noble.dollar.v2.Stats.total_external_yield":
+		x.TotalExternalYield = nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.Stats"))
@@ -276,11 +276,11 @@ func (x *fastReflection_Stats) Get(descriptor protoreflect.FieldDescriptor) prot
 	case "noble.dollar.v2.Stats.total_yield_accrued":
 		value := x.TotalYieldAccrued
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.v2.Stats.total_channel_yield":
-		if len(x.TotalChannelYield) == 0 {
+	case "noble.dollar.v2.Stats.total_external_yield":
+		if len(x.TotalExternalYield) == 0 {
 			return protoreflect.ValueOfMap(&_Stats_4_map{})
 		}
-		mapValue := &_Stats_4_map{m: &x.TotalChannelYield}
+		mapValue := &_Stats_4_map{m: &x.TotalExternalYield}
 		return protoreflect.ValueOfMap(mapValue)
 	default:
 		if descriptor.IsExtension() {
@@ -308,10 +308,10 @@ func (x *fastReflection_Stats) Set(fd protoreflect.FieldDescriptor, value protor
 		x.TotalPrincipal = value.Interface().(string)
 	case "noble.dollar.v2.Stats.total_yield_accrued":
 		x.TotalYieldAccrued = value.Interface().(string)
-	case "noble.dollar.v2.Stats.total_channel_yield":
+	case "noble.dollar.v2.Stats.total_external_yield":
 		mv := value.Map()
 		cmv := mv.(*_Stats_4_map)
-		x.TotalChannelYield = *cmv.m
+		x.TotalExternalYield = *cmv.m
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.Stats"))
@@ -332,11 +332,11 @@ func (x *fastReflection_Stats) Set(fd protoreflect.FieldDescriptor, value protor
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Stats) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.Stats.total_channel_yield":
-		if x.TotalChannelYield == nil {
-			x.TotalChannelYield = make(map[string]string)
+	case "noble.dollar.v2.Stats.total_external_yield":
+		if x.TotalExternalYield == nil {
+			x.TotalExternalYield = make(map[string]string)
 		}
-		value := &_Stats_4_map{m: &x.TotalChannelYield}
+		value := &_Stats_4_map{m: &x.TotalExternalYield}
 		return protoreflect.ValueOfMap(value)
 	case "noble.dollar.v2.Stats.total_holders":
 		panic(fmt.Errorf("field total_holders of message noble.dollar.v2.Stats is not mutable"))
@@ -363,7 +363,7 @@ func (x *fastReflection_Stats) NewField(fd protoreflect.FieldDescriptor) protore
 		return protoreflect.ValueOfString("")
 	case "noble.dollar.v2.Stats.total_yield_accrued":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.v2.Stats.total_channel_yield":
+	case "noble.dollar.v2.Stats.total_external_yield":
 		m := make(map[string]string)
 		return protoreflect.ValueOfMap(&_Stats_4_map{m: &m})
 	default:
@@ -446,23 +446,23 @@ func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		if len(x.TotalChannelYield) > 0 {
+		if len(x.TotalExternalYield) > 0 {
 			SiZeMaP := func(k string, v string) {
 				mapEntrySize := 1 + len(k) + runtime.Sov(uint64(len(k))) + 1 + len(v) + runtime.Sov(uint64(len(v)))
 				n += mapEntrySize + 1 + runtime.Sov(uint64(mapEntrySize))
 			}
 			if options.Deterministic {
-				sortme := make([]string, 0, len(x.TotalChannelYield))
-				for k := range x.TotalChannelYield {
+				sortme := make([]string, 0, len(x.TotalExternalYield))
+				for k := range x.TotalExternalYield {
 					sortme = append(sortme, k)
 				}
 				sort.Strings(sortme)
 				for _, k := range sortme {
-					v := x.TotalChannelYield[k]
+					v := x.TotalExternalYield[k]
 					SiZeMaP(k, v)
 				}
 			} else {
-				for k, v := range x.TotalChannelYield {
+				for k, v := range x.TotalExternalYield {
 					SiZeMaP(k, v)
 				}
 			}
@@ -496,7 +496,7 @@ func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if len(x.TotalChannelYield) > 0 {
+		if len(x.TotalExternalYield) > 0 {
 			MaRsHaLmAp := func(k string, v string) (protoiface.MarshalOutput, error) {
 				baseI := i
 				i -= len(v)
@@ -515,23 +515,23 @@ func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
 				return protoiface.MarshalOutput{}, nil
 			}
 			if options.Deterministic {
-				keysForTotalChannelYield := make([]string, 0, len(x.TotalChannelYield))
-				for k := range x.TotalChannelYield {
-					keysForTotalChannelYield = append(keysForTotalChannelYield, string(k))
+				keysForTotalExternalYield := make([]string, 0, len(x.TotalExternalYield))
+				for k := range x.TotalExternalYield {
+					keysForTotalExternalYield = append(keysForTotalExternalYield, string(k))
 				}
-				sort.Slice(keysForTotalChannelYield, func(i, j int) bool {
-					return keysForTotalChannelYield[i] < keysForTotalChannelYield[j]
+				sort.Slice(keysForTotalExternalYield, func(i, j int) bool {
+					return keysForTotalExternalYield[i] < keysForTotalExternalYield[j]
 				})
-				for iNdEx := len(keysForTotalChannelYield) - 1; iNdEx >= 0; iNdEx-- {
-					v := x.TotalChannelYield[string(keysForTotalChannelYield[iNdEx])]
-					out, err := MaRsHaLmAp(keysForTotalChannelYield[iNdEx], v)
+				for iNdEx := len(keysForTotalExternalYield) - 1; iNdEx >= 0; iNdEx-- {
+					v := x.TotalExternalYield[string(keysForTotalExternalYield[iNdEx])]
+					out, err := MaRsHaLmAp(keysForTotalExternalYield[iNdEx], v)
 					if err != nil {
 						return out, err
 					}
 				}
 			} else {
-				for k := range x.TotalChannelYield {
-					v := x.TotalChannelYield[k]
+				for k := range x.TotalExternalYield {
+					v := x.TotalExternalYield[k]
 					out, err := MaRsHaLmAp(k, v)
 					if err != nil {
 						return out, err
@@ -692,7 +692,7 @@ func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
 				iNdEx = postIndex
 			case 4:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalChannelYield", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalExternalYield", wireType)
 				}
 				var msglen int
 				for shift := uint(0); ; shift += 7 {
@@ -719,8 +719,8 @@ func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				if x.TotalChannelYield == nil {
-					x.TotalChannelYield = make(map[string]string)
+				if x.TotalExternalYield == nil {
+					x.TotalExternalYield = make(map[string]string)
 				}
 				var mapkey string
 				var mapvalue string
@@ -815,7 +815,7 @@ func (x *fastReflection_Stats) ProtoMethods() *protoiface.Methods {
 						iNdEx += skippy
 					}
 				}
-				x.TotalChannelYield[mapkey] = mapvalue
+				x.TotalExternalYield[mapkey] = mapvalue
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -865,15 +865,58 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Provider int32
+
+const (
+	Provider_IBC Provider = 0
+)
+
+// Enum value maps for Provider.
+var (
+	Provider_name = map[int32]string{
+		0: "IBC",
+	}
+	Provider_value = map[string]int32{
+		"IBC": 0,
+	}
+)
+
+func (x Provider) Enum() *Provider {
+	p := new(Provider)
+	*p = x
+	return p
+}
+
+func (x Provider) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Provider) Descriptor() protoreflect.EnumDescriptor {
+	return file_noble_dollar_v2_dollar_proto_enumTypes[0].Descriptor()
+}
+
+func (Provider) Type() protoreflect.EnumType {
+	return &file_noble_dollar_v2_dollar_proto_enumTypes[0]
+}
+
+func (x Provider) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Provider.Descriptor instead.
+func (Provider) EnumDescriptor() ([]byte, []int) {
+	return file_noble_dollar_v2_dollar_proto_rawDescGZIP(), []int{0}
+}
+
 type Stats struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TotalHolders      uint64            `protobuf:"varint,1,opt,name=total_holders,json=totalHolders,proto3" json:"total_holders,omitempty"`
-	TotalPrincipal    string            `protobuf:"bytes,2,opt,name=total_principal,json=totalPrincipal,proto3" json:"total_principal,omitempty"`
-	TotalYieldAccrued string            `protobuf:"bytes,3,opt,name=total_yield_accrued,json=totalYieldAccrued,proto3" json:"total_yield_accrued,omitempty"`
-	TotalChannelYield map[string]string `protobuf:"bytes,4,rep,name=total_channel_yield,json=totalChannelYield,proto3" json:"total_channel_yield,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	TotalHolders       uint64            `protobuf:"varint,1,opt,name=total_holders,json=totalHolders,proto3" json:"total_holders,omitempty"`
+	TotalPrincipal     string            `protobuf:"bytes,2,opt,name=total_principal,json=totalPrincipal,proto3" json:"total_principal,omitempty"`
+	TotalYieldAccrued  string            `protobuf:"bytes,3,opt,name=total_yield_accrued,json=totalYieldAccrued,proto3" json:"total_yield_accrued,omitempty"`
+	TotalExternalYield map[string]string `protobuf:"bytes,4,rep,name=total_external_yield,json=totalExternalYield,proto3" json:"total_external_yield,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *Stats) Reset() {
@@ -917,9 +960,9 @@ func (x *Stats) GetTotalYieldAccrued() string {
 	return ""
 }
 
-func (x *Stats) GetTotalChannelYield() map[string]string {
+func (x *Stats) GetTotalExternalYield() map[string]string {
 	if x != nil {
-		return x.TotalChannelYield
+		return x.TotalExternalYield
 	}
 	return nil
 }
@@ -934,7 +977,7 @@ var file_noble_dollar_v2_dollar_proto_rawDesc = []byte{
 	0x74, 0x6f, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67,
 	0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x22, 0x8e, 0x03, 0x0a, 0x05, 0x53, 0x74, 0x61, 0x74, 0x73, 0x12, 0x23, 0x0a,
+	0x6f, 0x74, 0x6f, 0x22, 0x92, 0x03, 0x0a, 0x05, 0x53, 0x74, 0x61, 0x74, 0x73, 0x12, 0x23, 0x0a,
 	0x0d, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x68, 0x6f, 0x6c, 0x64, 0x65, 0x72, 0x73, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x04, 0x52, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x48, 0x6f, 0x6c, 0x64, 0x65,
 	0x72, 0x73, 0x12, 0x59, 0x0a, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x70, 0x72, 0x69, 0x6e,
@@ -949,29 +992,30 @@ var file_noble_dollar_v2_dollar_proto_rawDesc = []byte{
 	0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73,
 	0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x11, 0x74, 0x6f,
 	0x74, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x41, 0x63, 0x63, 0x72, 0x75, 0x65, 0x64, 0x12,
-	0x5d, 0x0a, 0x13, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c,
-	0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2d, 0x2e, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x53,
-	0x74, 0x61, 0x74, 0x73, 0x2e, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65,
-	0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x11, 0x74, 0x6f, 0x74,
-	0x61, 0x6c, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x1a, 0x44,
-	0x0a, 0x16, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x59, 0x69,
-	0x65, 0x6c, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61,
-	0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
-	0x3a, 0x02, 0x38, 0x01, 0x42, 0xb2, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62,
-	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x42, 0x0b, 0x44, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x30, 0x64, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32,
-	0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2f, 0x76, 0x32, 0x3b, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x76, 0x32, 0xa2, 0x02, 0x03,
-	0x4e, 0x44, 0x58, 0xaa, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2e, 0x56, 0x32, 0xca, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0xe2, 0x02, 0x1b, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c,
-	0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74,
-	0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x11, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x32, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x60, 0x0a, 0x14, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61,
+	0x6c, 0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2e, 0x2e,
+	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e,
+	0x53, 0x74, 0x61, 0x74, 0x73, 0x2e, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x72,
+	0x6e, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x12, 0x74,
+	0x6f, 0x74, 0x61, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c,
+	0x64, 0x1a, 0x45, 0x0a, 0x17, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e,
+	0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03,
+	0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14,
+	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x2a, 0x13, 0x0a, 0x08, 0x50, 0x72, 0x6f, 0x76,
+	0x69, 0x64, 0x65, 0x72, 0x12, 0x07, 0x0a, 0x03, 0x49, 0x42, 0x43, 0x10, 0x00, 0x42, 0xb2, 0x01,
+	0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2e, 0x76, 0x32, 0x42, 0x0b, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x50, 0x72, 0x6f,
+	0x74, 0x6f, 0x50, 0x01, 0x5a, 0x30, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62,
+	0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x3b, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x76, 0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x58, 0xaa, 0x02, 0x0f, 0x4e,
+	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x32, 0xca, 0x02,
+	0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32,
+	0xe2, 0x02, 0x1b, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c,
+	0x56, 0x32, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02,
+	0x11, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a,
+	0x56, 0x32, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -986,13 +1030,15 @@ func file_noble_dollar_v2_dollar_proto_rawDescGZIP() []byte {
 	return file_noble_dollar_v2_dollar_proto_rawDescData
 }
 
+var file_noble_dollar_v2_dollar_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_noble_dollar_v2_dollar_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_noble_dollar_v2_dollar_proto_goTypes = []interface{}{
-	(*Stats)(nil), // 0: noble.dollar.v2.Stats
-	nil,           // 1: noble.dollar.v2.Stats.TotalChannelYieldEntry
+	(Provider)(0), // 0: noble.dollar.v2.Provider
+	(*Stats)(nil), // 1: noble.dollar.v2.Stats
+	nil,           // 2: noble.dollar.v2.Stats.TotalExternalYieldEntry
 }
 var file_noble_dollar_v2_dollar_proto_depIdxs = []int32{
-	1, // 0: noble.dollar.v2.Stats.total_channel_yield:type_name -> noble.dollar.v2.Stats.TotalChannelYieldEntry
+	2, // 0: noble.dollar.v2.Stats.total_external_yield:type_name -> noble.dollar.v2.Stats.TotalExternalYieldEntry
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -1024,13 +1070,14 @@ func file_noble_dollar_v2_dollar_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_noble_dollar_v2_dollar_proto_rawDesc,
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_noble_dollar_v2_dollar_proto_goTypes,
 		DependencyIndexes: file_noble_dollar_v2_dollar_proto_depIdxs,
+		EnumInfos:         file_noble_dollar_v2_dollar_proto_enumTypes,
 		MessageInfos:      file_noble_dollar_v2_dollar_proto_msgTypes,
 	}.Build()
 	File_noble_dollar_v2_dollar_proto = out.File

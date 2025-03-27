@@ -29,6 +29,6 @@ message GenesisState {
   // stats contains the genesis statistics around the Noble Dollar.
   noble.dollar.v2.Stats stats = 6 [(gogoproto.nullable) = false];
 
-  // yield_recipients contains the genesis yield recipients for IBC channels.
+  // yield_recipients contains the genesis yield recipients for external chains.
   map<string, string> yield_recipients = 7;
 }

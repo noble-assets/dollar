@@ -8,6 +8,10 @@ import "gogoproto/gogo.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/v2";
 
+enum Provider {
+  IBC = 0;
+}
+
 message Stats {
   uint64 total_holders = 1;
 
@@ -25,5 +29,5 @@ message Stats {
     (gogoproto.nullable) = false
   ];
 
-  map<string, string> total_channel_yield = 4;
+  map<string, string> total_external_yield = 4;
 }

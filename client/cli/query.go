@@ -74,7 +74,7 @@ func QueryStats() *cobra.Command {
 func QueryYieldRecipients() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "yield-recipients",
-		Short: "Query all yield recipients for IBC channels",
+		Short: "Query all yield recipients for external chains",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -96,14 +96,19 @@ func QueryYieldRecipients() *cobra.Command {
 
 func QueryYieldRecipient() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "yield-recipient [channel-id]",
-		Short: "Query the yield recipient for an IBC channel",
-		Args:  cobra.ExactArgs(1),
+		Use:   "yield-recipient [provider] [identifier]",
+		Short: "Query the yield recipient for an external chain",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			queryClient := v2.NewQueryClient(clientCtx)
 
-			res, err := queryClient.YieldRecipient(context.Background(), &v2.QueryYieldRecipient{ChannelId: args[0]})
+			provider := v2.Provider(v2.Provider_value[args[0]])
+
+			res, err := queryClient.YieldRecipient(context.Background(), &v2.QueryYieldRecipient{
+				Provider:   provider,
+				Identifier: args[1],
+			})
 			if err != nil {
 				return err
 			}

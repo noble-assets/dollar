@@ -2,10 +2,13 @@ syntax = "proto3";
 
 package noble.dollar.v2;
 
+import "noble/dollar/v2/dollar.proto";
+
 option go_package = "dollar.noble.xyz/v2/types/v2";
 
 // YieldRecipientSet is an event emitted when the yield recipient for an IBC channel is set.
 message YieldRecipientSet {
-  string channel_id = 1;
-  string yield_recipient = 2;
+  Provider provider = 1;
+  string identifier = 2;
+  string recipient = 3;
 }

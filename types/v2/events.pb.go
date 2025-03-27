@@ -24,8 +24,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // YieldRecipientSet is an event emitted when the yield recipient for an IBC channel is set.
 type YieldRecipientSet struct {
-	ChannelId      string `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	YieldRecipient string `protobuf:"bytes,2,opt,name=yield_recipient,json=yieldRecipient,proto3" json:"yield_recipient,omitempty"`
+	Provider   Provider `protobuf:"varint,1,opt,name=provider,proto3,enum=noble.dollar.v2.Provider" json:"provider,omitempty"`
+	Identifier string   `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`
+	Recipient  string   `protobuf:"bytes,3,opt,name=recipient,proto3" json:"recipient,omitempty"`
 }
 
 func (m *YieldRecipientSet) Reset()         { *m = YieldRecipientSet{} }
@@ -61,16 +62,23 @@ func (m *YieldRecipientSet) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_YieldRecipientSet proto.InternalMessageInfo
 
-func (m *YieldRecipientSet) GetChannelId() string {
+func (m *YieldRecipientSet) GetProvider() Provider {
 	if m != nil {
-		return m.ChannelId
+		return m.Provider
+	}
+	return Provider_IBC
+}
+
+func (m *YieldRecipientSet) GetIdentifier() string {
+	if m != nil {
+		return m.Identifier
 	}
 	return ""
 }
 
-func (m *YieldRecipientSet) GetYieldRecipient() string {
+func (m *YieldRecipientSet) GetRecipient() string {
 	if m != nil {
-		return m.YieldRecipient
+		return m.Recipient
 	}
 	return ""
 }
@@ -82,19 +90,21 @@ func init() {
 func init() { proto.RegisterFile("noble/dollar/v2/events.proto", fileDescriptor_06bffd168a5604d8) }
 
 var fileDescriptor_06bffd168a5604d8 = []byte{
-	// 182 bytes of a gzipped FileDescriptorProto
+	// 211 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xc9, 0xcb, 0x4f, 0xca,
 	0x49, 0xd5, 0x4f, 0xc9, 0xcf, 0xc9, 0x49, 0x2c, 0xd2, 0x2f, 0x33, 0xd2, 0x4f, 0x2d, 0x4b, 0xcd,
 	0x2b, 0x29, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x07, 0xcb, 0xea, 0x41, 0x64, 0xf5,
-	0xca, 0x8c, 0x94, 0xa2, 0xb9, 0x04, 0x23, 0x33, 0x53, 0x73, 0x52, 0x82, 0x52, 0x93, 0x33, 0x0b,
-	0x32, 0x53, 0xf3, 0x4a, 0x82, 0x53, 0x4b, 0x84, 0x64, 0xb9, 0xb8, 0x92, 0x33, 0x12, 0xf3, 0xf2,
-	0x52, 0x73, 0xe2, 0x33, 0x53, 0x24, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0x38, 0xa1, 0x22, 0x9e,
-	0x29, 0x42, 0xea, 0x5c, 0xfc, 0x95, 0x20, 0x3d, 0xf1, 0x45, 0x30, 0x4d, 0x12, 0x4c, 0x60, 0x35,
-	0x7c, 0x95, 0x28, 0x46, 0x39, 0x99, 0x9d, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83,
-	0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43,
-	0x94, 0x0c, 0xd4, 0x05, 0x10, 0xe7, 0x54, 0x54, 0x56, 0x81, 0x5c, 0x5a, 0x52, 0x59, 0x90, 0x5a,
-	0xac, 0x5f, 0x66, 0x94, 0xc4, 0x06, 0x76, 0xac, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x6e, 0x05,
-	0xbc, 0xda, 0xcc, 0x00, 0x00, 0x00,
+	0xca, 0x8c, 0xa4, 0x30, 0x94, 0x43, 0xa5, 0xc0, 0xca, 0x95, 0x3a, 0x18, 0xb9, 0x04, 0x23, 0x33,
+	0x53, 0x73, 0x52, 0x82, 0x52, 0x93, 0x33, 0x0b, 0x32, 0x53, 0xf3, 0x4a, 0x82, 0x53, 0x4b, 0x84,
+	0x4c, 0xb9, 0x38, 0x0a, 0x8a, 0xf2, 0xcb, 0x32, 0x53, 0x52, 0x8b, 0x24, 0x18, 0x15, 0x18, 0x35,
+	0xf8, 0x8c, 0x24, 0xf5, 0xd0, 0xcc, 0xd5, 0x0b, 0x80, 0x2a, 0x08, 0x82, 0x2b, 0x15, 0x92, 0xe3,
+	0xe2, 0xca, 0x4c, 0x49, 0xcd, 0x2b, 0xc9, 0x4c, 0xcb, 0x4c, 0x2d, 0x92, 0x60, 0x52, 0x60, 0xd4,
+	0xe0, 0x0c, 0x42, 0x12, 0x11, 0x92, 0xe1, 0xe2, 0x2c, 0x82, 0x59, 0x23, 0xc1, 0x0c, 0x96, 0x46,
+	0x08, 0x38, 0x99, 0x9d, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c,
+	0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x94, 0x0c, 0xd4,
+	0x56, 0x88, 0x13, 0x2a, 0x2a, 0xab, 0x40, 0xde, 0x28, 0xa9, 0x2c, 0x48, 0x2d, 0xd6, 0x2f, 0x33,
+	0x4a, 0x62, 0x03, 0xfb, 0xc4, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x40, 0xa2, 0x71, 0xfc, 0x18,
+	0x01, 0x00, 0x00,
 }
 
 func (m *YieldRecipientSet) Marshal() (dAtA []byte, err error) {
@@ -117,19 +127,24 @@ func (m *YieldRecipientSet) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.YieldRecipient) > 0 {
-		i -= len(m.YieldRecipient)
-		copy(dAtA[i:], m.YieldRecipient)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.YieldRecipient)))
+	if len(m.Recipient) > 0 {
+		i -= len(m.Recipient)
+		copy(dAtA[i:], m.Recipient)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Recipient)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Identifier) > 0 {
+		i -= len(m.Identifier)
+		copy(dAtA[i:], m.Identifier)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Identifier)))
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ChannelId) > 0 {
-		i -= len(m.ChannelId)
-		copy(dAtA[i:], m.ChannelId)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.ChannelId)))
+	if m.Provider != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.Provider))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -151,11 +166,14 @@ func (m *YieldRecipientSet) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.ChannelId)
+	if m.Provider != 0 {
+		n += 1 + sovEvents(uint64(m.Provider))
+	}
+	l = len(m.Identifier)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
-	l = len(m.YieldRecipient)
+	l = len(m.Recipient)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
@@ -198,10 +216,10 @@ func (m *YieldRecipientSet) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
 			}
-			var stringLen uint64
+			m.Provider = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowEvents
@@ -211,27 +229,14 @@ func (m *YieldRecipientSet) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.Provider |= Provider(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthEvents
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthEvents
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ChannelId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field YieldRecipient", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Identifier", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -259,7 +264,39 @@ func (m *YieldRecipientSet) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.YieldRecipient = string(dAtA[iNdEx:postIndex])
+			m.Identifier = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Recipient", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Recipient = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

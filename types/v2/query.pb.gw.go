@@ -75,20 +75,34 @@ func request_Query_YieldRecipient_0(ctx context.Context, marshaler runtime.Marsh
 
 	var (
 		val string
+		e   int32
 		ok  bool
 		err error
 		_   = err
 	)
 
-	val, ok = pathParams["channel_id"]
+	val, ok = pathParams["provider"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "channel_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "provider")
 	}
 
-	protoReq.ChannelId, err = runtime.String(val)
+	e, err = runtime.Enum(val, Provider_value)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "channel_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "provider", err)
+	}
+
+	protoReq.Provider = Provider(e)
+
+	val, ok = pathParams["identifier"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "identifier")
+	}
+
+	protoReq.Identifier, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "identifier", err)
 	}
 
 	msg, err := client.YieldRecipient(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -102,20 +116,34 @@ func local_request_Query_YieldRecipient_0(ctx context.Context, marshaler runtime
 
 	var (
 		val string
+		e   int32
 		ok  bool
 		err error
 		_   = err
 	)
 
-	val, ok = pathParams["channel_id"]
+	val, ok = pathParams["provider"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "channel_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "provider")
 	}
 
-	protoReq.ChannelId, err = runtime.String(val)
+	e, err = runtime.Enum(val, Provider_value)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "channel_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "provider", err)
+	}
+
+	protoReq.Provider = Provider(e)
+
+	val, ok = pathParams["identifier"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "identifier")
+	}
+
+	protoReq.Identifier, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "identifier", err)
 	}
 
 	msg, err := server.YieldRecipient(ctx, &protoReq)
@@ -307,7 +335,7 @@ var (
 
 	pattern_Query_YieldRecipients_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"noble", "dollar", "v2", "yield_recipients"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_YieldRecipient_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"noble", "dollar", "v2", "yield_recipient", "channel_id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_YieldRecipient_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "v2", "yield_recipient", "provider", "identifier"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

@@ -13,16 +13,18 @@ import (
 )
 
 var (
-	md_YieldRecipientSet                 protoreflect.MessageDescriptor
-	fd_YieldRecipientSet_channel_id      protoreflect.FieldDescriptor
-	fd_YieldRecipientSet_yield_recipient protoreflect.FieldDescriptor
+	md_YieldRecipientSet            protoreflect.MessageDescriptor
+	fd_YieldRecipientSet_provider   protoreflect.FieldDescriptor
+	fd_YieldRecipientSet_identifier protoreflect.FieldDescriptor
+	fd_YieldRecipientSet_recipient  protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_v2_events_proto_init()
 	md_YieldRecipientSet = File_noble_dollar_v2_events_proto.Messages().ByName("YieldRecipientSet")
-	fd_YieldRecipientSet_channel_id = md_YieldRecipientSet.Fields().ByName("channel_id")
-	fd_YieldRecipientSet_yield_recipient = md_YieldRecipientSet.Fields().ByName("yield_recipient")
+	fd_YieldRecipientSet_provider = md_YieldRecipientSet.Fields().ByName("provider")
+	fd_YieldRecipientSet_identifier = md_YieldRecipientSet.Fields().ByName("identifier")
+	fd_YieldRecipientSet_recipient = md_YieldRecipientSet.Fields().ByName("recipient")
 }
 
 var _ protoreflect.Message = (*fastReflection_YieldRecipientSet)(nil)
@@ -90,15 +92,21 @@ func (x *fastReflection_YieldRecipientSet) Interface() protoreflect.ProtoMessage
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_YieldRecipientSet) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.ChannelId != "" {
-		value := protoreflect.ValueOfString(x.ChannelId)
-		if !f(fd_YieldRecipientSet_channel_id, value) {
+	if x.Provider != 0 {
+		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.Provider))
+		if !f(fd_YieldRecipientSet_provider, value) {
 			return
 		}
 	}
-	if x.YieldRecipient != "" {
-		value := protoreflect.ValueOfString(x.YieldRecipient)
-		if !f(fd_YieldRecipientSet_yield_recipient, value) {
+	if x.Identifier != "" {
+		value := protoreflect.ValueOfString(x.Identifier)
+		if !f(fd_YieldRecipientSet_identifier, value) {
+			return
+		}
+	}
+	if x.Recipient != "" {
+		value := protoreflect.ValueOfString(x.Recipient)
+		if !f(fd_YieldRecipientSet_recipient, value) {
 			return
 		}
 	}
@@ -117,10 +125,12 @@ func (x *fastReflection_YieldRecipientSet) Range(f func(protoreflect.FieldDescri
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_YieldRecipientSet) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.v2.YieldRecipientSet.channel_id":
-		return x.ChannelId != ""
-	case "noble.dollar.v2.YieldRecipientSet.yield_recipient":
-		return x.YieldRecipient != ""
+	case "noble.dollar.v2.YieldRecipientSet.provider":
+		return x.Provider != 0
+	case "noble.dollar.v2.YieldRecipientSet.identifier":
+		return x.Identifier != ""
+	case "noble.dollar.v2.YieldRecipientSet.recipient":
+		return x.Recipient != ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.YieldRecipientSet"))
@@ -137,10 +147,12 @@ func (x *fastReflection_YieldRecipientSet) Has(fd protoreflect.FieldDescriptor) 
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_YieldRecipientSet) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.v2.YieldRecipientSet.channel_id":
-		x.ChannelId = ""
-	case "noble.dollar.v2.YieldRecipientSet.yield_recipient":
-		x.YieldRecipient = ""
+	case "noble.dollar.v2.YieldRecipientSet.provider":
+		x.Provider = 0
+	case "noble.dollar.v2.YieldRecipientSet.identifier":
+		x.Identifier = ""
+	case "noble.dollar.v2.YieldRecipientSet.recipient":
+		x.Recipient = ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.YieldRecipientSet"))
@@ -157,11 +169,14 @@ func (x *fastReflection_YieldRecipientSet) Clear(fd protoreflect.FieldDescriptor
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_YieldRecipientSet) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.v2.YieldRecipientSet.channel_id":
-		value := x.ChannelId
+	case "noble.dollar.v2.YieldRecipientSet.provider":
+		value := x.Provider
+		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
+	case "noble.dollar.v2.YieldRecipientSet.identifier":
+		value := x.Identifier
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.v2.YieldRecipientSet.yield_recipient":
-		value := x.YieldRecipient
+	case "noble.dollar.v2.YieldRecipientSet.recipient":
+		value := x.Recipient
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
@@ -183,10 +198,12 @@ func (x *fastReflection_YieldRecipientSet) Get(descriptor protoreflect.FieldDesc
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_YieldRecipientSet) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.v2.YieldRecipientSet.channel_id":
-		x.ChannelId = value.Interface().(string)
-	case "noble.dollar.v2.YieldRecipientSet.yield_recipient":
-		x.YieldRecipient = value.Interface().(string)
+	case "noble.dollar.v2.YieldRecipientSet.provider":
+		x.Provider = (Provider)(value.Enum())
+	case "noble.dollar.v2.YieldRecipientSet.identifier":
+		x.Identifier = value.Interface().(string)
+	case "noble.dollar.v2.YieldRecipientSet.recipient":
+		x.Recipient = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.YieldRecipientSet"))
@@ -207,10 +224,12 @@ func (x *fastReflection_YieldRecipientSet) Set(fd protoreflect.FieldDescriptor, 
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_YieldRecipientSet) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.YieldRecipientSet.channel_id":
-		panic(fmt.Errorf("field channel_id of message noble.dollar.v2.YieldRecipientSet is not mutable"))
-	case "noble.dollar.v2.YieldRecipientSet.yield_recipient":
-		panic(fmt.Errorf("field yield_recipient of message noble.dollar.v2.YieldRecipientSet is not mutable"))
+	case "noble.dollar.v2.YieldRecipientSet.provider":
+		panic(fmt.Errorf("field provider of message noble.dollar.v2.YieldRecipientSet is not mutable"))
+	case "noble.dollar.v2.YieldRecipientSet.identifier":
+		panic(fmt.Errorf("field identifier of message noble.dollar.v2.YieldRecipientSet is not mutable"))
+	case "noble.dollar.v2.YieldRecipientSet.recipient":
+		panic(fmt.Errorf("field recipient of message noble.dollar.v2.YieldRecipientSet is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.YieldRecipientSet"))
@@ -224,9 +243,11 @@ func (x *fastReflection_YieldRecipientSet) Mutable(fd protoreflect.FieldDescript
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_YieldRecipientSet) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.YieldRecipientSet.channel_id":
+	case "noble.dollar.v2.YieldRecipientSet.provider":
+		return protoreflect.ValueOfEnum(0)
+	case "noble.dollar.v2.YieldRecipientSet.identifier":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.v2.YieldRecipientSet.yield_recipient":
+	case "noble.dollar.v2.YieldRecipientSet.recipient":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
@@ -297,11 +318,14 @@ func (x *fastReflection_YieldRecipientSet) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		l = len(x.ChannelId)
+		if x.Provider != 0 {
+			n += 1 + runtime.Sov(uint64(x.Provider))
+		}
+		l = len(x.Identifier)
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		l = len(x.YieldRecipient)
+		l = len(x.Recipient)
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
@@ -334,19 +358,24 @@ func (x *fastReflection_YieldRecipientSet) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if len(x.YieldRecipient) > 0 {
-			i -= len(x.YieldRecipient)
-			copy(dAtA[i:], x.YieldRecipient)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.YieldRecipient)))
+		if len(x.Recipient) > 0 {
+			i -= len(x.Recipient)
+			copy(dAtA[i:], x.Recipient)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Recipient)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if len(x.Identifier) > 0 {
+			i -= len(x.Identifier)
+			copy(dAtA[i:], x.Identifier)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Identifier)))
 			i--
 			dAtA[i] = 0x12
 		}
-		if len(x.ChannelId) > 0 {
-			i -= len(x.ChannelId)
-			copy(dAtA[i:], x.ChannelId)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.ChannelId)))
+		if x.Provider != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.Provider))
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x8
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -398,10 +427,10 @@ func (x *fastReflection_YieldRecipientSet) ProtoMethods() *protoiface.Methods {
 			}
 			switch fieldNum {
 			case 1:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
 				}
-				var stringLen uint64
+				x.Provider = 0
 				for shift := uint(0); ; shift += 7 {
 					if shift >= 64 {
 						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
@@ -411,27 +440,14 @@ func (x *fastReflection_YieldRecipientSet) ProtoMethods() *protoiface.Methods {
 					}
 					b := dAtA[iNdEx]
 					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
+					x.Provider |= Provider(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
 				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.ChannelId = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
 			case 2:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field YieldRecipient", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Identifier", wireType)
 				}
 				var stringLen uint64
 				for shift := uint(0); ; shift += 7 {
@@ -459,7 +475,39 @@ func (x *fastReflection_YieldRecipientSet) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.YieldRecipient = string(dAtA[iNdEx:postIndex])
+				x.Identifier = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Recipient", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Recipient = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -515,8 +563,9 @@ type YieldRecipientSet struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ChannelId      string `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
-	YieldRecipient string `protobuf:"bytes,2,opt,name=yield_recipient,json=yieldRecipient,proto3" json:"yield_recipient,omitempty"`
+	Provider   Provider `protobuf:"varint,1,opt,name=provider,proto3,enum=noble.dollar.v2.Provider" json:"provider,omitempty"`
+	Identifier string   `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`
+	Recipient  string   `protobuf:"bytes,3,opt,name=recipient,proto3" json:"recipient,omitempty"`
 }
 
 func (x *YieldRecipientSet) Reset() {
@@ -539,16 +588,23 @@ func (*YieldRecipientSet) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_v2_events_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *YieldRecipientSet) GetChannelId() string {
+func (x *YieldRecipientSet) GetProvider() Provider {
 	if x != nil {
-		return x.ChannelId
+		return x.Provider
+	}
+	return Provider_IBC
+}
+
+func (x *YieldRecipientSet) GetIdentifier() string {
+	if x != nil {
+		return x.Identifier
 	}
 	return ""
 }
 
-func (x *YieldRecipientSet) GetYieldRecipient() string {
+func (x *YieldRecipientSet) GetRecipient() string {
 	if x != nil {
-		return x.YieldRecipient
+		return x.Recipient
 	}
 	return ""
 }
@@ -558,25 +614,30 @@ var File_noble_dollar_v2_events_proto protoreflect.FileDescriptor
 var file_noble_dollar_v2_events_proto_rawDesc = []byte{
 	0x0a, 0x1c, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76,
 	0x32, 0x2f, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0f,
-	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x22,
-	0x5b, 0x0a, 0x11, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e,
-	0x74, 0x53, 0x65, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x5f,
-	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65,
-	0x6c, 0x49, 0x64, 0x12, 0x27, 0x0a, 0x0f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x65, 0x63,
-	0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x79, 0x69,
-	0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x42, 0xb2, 0x01, 0x0a,
-	0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x76, 0x32, 0x42, 0x0b, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74,
-	0x6f, 0x50, 0x01, 0x5a, 0x30, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c,
-	0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62,
-	0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x3b, 0x64, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x76, 0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x58, 0xaa, 0x02, 0x0f, 0x4e, 0x6f,
-	0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x32, 0xca, 0x02, 0x0f,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0xe2,
-	0x02, 0x1b, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56,
-	0x32, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x11,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56,
-	0x32, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x1a,
+	0x1c, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32,
+	0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x88, 0x01,
+	0x0a, 0x11, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74,
+	0x53, 0x65, 0x74, 0x12, 0x35, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x19, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72,
+	0x52, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x12, 0x1e, 0x0a, 0x0a, 0x69, 0x64,
+	0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x65, 0x72, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65,
+	0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x72,
+	0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x42, 0xb2, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d,
+	0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32,
+	0x42, 0x0b, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a,
+	0x30, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79,
+	0x7a, 0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x3b, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x76,
+	0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x58, 0xaa, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e,
+	0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x32, 0xca, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c,
+	0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0xe2, 0x02, 0x1b, 0x4e, 0x6f,
+	0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0x5c, 0x47, 0x50,
+	0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x11, 0x4e, 0x6f, 0x62, 0x6c,
+	0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x32, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -594,13 +655,15 @@ func file_noble_dollar_v2_events_proto_rawDescGZIP() []byte {
 var file_noble_dollar_v2_events_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_noble_dollar_v2_events_proto_goTypes = []interface{}{
 	(*YieldRecipientSet)(nil), // 0: noble.dollar.v2.YieldRecipientSet
+	(Provider)(0),             // 1: noble.dollar.v2.Provider
 }
 var file_noble_dollar_v2_events_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1, // 0: noble.dollar.v2.YieldRecipientSet.provider:type_name -> noble.dollar.v2.Provider
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_noble_dollar_v2_events_proto_init() }
@@ -608,6 +671,7 @@ func file_noble_dollar_v2_events_proto_init() {
 	if File_noble_dollar_v2_events_proto != nil {
 		return
 	}
+	file_noble_dollar_v2_dollar_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_noble_dollar_v2_events_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*YieldRecipientSet); i {

@@ -54,10 +54,10 @@ func (m Migrator) Migrate1to2(ctx sdk.Context) error {
 	}
 
 	stats := v2.Stats{
-		TotalHolders:      v1Stats.TotalHolders,
-		TotalPrincipal:    v1Stats.TotalPrincipal,
-		TotalYieldAccrued: v1Stats.TotalYieldAccrued,
-		TotalChannelYield: make(map[string]string),
+		TotalHolders:       v1Stats.TotalHolders,
+		TotalPrincipal:     v1Stats.TotalPrincipal,
+		TotalYieldAccrued:  v1Stats.TotalYieldAccrued,
+		TotalExternalYield: make(map[string]string),
 	}
 
 	err = m.keeper.Stats.Set(ctx, stats)

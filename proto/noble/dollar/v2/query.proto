@@ -7,6 +7,7 @@ import "cosmos/query/v1/query.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "noble/dollar/v2/dollar.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/v2";
 
@@ -22,14 +23,14 @@ service Query {
   }
   rpc YieldRecipient(QueryYieldRecipient) returns (QueryYieldRecipientResponse) {
     option (cosmos.query.v1.module_query_safe) = true;
-    option (google.api.http).get = "/noble/dollar/v2/yield_recipient/{channel_id}";
+    option (google.api.http).get = "/noble/dollar/v2/yield_recipient/{provider}/{identifier}";
   }
 }
 
 message QueryStats {}
 
 message QueryStatsResponse {
-  message ChannelYield {
+  message ExternalYield {
     string chain_id = 1;
     string amount = 2 [
       (amino.dont_omitempty) = true,
@@ -55,7 +56,7 @@ message QueryStatsResponse {
     (gogoproto.nullable) = false
   ];
 
-  map<string, ChannelYield> total_channel_yield = 4 [(gogoproto.nullable) = false];
+  map<string, ExternalYield> total_external_yield = 4 [(gogoproto.nullable) = false];
 }
 
 message QueryYieldRecipients {}
@@ -65,7 +66,8 @@ message QueryYieldRecipientsResponse {
 }
 
 message QueryYieldRecipient {
-  string channel_id = 1;
+  Provider provider = 1;
+  string identifier = 2;
 }
 
 message QueryYieldRecipientResponse {

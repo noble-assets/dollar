@@ -23,6 +23,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
@@ -47,21 +48,27 @@ func (k msgServerV2) SetYieldRecipient(ctx context.Context, msg *v2.MsgSetYieldR
 		return nil, errors.Wrapf(vaults.ErrInvalidAuthority, "expected %s, got %s", k.authority, msg.Signer)
 	}
 
-	if has, _ := k.YieldRecipients.Has(ctx, msg.ChannelId); has {
-		// TODO(@john): Return an error!
-	}
-	_, found := k.channel.GetChannel(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, msg.ChannelId)
-	if !found {
+	key := collections.Join(int32(msg.Provider), msg.Identifier)
+	if has, _ := k.YieldRecipients.Has(ctx, key); has {
 		// TODO(@john): Return an error!
 	}
 
-	err := k.YieldRecipients.Set(ctx, msg.ChannelId, msg.YieldRecipient)
+	switch msg.Provider {
+	case v2.Provider_IBC:
+		_, found := k.channel.GetChannel(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, msg.Identifier)
+		if !found {
+			// TODO(@john): Return an error!
+		}
+	}
+
+	err := k.YieldRecipients.Set(ctx, key, msg.Recipient)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to set yield recipient in state")
 	}
 
 	return &v2.MsgSetYieldRecipientResponse{}, k.event.EventManager(ctx).Emit(ctx, &v2.YieldRecipientSet{
-		ChannelId:      msg.ChannelId,
-		YieldRecipient: msg.YieldRecipient,
+		Provider:   msg.Provider,
+		Identifier: msg.Identifier,
+		Recipient:  msg.Recipient,
 	})
 }

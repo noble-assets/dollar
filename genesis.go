@@ -23,6 +23,7 @@ package dollar
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/address"
@@ -70,10 +71,15 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis stats"))
 	}
 
-	for channelId, yieldRecipient := range genesis.YieldRecipients {
-		err = k.YieldRecipients.Set(ctx, channelId, yieldRecipient)
+	for key, recipient := range genesis.YieldRecipients {
+		splitKey := strings.Split(key, "/")
+		provider := types.Provider(types.Provider_value[splitKey[0]])
+		identifier := splitKey[1]
+
+		key := collections.Join(int32(provider), identifier)
+		err = k.YieldRecipients.Set(ctx, key, recipient)
 		if err != nil {
-			panic(errors.Wrapf(err, "unable to set genesis yield recipient (%s:%s)", channelId, yieldRecipient))
+			panic(errors.Wrapf(err, "unable to set genesis yield recipient (%s/%s:%s)", provider, identifier, recipient))
 		}
 	}
 

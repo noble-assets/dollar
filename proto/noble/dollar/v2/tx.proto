@@ -6,6 +6,7 @@ import "amino/amino.proto";
 import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
+import "noble/dollar/v2/dollar.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/v2";
 
@@ -15,7 +16,7 @@ service Msg {
   rpc SetYieldRecipient(MsgSetYieldRecipient) returns (MsgSetYieldRecipientResponse);
 }
 
-// MsgSetYieldRecipient allows the authority to set a yield recipient for an IBC channel.
+// MsgSetYieldRecipient allows the authority to set a yield recipient for an external chain.
 message MsgSetYieldRecipient {
   option (cosmos.msg.v1.signer) = "signer";
   option (amino.name) = "dollar/SetYieldRecipient";
@@ -24,8 +25,9 @@ message MsgSetYieldRecipient {
   option (gogoproto.goproto_getters) = false;
 
   string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  string channel_id = 2;
-  string yield_recipient = 3;
+  Provider provider = 2;
+  string identifier = 3;
+  string recipient = 4;
 }
 
 // MsgSetYieldRecipientResponse is the response of the SetYieldRecipient message.

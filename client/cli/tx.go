@@ -48,19 +48,22 @@ func GetTxCmd() *cobra.Command {
 
 func TxSetYieldRecipient() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-yield-recipient [channel-id] [yield-recipient]",
-		Short: "Set the yield recipient for an IBC channel",
-		Args:  cobra.ExactArgs(2),
+		Use:   "set-yield-recipient [provider] [identifier] [recipient]",
+		Short: "Set the yield recipient for an external chain",
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
+			provider := v2.Provider(v2.Provider_value[args[0]])
+
 			msg := &v2.MsgSetYieldRecipient{
-				Signer:         clientCtx.GetFromAddress().String(),
-				ChannelId:      args[0],
-				YieldRecipient: args[1],
+				Signer:     clientCtx.GetFromAddress().String(),
+				Provider:   provider,
+				Identifier: args[1],
+				Recipient:  args[2],
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)

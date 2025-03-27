@@ -22,7 +22,9 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -52,22 +54,32 @@ func (k queryServerV2) Stats(ctx context.Context, req *v2.QueryStats) (*v2.Query
 		return nil, errors.Wrap(err, "unable to get stats from state")
 	}
 
-	totalChannelYield := make(map[string]v2.QueryStatsResponse_ChannelYield)
-	for channelId, rawAmount := range stats.TotalChannelYield {
-		_, clientState, _ := k.channel.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, channelId)
+	totalExternalYield := make(map[string]v2.QueryStatsResponse_ExternalYield)
+	for key, rawAmount := range stats.TotalExternalYield {
+		splitKey := strings.Split(key, "/")
+		provider := v2.Provider(v2.Provider_value[splitKey[0]])
+		identifier := splitKey[1]
+
+		chainId := "UNKNOWN"
+		switch provider {
+		case v2.Provider_IBC:
+			_, clientState, _ := k.channel.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, identifier)
+			chainId = v2.ParseChainId(clientState)
+		}
+
 		amount, _ := math.NewIntFromString(rawAmount)
 
-		totalChannelYield[channelId] = v2.QueryStatsResponse_ChannelYield{
-			ChainId: v2.ParseChainId(clientState),
+		totalExternalYield[key] = v2.QueryStatsResponse_ExternalYield{
+			ChainId: chainId,
 			Amount:  amount,
 		}
 	}
 
 	return &v2.QueryStatsResponse{
-		TotalHolders:      stats.TotalHolders,
-		TotalPrincipal:    stats.TotalPrincipal,
-		TotalYieldAccrued: stats.TotalYieldAccrued,
-		TotalChannelYield: totalChannelYield,
+		TotalHolders:       stats.TotalHolders,
+		TotalPrincipal:     stats.TotalPrincipal,
+		TotalYieldAccrued:  stats.TotalYieldAccrued,
+		TotalExternalYield: totalExternalYield,
 	}, nil
 }
 
@@ -86,7 +98,8 @@ func (k queryServerV2) YieldRecipient(ctx context.Context, req *v2.QueryYieldRec
 		return nil, types.ErrInvalidRequest
 	}
 
-	yieldRecipient, err := k.Keeper.YieldRecipients.Get(ctx, req.ChannelId)
+	key := collections.Join(int32(req.Provider), req.Identifier)
+	yieldRecipient, err := k.Keeper.YieldRecipients.Get(ctx, key)
 	if err != nil {
 		// TODO(@john): Return an error!
 	}

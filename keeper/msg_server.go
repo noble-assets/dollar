@@ -22,6 +22,7 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
@@ -31,6 +32,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 
@@ -187,8 +189,8 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		return err
 	}
 
-	// Claim and transfer the yield of IBC channels.
-	err = k.claimChannelYield(ctx)
+	// Claim and transfer the yield of external chains.
+	err = k.claimExternalYield(ctx)
 	if err != nil {
 		return err
 	}
@@ -264,44 +266,59 @@ func (k *Keeper) claimStakedVaultYield(ctx context.Context) (math.Int, error) {
 	return yield, nil
 }
 
-func (k *Keeper) claimChannelYield(ctx context.Context) error {
+func (k *Keeper) claimExternalYield(ctx context.Context) error {
 	yieldRecipients, err := k.GetYieldRecipients(ctx)
 	if err != nil {
 		return errors.Wrap(err, "unable to get yield recipients from state")
 	}
 
-	for channelId, yieldRecipient := range yieldRecipients {
-		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelId)
-		yield, err := k.claimModuleYield(ctx, escrowAddress)
-		if err != nil {
-			return errors.Wrapf(err, "unable to claim yield for %s", channelId)
-		}
-		if !yield.IsPositive() {
-			continue
-		}
+	for key, recipient := range yieldRecipients {
+		splitKey := strings.Split(key, "/")
+		provider := v2.Provider(v2.Provider_value[splitKey[0]])
+		identifier := splitKey[1]
 
-		timeout := uint64(k.header.GetHeaderInfo(ctx).Time.UnixNano()) + transfertypes.DefaultRelativePacketTimeoutTimestamp
-		res, err := k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
-			SourcePort:       transfertypes.PortID,
-			SourceChannel:    channelId,
-			Token:            sdk.NewCoin(k.denom, yield),
-			Sender:           escrowAddress.String(),
-			Receiver:         yieldRecipient,
-			TimeoutHeight:    clienttypes.ZeroHeight(),
-			TimeoutTimestamp: timeout,
-			Memo:             "",
-		})
-		if err != nil {
-			return errors.Wrapf(err, "unable to transfer yield for %s", channelId)
+		switch provider {
+		case v2.Provider_IBC:
+			err := k.claimExternalYieldIBC(ctx, identifier, recipient)
+			if err != nil {
+				return err
+			}
 		}
-
-		err = k.IncrementTotalChannelYield(ctx, channelId, yield)
-		if err != nil {
-			return errors.Wrapf(err, "unable to increment total yield for %s", channelId)
-		}
-
-		k.logger.Info("claimed and transferred ibc channel yield", "amount", yield, "channel", channelId, "sequence", res.Sequence)
 	}
 
+	return nil
+}
+
+func (k *Keeper) claimExternalYieldIBC(ctx context.Context, channelId string, yieldRecipient string) error {
+	escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelId)
+	yield, err := k.claimModuleYield(ctx, escrowAddress)
+	if err != nil {
+		return errors.Wrapf(err, "unable to claim yield for %s", channelId)
+	}
+	if !yield.IsPositive() {
+		return nil
+	}
+
+	timeout := uint64(k.header.GetHeaderInfo(ctx).Time.UnixNano()) + transfertypes.DefaultRelativePacketTimeoutTimestamp
+	res, err := k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
+		SourcePort:       transfertypes.PortID,
+		SourceChannel:    channelId,
+		Token:            sdk.NewCoin(k.denom, yield),
+		Sender:           escrowAddress.String(),
+		Receiver:         yieldRecipient,
+		TimeoutHeight:    clienttypes.ZeroHeight(),
+		TimeoutTimestamp: timeout,
+		Memo:             "",
+	})
+	if err != nil {
+		return errors.Wrapf(err, "unable to transfer yield for %s", channelId)
+	}
+
+	err = k.IncrementTotalExternalYield(ctx, v2.Provider_IBC, channelId, yield)
+	if err != nil {
+		return errors.Wrapf(err, "unable to increment total yield for %s", channelId)
+	}
+
+	k.logger.Info("claimed and transferred ibc channel yield", "amount", yield, "channel", channelId, "sequence", res.Sequence)
 	return nil
 }

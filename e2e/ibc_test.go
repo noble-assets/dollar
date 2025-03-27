@@ -24,6 +24,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"cosmossdk.io/math"
@@ -117,12 +118,13 @@ func TestIBCYieldDistribution(t *testing.T) {
 	// TODO: Once NobleICS4Wrapper has been migrated, ensure that transfers are blocked at first!
 
 	// ACT: Set the yield recipient for the external chain.
-	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", channelID, yieldRecipient)
+	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, yieldRecipient)
 	require.NoError(t, err)
 
 	// ASSERT: There is one yield recipient.
 	yieldRecipients = getYieldRecipients(t, ctx, validator)
-	require.Equal(t, yieldRecipient, yieldRecipients[channelID])
+	key := fmt.Sprintf("%s/%s", dollartypes.Provider_IBC, channelID)
+	require.Equal(t, yieldRecipient, yieldRecipients[key])
 
 	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
 	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{

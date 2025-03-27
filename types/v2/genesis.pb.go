@@ -39,7 +39,7 @@ type GenesisState struct {
 	Principal map[string]string `protobuf:"bytes,5,rep,name=principal,proto3" json:"principal,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// stats contains the genesis statistics around the Noble Dollar.
 	Stats Stats `protobuf:"bytes,6,opt,name=stats,proto3" json:"stats"`
-	// yield_recipients contains the genesis yield recipients for IBC channels.
+	// yield_recipients contains the genesis yield recipients for external chains.
 	YieldRecipients map[string]string `protobuf:"bytes,7,rep,name=yield_recipients,json=yieldRecipients,proto3" json:"yield_recipients,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 

@@ -377,7 +377,7 @@ func (x *fastReflection_QueryStats) ProtoMethods() *protoiface.Methods {
 var _ protoreflect.Map = (*_QueryStatsResponse_4_map)(nil)
 
 type _QueryStatsResponse_4_map struct {
-	m *map[string]*QueryStatsResponse_ChannelYield
+	m *map[string]*QueryStatsResponse_ExternalYield
 }
 
 func (x *_QueryStatsResponse_4_map) Len() int {
@@ -439,7 +439,7 @@ func (x *_QueryStatsResponse_4_map) Set(key protoreflect.MapKey, value protorefl
 	keyUnwrapped := key.String()
 	concreteKey := keyUnwrapped
 	valueUnwrapped := value.Message()
-	concreteValue := valueUnwrapped.Interface().(*QueryStatsResponse_ChannelYield)
+	concreteValue := valueUnwrapped.Interface().(*QueryStatsResponse_ExternalYield)
 	(*x.m)[concreteKey] = concreteValue
 }
 
@@ -450,13 +450,13 @@ func (x *_QueryStatsResponse_4_map) Mutable(key protoreflect.MapKey) protoreflec
 	if ok {
 		return protoreflect.ValueOfMessage(v.ProtoReflect())
 	}
-	newValue := new(QueryStatsResponse_ChannelYield)
+	newValue := new(QueryStatsResponse_ExternalYield)
 	(*x.m)[concreteKey] = newValue
 	return protoreflect.ValueOfMessage(newValue.ProtoReflect())
 }
 
 func (x *_QueryStatsResponse_4_map) NewValue() protoreflect.Value {
-	v := new(QueryStatsResponse_ChannelYield)
+	v := new(QueryStatsResponse_ExternalYield)
 	return protoreflect.ValueOfMessage(v.ProtoReflect())
 }
 
@@ -465,11 +465,11 @@ func (x *_QueryStatsResponse_4_map) IsValid() bool {
 }
 
 var (
-	md_QueryStatsResponse                     protoreflect.MessageDescriptor
-	fd_QueryStatsResponse_total_holders       protoreflect.FieldDescriptor
-	fd_QueryStatsResponse_total_principal     protoreflect.FieldDescriptor
-	fd_QueryStatsResponse_total_yield_accrued protoreflect.FieldDescriptor
-	fd_QueryStatsResponse_total_channel_yield protoreflect.FieldDescriptor
+	md_QueryStatsResponse                      protoreflect.MessageDescriptor
+	fd_QueryStatsResponse_total_holders        protoreflect.FieldDescriptor
+	fd_QueryStatsResponse_total_principal      protoreflect.FieldDescriptor
+	fd_QueryStatsResponse_total_yield_accrued  protoreflect.FieldDescriptor
+	fd_QueryStatsResponse_total_external_yield protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -478,7 +478,7 @@ func init() {
 	fd_QueryStatsResponse_total_holders = md_QueryStatsResponse.Fields().ByName("total_holders")
 	fd_QueryStatsResponse_total_principal = md_QueryStatsResponse.Fields().ByName("total_principal")
 	fd_QueryStatsResponse_total_yield_accrued = md_QueryStatsResponse.Fields().ByName("total_yield_accrued")
-	fd_QueryStatsResponse_total_channel_yield = md_QueryStatsResponse.Fields().ByName("total_channel_yield")
+	fd_QueryStatsResponse_total_external_yield = md_QueryStatsResponse.Fields().ByName("total_external_yield")
 }
 
 var _ protoreflect.Message = (*fastReflection_QueryStatsResponse)(nil)
@@ -564,9 +564,9 @@ func (x *fastReflection_QueryStatsResponse) Range(f func(protoreflect.FieldDescr
 			return
 		}
 	}
-	if len(x.TotalChannelYield) != 0 {
-		value := protoreflect.ValueOfMap(&_QueryStatsResponse_4_map{m: &x.TotalChannelYield})
-		if !f(fd_QueryStatsResponse_total_channel_yield, value) {
+	if len(x.TotalExternalYield) != 0 {
+		value := protoreflect.ValueOfMap(&_QueryStatsResponse_4_map{m: &x.TotalExternalYield})
+		if !f(fd_QueryStatsResponse_total_external_yield, value) {
 			return
 		}
 	}
@@ -591,8 +591,8 @@ func (x *fastReflection_QueryStatsResponse) Has(fd protoreflect.FieldDescriptor)
 		return x.TotalPrincipal != ""
 	case "noble.dollar.v2.QueryStatsResponse.total_yield_accrued":
 		return x.TotalYieldAccrued != ""
-	case "noble.dollar.v2.QueryStatsResponse.total_channel_yield":
-		return len(x.TotalChannelYield) != 0
+	case "noble.dollar.v2.QueryStatsResponse.total_external_yield":
+		return len(x.TotalExternalYield) != 0
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse"))
@@ -615,8 +615,8 @@ func (x *fastReflection_QueryStatsResponse) Clear(fd protoreflect.FieldDescripto
 		x.TotalPrincipal = ""
 	case "noble.dollar.v2.QueryStatsResponse.total_yield_accrued":
 		x.TotalYieldAccrued = ""
-	case "noble.dollar.v2.QueryStatsResponse.total_channel_yield":
-		x.TotalChannelYield = nil
+	case "noble.dollar.v2.QueryStatsResponse.total_external_yield":
+		x.TotalExternalYield = nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse"))
@@ -642,11 +642,11 @@ func (x *fastReflection_QueryStatsResponse) Get(descriptor protoreflect.FieldDes
 	case "noble.dollar.v2.QueryStatsResponse.total_yield_accrued":
 		value := x.TotalYieldAccrued
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.v2.QueryStatsResponse.total_channel_yield":
-		if len(x.TotalChannelYield) == 0 {
+	case "noble.dollar.v2.QueryStatsResponse.total_external_yield":
+		if len(x.TotalExternalYield) == 0 {
 			return protoreflect.ValueOfMap(&_QueryStatsResponse_4_map{})
 		}
-		mapValue := &_QueryStatsResponse_4_map{m: &x.TotalChannelYield}
+		mapValue := &_QueryStatsResponse_4_map{m: &x.TotalExternalYield}
 		return protoreflect.ValueOfMap(mapValue)
 	default:
 		if descriptor.IsExtension() {
@@ -674,10 +674,10 @@ func (x *fastReflection_QueryStatsResponse) Set(fd protoreflect.FieldDescriptor,
 		x.TotalPrincipal = value.Interface().(string)
 	case "noble.dollar.v2.QueryStatsResponse.total_yield_accrued":
 		x.TotalYieldAccrued = value.Interface().(string)
-	case "noble.dollar.v2.QueryStatsResponse.total_channel_yield":
+	case "noble.dollar.v2.QueryStatsResponse.total_external_yield":
 		mv := value.Map()
 		cmv := mv.(*_QueryStatsResponse_4_map)
-		x.TotalChannelYield = *cmv.m
+		x.TotalExternalYield = *cmv.m
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse"))
@@ -698,11 +698,11 @@ func (x *fastReflection_QueryStatsResponse) Set(fd protoreflect.FieldDescriptor,
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_QueryStatsResponse) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.total_channel_yield":
-		if x.TotalChannelYield == nil {
-			x.TotalChannelYield = make(map[string]*QueryStatsResponse_ChannelYield)
+	case "noble.dollar.v2.QueryStatsResponse.total_external_yield":
+		if x.TotalExternalYield == nil {
+			x.TotalExternalYield = make(map[string]*QueryStatsResponse_ExternalYield)
 		}
-		value := &_QueryStatsResponse_4_map{m: &x.TotalChannelYield}
+		value := &_QueryStatsResponse_4_map{m: &x.TotalExternalYield}
 		return protoreflect.ValueOfMap(value)
 	case "noble.dollar.v2.QueryStatsResponse.total_holders":
 		panic(fmt.Errorf("field total_holders of message noble.dollar.v2.QueryStatsResponse is not mutable"))
@@ -729,8 +729,8 @@ func (x *fastReflection_QueryStatsResponse) NewField(fd protoreflect.FieldDescri
 		return protoreflect.ValueOfString("")
 	case "noble.dollar.v2.QueryStatsResponse.total_yield_accrued":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.v2.QueryStatsResponse.total_channel_yield":
-		m := make(map[string]*QueryStatsResponse_ChannelYield)
+	case "noble.dollar.v2.QueryStatsResponse.total_external_yield":
+		m := make(map[string]*QueryStatsResponse_ExternalYield)
 		return protoreflect.ValueOfMap(&_QueryStatsResponse_4_map{m: &m})
 	default:
 		if fd.IsExtension() {
@@ -812,8 +812,8 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		if len(x.TotalChannelYield) > 0 {
-			SiZeMaP := func(k string, v *QueryStatsResponse_ChannelYield) {
+		if len(x.TotalExternalYield) > 0 {
+			SiZeMaP := func(k string, v *QueryStatsResponse_ExternalYield) {
 				l := 0
 				if v != nil {
 					l = options.Size(v)
@@ -823,17 +823,17 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 				n += mapEntrySize + 1 + runtime.Sov(uint64(mapEntrySize))
 			}
 			if options.Deterministic {
-				sortme := make([]string, 0, len(x.TotalChannelYield))
-				for k := range x.TotalChannelYield {
+				sortme := make([]string, 0, len(x.TotalExternalYield))
+				for k := range x.TotalExternalYield {
 					sortme = append(sortme, k)
 				}
 				sort.Strings(sortme)
 				for _, k := range sortme {
-					v := x.TotalChannelYield[k]
+					v := x.TotalExternalYield[k]
 					SiZeMaP(k, v)
 				}
 			} else {
-				for k, v := range x.TotalChannelYield {
+				for k, v := range x.TotalExternalYield {
 					SiZeMaP(k, v)
 				}
 			}
@@ -867,8 +867,8 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if len(x.TotalChannelYield) > 0 {
-			MaRsHaLmAp := func(k string, v *QueryStatsResponse_ChannelYield) (protoiface.MarshalOutput, error) {
+		if len(x.TotalExternalYield) > 0 {
+			MaRsHaLmAp := func(k string, v *QueryStatsResponse_ExternalYield) (protoiface.MarshalOutput, error) {
 				baseI := i
 				encoded, err := options.Marshal(v)
 				if err != nil {
@@ -893,23 +893,23 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 				return protoiface.MarshalOutput{}, nil
 			}
 			if options.Deterministic {
-				keysForTotalChannelYield := make([]string, 0, len(x.TotalChannelYield))
-				for k := range x.TotalChannelYield {
-					keysForTotalChannelYield = append(keysForTotalChannelYield, string(k))
+				keysForTotalExternalYield := make([]string, 0, len(x.TotalExternalYield))
+				for k := range x.TotalExternalYield {
+					keysForTotalExternalYield = append(keysForTotalExternalYield, string(k))
 				}
-				sort.Slice(keysForTotalChannelYield, func(i, j int) bool {
-					return keysForTotalChannelYield[i] < keysForTotalChannelYield[j]
+				sort.Slice(keysForTotalExternalYield, func(i, j int) bool {
+					return keysForTotalExternalYield[i] < keysForTotalExternalYield[j]
 				})
-				for iNdEx := len(keysForTotalChannelYield) - 1; iNdEx >= 0; iNdEx-- {
-					v := x.TotalChannelYield[string(keysForTotalChannelYield[iNdEx])]
-					out, err := MaRsHaLmAp(keysForTotalChannelYield[iNdEx], v)
+				for iNdEx := len(keysForTotalExternalYield) - 1; iNdEx >= 0; iNdEx-- {
+					v := x.TotalExternalYield[string(keysForTotalExternalYield[iNdEx])]
+					out, err := MaRsHaLmAp(keysForTotalExternalYield[iNdEx], v)
 					if err != nil {
 						return out, err
 					}
 				}
 			} else {
-				for k := range x.TotalChannelYield {
-					v := x.TotalChannelYield[k]
+				for k := range x.TotalExternalYield {
+					v := x.TotalExternalYield[k]
 					out, err := MaRsHaLmAp(k, v)
 					if err != nil {
 						return out, err
@@ -1070,7 +1070,7 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 				iNdEx = postIndex
 			case 4:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalChannelYield", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalExternalYield", wireType)
 				}
 				var msglen int
 				for shift := uint(0); ; shift += 7 {
@@ -1097,11 +1097,11 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				if x.TotalChannelYield == nil {
-					x.TotalChannelYield = make(map[string]*QueryStatsResponse_ChannelYield)
+				if x.TotalExternalYield == nil {
+					x.TotalExternalYield = make(map[string]*QueryStatsResponse_ExternalYield)
 				}
 				var mapkey string
-				var mapvalue *QueryStatsResponse_ChannelYield
+				var mapvalue *QueryStatsResponse_ExternalYield
 				for iNdEx < postIndex {
 					entryPreIndex := iNdEx
 					var wire uint64
@@ -1175,7 +1175,7 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 						if postmsgIndex > l {
 							return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 						}
-						mapvalue = &QueryStatsResponse_ChannelYield{}
+						mapvalue = &QueryStatsResponse_ExternalYield{}
 						if err := options.Unmarshal(dAtA[iNdEx:postmsgIndex], mapvalue); err != nil {
 							return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 						}
@@ -1195,7 +1195,7 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 						iNdEx += skippy
 					}
 				}
-				x.TotalChannelYield[mapkey] = mapvalue
+				x.TotalExternalYield[mapkey] = mapvalue
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -1233,27 +1233,27 @@ func (x *fastReflection_QueryStatsResponse) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_QueryStatsResponse_ChannelYield          protoreflect.MessageDescriptor
-	fd_QueryStatsResponse_ChannelYield_chain_id protoreflect.FieldDescriptor
-	fd_QueryStatsResponse_ChannelYield_amount   protoreflect.FieldDescriptor
+	md_QueryStatsResponse_ExternalYield          protoreflect.MessageDescriptor
+	fd_QueryStatsResponse_ExternalYield_chain_id protoreflect.FieldDescriptor
+	fd_QueryStatsResponse_ExternalYield_amount   protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_v2_query_proto_init()
-	md_QueryStatsResponse_ChannelYield = File_noble_dollar_v2_query_proto.Messages().ByName("QueryStatsResponse").Messages().ByName("ChannelYield")
-	fd_QueryStatsResponse_ChannelYield_chain_id = md_QueryStatsResponse_ChannelYield.Fields().ByName("chain_id")
-	fd_QueryStatsResponse_ChannelYield_amount = md_QueryStatsResponse_ChannelYield.Fields().ByName("amount")
+	md_QueryStatsResponse_ExternalYield = File_noble_dollar_v2_query_proto.Messages().ByName("QueryStatsResponse").Messages().ByName("ExternalYield")
+	fd_QueryStatsResponse_ExternalYield_chain_id = md_QueryStatsResponse_ExternalYield.Fields().ByName("chain_id")
+	fd_QueryStatsResponse_ExternalYield_amount = md_QueryStatsResponse_ExternalYield.Fields().ByName("amount")
 }
 
-var _ protoreflect.Message = (*fastReflection_QueryStatsResponse_ChannelYield)(nil)
+var _ protoreflect.Message = (*fastReflection_QueryStatsResponse_ExternalYield)(nil)
 
-type fastReflection_QueryStatsResponse_ChannelYield QueryStatsResponse_ChannelYield
+type fastReflection_QueryStatsResponse_ExternalYield QueryStatsResponse_ExternalYield
 
-func (x *QueryStatsResponse_ChannelYield) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_QueryStatsResponse_ChannelYield)(x)
+func (x *QueryStatsResponse_ExternalYield) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_QueryStatsResponse_ExternalYield)(x)
 }
 
-func (x *QueryStatsResponse_ChannelYield) slowProtoReflect() protoreflect.Message {
+func (x *QueryStatsResponse_ExternalYield) slowProtoReflect() protoreflect.Message {
 	mi := &file_noble_dollar_v2_query_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1265,43 +1265,43 @@ func (x *QueryStatsResponse_ChannelYield) slowProtoReflect() protoreflect.Messag
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_QueryStatsResponse_ChannelYield_messageType fastReflection_QueryStatsResponse_ChannelYield_messageType
-var _ protoreflect.MessageType = fastReflection_QueryStatsResponse_ChannelYield_messageType{}
+var _fastReflection_QueryStatsResponse_ExternalYield_messageType fastReflection_QueryStatsResponse_ExternalYield_messageType
+var _ protoreflect.MessageType = fastReflection_QueryStatsResponse_ExternalYield_messageType{}
 
-type fastReflection_QueryStatsResponse_ChannelYield_messageType struct{}
+type fastReflection_QueryStatsResponse_ExternalYield_messageType struct{}
 
-func (x fastReflection_QueryStatsResponse_ChannelYield_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_QueryStatsResponse_ChannelYield)(nil)
+func (x fastReflection_QueryStatsResponse_ExternalYield_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_QueryStatsResponse_ExternalYield)(nil)
 }
-func (x fastReflection_QueryStatsResponse_ChannelYield_messageType) New() protoreflect.Message {
-	return new(fastReflection_QueryStatsResponse_ChannelYield)
+func (x fastReflection_QueryStatsResponse_ExternalYield_messageType) New() protoreflect.Message {
+	return new(fastReflection_QueryStatsResponse_ExternalYield)
 }
-func (x fastReflection_QueryStatsResponse_ChannelYield_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_QueryStatsResponse_ChannelYield
+func (x fastReflection_QueryStatsResponse_ExternalYield_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_QueryStatsResponse_ExternalYield
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Descriptor() protoreflect.MessageDescriptor {
-	return md_QueryStatsResponse_ChannelYield
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Descriptor() protoreflect.MessageDescriptor {
+	return md_QueryStatsResponse_ExternalYield
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Type() protoreflect.MessageType {
-	return _fastReflection_QueryStatsResponse_ChannelYield_messageType
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Type() protoreflect.MessageType {
+	return _fastReflection_QueryStatsResponse_ExternalYield_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) New() protoreflect.Message {
-	return new(fastReflection_QueryStatsResponse_ChannelYield)
+func (x *fastReflection_QueryStatsResponse_ExternalYield) New() protoreflect.Message {
+	return new(fastReflection_QueryStatsResponse_ExternalYield)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Interface() protoreflect.ProtoMessage {
-	return (*QueryStatsResponse_ChannelYield)(x)
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Interface() protoreflect.ProtoMessage {
+	return (*QueryStatsResponse_ExternalYield)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -1309,16 +1309,16 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) Interface() protoreflec
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.ChainId != "" {
 		value := protoreflect.ValueOfString(x.ChainId)
-		if !f(fd_QueryStatsResponse_ChannelYield_chain_id, value) {
+		if !f(fd_QueryStatsResponse_ExternalYield_chain_id, value) {
 			return
 		}
 	}
 	if x.Amount != "" {
 		value := protoreflect.ValueOfString(x.Amount)
-		if !f(fd_QueryStatsResponse_ChannelYield_amount, value) {
+		if !f(fd_QueryStatsResponse_ExternalYield_amount, value) {
 			return
 		}
 	}
@@ -1335,17 +1335,17 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) Range(f func(protorefle
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.chain_id":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.chain_id":
 		return x.ChainId != ""
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.amount":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.amount":
 		return x.Amount != ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ChannelYield"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ExternalYield"))
 		}
-		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ChannelYield does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ExternalYield does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -1355,17 +1355,17 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) Has(fd protoreflect.Fie
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.chain_id":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.chain_id":
 		x.ChainId = ""
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.amount":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.amount":
 		x.Amount = ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ChannelYield"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ExternalYield"))
 		}
-		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ChannelYield does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ExternalYield does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -1375,19 +1375,19 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) Clear(fd protoreflect.F
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.chain_id":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.chain_id":
 		value := x.ChainId
 		return protoreflect.ValueOfString(value)
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.amount":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.amount":
 		value := x.Amount
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ChannelYield"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ExternalYield"))
 		}
-		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ChannelYield does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ExternalYield does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -1401,17 +1401,17 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) Get(descriptor protoref
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.chain_id":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.chain_id":
 		x.ChainId = value.Interface().(string)
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.amount":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.amount":
 		x.Amount = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ChannelYield"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ExternalYield"))
 		}
-		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ChannelYield does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ExternalYield does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -1425,44 +1425,44 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) Set(fd protoreflect.Fie
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.chain_id":
-		panic(fmt.Errorf("field chain_id of message noble.dollar.v2.QueryStatsResponse.ChannelYield is not mutable"))
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.amount":
-		panic(fmt.Errorf("field amount of message noble.dollar.v2.QueryStatsResponse.ChannelYield is not mutable"))
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.chain_id":
+		panic(fmt.Errorf("field chain_id of message noble.dollar.v2.QueryStatsResponse.ExternalYield is not mutable"))
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.amount":
+		panic(fmt.Errorf("field amount of message noble.dollar.v2.QueryStatsResponse.ExternalYield is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ChannelYield"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ExternalYield"))
 		}
-		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ChannelYield does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ExternalYield does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.chain_id":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.chain_id":
 		return protoreflect.ValueOfString("")
-	case "noble.dollar.v2.QueryStatsResponse.ChannelYield.amount":
+	case "noble.dollar.v2.QueryStatsResponse.ExternalYield.amount":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ChannelYield"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryStatsResponse.ExternalYield"))
 		}
-		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ChannelYield does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message noble.dollar.v2.QueryStatsResponse.ExternalYield does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.v2.QueryStatsResponse.ChannelYield", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in noble.dollar.v2.QueryStatsResponse.ExternalYield", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -1470,7 +1470,7 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) WhichOneof(d protorefle
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -1481,7 +1481,7 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) GetUnknown() protorefle
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -1493,7 +1493,7 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) SetUnknown(fields proto
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) IsValid() bool {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) IsValid() bool {
 	return x != nil
 }
 
@@ -1503,9 +1503,9 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_QueryStatsResponse_ChannelYield) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_QueryStatsResponse_ExternalYield) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*QueryStatsResponse_ChannelYield)
+		x := input.Message.Interface().(*QueryStatsResponse_ExternalYield)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1535,7 +1535,7 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) ProtoMethods() *protoif
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*QueryStatsResponse_ChannelYield)
+		x := input.Message.Interface().(*QueryStatsResponse_ExternalYield)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1579,7 +1579,7 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) ProtoMethods() *protoif
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*QueryStatsResponse_ChannelYield)
+		x := input.Message.Interface().(*QueryStatsResponse_ExternalYield)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1611,10 +1611,10 @@ func (x *fastReflection_QueryStatsResponse_ChannelYield) ProtoMethods() *protoif
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryStatsResponse_ChannelYield: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryStatsResponse_ExternalYield: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryStatsResponse_ChannelYield: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: QueryStatsResponse_ExternalYield: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -2734,13 +2734,15 @@ func (x *fastReflection_QueryYieldRecipientsResponse) ProtoMethods() *protoiface
 
 var (
 	md_QueryYieldRecipient            protoreflect.MessageDescriptor
-	fd_QueryYieldRecipient_channel_id protoreflect.FieldDescriptor
+	fd_QueryYieldRecipient_provider   protoreflect.FieldDescriptor
+	fd_QueryYieldRecipient_identifier protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_v2_query_proto_init()
 	md_QueryYieldRecipient = File_noble_dollar_v2_query_proto.Messages().ByName("QueryYieldRecipient")
-	fd_QueryYieldRecipient_channel_id = md_QueryYieldRecipient.Fields().ByName("channel_id")
+	fd_QueryYieldRecipient_provider = md_QueryYieldRecipient.Fields().ByName("provider")
+	fd_QueryYieldRecipient_identifier = md_QueryYieldRecipient.Fields().ByName("identifier")
 }
 
 var _ protoreflect.Message = (*fastReflection_QueryYieldRecipient)(nil)
@@ -2808,9 +2810,15 @@ func (x *fastReflection_QueryYieldRecipient) Interface() protoreflect.ProtoMessa
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_QueryYieldRecipient) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.ChannelId != "" {
-		value := protoreflect.ValueOfString(x.ChannelId)
-		if !f(fd_QueryYieldRecipient_channel_id, value) {
+	if x.Provider != 0 {
+		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.Provider))
+		if !f(fd_QueryYieldRecipient_provider, value) {
+			return
+		}
+	}
+	if x.Identifier != "" {
+		value := protoreflect.ValueOfString(x.Identifier)
+		if !f(fd_QueryYieldRecipient_identifier, value) {
 			return
 		}
 	}
@@ -2829,8 +2837,10 @@ func (x *fastReflection_QueryYieldRecipient) Range(f func(protoreflect.FieldDesc
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_QueryYieldRecipient) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryYieldRecipient.channel_id":
-		return x.ChannelId != ""
+	case "noble.dollar.v2.QueryYieldRecipient.provider":
+		return x.Provider != 0
+	case "noble.dollar.v2.QueryYieldRecipient.identifier":
+		return x.Identifier != ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryYieldRecipient"))
@@ -2847,8 +2857,10 @@ func (x *fastReflection_QueryYieldRecipient) Has(fd protoreflect.FieldDescriptor
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_QueryYieldRecipient) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryYieldRecipient.channel_id":
-		x.ChannelId = ""
+	case "noble.dollar.v2.QueryYieldRecipient.provider":
+		x.Provider = 0
+	case "noble.dollar.v2.QueryYieldRecipient.identifier":
+		x.Identifier = ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryYieldRecipient"))
@@ -2865,8 +2877,11 @@ func (x *fastReflection_QueryYieldRecipient) Clear(fd protoreflect.FieldDescript
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_QueryYieldRecipient) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.v2.QueryYieldRecipient.channel_id":
-		value := x.ChannelId
+	case "noble.dollar.v2.QueryYieldRecipient.provider":
+		value := x.Provider
+		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
+	case "noble.dollar.v2.QueryYieldRecipient.identifier":
+		value := x.Identifier
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
@@ -2888,8 +2903,10 @@ func (x *fastReflection_QueryYieldRecipient) Get(descriptor protoreflect.FieldDe
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_QueryYieldRecipient) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryYieldRecipient.channel_id":
-		x.ChannelId = value.Interface().(string)
+	case "noble.dollar.v2.QueryYieldRecipient.provider":
+		x.Provider = (Provider)(value.Enum())
+	case "noble.dollar.v2.QueryYieldRecipient.identifier":
+		x.Identifier = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryYieldRecipient"))
@@ -2910,8 +2927,10 @@ func (x *fastReflection_QueryYieldRecipient) Set(fd protoreflect.FieldDescriptor
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_QueryYieldRecipient) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryYieldRecipient.channel_id":
-		panic(fmt.Errorf("field channel_id of message noble.dollar.v2.QueryYieldRecipient is not mutable"))
+	case "noble.dollar.v2.QueryYieldRecipient.provider":
+		panic(fmt.Errorf("field provider of message noble.dollar.v2.QueryYieldRecipient is not mutable"))
+	case "noble.dollar.v2.QueryYieldRecipient.identifier":
+		panic(fmt.Errorf("field identifier of message noble.dollar.v2.QueryYieldRecipient is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.v2.QueryYieldRecipient"))
@@ -2925,7 +2944,9 @@ func (x *fastReflection_QueryYieldRecipient) Mutable(fd protoreflect.FieldDescri
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_QueryYieldRecipient) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.v2.QueryYieldRecipient.channel_id":
+	case "noble.dollar.v2.QueryYieldRecipient.provider":
+		return protoreflect.ValueOfEnum(0)
+	case "noble.dollar.v2.QueryYieldRecipient.identifier":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
@@ -2996,7 +3017,10 @@ func (x *fastReflection_QueryYieldRecipient) ProtoMethods() *protoiface.Methods 
 		var n int
 		var l int
 		_ = l
-		l = len(x.ChannelId)
+		if x.Provider != 0 {
+			n += 1 + runtime.Sov(uint64(x.Provider))
+		}
+		l = len(x.Identifier)
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
@@ -3029,12 +3053,17 @@ func (x *fastReflection_QueryYieldRecipient) ProtoMethods() *protoiface.Methods 
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if len(x.ChannelId) > 0 {
-			i -= len(x.ChannelId)
-			copy(dAtA[i:], x.ChannelId)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.ChannelId)))
+		if len(x.Identifier) > 0 {
+			i -= len(x.Identifier)
+			copy(dAtA[i:], x.Identifier)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Identifier)))
 			i--
-			dAtA[i] = 0xa
+			dAtA[i] = 0x12
+		}
+		if x.Provider != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.Provider))
+			i--
+			dAtA[i] = 0x8
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -3086,8 +3115,27 @@ func (x *fastReflection_QueryYieldRecipient) ProtoMethods() *protoiface.Methods 
 			}
 			switch fieldNum {
 			case 1:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
+				}
+				x.Provider = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.Provider |= Provider(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 2:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Identifier", wireType)
 				}
 				var stringLen uint64
 				for shift := uint(0); ; shift += 7 {
@@ -3115,7 +3163,7 @@ func (x *fastReflection_QueryYieldRecipient) ProtoMethods() *protoiface.Methods 
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.ChannelId = string(dAtA[iNdEx:postIndex])
+				x.Identifier = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -3616,10 +3664,10 @@ type QueryStatsResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	TotalHolders      uint64                                      `protobuf:"varint,1,opt,name=total_holders,json=totalHolders,proto3" json:"total_holders,omitempty"`
-	TotalPrincipal    string                                      `protobuf:"bytes,2,opt,name=total_principal,json=totalPrincipal,proto3" json:"total_principal,omitempty"`
-	TotalYieldAccrued string                                      `protobuf:"bytes,3,opt,name=total_yield_accrued,json=totalYieldAccrued,proto3" json:"total_yield_accrued,omitempty"`
-	TotalChannelYield map[string]*QueryStatsResponse_ChannelYield `protobuf:"bytes,4,rep,name=total_channel_yield,json=totalChannelYield,proto3" json:"total_channel_yield,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	TotalHolders       uint64                                       `protobuf:"varint,1,opt,name=total_holders,json=totalHolders,proto3" json:"total_holders,omitempty"`
+	TotalPrincipal     string                                       `protobuf:"bytes,2,opt,name=total_principal,json=totalPrincipal,proto3" json:"total_principal,omitempty"`
+	TotalYieldAccrued  string                                       `protobuf:"bytes,3,opt,name=total_yield_accrued,json=totalYieldAccrued,proto3" json:"total_yield_accrued,omitempty"`
+	TotalExternalYield map[string]*QueryStatsResponse_ExternalYield `protobuf:"bytes,4,rep,name=total_external_yield,json=totalExternalYield,proto3" json:"total_external_yield,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *QueryStatsResponse) Reset() {
@@ -3663,9 +3711,9 @@ func (x *QueryStatsResponse) GetTotalYieldAccrued() string {
 	return ""
 }
 
-func (x *QueryStatsResponse) GetTotalChannelYield() map[string]*QueryStatsResponse_ChannelYield {
+func (x *QueryStatsResponse) GetTotalExternalYield() map[string]*QueryStatsResponse_ExternalYield {
 	if x != nil {
-		return x.TotalChannelYield
+		return x.TotalExternalYield
 	}
 	return nil
 }
@@ -3736,7 +3784,8 @@ type QueryYieldRecipient struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ChannelId string `protobuf:"bytes,1,opt,name=channel_id,json=channelId,proto3" json:"channel_id,omitempty"`
+	Provider   Provider `protobuf:"varint,1,opt,name=provider,proto3,enum=noble.dollar.v2.Provider" json:"provider,omitempty"`
+	Identifier string   `protobuf:"bytes,2,opt,name=identifier,proto3" json:"identifier,omitempty"`
 }
 
 func (x *QueryYieldRecipient) Reset() {
@@ -3759,9 +3808,16 @@ func (*QueryYieldRecipient) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_v2_query_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *QueryYieldRecipient) GetChannelId() string {
+func (x *QueryYieldRecipient) GetProvider() Provider {
 	if x != nil {
-		return x.ChannelId
+		return x.Provider
+	}
+	return Provider_IBC
+}
+
+func (x *QueryYieldRecipient) GetIdentifier() string {
+	if x != nil {
+		return x.Identifier
 	}
 	return ""
 }
@@ -3801,7 +3857,7 @@ func (x *QueryYieldRecipientResponse) GetYieldRecipient() string {
 	return ""
 }
 
-type QueryStatsResponse_ChannelYield struct {
+type QueryStatsResponse_ExternalYield struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -3810,8 +3866,8 @@ type QueryStatsResponse_ChannelYield struct {
 	Amount  string `protobuf:"bytes,2,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
-func (x *QueryStatsResponse_ChannelYield) Reset() {
-	*x = QueryStatsResponse_ChannelYield{}
+func (x *QueryStatsResponse_ExternalYield) Reset() {
+	*x = QueryStatsResponse_ExternalYield{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_noble_dollar_v2_query_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -3819,25 +3875,25 @@ func (x *QueryStatsResponse_ChannelYield) Reset() {
 	}
 }
 
-func (x *QueryStatsResponse_ChannelYield) String() string {
+func (x *QueryStatsResponse_ExternalYield) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryStatsResponse_ChannelYield) ProtoMessage() {}
+func (*QueryStatsResponse_ExternalYield) ProtoMessage() {}
 
-// Deprecated: Use QueryStatsResponse_ChannelYield.ProtoReflect.Descriptor instead.
-func (*QueryStatsResponse_ChannelYield) Descriptor() ([]byte, []int) {
+// Deprecated: Use QueryStatsResponse_ExternalYield.ProtoReflect.Descriptor instead.
+func (*QueryStatsResponse_ExternalYield) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_v2_query_proto_rawDescGZIP(), []int{1, 0}
 }
 
-func (x *QueryStatsResponse_ChannelYield) GetChainId() string {
+func (x *QueryStatsResponse_ExternalYield) GetChainId() string {
 	if x != nil {
 		return x.ChainId
 	}
 	return ""
 }
 
-func (x *QueryStatsResponse_ChannelYield) GetAmount() string {
+func (x *QueryStatsResponse_ExternalYield) GetAmount() string {
 	if x != nil {
 		return x.Amount
 	}
@@ -3857,108 +3913,114 @@ var file_noble_dollar_v2_query_proto_rawDesc = []byte{
 	0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x67, 0x6f, 0x67, 0x6f, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a,
 	0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f,
-	0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x0c, 0x0a,
-	0x0a, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x22, 0xdc, 0x04, 0x0a, 0x12,
-	0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x2a, 0x0a, 0x0d, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x68, 0x6f, 0x6c, 0x64,
-	0x65, 0x72, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x42, 0x05, 0xa8, 0xe7, 0xb0, 0x2a, 0x01,
-	0x52, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x48, 0x6f, 0x6c, 0x64, 0x65, 0x72, 0x73, 0x12, 0x59,
-	0x0a, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61,
-	0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f,
-	0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61,
-	0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
-	0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x74, 0x6f, 0x74, 0x61, 0x6c,
-	0x50, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x12, 0x60, 0x0a, 0x13, 0x74, 0x6f, 0x74,
-	0x61, 0x6c, 0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x61, 0x63, 0x63, 0x72, 0x75, 0x65, 0x64,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15,
-	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74,
-	0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
-	0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x11, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x59,
-	0x69, 0x65, 0x6c, 0x64, 0x41, 0x63, 0x63, 0x72, 0x75, 0x65, 0x64, 0x12, 0x70, 0x0a, 0x13, 0x74,
-	0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x5f, 0x79, 0x69, 0x65,
-	0x6c, 0x64, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x3a, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
-	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79,
-	0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x54, 0x6f,
-	0x74, 0x61, 0x6c, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45,
-	0x6e, 0x74, 0x72, 0x79, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x11, 0x74, 0x6f, 0x74, 0x61,
-	0x6c, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x1a, 0x73, 0x0a,
-	0x0c, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x12, 0x19, 0x0a,
-	0x08, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x07, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x12, 0x48, 0x0a, 0x06, 0x61, 0x6d, 0x6f, 0x75,
-	0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde,
-	0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d,
-	0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
-	0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75,
-	0x6e, 0x74, 0x1a, 0x76, 0x0a, 0x16, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x68, 0x61, 0x6e, 0x6e,
-	0x65, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03,
-	0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x46,
-	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x30, 0x2e,
-	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e,
-	0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x16, 0x0a, 0x14, 0x51, 0x75,
-	0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e,
-	0x74, 0x73, 0x22, 0xd1, 0x01, 0x0a, 0x1c, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c,
-	0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x6d, 0x0a, 0x10, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x65, 0x63,
-	0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x42, 0x2e,
-	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e,
-	0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69,
-	0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x59, 0x69, 0x65,
-	0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72,
-	0x79, 0x52, 0x0f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e,
-	0x74, 0x73, 0x1a, 0x42, 0x0a, 0x14, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70,
-	0x69, 0x65, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65,
-	0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x14, 0x0a, 0x05,
-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x34, 0x0a, 0x13, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59,
-	0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x1d, 0x0a,
-	0x0a, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x09, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x49, 0x64, 0x22, 0x46, 0x0a, 0x1b,
-	0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69,
-	0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x79,
-	0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70,
-	0x69, 0x65, 0x6e, 0x74, 0x32, 0xb4, 0x03, 0x0a, 0x05, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x6e,
-	0x0a, 0x05, 0x53, 0x74, 0x61, 0x74, 0x73, 0x12, 0x1b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e,
+	0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1c, 0x6e,
+	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x2f, 0x64,
+	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x0c, 0x0a, 0x0a, 0x51,
+	0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x22, 0xe2, 0x04, 0x0a, 0x12, 0x51, 0x75,
+	0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x2a, 0x0a, 0x0d, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x68, 0x6f, 0x6c, 0x64, 0x65, 0x72,
+	0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x42, 0x05, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0c,
+	0x74, 0x6f, 0x74, 0x61, 0x6c, 0x48, 0x6f, 0x6c, 0x64, 0x65, 0x72, 0x73, 0x12, 0x59, 0x0a, 0x0f,
+	0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63,
+	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68,
+	0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49,
+	0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x50, 0x72,
+	0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x12, 0x60, 0x0a, 0x13, 0x74, 0x6f, 0x74, 0x61, 0x6c,
+	0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x61, 0x63, 0x63, 0x72, 0x75, 0x65, 0x64, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f,
+	0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e,
+	0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e,
+	0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x11, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x59, 0x69, 0x65,
+	0x6c, 0x64, 0x41, 0x63, 0x63, 0x72, 0x75, 0x65, 0x64, 0x12, 0x73, 0x0a, 0x14, 0x74, 0x6f, 0x74,
+	0x61, 0x6c, 0x5f, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x5f, 0x79, 0x69, 0x65, 0x6c,
+	0x64, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x3b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e,
 	0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53,
-	0x74, 0x61, 0x74, 0x73, 0x1a, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74,
-	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x23, 0x88, 0xe7, 0xb0, 0x2a, 0x01,
-	0x82, 0xd3, 0xe4, 0x93, 0x02, 0x18, 0x12, 0x16, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x73, 0x12, 0x97,
-	0x01, 0x0a, 0x0f, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e,
-	0x74, 0x73, 0x12, 0x25, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52,
-	0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x1a, 0x2d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c,
-	0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72,
-	0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2e, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82,
-	0xd3, 0xe4, 0x93, 0x02, 0x23, 0x12, 0x21, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x2f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x65,
-	0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x12, 0xa0, 0x01, 0x0a, 0x0e, 0x59, 0x69, 0x65,
-	0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x24, 0x2e, 0x6e, 0x6f,
-	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75,
-	0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e,
-	0x74, 0x1a, 0x2c, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x54, 0x6f, 0x74,
+	0x61, 0x6c, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x12, 0x74, 0x6f, 0x74, 0x61,
+	0x6c, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x1a, 0x74,
+	0x0a, 0x0d, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x12,
+	0x19, 0x0a, 0x08, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x12, 0x48, 0x0a, 0x06, 0x61, 0x6d,
+	0x6f, 0x75, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00,
+	0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f,
+	0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73,
+	0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x61, 0x6d,
+	0x6f, 0x75, 0x6e, 0x74, 0x1a, 0x78, 0x0a, 0x17, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x45, 0x78, 0x74,
+	0x65, 0x72, 0x6e, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12,
+	0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65,
+	0x79, 0x12, 0x47, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x31, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
+	0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x2e, 0x45, 0x78, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x59, 0x69,
+	0x65, 0x6c, 0x64, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x16,
+	0x0a, 0x14, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69,
+	0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x22, 0xd1, 0x01, 0x0a, 0x1c, 0x51, 0x75, 0x65, 0x72, 0x79,
+	0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6d, 0x0a, 0x10, 0x79, 0x69, 0x65, 0x6c, 0x64,
+	0x5f, 0x72, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x42, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
 	0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65,
-	0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x3a, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x2f, 0x12, 0x2d, 0x2f, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x2f, 0x79,
-	0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x7b,
-	0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x5f, 0x69, 0x64, 0x7d, 0x42, 0xb1, 0x01, 0x0a, 0x13,
-	0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x76, 0x32, 0x42, 0x0a, 0x51, 0x75, 0x65, 0x72, 0x79, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50,
-	0x01, 0x5a, 0x30, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e,
-	0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
-	0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x3b, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
-	0x72, 0x76, 0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x58, 0xaa, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c,
-	0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x32, 0xca, 0x02, 0x0f, 0x4e, 0x6f,
-	0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0xe2, 0x02, 0x1b,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0x5c,
-	0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x11, 0x4e, 0x6f,
-	0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x32, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x2e, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73,
+	0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x0f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69,
+	0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x1a, 0x42, 0x0a, 0x14, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52,
+	0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10,
+	0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79,
+	0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x6c, 0x0a, 0x13, 0x51, 0x75,
+	0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e,
+	0x74, 0x12, 0x35, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0e, 0x32, 0x19, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x52, 0x08,
+	0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x12, 0x1e, 0x0a, 0x0a, 0x69, 0x64, 0x65, 0x6e,
+	0x74, 0x69, 0x66, 0x69, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x69, 0x64,
+	0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x65, 0x72, 0x22, 0x46, 0x0a, 0x1b, 0x51, 0x75, 0x65, 0x72,
+	0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x79, 0x69, 0x65, 0x6c, 0x64,
+	0x5f, 0x72, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0e, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74,
+	0x32, 0xbf, 0x03, 0x0a, 0x05, 0x51, 0x75, 0x65, 0x72, 0x79, 0x12, 0x6e, 0x0a, 0x05, 0x53, 0x74,
+	0x61, 0x74, 0x73, 0x12, 0x1b, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73,
+	0x1a, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
+	0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x53, 0x74, 0x61, 0x74, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x23, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93,
+	0x02, 0x18, 0x12, 0x16, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x2f, 0x76, 0x32, 0x2f, 0x73, 0x74, 0x61, 0x74, 0x73, 0x12, 0x97, 0x01, 0x0a, 0x0f, 0x59,
+	0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x12, 0x25,
+	0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32,
+	0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70,
+	0x69, 0x65, 0x6e, 0x74, 0x73, 0x1a, 0x2d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65,
+	0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x2e, 0x88, 0xe7, 0xb0, 0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02,
+	0x23, 0x12, 0x21, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x2f, 0x76, 0x32, 0x2f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x65, 0x63, 0x69, 0x70, 0x69,
+	0x65, 0x6e, 0x74, 0x73, 0x12, 0xab, 0x01, 0x0a, 0x0e, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65,
+	0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x12, 0x24, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e,
+	0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x59,
+	0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x1a, 0x2c, 0x2e,
+	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x2e,
+	0x51, 0x75, 0x65, 0x72, 0x79, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x69,
+	0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x45, 0x88, 0xe7, 0xb0,
+	0x2a, 0x01, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x3a, 0x12, 0x38, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x32, 0x2f, 0x79, 0x69, 0x65, 0x6c, 0x64,
+	0x5f, 0x72, 0x65, 0x63, 0x69, 0x70, 0x69, 0x65, 0x6e, 0x74, 0x2f, 0x7b, 0x70, 0x72, 0x6f, 0x76,
+	0x69, 0x64, 0x65, 0x72, 0x7d, 0x2f, 0x7b, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x65,
+	0x72, 0x7d, 0x42, 0xb1, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65,
+	0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x32, 0x42, 0x0a, 0x51, 0x75, 0x65, 0x72,
+	0x79, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x30, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
+	0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70,
+	0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76,
+	0x32, 0x3b, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x76, 0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x58,
+	0xaa, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
+	0x56, 0x32, 0xca, 0x02, 0x0f, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x5c, 0x56, 0x32, 0xe2, 0x02, 0x1b, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x5c, 0x56, 0x32, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
+	0x74, 0x61, 0xea, 0x02, 0x11, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x3a, 0x3a, 0x56, 0x32, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -3975,31 +4037,33 @@ func file_noble_dollar_v2_query_proto_rawDescGZIP() []byte {
 
 var file_noble_dollar_v2_query_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_noble_dollar_v2_query_proto_goTypes = []interface{}{
-	(*QueryStats)(nil),                      // 0: noble.dollar.v2.QueryStats
-	(*QueryStatsResponse)(nil),              // 1: noble.dollar.v2.QueryStatsResponse
-	(*QueryYieldRecipients)(nil),            // 2: noble.dollar.v2.QueryYieldRecipients
-	(*QueryYieldRecipientsResponse)(nil),    // 3: noble.dollar.v2.QueryYieldRecipientsResponse
-	(*QueryYieldRecipient)(nil),             // 4: noble.dollar.v2.QueryYieldRecipient
-	(*QueryYieldRecipientResponse)(nil),     // 5: noble.dollar.v2.QueryYieldRecipientResponse
-	(*QueryStatsResponse_ChannelYield)(nil), // 6: noble.dollar.v2.QueryStatsResponse.ChannelYield
-	nil,                                     // 7: noble.dollar.v2.QueryStatsResponse.TotalChannelYieldEntry
-	nil,                                     // 8: noble.dollar.v2.QueryYieldRecipientsResponse.YieldRecipientsEntry
+	(*QueryStats)(nil),                       // 0: noble.dollar.v2.QueryStats
+	(*QueryStatsResponse)(nil),               // 1: noble.dollar.v2.QueryStatsResponse
+	(*QueryYieldRecipients)(nil),             // 2: noble.dollar.v2.QueryYieldRecipients
+	(*QueryYieldRecipientsResponse)(nil),     // 3: noble.dollar.v2.QueryYieldRecipientsResponse
+	(*QueryYieldRecipient)(nil),              // 4: noble.dollar.v2.QueryYieldRecipient
+	(*QueryYieldRecipientResponse)(nil),      // 5: noble.dollar.v2.QueryYieldRecipientResponse
+	(*QueryStatsResponse_ExternalYield)(nil), // 6: noble.dollar.v2.QueryStatsResponse.ExternalYield
+	nil,                                      // 7: noble.dollar.v2.QueryStatsResponse.TotalExternalYieldEntry
+	nil,                                      // 8: noble.dollar.v2.QueryYieldRecipientsResponse.YieldRecipientsEntry
+	(Provider)(0),                            // 9: noble.dollar.v2.Provider
 }
 var file_noble_dollar_v2_query_proto_depIdxs = []int32{
-	7, // 0: noble.dollar.v2.QueryStatsResponse.total_channel_yield:type_name -> noble.dollar.v2.QueryStatsResponse.TotalChannelYieldEntry
+	7, // 0: noble.dollar.v2.QueryStatsResponse.total_external_yield:type_name -> noble.dollar.v2.QueryStatsResponse.TotalExternalYieldEntry
 	8, // 1: noble.dollar.v2.QueryYieldRecipientsResponse.yield_recipients:type_name -> noble.dollar.v2.QueryYieldRecipientsResponse.YieldRecipientsEntry
-	6, // 2: noble.dollar.v2.QueryStatsResponse.TotalChannelYieldEntry.value:type_name -> noble.dollar.v2.QueryStatsResponse.ChannelYield
-	0, // 3: noble.dollar.v2.Query.Stats:input_type -> noble.dollar.v2.QueryStats
-	2, // 4: noble.dollar.v2.Query.YieldRecipients:input_type -> noble.dollar.v2.QueryYieldRecipients
-	4, // 5: noble.dollar.v2.Query.YieldRecipient:input_type -> noble.dollar.v2.QueryYieldRecipient
-	1, // 6: noble.dollar.v2.Query.Stats:output_type -> noble.dollar.v2.QueryStatsResponse
-	3, // 7: noble.dollar.v2.Query.YieldRecipients:output_type -> noble.dollar.v2.QueryYieldRecipientsResponse
-	5, // 8: noble.dollar.v2.Query.YieldRecipient:output_type -> noble.dollar.v2.QueryYieldRecipientResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	9, // 2: noble.dollar.v2.QueryYieldRecipient.provider:type_name -> noble.dollar.v2.Provider
+	6, // 3: noble.dollar.v2.QueryStatsResponse.TotalExternalYieldEntry.value:type_name -> noble.dollar.v2.QueryStatsResponse.ExternalYield
+	0, // 4: noble.dollar.v2.Query.Stats:input_type -> noble.dollar.v2.QueryStats
+	2, // 5: noble.dollar.v2.Query.YieldRecipients:input_type -> noble.dollar.v2.QueryYieldRecipients
+	4, // 6: noble.dollar.v2.Query.YieldRecipient:input_type -> noble.dollar.v2.QueryYieldRecipient
+	1, // 7: noble.dollar.v2.Query.Stats:output_type -> noble.dollar.v2.QueryStatsResponse
+	3, // 8: noble.dollar.v2.Query.YieldRecipients:output_type -> noble.dollar.v2.QueryYieldRecipientsResponse
+	5, // 9: noble.dollar.v2.Query.YieldRecipient:output_type -> noble.dollar.v2.QueryYieldRecipientResponse
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_noble_dollar_v2_query_proto_init() }
@@ -4007,6 +4071,7 @@ func file_noble_dollar_v2_query_proto_init() {
 	if File_noble_dollar_v2_query_proto != nil {
 		return
 	}
+	file_noble_dollar_v2_dollar_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_noble_dollar_v2_query_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*QueryStats); i {
@@ -4081,7 +4146,7 @@ func file_noble_dollar_v2_query_proto_init() {
 			}
 		}
 		file_noble_dollar_v2_query_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*QueryStatsResponse_ChannelYield); i {
+			switch v := v.(*QueryStatsResponse_ExternalYield); i {
 			case 0:
 				return &v.state
 			case 1:

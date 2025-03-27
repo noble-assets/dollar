@@ -22,8 +22,12 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
+
+	"dollar.noble.xyz/v2/types/v2"
 )
 
 // GetPaused is a utility that returns the current paused state.
@@ -130,24 +134,26 @@ func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int
 	return k.Stats.Set(ctx, stats)
 }
 
-// IncrementTotalChannelYield is a utility that increments the total channel yield stat.
-func (k *Keeper) IncrementTotalChannelYield(ctx context.Context, channelId string, amount math.Int) error {
+// IncrementTotalExternalYield is a utility that increments the total external yield stat.
+func (k *Keeper) IncrementTotalExternalYield(ctx context.Context, provider v2.Provider, identifier string, amount math.Int) error {
 	stats, err := k.Stats.Get(ctx)
 	if err != nil {
 		return err
 	}
-	if stats.TotalChannelYield == nil {
-		stats.TotalChannelYield = make(map[string]string)
+	if stats.TotalExternalYield == nil {
+		stats.TotalExternalYield = make(map[string]string)
 	}
 
-	totalChannelYield := math.ZeroInt()
-	rawTotalChannelYield, exists := stats.TotalChannelYield[channelId]
+	key := fmt.Sprintf("%s/%s", provider, identifier)
+
+	totalExternalYield := math.ZeroInt()
+	rawTotalExternalYield, exists := stats.TotalExternalYield[key]
 	if exists {
-		totalChannelYield, _ = math.NewIntFromString(rawTotalChannelYield)
+		totalExternalYield, _ = math.NewIntFromString(rawTotalExternalYield)
 	}
 
-	totalChannelYield = totalChannelYield.Add(amount)
-	stats.TotalChannelYield[channelId] = totalChannelYield.String()
+	totalExternalYield = totalExternalYield.Add(amount)
+	stats.TotalExternalYield[key] = totalExternalYield.String()
 
 	return k.Stats.Set(ctx, stats)
 }
@@ -156,8 +162,8 @@ func (k *Keeper) IncrementTotalChannelYield(ctx context.Context, channelId strin
 func (k *Keeper) GetYieldRecipients(ctx context.Context) (map[string]string, error) {
 	yieldRecipients := make(map[string]string)
 
-	err := k.YieldRecipients.Walk(ctx, nil, func(channelId string, yieldRecipient string) (stop bool, err error) {
-		yieldRecipients[channelId] = yieldRecipient
+	err := k.YieldRecipients.Walk(ctx, nil, func(key collections.Pair[int32, string], yieldRecipient string) (stop bool, err error) {
+		yieldRecipients[fmt.Sprintf("%s/%s", v2.Provider(key.K1()), key.K2())] = yieldRecipient
 		return false, nil
 	})
 
