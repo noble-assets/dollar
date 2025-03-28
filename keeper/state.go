@@ -169,3 +169,21 @@ func (k *Keeper) GetYieldRecipients(ctx context.Context) (map[string]string, err
 
 	return yieldRecipients, err
 }
+
+// GetYieldRecipientsByProvider is utility that returns yield recipients for a specific provider.
+func (k *Keeper) GetYieldRecipientsByProvider(ctx context.Context, provider v2.Provider) (map[string]string, error) {
+	yieldRecipients := make(map[string]string)
+
+	err := k.YieldRecipients.Walk(
+		ctx,
+		collections.NewPrefixedPairRange[int32, string](int32(provider)),
+		func(key collections.Pair[int32, string], yieldRecipient string) (stop bool, err error) {
+			identifier := key.K2()
+			yieldRecipients[identifier] = yieldRecipient
+
+			return false, nil
+		},
+	)
+
+	return yieldRecipients, err
+}
