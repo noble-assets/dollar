@@ -23,7 +23,6 @@ package dollar
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/address"
@@ -72,9 +71,7 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	}
 
 	for key, recipient := range genesis.YieldRecipients {
-		splitKey := strings.Split(key, "/")
-		provider := types.Provider(types.Provider_value[splitKey[0]])
-		identifier := splitKey[1]
+		provider, identifier := types.ParseYieldRecipientKey(key)
 
 		key := collections.Join(int32(provider), identifier)
 		err = k.YieldRecipients.Set(ctx, key, recipient)

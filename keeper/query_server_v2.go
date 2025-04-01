@@ -22,12 +22,10 @@ package keeper
 
 import (
 	"context"
-	"fmt"
-	"strings"
-
 	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	solomachine "github.com/cosmos/ibc-go/v8/modules/light-clients/06-solomachine"
@@ -59,9 +57,7 @@ func (k queryServerV2) Stats(ctx context.Context, req *v2.QueryStats) (*v2.Query
 
 	totalExternalYield := make(map[string]v2.QueryStatsResponse_ExternalYield)
 	for key, rawAmount := range stats.TotalExternalYield {
-		splitKey := strings.Split(key, "/")
-		provider := v2.Provider(v2.Provider_value[splitKey[0]])
-		identifier := splitKey[1]
+		provider, identifier := v2.ParseYieldRecipientKey(key)
 
 		chainId := "UNKNOWN"
 		switch provider {
