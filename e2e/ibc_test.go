@@ -112,7 +112,15 @@ func TestIBCYieldDistribution(t *testing.T) {
 	// ASSERT: There are no yield recipients.
 	require.Empty(t, yieldRecipients)
 
-	// TODO: Once NobleICS4Wrapper has been migrated, ensure that transfers are blocked at first!
+	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
+	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{
+		Address: externalUser.FormattedAddress(),
+		Denom:   "uusdn",
+		Amount:  math.NewInt(500_000 * 1e6),
+	}, ibc.TransferOptions{})
+
+	// ASSERT: The transfer should've failed as a yield recipient hasn't been set.
+	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled on %s", "uusdn", channelID))
 
 	// ACT: Set the yield recipient for the external chain.
 	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, yieldRecipient)

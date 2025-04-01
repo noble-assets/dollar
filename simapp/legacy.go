@@ -2,6 +2,7 @@ package simapp
 
 import (
 	storetypes "cosmossdk.io/store/types"
+	"dollar.noble.xyz/v2"
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
@@ -49,12 +50,15 @@ func (app *SimApp) RegisterLegacyModules() error {
 		"noble1s7evsmath5f3ef7vk97ru2tez9k5rs00klunzu",
 	)
 
+	// Create custom ICS4Wrapper so that we can block outgoing $USDN IBC transfers.
+	ics4Wrapper := dollar.NewICS4Wrapper(app.IBCKeeper.ChannelKeeper, app.DollarKeeper)
+
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(transfertypes.ModuleName)
 	app.TransferKeeper = transferkeeper.NewKeeper(
 		app.appCodec,
 		app.GetKey(transfertypes.StoreKey),
 		app.GetSubspace(transfertypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, // TODO(@john): Think about migrating NobleICS4Wrapper
+		ics4Wrapper,
 		app.IBCKeeper.ChannelKeeper,
 		app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,

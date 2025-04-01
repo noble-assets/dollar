@@ -21,6 +21,7 @@
 package dollar
 
 import (
+	"context"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -29,6 +30,8 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+
+	"dollar.noble.xyz/v2/types/v2"
 )
 
 var _ porttypes.ICS4Wrapper = &ICS4Wrapper{}
@@ -44,6 +47,7 @@ type ICS4Wrapper struct {
 // ExpectedDollarKeeper defines the interface expected by ICS4Wrapper for the Noble Dollar module.
 type ExpectedDollarKeeper interface {
 	GetDenom() string
+	HasYieldRecipient(ctx context.Context, provider v2.Provider, identifier string) bool
 }
 
 // NewICS4Wrapper returns a new instance of ICS4Wrapper.
@@ -66,7 +70,10 @@ func (w ICS4Wrapper) SendPacket(ctx sdk.Context, chanCap *capabilitytypes.Capabi
 
 	denom := w.dollarKeeper.GetDenom()
 	if packetData.Denom == denom {
-		return 0, fmt.Errorf("ibc transfers of %s are currently disabled", denom)
+		enabled := w.dollarKeeper.HasYieldRecipient(ctx, v2.Provider_IBC, sourceChannel)
+		if !enabled {
+			return 0, fmt.Errorf("ibc transfers of %s are currently disabled on %s", denom, sourceChannel)
+		}
 	}
 
 	return w.ics4Wrapper.SendPacket(ctx, chanCap, sourcePort, sourceChannel, timeoutHeight, timeoutTimestamp, data)

@@ -21,6 +21,7 @@
 package dollar
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -31,6 +32,8 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
 	"github.com/stretchr/testify/require"
+
+	"dollar.noble.xyz/v2/types/v2"
 )
 
 var _ porttypes.ICS4Wrapper = (*MockICS4Wrapper)(nil)
@@ -74,23 +77,42 @@ func (m MockDollarKeeper) GetDenom() string {
 	return m.denom
 }
 
+func (m MockDollarKeeper) HasYieldRecipient(_ context.Context, provider v2.Provider, identifier string) bool {
+	if provider == v2.Provider_IBC {
+		if identifier == "channel-0" {
+			return true
+		}
+	}
+
+	return false
+}
+
 // TestSendPacket asserts that outgoing IBC transfers work as expected in cases
 // where the denom is $USDN, as well as cases where the denom is not.
 func TestSendPacket(t *testing.T) {
 	denom := "uusdn"
 
 	tc := []struct {
-		name string
-		data transfertypes.FungibleTokenPacketData
-		fail bool
+		name    string
+		channel string
+		data    transfertypes.FungibleTokenPacketData
+		fail    bool
 	}{
 		{
-			"Outgoing IBC transfer of USDN - should be blocked",
+			"Outgoing IBC transfer of USDN with channel yield recipient set - should not be blocked",
+			"channel-0",
+			transfertypes.NewFungibleTokenPacketData(denom, "1000000", "test", "test", "test"),
+			false,
+		},
+		{
+			"Outgoing IBC transfer of USDN without channel yield recipient set - should be blocked",
+			"channel-1",
 			transfertypes.NewFungibleTokenPacketData(denom, "1000000", "test", "test", "test"),
 			true,
 		},
 		{
 			"Outgoing IBC transfer of USDC - should not be blocked",
+			"channel-0",
 			transfertypes.NewFungibleTokenPacketData("uusdc", "1000000", "test", "test", "test"),
 			false,
 		},
@@ -108,11 +130,11 @@ func TestSendPacket(t *testing.T) {
 			ctx := sdk.Context{}
 			timeout := uint64(0)
 
-			_, err = nobleWrapper.SendPacket(ctx, nil, "transfer", "channel-0", clienttypes.Height{}, timeout, data)
+			_, err = nobleWrapper.SendPacket(ctx, nil, "transfer", tt.channel, clienttypes.Height{}, timeout, data)
 
 			if tt.fail {
 				require.Error(t, err)
-				require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled", denom))
+				require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled on %s", denom, tt.channel))
 			} else {
 				require.NoError(t, err)
 			}

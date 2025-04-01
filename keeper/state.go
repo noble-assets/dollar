@@ -187,3 +187,11 @@ func (k *Keeper) GetYieldRecipientsByProvider(ctx context.Context, provider v2.P
 
 	return yieldRecipients, err
 }
+
+// HasYieldRecipient is a utility that returns if there is a yield recipient for a specific provider and identifier.
+func (k *Keeper) HasYieldRecipient(ctx context.Context, provider v2.Provider, identifier string) bool {
+	key := collections.Join(int32(provider), identifier)
+	has, _ := k.YieldRecipients.Has(ctx, key)
+
+	return has
+}
