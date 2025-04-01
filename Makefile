@@ -79,7 +79,7 @@ endif
 
 test-unit:
 	@echo "🤖 Running unit tests..."
-	@go test -cover -coverprofile=coverage.out -race -v ./keeper ./types/portal/ntt
+	@go test -cover -coverprofile=coverage.out -race -v . ./keeper ./types/portal/ntt
 	@go tool cover -html coverage.out -o coverage.html
 	@echo "✅ Completed unit tests!"
 
