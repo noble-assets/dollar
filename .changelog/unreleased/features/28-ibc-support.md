@@ -1,0 +1,1 @@
+- Enable transfers and yield distribution across specific IBC channels. ([#28](https://github.com/noble-assets/dollar/pull/28))
