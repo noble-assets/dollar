@@ -29,8 +29,8 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/x/staking"
 	_ "github.com/noble-assets/wormhole"
 
-	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	// Cosmos Modules
+	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	consensuskeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
@@ -41,6 +41,7 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	// IBC Modules
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
+	transferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	// Custom Modules
 	dollarkeeper "dollar.noble.xyz/v2/keeper"
@@ -77,6 +78,7 @@ type SimApp struct {
 	// IBC Modules
 	CapabilityKeeper *capabilitykeeper.Keeper
 	IBCKeeper        *ibckeeper.Keeper
+	TransferKeeper   transferkeeper.Keeper
 	// Custom Modules
 	DollarKeeper   *dollarkeeper.Keeper
 	WormholeKeeper *wormholekeeper.Keeper

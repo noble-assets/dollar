@@ -24,24 +24,35 @@ import (
 	"context"
 	"testing"
 
-	portaltypes "dollar.noble.xyz/v2/types/portal"
 	wormholetypes "github.com/noble-assets/wormhole/types"
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
 	"github.com/strangelove-ventures/interchaintest/v8/ibc"
+	"github.com/strangelove-ventures/interchaintest/v8/relayer/rly"
+	"github.com/strangelove-ventures/interchaintest/v8/testreporter"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
+	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 	"go.uber.org/zap/zaptest"
+
+	portaltypes "dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/utils"
 )
 
-// Suite sets up a test suite with a single chain.
-func Suite(t *testing.T) (ctx context.Context, logger *zap.Logger, chain *cosmos.CosmosChain) {
+// Suite is a utility for spinning up a new E2E testing suite.
+func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, guardians []utils.Guardian) {
 	ctx = context.Background()
-	logger = zaptest.NewLogger(t)
+	logger := zaptest.NewLogger(t)
+	reporter := testreporter.NewNopReporter()
+	execReporter := reporter.RelayerExecReporter(t)
+	client, network := interchaintest.DockerSetup(t)
+	var relayer *rly.CosmosRelayer
+
+	guardian := utils.NewGuardian(t)
+	guardians = []utils.Guardian{guardian}
 
 	numValidators, numFullNodes := 1, 0
 
-	cf := interchaintest.NewBuiltinChainFactory(zaptest.NewLogger(t), []*interchaintest.ChainSpec{
+	specs := []*interchaintest.ChainSpec{
 		{
 			Name:          "dollar",
 			Version:       "local",
@@ -66,52 +77,86 @@ func Suite(t *testing.T) (ctx context.Context, logger *zap.Logger, chain *cosmos
 				TrustingPeriod: "504h",
 				ModifyGenesis: func(cc ibc.ChainConfig, genesis []byte) ([]byte, error) {
 					peers := make(map[uint16]portaltypes.Peer)
-					peers[10002] = portaltypes.Peer{
-						Transceiver: []byte("AAAAAAAAAAAAAAAAKcvx4HFm0xRGMHrgeZn6bRYiOZA="),
-						Manager:     []byte("AAAAAAAAAAAAAAAAG3rhlLIMVVudmZyDX3TNzjamenQ="),
+					peers[uint16(vaautils.ChainIDEthereum)] = portaltypes.Peer{
+						Transceiver: utils.SourceTransceiverAddress,
+						Manager:     utils.SourceManagerAddress,
 					}
 
-					guardians := make(map[uint16]wormholetypes.GuardianSet)
-					guardians[0] = wormholetypes.GuardianSet{
-						Addresses:      [][]byte{[]byte("E5R71IsY5T/a7ud/NHM5Gscnxjg=")},
+					guardianSets := make(map[uint16]wormholetypes.GuardianSet)
+					var addresses [][]byte
+					for _, guardian := range guardians {
+						addresses = append(addresses, guardian.Address.Bytes())
+					}
+					guardianSets[0] = wormholetypes.GuardianSet{
+						Addresses:      addresses,
 						ExpirationTime: 0,
 					}
 
 					updatedGenesis := []cosmos.GenesisKV{
 						cosmos.NewGenesisKV("app_state.dollar.portal.peers", peers),
 						cosmos.NewGenesisKV("app_state.wormhole.config", wormholetypes.Config{
-							ChainId:    4009,
-							GovChain:   1,
-							GovAddress: []byte("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ="),
+							ChainId:          uint16(vaautils.ChainIDNoble),
+							GuardianSetIndex: 0,
+							GovChain:         uint16(vaautils.GovernanceChain),
+							GovAddress:       vaautils.GovernanceEmitter.Bytes(),
 						}),
-						cosmos.NewGenesisKV("app_state.wormhole.guardian_sets", guardians),
+						cosmos.NewGenesisKV("app_state.wormhole.guardian_sets", guardianSets),
 					}
 
 					return cosmos.ModifyGenesis(updatedGenesis)(cc, genesis)
 				},
 			},
 		},
-	})
+	}
+	if ibcEnabled {
+		specs = append(specs, &interchaintest.ChainSpec{
+			Name:          "ibc-go-simd",
+			Version:       "v8.7.0",
+			NumValidators: &numValidators,
+			NumFullNodes:  &numFullNodes,
+			ChainConfig: ibc.ChainConfig{
+				ChainID: "ibc-go-simd-1",
+			},
+		})
+	}
+	factory := interchaintest.NewBuiltinChainFactory(logger, specs)
 
-	chains, err := cf.Chains(t.Name())
+	chains, err := factory.Chains(t.Name())
 	require.NoError(t, err)
 
-	chain = chains[0].(*cosmos.CosmosChain)
+	noble = chains[0].(*cosmos.CosmosChain)
+	interchain := interchaintest.NewInterchain().AddChain(noble)
+	if ibcEnabled {
+		relayer = interchaintest.NewBuiltinRelayerFactory(
+			ibc.CosmosRly,
+			logger,
+		).Build(t, client, network).(*rly.CosmosRelayer)
 
-	ic := interchaintest.NewInterchain().
-		AddChain(chain)
+		ibcSimapp = chains[1].(*cosmos.CosmosChain)
 
-	client, network := interchaintest.DockerSetup(t)
-
-	require.NoError(t, ic.Build(ctx, nil, interchaintest.InterchainBuildOptions{
-		TestName:         t.Name(),
-		Client:           client,
-		NetworkID:        network,
-		SkipPathCreation: true,
+		interchain = interchain.
+			AddChain(ibcSimapp).
+			AddRelayer(relayer, "relayer").
+			AddLink(interchaintest.InterchainLink{
+				Chain1:  noble,
+				Chain2:  ibcSimapp,
+				Relayer: relayer,
+				Path:    "transfer",
+			})
+	}
+	require.NoError(t, interchain.Build(ctx, execReporter, interchaintest.InterchainBuildOptions{
+		TestName:  t.Name(),
+		Client:    client,
+		NetworkID: network,
 	}))
+
 	t.Cleanup(func() {
-		_ = ic.Close()
+		_ = interchain.Close()
 	})
 
-	return ctx, logger, chain
+	if ibcEnabled {
+		require.NoError(t, relayer.StartRelayer(ctx, execReporter))
+	}
+
+	return
 }

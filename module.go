@@ -32,6 +32,7 @@ import (
 	"cosmossdk.io/core/header"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
+	"cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -40,19 +41,22 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
 
 	modulev1 "dollar.noble.xyz/v2/api/module/v1"
 	portalv1 "dollar.noble.xyz/v2/api/portal/v1"
 	dollarv1 "dollar.noble.xyz/v2/api/v1"
 	vaultsv1 "dollar.noble.xyz/v2/api/vaults/v1"
+	"dollar.noble.xyz/v2/client/cli"
 	"dollar.noble.xyz/v2/keeper"
 	"dollar.noble.xyz/v2/types"
 	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 
 // ConsensusVersion defines the current Noble Dollar module consensus version.
-const ConsensusVersion = 1
+const ConsensusVersion = 2
 
 var (
 	_ module.AppModuleBasic      = AppModule{}
@@ -87,6 +91,9 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
+	if err := v2.RegisterQueryHandlerClient(context.Background(), mux, v2.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
 
 	if err := portal.RegisterQueryHandlerClient(context.Background(), mux, portal.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
@@ -98,11 +105,11 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 }
 
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
-	return cdc.MustMarshalJSON(types.DefaultGenesisState())
+	return cdc.MustMarshalJSON(v2.DefaultGenesisState())
 }
 
 func (b AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, _ client.TxEncodingConfig, bz json.RawMessage) error {
-	var genesis types.GenesisState
+	var genesis v2.GenesisState
 	if err := cdc.UnmarshalJSON(bz, &genesis); err != nil {
 		return fmt.Errorf("failed to unmarshal Noble Dollar genesis state: %w", err)
 	}
@@ -132,7 +139,7 @@ func (AppModule) IsAppModule() {}
 func (AppModule) ConsensusVersion() uint64 { return ConsensusVersion }
 
 func (m AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, bz json.RawMessage) {
-	var genesis types.GenesisState
+	var genesis v2.GenesisState
 	cdc.MustUnmarshalJSON(bz, &genesis)
 
 	InitGenesis(ctx, m.keeper, m.addressCodec, genesis)
@@ -146,12 +153,19 @@ func (m AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawM
 func (m AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServer(m.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServer(m.keeper))
+	v2.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerV2(m.keeper))
+	v2.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServerV2(m.keeper))
 
 	portal.RegisterMsgServer(cfg.MsgServer(), keeper.NewPortalMsgServer(m.keeper))
 	portal.RegisterQueryServer(cfg.QueryServer(), keeper.NewPortalQueryServer(m.keeper))
 
 	vaults.RegisterMsgServer(cfg.MsgServer(), keeper.NewVaultsMsgServer(m.keeper))
 	vaults.RegisterQueryServer(cfg.QueryServer(), keeper.NewVaultsQueryServer(m.keeper))
+
+	migrator := keeper.NewMigrator(m.keeper)
+	if err := cfg.RegisterMigration(types.ModuleName, 1, migrator.Migrate1to2); err != nil {
+		panic(fmt.Sprintf("failed to migrate Noble Dollar from version 1 to 2: %v", err))
+	}
 }
 
 //
@@ -254,6 +268,7 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					},
 				},
 			},
+			EnhanceCustomCommand: true,
 		},
 		Query: &autocliv1.ServiceCommandDescriptor{
 			Service: dollarv1.Query_ServiceDesc.ServiceName,
@@ -273,8 +288,9 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "account"}},
 				},
 				{
+					// NOTE: This is skipped as it is overridden by the v2 command.
 					RpcMethod: "Stats",
-					Use:       "stats",
+					Skip:      true,
 				},
 			},
 			SubCommands: map[string]*autocliv1.ServiceCommandDescriptor{
@@ -337,8 +353,17 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 					},
 				},
 			},
+			EnhanceCustomCommand: true,
 		},
 	}
+}
+
+func (AppModule) GetTxCmd() *cobra.Command {
+	return cli.GetTxCmd()
+}
+
+func (AppModule) GetQueryCmd() *cobra.Command {
+	return cli.GetQueryCmd()
 }
 
 //
@@ -354,6 +379,7 @@ type ModuleInputs struct {
 
 	Config        *modulev1.Module
 	StoreService  store.KVStoreService
+	Logger        log.Logger
 	HeaderService header.Service
 	EventService  event.Service
 
@@ -385,11 +411,14 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.Config.VaultsMinimumUnlock,
 		in.Cdc,
 		in.StoreService,
+		in.Logger,
 		in.HeaderService,
 		in.EventService,
 		in.AddressCodec,
-		in.BankKeeper,
 		in.AccountKeeper,
+		in.BankKeeper,
+		nil,
+		nil,
 		in.WormholeKeeper,
 	)
 	m := NewAppModule(in.AddressCodec, k)

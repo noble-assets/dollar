@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package noble.dollar.v2;
+
+import "amino/amino.proto";
+import "cosmos/query/v1/query.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "noble/dollar/v2/dollar.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/v2";
+
+service Query {
+  rpc Stats(QueryStats) returns (QueryStatsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v2/stats";
+  }
+
+  rpc YieldRecipients(QueryYieldRecipients) returns (QueryYieldRecipientsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v2/yield_recipients";
+  }
+  rpc YieldRecipient(QueryYieldRecipient) returns (QueryYieldRecipientResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v2/yield_recipient/{provider}/{identifier}";
+  }
+}
+
+message QueryStats {}
+
+message QueryStatsResponse {
+  message ExternalYield {
+    string chain_id = 1;
+    string amount = 2 [
+      (amino.dont_omitempty) = true,
+      (cosmos_proto.scalar) = "cosmos.Int",
+      (gogoproto.customtype) = "cosmossdk.io/math.Int",
+      (gogoproto.nullable) = false
+    ];
+  }
+
+  uint64 total_holders = 1 [(amino.dont_omitempty) = true];
+
+  string total_principal = 2 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string total_yield_accrued = 3 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  map<string, ExternalYield> total_external_yield = 4 [(gogoproto.nullable) = false];
+}
+
+message QueryYieldRecipients {}
+
+message QueryYieldRecipientsResponse {
+  map<string, string> yield_recipients = 1;
+}
+
+message QueryYieldRecipient {
+  Provider provider = 1;
+  string identifier = 2;
+}
+
+message QueryYieldRecipientResponse {
+  string yield_recipient = 1;
+}

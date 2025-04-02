@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package noble.dollar.v2;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "noble/dollar/v2/dollar.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/v2";
+
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  rpc SetYieldRecipient(MsgSetYieldRecipient) returns (MsgSetYieldRecipientResponse);
+}
+
+// MsgSetYieldRecipient allows the authority to set a yield recipient for an external chain.
+message MsgSetYieldRecipient {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/SetYieldRecipient";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  Provider provider = 2;
+  string identifier = 3;
+  string recipient = 4;
+}
+
+// MsgSetYieldRecipientResponse is the response of the SetYieldRecipient message.
+message MsgSetYieldRecipientResponse {}

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package noble.dollar.v2;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/v2";
+
+enum Provider {
+  IBC = 0;
+}
+
+message Stats {
+  uint64 total_holders = 1;
+
+  string total_principal = 2 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  string total_yield_accrued = 3 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  map<string, string> total_external_yield = 4;
+}

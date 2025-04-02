@@ -22,6 +22,7 @@ package types
 
 import (
 	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -35,6 +36,8 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 
 	cdc.RegisterConcrete(&MsgClaimYield{}, "dollar/ClaimYield", nil)
 	cdc.RegisterConcrete(&MsgSetPausedState{}, "dollar/SetPausedState", nil)
+
+	v2.RegisterLegacyAminoCodec(cdc)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
@@ -45,6 +48,8 @@ func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetPausedState{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+
+	v2.RegisterInterfaces(registry)
 }
 
 var amino = codec.NewLegacyAmino()
