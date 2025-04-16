@@ -350,6 +350,11 @@ func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetP
 }
 
 func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry, amount math.Int) (math.Int, error) {
+	userAddress, err := k.address.BytesToString(position.Address)
+	if err != nil {
+		return math.Int{}, err
+	}
+
 	// Get the total Vault rewards.
 	vaultRewardsPrincipal := math.ZeroInt()
 	if has, _ := k.Principal.Has(ctx, vaults.FlexibleVaultAddress); has {
@@ -414,8 +419,8 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	}
 
 	return rewardsAmount, k.event.EventManager(ctx).Emit(ctx, &vaults.RewardClaimed{
-		Account: string(position.Address),
-		Amount:  amount,
+		Account: userAddress,
+		Amount:  rewardsAmount,
 	})
 }
 
