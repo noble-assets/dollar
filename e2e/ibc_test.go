@@ -56,19 +56,14 @@ var (
 
 	// channelID is the IBC channel identifier of ibc-go-simd.
 	channelID = "channel-0"
-	// yieldRecipient is the "gov" module account on ibc-go-simd.
-	yieldRecipient = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
+	// ibcYieldRecipient is the "gov" module account on ibc-go-simd.
+	ibcYieldRecipient = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
 )
 
 // TestIBCYieldDistribution tests $USDN yield distribution across IBC channels.
 func TestIBCYieldDistribution(t *testing.T) {
-	ctx, chain, externalChain, guardians := Suite(t, true)
+	ctx, chain, externalChain, authority, guardians, _ := Suite(t, true, false)
 	validator := chain.Validators[0]
-
-	// ARRANGE: Recover the authority wallet in order to perform gated actions.
-	// This mnemonic must be for the authority account set in simapp/app.yaml!
-	authority, err := interchaintest.GetAndFundTestUserWithMnemonic(ctx, "authority", "occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon", math.OneInt(), chain)
-	require.NoError(t, err)
 
 	// ARRANGE: Create and fund test user accounts on both Noble and the external chain.
 	wallets := interchaintest.GetAndFundTestUsers(t, ctx, "user", math.OneInt(), chain, externalChain)
@@ -123,13 +118,13 @@ func TestIBCYieldDistribution(t *testing.T) {
 	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled on %s", "uusdn", channelID))
 
 	// ACT: Set the yield recipient for the external chain.
-	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, yieldRecipient)
+	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, ibcYieldRecipient)
 	require.NoError(t, err)
 
 	// ASSERT: There is one yield recipient.
 	yieldRecipients = getYieldRecipients(t, ctx, validator)
 	key := fmt.Sprintf("%s/%s", dollartypes.Provider_IBC, channelID)
-	require.Equal(t, yieldRecipient, yieldRecipients[key])
+	require.Equal(t, ibcYieldRecipient, yieldRecipients[key])
 
 	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
 	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{

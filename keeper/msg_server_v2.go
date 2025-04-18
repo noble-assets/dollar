@@ -26,6 +26,8 @@ import (
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
+	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
+	warptypes "github.com/bcp-innovations/hyperlane-cosmos/x/warp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
@@ -54,6 +56,22 @@ func (k msgServerV2) SetYieldRecipient(ctx context.Context, msg *v2.MsgSetYieldR
 		if !found {
 			return nil, fmt.Errorf("ibc identifier does not exist: %s", msg.Identifier)
 		}
+	case v2.Provider_HYPERLANE:
+		rawIdentifier, err := hyperlaneutil.DecodeHexAddress(msg.Identifier)
+		if err != nil {
+			return nil, errors.Wrap(err, "unable to decode hyperlane identifier")
+		}
+		tokenId := rawIdentifier.GetInternalId()
+
+		has, _ := k.warp.HypTokens.Has(ctx, tokenId)
+		if !has {
+			return nil, fmt.Errorf("hyperlane identifier does not exist: %d", tokenId)
+		}
+
+		_, err = k.getHyperlaneRouter(ctx, tokenId)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	key := collections.Join(int32(msg.Provider), msg.Identifier)
@@ -67,4 +85,26 @@ func (k msgServerV2) SetYieldRecipient(ctx context.Context, msg *v2.MsgSetYieldR
 		Identifier: msg.Identifier,
 		Recipient:  msg.Recipient,
 	})
+}
+
+func (k *Keeper) getHyperlaneRouter(ctx context.Context, tokenId uint64) (warptypes.RemoteRouter, error) {
+	var routers []warptypes.RemoteRouter
+
+	ranger := collections.NewPrefixedPairRange[uint64, uint32](tokenId)
+	err := k.warp.EnrolledRouters.Walk(
+		ctx, ranger,
+		func(key collections.Pair[uint64, uint32], router warptypes.RemoteRouter) (stop bool, err error) {
+			routers = append(routers, router)
+			return false, nil
+		},
+	)
+	if err != nil {
+		return warptypes.RemoteRouter{}, errors.Wrapf(err, "unable to get routers for hyperlane identifier %d", tokenId)
+	}
+
+	if len(routers) != 1 {
+		return warptypes.RemoteRouter{}, fmt.Errorf("expected only one router for hyperlane identifier %d", tokenId)
+	}
+
+	return routers[0], nil
 }

@@ -22,10 +22,13 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+	"strconv"
+
 	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	"fmt"
+	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	solomachine "github.com/cosmos/ibc-go/v8/modules/light-clients/06-solomachine"
@@ -62,7 +65,9 @@ func (k queryServerV2) Stats(ctx context.Context, req *v2.QueryStats) (*v2.Query
 		chainId := "UNKNOWN"
 		switch provider {
 		case v2.Provider_IBC:
-			chainId = GetIBCChainId(ctx, k.channel, identifier)
+			chainId = k.getIBCChainId(ctx, identifier)
+		case v2.Provider_HYPERLANE:
+			chainId = k.getHyperlaneChainId(ctx, identifier)
 		}
 
 		amount, _ := math.NewIntFromString(rawAmount)
@@ -105,8 +110,8 @@ func (k queryServerV2) YieldRecipient(ctx context.Context, req *v2.QueryYieldRec
 	return &v2.QueryYieldRecipientResponse{YieldRecipient: yieldRecipient}, nil
 }
 
-func GetIBCChainId(ctx context.Context, channelKeeper types.ChannelKeeper, channelId string) string {
-	_, rawClientState, _ := channelKeeper.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, channelId)
+func (k *Keeper) getIBCChainId(ctx context.Context, channelId string) string {
+	_, rawClientState, _ := k.channel.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, channelId)
 
 	switch clientState := rawClientState.(type) {
 	case *solomachine.ClientState:
@@ -116,4 +121,19 @@ func GetIBCChainId(ctx context.Context, channelKeeper types.ChannelKeeper, chann
 	default:
 		return "UNKNOWN"
 	}
+}
+
+func (k *Keeper) getHyperlaneChainId(ctx context.Context, identifier string) string {
+	rawIdentifier, err := hyperlaneutil.DecodeHexAddress(identifier)
+	if err != nil {
+		return "UNKNOWN"
+	}
+	tokenId := rawIdentifier.GetInternalId()
+
+	router, err := k.getHyperlaneRouter(ctx, tokenId)
+	if err != nil {
+		return "UNKNOWN"
+	}
+
+	return strconv.Itoa(int(router.ReceiverDomain))
 }

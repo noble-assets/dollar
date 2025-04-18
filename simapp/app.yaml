@@ -5,7 +5,7 @@ modules:
       app_name: SimApp
       begin_blockers: [ capability, staking, ibc ]
       end_blockers: [ staking ]
-      init_genesis: [ capability, transfer, auth, bank, staking, ibc, genutil, upgrade, wormhole, dollar ]
+      init_genesis: [ capability, transfer, auth, bank, staking, ibc, genutil, upgrade, wormhole, hyperlane, warp, dollar ]
       override_store_keys:
         - module_name: auth
           kv_store_key: acc
@@ -21,6 +21,9 @@ modules:
           permissions: [ burner, staking ]
         - account: transfer
           permissions: [ burner, minter ]
+        - account: hyperlane
+        - account: warp
+          # NOTE: No permissions because we only support collateral routes.
         - account: dollar
           permissions: [ burner, minter ]
         - account: dollar/yield
@@ -47,6 +50,19 @@ modules:
   - name: upgrade
     config:
       "@type": cosmos.upgrade.module.v1.Module
+
+  - name: hyperlane
+    config:
+      "@type": hyperlane.core.module.v1.Module
+      # occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon
+      authority: noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69
+  - name: warp
+    config:
+      "@type": hyperlane.warp.module.v1.Module
+      # occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon
+      authority: noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69
+      enabled_tokens:
+        - 1 # collateral routes
 
   - name: dollar
     config:
