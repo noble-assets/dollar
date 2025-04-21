@@ -27,11 +27,10 @@ import (
 	"cosmossdk.io/math"
 	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
 	ismtypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/01_interchain_security/types"
-	igptypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/02_post_dispatch/types"
+	pdhtypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/02_post_dispatch/types"
 	hyperlanetypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/types"
 	"github.com/bcp-innovations/hyperlane-cosmos/x/warp"
 	warptypes "github.com/bcp-innovations/hyperlane-cosmos/x/warp/types"
-	"github.com/cosmos/cosmos-sdk/types/module/testutil"
 	"github.com/cosmos/gogoproto/proto"
 	wormholetypes "github.com/noble-assets/wormhole/types"
 	"github.com/strangelove-ventures/interchaintest/v8"
@@ -62,7 +61,10 @@ func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Co
 
 	numValidators, numFullNodes := 1, 0
 
-	encodingConfig := testutil.MakeTestEncodingConfig(dollar.AppModule{}, warp.AppModule{})
+	encodingConfig := cosmos.DefaultEncoding()
+	dollar.AppModule{}.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+	warp.AppModule{}.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+
 	specs := []*interchaintest.ChainSpec{
 		{
 			Name:          "dollar",
@@ -223,9 +225,9 @@ func getHyperlaneIsmId(t require.TestingT, ctx context.Context, validator *cosmo
 
 // getHyperlaneHookId is a utility that returns the most recently created hook.
 func getHyperlaneHookId(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) hyperlaneutil.HexAddress {
-	client := igptypes.NewQueryClient(validator.GrpcConn)
+	client := pdhtypes.NewQueryClient(validator.GrpcConn)
 
-	res, err := client.NoopHooks(ctx, &igptypes.QueryNoopHooksRequest{})
+	res, err := client.NoopHooks(ctx, &pdhtypes.QueryNoopHooksRequest{})
 	require.NoError(t, err)
 	require.Len(t, res.NoopHooks, 1)
 
