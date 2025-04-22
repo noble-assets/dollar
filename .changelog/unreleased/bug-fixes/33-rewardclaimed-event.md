@@ -1,0 +1,1 @@
+- Correctly emit values inside `RewardClaimed` event. ([#33](https://github.com/noble-assets/dollar/pull/33))
