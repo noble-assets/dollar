@@ -87,6 +87,10 @@ func (k msgServerV2) SetYieldRecipient(ctx context.Context, msg *v2.MsgSetYieldR
 	})
 }
 
+// getHyperlaneRouter returns the remote router enrolled for a Hyperlane Warp
+// route. The function errors if it can't find any routers or if there are
+// multiple routers. This is because, to correctly distribute yield, we need
+// only one router enrolled.
 func (k *Keeper) getHyperlaneRouter(ctx context.Context, tokenId uint64) (warptypes.RemoteRouter, error) {
 	var routers []warptypes.RemoteRouter
 
@@ -95,7 +99,7 @@ func (k *Keeper) getHyperlaneRouter(ctx context.Context, tokenId uint64) (warpty
 		ctx, ranger,
 		func(key collections.Pair[uint64, uint32], router warptypes.RemoteRouter) (stop bool, err error) {
 			routers = append(routers, router)
-			return false, nil
+			return true, nil
 		},
 	)
 	if err != nil {

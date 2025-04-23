@@ -1,1 +1,0 @@
-- Enable transfers and yield distribution across specific Hyperlane routes. ([#32](https://github.com/noble-assets/dollar/pull/32))

@@ -333,6 +333,10 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		return nil
 	}
 
+	// NOTE: We iterate over the yield recipients twice to first calculate the
+	// total collateral across all supported routes. This is done so that we
+	// can safely calculate the yield portion of each route.
+
 	totalCollateral := math.ZeroInt()
 	tokens := make(map[string]warptypes.HypToken)
 	for identifier := range yieldRecipients {
@@ -380,7 +384,7 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 			yieldPortion,
 			nil,
 			math.ZeroInt(),
-			sdk.Coin{},
+			sdk.NewCoin(k.denom, math.ZeroInt()),
 			nil,
 		)
 		if err != nil {

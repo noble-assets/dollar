@@ -22,8 +22,8 @@ modules:
         - account: transfer
           permissions: [ burner, minter ]
         - account: hyperlane
+        # NOTE: No permissions because we only support collateral routes.
         - account: warp
-          # NOTE: No permissions because we only support collateral routes.
         - account: dollar
           permissions: [ burner, minter ]
         - account: dollar/yield
