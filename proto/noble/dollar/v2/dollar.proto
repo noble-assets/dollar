@@ -10,6 +10,7 @@ option go_package = "dollar.noble.xyz/v2/types/v2";
 
 enum Provider {
   IBC = 0;
+  HYPERLANE = 1;
 }
 
 message Stats {

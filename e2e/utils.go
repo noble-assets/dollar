@@ -24,6 +24,14 @@ import (
 	"context"
 	"testing"
 
+	"cosmossdk.io/math"
+	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
+	ismtypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/01_interchain_security/types"
+	pdhtypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/02_post_dispatch/types"
+	hyperlanetypes "github.com/bcp-innovations/hyperlane-cosmos/x/core/types"
+	"github.com/bcp-innovations/hyperlane-cosmos/x/warp"
+	warptypes "github.com/bcp-innovations/hyperlane-cosmos/x/warp/types"
+	"github.com/cosmos/gogoproto/proto"
 	wormholetypes "github.com/noble-assets/wormhole/types"
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
@@ -34,12 +42,13 @@ import (
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 	"go.uber.org/zap/zaptest"
 
+	"dollar.noble.xyz/v2"
 	portaltypes "dollar.noble.xyz/v2/types/portal"
 	"dollar.noble.xyz/v2/utils"
 )
 
 // Suite is a utility for spinning up a new E2E testing suite.
-func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, guardians []utils.Guardian) {
+func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, authority ibc.Wallet, guardians []utils.Guardian, tokenId string) {
 	ctx = context.Background()
 	logger := zaptest.NewLogger(t)
 	reporter := testreporter.NewNopReporter()
@@ -51,6 +60,10 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 	guardians = []utils.Guardian{guardian}
 
 	numValidators, numFullNodes := 1, 0
+
+	encodingConfig := cosmos.DefaultEncoding()
+	dollar.AppModule{}.RegisterInterfaces(encodingConfig.InterfaceRegistry)
+	warp.AppModule{}.RegisterInterfaces(encodingConfig.InterfaceRegistry)
 
 	specs := []*interchaintest.ChainSpec{
 		{
@@ -105,6 +118,7 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 
 					return cosmos.ModifyGenesis(updatedGenesis)(cc, genesis)
 				},
+				EncodingConfig: &encodingConfig,
 			},
 		},
 	}
@@ -158,5 +172,86 @@ func Suite(t *testing.T, ibcEnabled bool) (ctx context.Context, noble *cosmos.Co
 		require.NoError(t, relayer.StartRelayer(ctx, execReporter))
 	}
 
+	// ARRANGE: Recover the authority wallet in order to perform gated actions.
+	// This mnemonic must be for the authority account set in simapp/app.yaml!
+	authority, err = interchaintest.GetAndFundTestUserWithMnemonic(ctx, "authority", "occur subway woman achieve deputy rapid museum point usual appear oil blue rate title claw debate flag gallery level object baby winner erase carbon", math.OneInt(), noble)
+	require.NoError(t, err)
+
+	if hyperlaneEnabled {
+		validator := noble.Validators[0]
+
+		_, err := validator.ExecTx(ctx, authority.KeyName(), "hyperlane", "ism", "create-noop")
+		require.NoError(t, err)
+		ismId := getHyperlaneIsmId(t, ctx, validator)
+
+		_, err = validator.ExecTx(ctx, authority.KeyName(), "hyperlane", "hooks", "noop", "create")
+		require.NoError(t, err)
+		hookId := getHyperlaneHookId(t, ctx, validator)
+
+		// TODO: Replace the Noble Hyperlane domain with the real value!
+		_, err = validator.ExecTx(ctx, authority.KeyName(), "hyperlane", "mailbox", "create", ismId.String(), "1313817164")
+		require.NoError(t, err)
+		mailboxId := getHyperlaneMailboxId(t, ctx, validator)
+
+		_, err = validator.ExecTx(ctx, authority.KeyName(), "hyperlane", "mailbox", "set", mailboxId.String(), "--required-hook", hookId.String(), "--default-hook", hookId.String())
+		require.NoError(t, err)
+
+		_, err = validator.ExecTx(ctx, authority.KeyName(), "hyperlane-transfer", "create-collateral-token", mailboxId.String(), "uusdn")
+		require.NoError(t, err)
+		tokenId = getHyperlaneTokenId(t, ctx, validator)
+
+		_, err = validator.ExecTx(ctx, authority.KeyName(), "hyperlane-transfer", "enroll-remote-router", tokenId, "1", "0x0000000000000000000000000000000000000000000000000000000000000000", "0")
+		require.NoError(t, err)
+	}
+
 	return
+}
+
+// getHyperlaneIsmId is a utility that returns the most recently creates ISM.
+func getHyperlaneIsmId(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) hyperlaneutil.HexAddress {
+	client := ismtypes.NewQueryClient(validator.GrpcConn)
+
+	res, err := client.Isms(ctx, &ismtypes.QueryIsmsRequest{})
+	require.NoError(t, err)
+	require.Len(t, res.Isms, 1)
+	require.Equal(t, "/hyperlane.core.interchain_security.v1.NoopISM", res.Isms[0].TypeUrl)
+
+	var ism ismtypes.NoopISM
+	err = proto.Unmarshal(res.Isms[0].Value, &ism)
+	require.NoError(t, err)
+
+	return ism.Id
+}
+
+// getHyperlaneHookId is a utility that returns the most recently created hook.
+func getHyperlaneHookId(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) hyperlaneutil.HexAddress {
+	client := pdhtypes.NewQueryClient(validator.GrpcConn)
+
+	res, err := client.NoopHooks(ctx, &pdhtypes.QueryNoopHooksRequest{})
+	require.NoError(t, err)
+	require.Len(t, res.NoopHooks, 1)
+
+	return res.NoopHooks[0].Id
+}
+
+// getHyperlaneMailboxId is a utility that returns the most recently created
+func getHyperlaneMailboxId(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) hyperlaneutil.HexAddress {
+	client := hyperlanetypes.NewQueryClient(validator.GrpcConn)
+
+	res, err := client.Mailboxes(ctx, &hyperlanetypes.QueryMailboxesRequest{})
+	require.NoError(t, err)
+	require.Len(t, res.Mailboxes, 1)
+
+	return res.Mailboxes[0].Id
+}
+
+// getHyperlaneTokenId is a utility that returns the most recently created warp
+func getHyperlaneTokenId(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) string {
+	client := warptypes.NewQueryClient(validator.GrpcConn)
+
+	res, err := client.Tokens(ctx, &warptypes.QueryTokensRequest{})
+	require.NoError(t, err)
+	require.Len(t, res.Tokens, 1)
+
+	return res.Tokens[0].Id
 }

@@ -25,7 +25,10 @@ import (
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
+	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
+	warptypes "github.com/bcp-innovations/hyperlane-cosmos/x/warp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	"google.golang.org/protobuf/runtime/protoiface"
@@ -194,6 +197,12 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		return err
 	}
 
+	// Claim and transfer the yield of hyperlane external chains.
+	err = k.claimExternalYieldHyperlane(ctx)
+	if err != nil {
+		return err
+	}
+
 	return k.event.EventManager(ctx).Emit(ctx, &types.IndexUpdated{
 		OldIndex:       oldIndex,
 		NewIndex:       index,
@@ -303,6 +312,91 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		}
 
 		k.logger.Info("claimed and transferred ibc yield", "amount", yield, "identifier", channelId)
+	}
+
+	return nil
+}
+
+func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
+	provider := v2.Provider_HYPERLANE
+	yieldRecipients, err := k.GetYieldRecipientsByProvider(ctx, provider)
+	if err != nil {
+		return errors.Wrap(err, "unable to get hyperlane yield recipients from state")
+	}
+
+	address := authtypes.NewModuleAddress(warptypes.ModuleName)
+	yield, err := k.claimModuleYield(ctx, address)
+	if err != nil {
+		return errors.Wrapf(err, "unable to claim yield for hyperlane")
+	}
+	if !yield.IsPositive() {
+		return nil
+	}
+
+	// NOTE: We iterate over the yield recipients twice to first calculate the
+	// total collateral across all supported routes. This is done so that we
+	// can safely calculate the yield portion of each route.
+
+	totalCollateral := math.ZeroInt()
+	tokens := make(map[string]warptypes.HypToken)
+	for identifier := range yieldRecipients {
+		rawIdentifier, err := hyperlaneutil.DecodeHexAddress(identifier)
+		if err != nil {
+			return errors.Wrap(err, "unable to decode hyperlane identifier")
+		}
+		tokenId := rawIdentifier.GetInternalId()
+
+		token, err := k.warp.HypTokens.Get(ctx, tokenId)
+		if err != nil {
+			return errors.Wrap(err, "unable to get hyperlane token from state")
+		}
+
+		totalCollateral = totalCollateral.Add(token.CollateralBalance)
+		tokens[identifier] = token
+	}
+
+	for identifier, yieldRecipient := range yieldRecipients {
+		token := tokens[identifier]
+		collateral := token.CollateralBalance
+		collateralPortion := math.LegacyNewDecFromInt(collateral).QuoInt(totalCollateral)
+		yieldPortion := collateralPortion.MulInt(yield).TruncateInt()
+		if !yieldPortion.IsPositive() {
+			continue
+		}
+
+		router, err := k.getHyperlaneRouter(ctx, token.Id.GetInternalId())
+		if err != nil {
+			return err
+		}
+
+		yieldRecipientBz, err := hyperlaneutil.DecodeHexAddress(yieldRecipient)
+		if err != nil {
+			return errors.Wrap(err, "unable to decode hyperlane yield recipient")
+		}
+
+		sdkCtx := sdk.UnwrapSDKContext(ctx)
+		_, err = k.warp.RemoteTransferCollateral(
+			sdkCtx,
+			token,
+			address.String(),
+			router.ReceiverDomain,
+			yieldRecipientBz,
+			yieldPortion,
+			nil,
+			math.ZeroInt(),
+			sdk.NewCoin(k.denom, math.ZeroInt()),
+			nil,
+		)
+		if err != nil {
+			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, identifier)
+		}
+
+		err = k.IncrementTotalExternalYield(ctx, provider, identifier, yieldPortion)
+		if err != nil {
+			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, identifier)
+		}
+
+		k.logger.Info("claimed and transferred hyperlane yield", "amount", yieldPortion, "identifier", identifier)
 	}
 
 	return nil

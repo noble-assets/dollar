@@ -5,7 +5,9 @@ go 1.22.11
 require (
 	cosmossdk.io/math v1.4.0
 	dollar.noble.xyz/v2 v2.0.0
+	github.com/bcp-innovations/hyperlane-cosmos v1.0.0-rc0
 	github.com/cosmos/cosmos-sdk v0.50.13
+	github.com/cosmos/gogoproto v1.7.0
 	github.com/cosmos/ibc-go/v8 v8.7.0
 	github.com/ethereum/go-ethereum v1.14.13
 	github.com/noble-assets/wormhole v1.0.0
@@ -102,7 +104,6 @@ require (
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gogogateway v1.2.0 // indirect
-	github.com/cosmos/gogoproto v1.7.0 // indirect
 	github.com/cosmos/iavl v1.2.2 // indirect
 	github.com/cosmos/ibc-go/modules/capability v1.0.1 // indirect
 	github.com/cosmos/ics23/go v0.11.0 // indirect
