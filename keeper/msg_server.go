@@ -333,9 +333,6 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		return nil
 	}
 
-	paddedAddress := make([]byte, 32)
-	copy(paddedAddress[32-len(address):], address)
-
 	totalCollateral := math.ZeroInt()
 	tokens := make(map[string]warptypes.HypToken)
 	for identifier := range yieldRecipients {
@@ -367,34 +364,23 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		receiverContract, err := hyperlaneutil.DecodeHexAddress(router.ReceiverContract)
-		if err != nil {
-			return errors.Wrap(err, "unable to decode hyperlane receiver contract")
-		}
 
 		yieldRecipientBz, err := hyperlaneutil.DecodeHexAddress(yieldRecipient)
 		if err != nil {
 			return errors.Wrap(err, "unable to decode hyperlane yield recipient")
 		}
-		payload, err := warptypes.NewWarpPayload(yieldRecipientBz.Bytes(), *yieldPortion.BigInt())
-		if err != nil {
-			return errors.Wrap(err, "unable to create warp payload")
-		}
 
 		sdkCtx := sdk.UnwrapSDKContext(ctx)
-		_, err = k.hyperlane.DispatchMessage(
+		_, err = k.warp.RemoteTransferCollateral(
 			sdkCtx,
-			token.OriginMailbox,
-			hyperlaneutil.HexAddress(paddedAddress),
-			sdk.NewCoins(),
+			token,
+			address.String(),
 			router.ReceiverDomain,
-			receiverContract,
-			payload.Bytes(),
-			hyperlaneutil.StandardHookMetadata{
-				Address:            address,
-				GasLimit:           math.ZeroInt(),
-				CustomHookMetadata: nil,
-			},
+			yieldRecipientBz,
+			yieldPortion,
+			nil,
+			math.ZeroInt(),
+			sdk.Coin{},
 			nil,
 		)
 		if err != nil {

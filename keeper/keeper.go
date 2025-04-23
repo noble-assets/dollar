@@ -56,17 +56,16 @@ type Keeper struct {
 	cdc   codec.Codec
 	store store.KVStoreService
 
-	logger    log.Logger
-	header    header.Service
-	event     event.Service
-	address   address.Codec
-	account   types.AccountKeeper
-	bank      types.BankKeeper
-	channel   types.ChannelKeeper
-	hyperlane types.HyperlaneKeeper
-	transfer  types.TransferKeeper
-	warp      *warpkeeper.Keeper
-	wormhole  portal.WormholeKeeper
+	logger   log.Logger
+	header   header.Service
+	event    event.Service
+	address  address.Codec
+	account  types.AccountKeeper
+	bank     types.BankKeeper
+	channel  types.ChannelKeeper
+	transfer types.TransferKeeper
+	warp     *warpkeeper.Keeper
+	wormhole portal.WormholeKeeper
 
 	Paused          collections.Item[bool]
 	Index           collections.Item[int64]
@@ -87,7 +86,24 @@ type Keeper struct {
 	VaultsStats                  collections.Item[vaults.Stats]
 }
 
-func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMinimumUnlock int64, cdc codec.Codec, store store.KVStoreService, logger log.Logger, header header.Service, event event.Service, address address.Codec, account types.AccountKeeper, bank types.BankKeeper, channel types.ChannelKeeper, hyperlane types.HyperlaneKeeper, transfer types.TransferKeeper, warp *warpkeeper.Keeper, wormhole portal.WormholeKeeper) *Keeper {
+func NewKeeper(
+	denom string,
+	authority string,
+	vaultsMinimumLock int64,
+	vaultsMinimumUnlock int64,
+	cdc codec.Codec,
+	store store.KVStoreService,
+	logger log.Logger,
+	header header.Service,
+	event event.Service,
+	address address.Codec,
+	account types.AccountKeeper,
+	bank types.BankKeeper,
+	channel types.ChannelKeeper,
+	transfer types.TransferKeeper,
+	warp *warpkeeper.Keeper,
+	wormhole portal.WormholeKeeper,
+) *Keeper {
 	transceiverAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/transceiver", portal.SubmoduleName))
 	copy(portal.PaddedTransceiverAddress[12:], transceiverAddress)
 	portal.TransceiverAddress, _ = address.BytesToString(transceiverAddress)
@@ -110,17 +126,16 @@ func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMi
 		cdc:   cdc,
 		store: store,
 
-		logger:    logger.With("module", types.ModuleName),
-		header:    header,
-		event:     event,
-		address:   address,
-		account:   account,
-		bank:      bank,
-		channel:   channel,
-		hyperlane: hyperlane,
-		transfer:  transfer,
-		warp:      warp,
-		wormhole:  wormhole,
+		logger:   logger.With("module", types.ModuleName),
+		header:   header,
+		event:    event,
+		address:  address,
+		account:  account,
+		bank:     bank,
+		channel:  channel,
+		transfer: transfer,
+		warp:     warp,
+		wormhole: wormhole,
 
 		Paused:          collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
 		Index:           collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),

@@ -384,13 +384,12 @@ type ModuleInputs struct {
 	HeaderService header.Service
 	EventService  event.Service
 
-	Cdc             codec.Codec
-	AddressCodec    address.Codec
-	BankKeeper      types.BankKeeper
-	AccountKeeper   types.AccountKeeper
-	HyperlaneKeeper types.HyperlaneKeeper
-	WarpKeeper      warpkeeper.Keeper
-	WormholeKeeper  portal.WormholeKeeper
+	Cdc            codec.Codec
+	AddressCodec   address.Codec
+	BankKeeper     types.BankKeeper
+	AccountKeeper  types.AccountKeeper
+	WarpKeeper     warpkeeper.Keeper
+	WormholeKeeper portal.WormholeKeeper
 }
 
 type ModuleOutputs struct {
@@ -421,7 +420,6 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.AccountKeeper,
 		in.BankKeeper,
 		nil,
-		in.HyperlaneKeeper,
 		nil,
 		&in.WarpKeeper,
 		in.WormholeKeeper,

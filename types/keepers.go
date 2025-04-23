@@ -23,7 +23,6 @@ package types
 import (
 	"context"
 
-	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
@@ -49,10 +48,6 @@ type BankKeeper interface {
 type ChannelKeeper interface {
 	GetChannel(ctx sdk.Context, portID, channelID string) (channeltypes.Channel, bool)
 	GetChannelClientState(ctx sdk.Context, portID string, channelID string) (string, ibcexported.ClientState, error)
-}
-
-type HyperlaneKeeper interface {
-	DispatchMessage(ctx sdk.Context, originMailboxId hyperlaneutil.HexAddress, sender hyperlaneutil.HexAddress, maxFee sdk.Coins, destinationDomain uint32, recipient hyperlaneutil.HexAddress, body []byte, metadata hyperlaneutil.StandardHookMetadata, postDispatchHookId *hyperlaneutil.HexAddress) (messageId hyperlaneutil.HexAddress, error error)
 }
 
 type TransferKeeper interface {
