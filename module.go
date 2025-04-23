@@ -33,6 +33,7 @@ import (
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
 	"cosmossdk.io/log"
+	warpkeeper "github.com/bcp-innovations/hyperlane-cosmos/x/warp/keeper"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -387,6 +388,7 @@ type ModuleInputs struct {
 	AddressCodec   address.Codec
 	BankKeeper     types.BankKeeper
 	AccountKeeper  types.AccountKeeper
+	WarpKeeper     warpkeeper.Keeper
 	WormholeKeeper portal.WormholeKeeper
 }
 
@@ -419,6 +421,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 		nil,
 		nil,
+		&in.WarpKeeper,
 		in.WormholeKeeper,
 	)
 	m := NewAppModule(in.AddressCodec, k)
