@@ -1,1 +1,1 @@
-- Lowercase user address when generating their flexible vault account. ([#36](https://github.com/noble-assets/dollar/pull/36))
+- Enforce lowercase user address when generating their flexible vault account. ([#36](https://github.com/noble-assets/dollar/pull/36))
