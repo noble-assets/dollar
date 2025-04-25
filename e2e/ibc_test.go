@@ -165,6 +165,7 @@ func TestIBCYieldDistribution(t *testing.T) {
 	_, err = validator.ExecTx(
 		ctx, user.KeyName(),
 		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+		"--gas", "500000",
 	)
 	require.NoError(t, err)
 
