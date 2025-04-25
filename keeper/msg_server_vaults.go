@@ -427,7 +427,7 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaults.VaultType, timestamp int64) string {
 	if vaultType == vaults.FLEXIBLE {
 		// Flexible Vaults use individual accounts for each user position.
-		return fmt.Sprintf("%s/%s/%s/%d", vaults.SubmoduleName, strings.ToLower(vaultType.String()), address, timestamp)
+		return fmt.Sprintf("%s/%s/%s/%d", vaults.SubmoduleName, strings.ToLower(vaultType.String()), strings.ToLower(address), timestamp)
 	} else {
 		// Staked Vaults use a shared account for all users.
 		return vaults.StakedVaultName
