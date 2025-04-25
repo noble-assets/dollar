@@ -41,17 +41,17 @@ var _ porttypes.ICS4Wrapper = &ICS4Wrapper{}
 // that $USDN cannot be sent to another chain.
 type ICS4Wrapper struct {
 	ics4Wrapper  porttypes.ICS4Wrapper
-	dollarKeeper ExpectedDollarKeeper
+	dollarKeeper ICS4WrapperExpectedDollarKeeper
 }
 
-// ExpectedDollarKeeper defines the interface expected by ICS4Wrapper for the Noble Dollar module.
-type ExpectedDollarKeeper interface {
+// ICS4WrapperExpectedDollarKeeper defines the interface expected by ICS4Wrapper for the Noble Dollar module.
+type ICS4WrapperExpectedDollarKeeper interface {
 	GetDenom() string
 	HasYieldRecipient(ctx context.Context, provider v2.Provider, identifier string) bool
 }
 
 // NewICS4Wrapper returns a new instance of ICS4Wrapper.
-func NewICS4Wrapper(app porttypes.ICS4Wrapper, dollarKeeper ExpectedDollarKeeper) porttypes.ICS4Wrapper {
+func NewICS4Wrapper(app porttypes.ICS4Wrapper, dollarKeeper ICS4WrapperExpectedDollarKeeper) porttypes.ICS4Wrapper {
 	return ICS4Wrapper{
 		ics4Wrapper:  app,
 		dollarKeeper: dollarKeeper,

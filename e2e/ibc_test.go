@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
+	"time"
 
 	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec/address"
@@ -62,7 +63,7 @@ var (
 
 // TestIBCYieldDistribution tests $USDN yield distribution across IBC channels.
 func TestIBCYieldDistribution(t *testing.T) {
-	ctx, chain, externalChain, authority, guardians, _ := Suite(t, true, false)
+	ctx, _, chain, externalChain, _, authority, guardians, _ := Suite(t, true, false)
 	validator := chain.Validators[0]
 
 	// ARRANGE: Create and fund test user accounts on both Noble and the external chain.
@@ -148,7 +149,7 @@ func TestIBCYieldDistribution(t *testing.T) {
 	require.NoError(t, err)
 	require.True(t, math.NewInt(500_000*1e6).Equal(totalSupply.Amount))
 
-	// ARRANGE: Prepare a VAA to be delivered that accrues 4.15% yield.
+	// ARRANGE: Prepare a VAA to be delivered that accrues a 4.15% yield.
 	payload = portaltypes.EncodeIndexPayload(
 		1041500000000,
 		uint16(vaautils.ChainIDNoble),
@@ -177,6 +178,163 @@ func TestIBCYieldDistribution(t *testing.T) {
 	totalSupply, err = externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
 	require.NoError(t, err)
 	require.True(t, math.NewInt(520_750*1e6).Equal(totalSupply.Amount))
+}
+
+// TestIBCYieldDistributionTimeout tests $USDN yield distribution across an IBC channel, while triggering a timeout.
+func TestIBCYieldDistributionTimeout(t *testing.T) {
+	ctx, execReporter, chain, externalChain, relayer, authority, guardians, _ := Suite(t, true, false)
+	validator := chain.Validators[0]
+
+	// ARRANGE: Create and fund test user accounts on both Noble and the external chain.
+	wallets := interchaintest.GetAndFundTestUsers(t, ctx, "user", math.OneInt(), chain, externalChain)
+	user, externalUser := wallets[0], wallets[1]
+
+	// ARRANGE: Pad the user address to be compatible with Wormhole's NTT standard.
+	paddedAddress := make([]byte, 32)
+	copy(paddedAddress[12:], user.Address())
+
+	// ARRANGE: Prepare a VAA to be delivered that mints the user 1,000,000 $USDN.
+	additionalPayload := portaltypes.EncodeAdditionalPayload(1e12, destinationToken)
+	payload := ntt.EncodeNativeTokenTransfer(ntt.NativeTokenTransfer{
+		Amount:            1_000_000 * 1e6,
+		SourceToken:       sourceToken,
+		To:                paddedAddress,
+		ToChain:           uint16(vaautils.ChainIDNoble),
+		AdditionalPayload: additionalPayload,
+	})
+
+	transceiverMessage := buildTransceiverMessage(payload)
+	vaa := utils.NewVAA(guardians, transceiverMessage)
+
+	bz, err := vaa.Marshal()
+	require.NoError(t, err)
+
+	// ACT: Deliver the prepared VAA that mints 1,000,000 $USDN.
+	_, err = validator.ExecTx(
+		ctx, authority.KeyName(),
+		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+	)
+	require.NoError(t, err)
+
+	// ASSERT: The user should now have 1,000,000 $USDN.
+	balance, err := chain.BankQueryBalance(ctx, user.FormattedAddress(), "uusdn")
+	require.NoError(t, err)
+	require.True(t, math.NewInt(1_000_000*1e6).Equal(balance))
+
+	// ACT: Query all yield recipients.
+	yieldRecipients := getYieldRecipients(t, ctx, validator)
+
+	// ASSERT: There are no yield recipients.
+	require.Empty(t, yieldRecipients)
+
+	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
+	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{
+		Address: externalUser.FormattedAddress(),
+		Denom:   "uusdn",
+		Amount:  math.NewInt(500_000 * 1e6),
+	}, ibc.TransferOptions{})
+
+	// ASSERT: The transfer should've failed as a yield recipient hasn't been set.
+	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled on %s", "uusdn", channelID))
+
+	// ACT: Set the yield recipient for the external chain.
+	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, ibcYieldRecipient)
+	require.NoError(t, err)
+
+	// ASSERT: There is one yield recipient.
+	yieldRecipients = getYieldRecipients(t, ctx, validator)
+	key := fmt.Sprintf("%s/%s", dollartypes.Provider_IBC, channelID)
+	require.Equal(t, ibcYieldRecipient, yieldRecipients[key])
+
+	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
+	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{
+		Address: externalUser.FormattedAddress(),
+		Denom:   "uusdn",
+		Amount:  math.NewInt(500_000 * 1e6),
+	}, ibc.TransferOptions{})
+	require.NoError(t, err)
+
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
+
+	// ASSERT: The escrow account should now have 500,000 $USDN.
+	rawEscrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelID)
+	escrowAddress, _ := address.NewBech32Codec(chain.Config().Bech32Prefix).BytesToString(rawEscrowAddress)
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
+	require.NoError(t, err)
+	require.True(t, math.NewInt(500_000*1e6).Equal(balance))
+	// ASSERT: The total supply should be 500,000 $USDN on the external chain.
+	ibcDenom := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(transfertypes.PortID, channelID, "uusdn")).IBCDenom()
+	totalSupply, err := externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
+	require.NoError(t, err)
+	require.True(t, math.NewInt(500_000*1e6).Equal(totalSupply.Amount))
+
+	// ARRANGE: Stop the relayer before accruing yield.
+	require.NoError(t, relayer.StopRelayer(ctx, execReporter))
+
+	// ARRANGE: Prepare a VAA to be delivered that accrues a 4.15% yield.
+	payload = portaltypes.EncodeIndexPayload(
+		1041500000000,
+		uint16(vaautils.ChainIDNoble),
+	)
+
+	transceiverMessage = buildTransceiverMessage(payload)
+	vaa = utils.NewVAA(guardians, transceiverMessage)
+
+	bz, err = vaa.Marshal()
+	require.NoError(t, err)
+
+	// ACT: Deliver the prepared VAA that accrues 4.15% yield.
+	_, err = validator.ExecTx(
+		ctx, user.KeyName(),
+		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+		"--gas", "500000",
+	)
+	require.NoError(t, err)
+
+	// ARRANGE: Start the relayer after 10 minutes to trigger a timeout.
+	time.Sleep(10 * time.Minute)
+	require.NoError(t, relayer.StartRelayer(ctx, execReporter))
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
+
+	// ASSERT: The escrow account should now have 520,750 $USDN.
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
+	require.NoError(t, err)
+	require.True(t, math.NewInt(520_750*1e6).Equal(balance))
+	// ASSERT: The total supply should still be 500,000 $USDN on the external chain.
+	totalSupply, err = externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
+	require.NoError(t, err)
+	require.True(t, math.NewInt(500_000*1e6).Equal(totalSupply.Amount))
+
+	// ARRANGE: Prepare a VAA to be delivered that accrues another 4.15% yield.
+	payload = portaltypes.EncodeIndexPayload(
+		1083000000000,
+		uint16(vaautils.ChainIDNoble),
+	)
+
+	transceiverMessage = buildTransceiverMessage(payload)
+	vaa = utils.NewVAA(guardians, transceiverMessage)
+
+	bz, err = vaa.Marshal()
+	require.NoError(t, err)
+
+	// ACT: Deliver the prepared VAA that accrues another 4.15% yield.
+	_, err = validator.ExecTx(
+		ctx, user.KeyName(),
+		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+		"--gas", "500000",
+	)
+	require.NoError(t, err)
+
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
+
+	// ASSERT: The escrow account should now have 541,500 $USDN.
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
+	require.NoError(t, err)
+	require.True(t, math.NewInt(541_500*1e6).Equal(balance))
+	// ASSERT: The total supply should be 541,500 $USDN on the external chain.
+	totalSupply, err = externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
+	require.NoError(t, err)
+	require.True(t, math.NewInt(541_500*1e6).Equal(totalSupply.Amount))
 }
 
 // buildTransceiverMessage is a utility that builds a transceiver message.

@@ -110,6 +110,26 @@ func (k queryServerV2) YieldRecipient(ctx context.Context, req *v2.QueryYieldRec
 	return &v2.QueryYieldRecipientResponse{YieldRecipient: yieldRecipient}, nil
 }
 
+func (k queryServerV2) RetryAmounts(ctx context.Context, req *v2.QueryRetryAmounts) (*v2.QueryRetryAmountsResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	retryAmounts, err := k.GetRetryAmounts(ctx)
+
+	return &v2.QueryRetryAmountsResponse{RetryAmounts: retryAmounts}, err
+}
+
+func (k queryServerV2) RetryAmount(ctx context.Context, req *v2.QueryRetryAmount) (*v2.QueryRetryAmountResponse, error) {
+	if req == nil {
+		return nil, types.ErrInvalidRequest
+	}
+
+	retryAmount := k.GetRetryAmount(ctx, req.Provider, req.Identifier)
+
+	return &v2.QueryRetryAmountResponse{RetryAmount: retryAmount}, nil
+}
+
 func (k *Keeper) getIBCChainId(ctx context.Context, channelId string) string {
 	_, rawClientState, _ := k.channel.GetChannelClientState(sdk.UnwrapSDKContext(ctx), transfertypes.PortID, channelId)
 

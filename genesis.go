@@ -80,6 +80,21 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		}
 	}
 
+	for key, rawRetryAmount := range genesis.RetryAmounts {
+		retryAmount, ok := math.NewIntFromString(rawRetryAmount)
+		if !ok {
+			panic(fmt.Errorf("unable to decode retry amount %s", rawRetryAmount))
+		}
+
+		provider, identifier := types.ParseYieldRecipientKey(key)
+		key := collections.Join(int32(provider), identifier)
+
+		err = k.RetryAmounts.Set(ctx, key, retryAmount)
+		if err != nil {
+			panic(errors.Wrapf(err, "unable to set retry amount (%s/%s:%s)", provider, identifier, retryAmount))
+		}
+	}
+
 	if err = k.PortalOwner.Set(ctx, genesis.Portal.Owner); err != nil {
 		panic(errors.Wrap(err, "unable to set genesis portal owner"))
 	}
@@ -147,6 +162,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	principal, _ := k.GetPrincipal(ctx)
 	stats, _ := k.Stats.Get(ctx)
 	yieldRecipients, _ := k.GetYieldRecipients(ctx)
+	retryAmounts, _ := k.GetRetryAmounts(ctx)
 
 	portalOwner, _ := k.PortalOwner.Get(ctx)
 	portalPaused := k.GetPortalPaused(ctx)
@@ -180,5 +196,6 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 		Principal:       principal,
 		Stats:           stats,
 		YieldRecipients: yieldRecipients,
+		RetryAmounts:    retryAmounts,
 	}
 }

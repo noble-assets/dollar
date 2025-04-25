@@ -71,8 +71,12 @@ func (app *SimApp) RegisterLegacyModules() error {
 	scopedWormholeKeeper := app.CapabilityKeeper.ScopeToModule(wormholetypes.ModuleName)
 	app.WormholeKeeper.SetIBCKeepers(app.IBCKeeper.ChannelKeeper, app.IBCKeeper.PortKeeper, scopedWormholeKeeper)
 
+	var transferStack porttypes.IBCModule
+	transferStack = transfer.NewIBCModule(app.TransferKeeper)
+	transferStack = dollar.NewIBCModule(transferStack, app.DollarKeeper)
+
 	router := porttypes.NewRouter()
-	router.AddRoute(transfertypes.PortID, transfer.NewIBCModule(app.TransferKeeper))
+	router.AddRoute(transfertypes.PortID, transferStack)
 	router.AddRoute(wormholetypes.ModuleName, wormhole.NewIBCModule(app.WormholeKeeper))
 	app.IBCKeeper.SetRouter(router)
 

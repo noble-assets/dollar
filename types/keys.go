@@ -41,4 +41,5 @@ var (
 	PrincipalPrefix      = []byte("principal/")
 	StatsKey             = []byte("stats")
 	YieldRecipientPrefix = []byte("yield_recipient/")
+	RetryAmountPrefix    = []byte("retry_amount/")
 )

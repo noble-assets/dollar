@@ -287,7 +287,8 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrapf(err, "unable to claim yield for %s/%s", provider, channelId)
 		}
-		if !yield.IsPositive() {
+		retryAmount := k.GetRetryAmount(ctx, provider, channelId)
+		if !yield.Add(retryAmount).IsPositive() {
 			continue
 		}
 
@@ -295,7 +296,7 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		_, err = k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
 			SourcePort:       transfertypes.PortID,
 			SourceChannel:    channelId,
-			Token:            sdk.NewCoin(k.denom, yield),
+			Token:            sdk.NewCoin(k.denom, yield.Add(retryAmount)),
 			Sender:           escrowAddress.String(),
 			Receiver:         yieldRecipient,
 			TimeoutHeight:    clienttypes.ZeroHeight(),

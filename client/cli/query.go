@@ -44,6 +44,8 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(QueryStats())
 	cmd.AddCommand(QueryYieldRecipients())
 	cmd.AddCommand(QueryYieldRecipient())
+	cmd.AddCommand(QueryRetryAmounts())
+	cmd.AddCommand(QueryRetryAmount())
 
 	return cmd
 }
@@ -106,6 +108,57 @@ func QueryYieldRecipient() *cobra.Command {
 			provider := v2.Provider(v2.Provider_value[args[0]])
 
 			res, err := queryClient.YieldRecipient(context.Background(), &v2.QueryYieldRecipient{
+				Provider:   provider,
+				Identifier: args[1],
+			})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func QueryRetryAmounts() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "retry-amounts",
+		Short: "Query all retry amounts for external chains",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			queryClient := v2.NewQueryClient(clientCtx)
+
+			res, err := queryClient.RetryAmounts(context.Background(), &v2.QueryRetryAmounts{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func QueryRetryAmount() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "retry-amount [provider] [identifier]",
+		Short: "Query the retry amount for an external chain",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			queryClient := v2.NewQueryClient(clientCtx)
+
+			provider := v2.Provider(v2.Provider_value[args[0]])
+
+			res, err := queryClient.RetryAmount(context.Background(), &v2.QueryRetryAmount{
 				Provider:   provider,
 				Identifier: args[1],
 			})

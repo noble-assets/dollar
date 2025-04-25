@@ -72,6 +72,7 @@ type Keeper struct {
 	Principal       collections.Map[[]byte, math.Int]
 	Stats           collections.Item[v2.Stats]
 	YieldRecipients collections.Map[collections.Pair[int32, string], string]
+	RetryAmounts    collections.Map[collections.Pair[int32, string], math.Int]
 
 	PortalOwner         collections.Item[string]
 	PortalPaused        collections.Item[bool]
@@ -142,6 +143,7 @@ func NewKeeper(
 		Principal:       collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
 		Stats:           collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[v2.Stats](cdc)),
 		YieldRecipients: collections.NewMap(builder, types.YieldRecipientPrefix, "yield_recipients", collections.PairKeyCodec(collections.Int32Key, collections.StringKey), collections.StringValue),
+		RetryAmounts:    collections.NewMap(builder, types.RetryAmountPrefix, "retry_amounts", collections.PairKeyCodec(collections.Int32Key, collections.StringKey), sdk.IntValue),
 
 		PortalOwner:         collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
 		PortalPaused:        collections.NewItem(builder, portal.PausedKey, "portal_paused", collections.BoolValue),

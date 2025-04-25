@@ -31,4 +31,7 @@ message GenesisState {
 
   // yield_recipients contains the genesis yield recipients for external chains.
   map<string, string> yield_recipients = 7;
+
+  // retry_amounts contains the genesis retry amounts of yield for external chains.
+  map<string, string> retry_amounts = 8;
 }
