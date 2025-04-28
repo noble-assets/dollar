@@ -58,6 +58,32 @@ func NewIBCModule(underlying porttypes.IBCModule, dollarKeeper IBCModuleExpected
 	}
 }
 
+// TriggerRetry is a utility that potentially triggers a retry of a yield distribution via IBC.
+func (m IBCModule) TriggerRetry(ctx sdk.Context, packet channeltypes.Packet) {
+	var data transfertypes.FungibleTokenPacketData
+	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.Data, &data); err != nil {
+		return
+	}
+
+	denom := m.dollarKeeper.GetDenom()
+	if data.Denom == denom {
+		escrowAddress := transfertypes.GetEscrowAddress(packet.SourcePort, packet.SourceChannel)
+		if data.Sender == escrowAddress.String() {
+			amount, ok := math.NewIntFromString(data.Amount)
+			if !ok {
+				return
+			}
+
+			err := m.dollarKeeper.IncrementRetryAmount(ctx, v2.Provider_IBC, packet.SourceChannel, amount)
+			if err != nil {
+				return
+			}
+		}
+	}
+
+	return
+}
+
 func (m IBCModule) OnChanOpenInit(ctx sdk.Context, order channeltypes.Order, connectionHops []string, portID string, channelID string, channelCap *capabilitytypes.Capability, counterparty channeltypes.Counterparty, version string) (string, error) {
 	return m.underlying.OnChanOpenInit(ctx, order, connectionHops, portID, channelID, channelCap, counterparty, version)
 }
@@ -87,30 +113,20 @@ func (m IBCModule) OnRecvPacket(ctx sdk.Context, packet channeltypes.Packet, rel
 }
 
 func (m IBCModule) OnAcknowledgementPacket(ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress) error {
+	var ack channeltypes.Acknowledgement
+	if err := transfertypes.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
+		return m.underlying.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
+	}
+
+	if !ack.Success() {
+		m.TriggerRetry(ctx, packet)
+	}
+
 	return m.underlying.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
 }
 
 func (m IBCModule) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
-	var packetData transfertypes.FungibleTokenPacketData
-	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.Data, &packetData); err != nil {
-		return m.underlying.OnTimeoutPacket(ctx, packet, relayer)
-	}
-
-	denom := m.dollarKeeper.GetDenom()
-	if packetData.Denom == denom {
-		escrowAddress := transfertypes.GetEscrowAddress(packet.SourcePort, packet.SourceChannel)
-		if packetData.Sender == escrowAddress.String() {
-			amount, ok := math.NewIntFromString(packetData.Amount)
-			if !ok {
-				return m.underlying.OnTimeoutPacket(ctx, packet, relayer)
-			}
-
-			err := m.dollarKeeper.IncrementRetryAmount(ctx, v2.Provider_IBC, packet.SourceChannel, amount)
-			if err != nil {
-				return m.underlying.OnTimeoutPacket(ctx, packet, relayer)
-			}
-		}
-	}
+	m.TriggerRetry(ctx, packet)
 
 	return m.underlying.OnTimeoutPacket(ctx, packet, relayer)
 }
