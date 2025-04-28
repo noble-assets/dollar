@@ -105,7 +105,10 @@ func QueryYieldRecipient() *cobra.Command {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			queryClient := v2.NewQueryClient(clientCtx)
 
-			provider := v2.Provider(v2.Provider_value[args[0]])
+			provider, err := parseProvider(args[0])
+			if err != nil {
+				return err
+			}
 
 			res, err := queryClient.YieldRecipient(context.Background(), &v2.QueryYieldRecipient{
 				Provider:   provider,
@@ -156,7 +159,10 @@ func QueryRetryAmount() *cobra.Command {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			queryClient := v2.NewQueryClient(clientCtx)
 
-			provider := v2.Provider(v2.Provider_value[args[0]])
+			provider, err := parseProvider(args[0])
+			if err != nil {
+				return err
+			}
 
 			res, err := queryClient.RetryAmount(context.Background(), &v2.QueryRetryAmount{
 				Provider:   provider,
