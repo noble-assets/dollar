@@ -115,7 +115,7 @@ func TestIBCYieldDistribution(t *testing.T) {
 	}, ibc.TransferOptions{})
 
 	// ASSERT: The transfer should've failed as a yield recipient hasn't been set.
-	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled on %s", "uusdn", channelID))
+	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of uusdn are currently disabled on %s", channelID))
 
 	// ACT: Set the yield recipient for the external chain.
 	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, ibcYieldRecipient)
@@ -235,7 +235,7 @@ func TestIBCYieldDistributionTimeout(t *testing.T) {
 	}, ibc.TransferOptions{})
 
 	// ASSERT: The transfer should've failed as a yield recipient hasn't been set.
-	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of %s are currently disabled on %s", "uusdn", channelID))
+	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of uusdn are currently disabled on %s", channelID))
 
 	// ACT: Set the yield recipient for the external chain.
 	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, ibcYieldRecipient)
