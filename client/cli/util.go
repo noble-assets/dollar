@@ -18,28 +18,22 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND
 // TITLE.
 
-package types
+package cli
 
 import (
 	"fmt"
+	"strings"
 
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"dollar.noble.xyz/v2/types/v2"
 )
 
-const ModuleName = "dollar"
-
-var (
-	ModuleAddress = authtypes.NewModuleAddress(ModuleName)
-
-	YieldName    = fmt.Sprintf("%s/yield", ModuleName)
-	YieldAddress = authtypes.NewModuleAddress(YieldName)
-)
-
-var (
-	PausedKey            = []byte("paused")
-	IndexKey             = []byte("index")
-	PrincipalPrefix      = []byte("principal/")
-	StatsKey             = []byte("stats")
-	YieldRecipientPrefix = []byte("yield_recipient/")
-	RetryAmountPrefix    = []byte("retry_amount/")
-)
+func parseProvider(input string) (v2.Provider, error) {
+	switch strings.ToLower(input) {
+	case "ibc":
+		return v2.Provider_IBC, nil
+	case "hyperlane":
+		return v2.Provider_HYPERLANE, nil
+	default:
+		return -1, fmt.Errorf("invalid provider %s", input)
+	}
+}

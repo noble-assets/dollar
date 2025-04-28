@@ -48,13 +48,12 @@ import (
 )
 
 // Suite is a utility for spinning up a new E2E testing suite.
-func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Context, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, authority ibc.Wallet, guardians []utils.Guardian, tokenId string) {
+func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Context, execReporter *testreporter.RelayerExecReporter, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, relayer *rly.CosmosRelayer, authority ibc.Wallet, guardians []utils.Guardian, tokenId string) {
 	ctx = context.Background()
 	logger := zaptest.NewLogger(t)
 	reporter := testreporter.NewNopReporter()
-	execReporter := reporter.RelayerExecReporter(t)
+	execReporter = reporter.RelayerExecReporter(t)
 	client, network := interchaintest.DockerSetup(t)
-	var relayer *rly.CosmosRelayer
 
 	guardian := utils.NewGuardian(t)
 	guardians = []utils.Guardian{guardian}

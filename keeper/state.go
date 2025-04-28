@@ -170,7 +170,7 @@ func (k *Keeper) GetYieldRecipients(ctx context.Context) (map[string]string, err
 	return yieldRecipients, err
 }
 
-// GetYieldRecipientsByProvider is utility that returns yield recipients for a specific provider.
+// GetYieldRecipientsByProvider is a utility that returns yield recipients for a specific provider.
 func (k *Keeper) GetYieldRecipientsByProvider(ctx context.Context, provider v2.Provider) (map[string]string, error) {
 	yieldRecipients := make(map[string]string)
 
@@ -194,4 +194,51 @@ func (k *Keeper) HasYieldRecipient(ctx context.Context, provider v2.Provider, id
 	has, _ := k.YieldRecipients.Has(ctx, key)
 
 	return has
+}
+
+// GetRetryAmounts is a utility that returns all retry amounts from state.
+func (k *Keeper) GetRetryAmounts(ctx context.Context) (map[string]string, error) {
+	retryAmounts := make(map[string]string)
+
+	err := k.RetryAmounts.Walk(ctx, nil, func(key collections.Pair[int32, string], retryAmount math.Int) (stop bool, err error) {
+		retryAmounts[fmt.Sprintf("%s/%s", v2.Provider(key.K1()), key.K2())] = retryAmount.String()
+		return false, nil
+	})
+
+	return retryAmounts, err
+}
+
+// GetRetryAmount is a utility that returns the retry amount for a specific provider and identifier.
+func (k *Keeper) GetRetryAmount(ctx context.Context, provider v2.Provider, identifier string) math.Int {
+	key := collections.Join(int32(provider), identifier)
+	retryAmount, err := k.RetryAmounts.Get(ctx, key)
+	if err != nil {
+		return math.ZeroInt()
+	}
+
+	return retryAmount
+}
+
+// GetRetryAmountAndRemove is a utility that returns the retry amount and removes it from state.
+func (k *Keeper) GetRetryAmountAndRemove(ctx context.Context, provider v2.Provider, identifier string) (math.Int, error) {
+	retryAmount := k.GetRetryAmount(ctx, provider, identifier)
+
+	if retryAmount.IsPositive() {
+		key := collections.Join(int32(provider), identifier)
+		err := k.RetryAmounts.Remove(ctx, key)
+		if err != nil {
+			return math.ZeroInt(), err
+		}
+	}
+
+	return retryAmount, nil
+}
+
+// IncrementRetryAmount is a utility that increments the retry amount for a specific provider and identifier.
+func (k *Keeper) IncrementRetryAmount(ctx context.Context, provider v2.Provider, identifier string, amount math.Int) error {
+	retryAmount := k.GetRetryAmount(ctx, provider, identifier)
+	retryAmount = retryAmount.Add(amount)
+
+	key := collections.Join(int32(provider), identifier)
+	return k.RetryAmounts.Set(ctx, key, retryAmount)
 }

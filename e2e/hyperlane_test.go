@@ -50,7 +50,7 @@ var hyperlaneYieldRecipient = "0x00000000000000000000000000000000000000000000000
 
 // TestHyperlaneYieldDistribution tests $USDN yield distribution across Hyperlane routes.
 func TestHyperlaneYieldDistribution(t *testing.T) {
-	ctx, chain, _, authority, guardians, tokenId := Suite(t, false, true)
+	ctx, _, chain, _, _, authority, guardians, tokenId := Suite(t, false, true)
 	validator := chain.Validators[0]
 
 	// ARRANGE: Create and fund a test user account on Noble.
@@ -118,7 +118,7 @@ func TestHyperlaneYieldDistribution(t *testing.T) {
 	warpPayload := getWarpPayload(t, validator, hash)
 	require.Equal(t, big.NewInt(500_000*1e6), warpPayload.Amount())
 
-	// ARRANGE: Prepare a VAA to be delivered that accrues 4.15% yield.
+	// ARRANGE: Prepare a VAA to be delivered that accrues a 4.15% yield.
 	payload = portaltypes.EncodeIndexPayload(
 		1041500000000,
 		uint16(vaautils.ChainIDNoble),

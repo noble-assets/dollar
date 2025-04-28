@@ -22,6 +22,8 @@ const (
 	Query_Stats_FullMethodName           = "/noble.dollar.v2.Query/Stats"
 	Query_YieldRecipients_FullMethodName = "/noble.dollar.v2.Query/YieldRecipients"
 	Query_YieldRecipient_FullMethodName  = "/noble.dollar.v2.Query/YieldRecipient"
+	Query_RetryAmounts_FullMethodName    = "/noble.dollar.v2.Query/RetryAmounts"
+	Query_RetryAmount_FullMethodName     = "/noble.dollar.v2.Query/RetryAmount"
 )
 
 // QueryClient is the client API for Query service.
@@ -31,6 +33,8 @@ type QueryClient interface {
 	Stats(ctx context.Context, in *QueryStats, opts ...grpc.CallOption) (*QueryStatsResponse, error)
 	YieldRecipients(ctx context.Context, in *QueryYieldRecipients, opts ...grpc.CallOption) (*QueryYieldRecipientsResponse, error)
 	YieldRecipient(ctx context.Context, in *QueryYieldRecipient, opts ...grpc.CallOption) (*QueryYieldRecipientResponse, error)
+	RetryAmounts(ctx context.Context, in *QueryRetryAmounts, opts ...grpc.CallOption) (*QueryRetryAmountsResponse, error)
+	RetryAmount(ctx context.Context, in *QueryRetryAmount, opts ...grpc.CallOption) (*QueryRetryAmountResponse, error)
 }
 
 type queryClient struct {
@@ -71,6 +75,26 @@ func (c *queryClient) YieldRecipient(ctx context.Context, in *QueryYieldRecipien
 	return out, nil
 }
 
+func (c *queryClient) RetryAmounts(ctx context.Context, in *QueryRetryAmounts, opts ...grpc.CallOption) (*QueryRetryAmountsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryRetryAmountsResponse)
+	err := c.cc.Invoke(ctx, Query_RetryAmounts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) RetryAmount(ctx context.Context, in *QueryRetryAmount, opts ...grpc.CallOption) (*QueryRetryAmountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryRetryAmountResponse)
+	err := c.cc.Invoke(ctx, Query_RetryAmount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 // All implementations must embed UnimplementedQueryServer
 // for forward compatibility.
@@ -78,6 +102,8 @@ type QueryServer interface {
 	Stats(context.Context, *QueryStats) (*QueryStatsResponse, error)
 	YieldRecipients(context.Context, *QueryYieldRecipients) (*QueryYieldRecipientsResponse, error)
 	YieldRecipient(context.Context, *QueryYieldRecipient) (*QueryYieldRecipientResponse, error)
+	RetryAmounts(context.Context, *QueryRetryAmounts) (*QueryRetryAmountsResponse, error)
+	RetryAmount(context.Context, *QueryRetryAmount) (*QueryRetryAmountResponse, error)
 	mustEmbedUnimplementedQueryServer()
 }
 
@@ -96,6 +122,12 @@ func (UnimplementedQueryServer) YieldRecipients(context.Context, *QueryYieldReci
 }
 func (UnimplementedQueryServer) YieldRecipient(context.Context, *QueryYieldRecipient) (*QueryYieldRecipientResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method YieldRecipient not implemented")
+}
+func (UnimplementedQueryServer) RetryAmounts(context.Context, *QueryRetryAmounts) (*QueryRetryAmountsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetryAmounts not implemented")
+}
+func (UnimplementedQueryServer) RetryAmount(context.Context, *QueryRetryAmount) (*QueryRetryAmountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetryAmount not implemented")
 }
 func (UnimplementedQueryServer) mustEmbedUnimplementedQueryServer() {}
 func (UnimplementedQueryServer) testEmbeddedByValue()               {}
@@ -172,6 +204,42 @@ func _Query_YieldRecipient_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_RetryAmounts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRetryAmounts)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).RetryAmounts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_RetryAmounts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).RetryAmounts(ctx, req.(*QueryRetryAmounts))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_RetryAmount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRetryAmount)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).RetryAmount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_RetryAmount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).RetryAmount(ctx, req.(*QueryRetryAmount))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Query_ServiceDesc is the grpc.ServiceDesc for Query service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +258,14 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "YieldRecipient",
 			Handler:    _Query_YieldRecipient_Handler,
+		},
+		{
+			MethodName: "RetryAmounts",
+			Handler:    _Query_RetryAmounts_Handler,
+		},
+		{
+			MethodName: "RetryAmount",
+			Handler:    _Query_RetryAmount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

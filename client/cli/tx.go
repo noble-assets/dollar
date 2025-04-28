@@ -57,7 +57,10 @@ func TxSetYieldRecipient() *cobra.Command {
 				return err
 			}
 
-			provider := v2.Provider(v2.Provider_value[args[0]])
+			provider, err := parseProvider(args[0])
+			if err != nil {
+				return err
+			}
 
 			msg := &v2.MsgSetYieldRecipient{
 				Signer:     clientCtx.GetFromAddress().String(),

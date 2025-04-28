@@ -25,6 +25,15 @@ service Query {
     option (cosmos.query.v1.module_query_safe) = true;
     option (google.api.http).get = "/noble/dollar/v2/yield_recipient/{provider}/{identifier}";
   }
+
+  rpc RetryAmounts(QueryRetryAmounts) returns (QueryRetryAmountsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v2/retry_amounts";
+  }
+  rpc RetryAmount(QueryRetryAmount) returns (QueryRetryAmountResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get = "/noble/dollar/v2/retry_amount/{provider}/{identifier}";
+  }
 }
 
 message QueryStats {}
@@ -72,4 +81,24 @@ message QueryYieldRecipient {
 
 message QueryYieldRecipientResponse {
   string yield_recipient = 1;
+}
+
+message QueryRetryAmounts {}
+
+message QueryRetryAmountsResponse {
+  map<string, string> retry_amounts = 1;
+}
+
+message QueryRetryAmount {
+  Provider provider = 1;
+  string identifier = 2;
+}
+
+message QueryRetryAmountResponse {
+  string retry_amount = 1 [
+    (amino.dont_omitempty) = true,
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }

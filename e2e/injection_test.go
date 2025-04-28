@@ -34,7 +34,7 @@ import (
 
 // TestMsgDeliverInjection ensures that the injected message can't be executed publicly.
 func TestMsgDeliverInjection(t *testing.T) {
-	ctx, chain, _, _, _, _ := Suite(t, false, false)
+	ctx, _, chain, _, _, _, _, _ := Suite(t, false, false)
 
 	broadcaster := cosmos.NewBroadcaster(t, chain)
 	user := interchaintest.GetAndFundTestUsers(t, ctx, "wallet", math.OneInt(), chain)[0]
