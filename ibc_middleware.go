@@ -58,8 +58,10 @@ func NewIBCModule(underlying porttypes.IBCModule, dollarKeeper IBCModuleExpected
 	}
 }
 
-// TriggerRetry is a utility that potentially triggers a retry of a yield distribution via IBC.
-func (m IBCModule) TriggerRetry(ctx sdk.Context, packet channeltypes.Packet) {
+// AddAmountToRetry is a utility that adds an amount to retry on the next yield
+// distribution. The provided packet must have either timed out or incurred an
+// error acknowledgement.
+func (m IBCModule) AddAmountToRetry(ctx sdk.Context, packet channeltypes.Packet) {
 	var data transfertypes.FungibleTokenPacketData
 	if err := transfertypes.ModuleCdc.UnmarshalJSON(packet.Data, &data); err != nil {
 		return
@@ -119,14 +121,14 @@ func (m IBCModule) OnAcknowledgementPacket(ctx sdk.Context, packet channeltypes.
 	}
 
 	if !ack.Success() {
-		m.TriggerRetry(ctx, packet)
+		m.AddAmountToRetry(ctx, packet)
 	}
 
 	return m.underlying.OnAcknowledgementPacket(ctx, packet, acknowledgement, relayer)
 }
 
 func (m IBCModule) OnTimeoutPacket(ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress) error {
-	m.TriggerRetry(ctx, packet)
+	m.AddAmountToRetry(ctx, packet)
 
 	return m.underlying.OnTimeoutPacket(ctx, packet, relayer)
 }

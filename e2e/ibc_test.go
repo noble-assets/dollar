@@ -23,7 +23,6 @@ package e2e
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
@@ -297,6 +296,9 @@ func TestIBCYieldDistributionTimeout(t *testing.T) {
 	require.NoError(t, relayer.StartRelayer(ctx, execReporter))
 	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
 
+	// ASSERT: The retry amount should be 20,750 $USDN.
+	retryAmounts := getRetryAmounts(t, ctx, validator)
+	require.Equal(t, "20750000000", retryAmounts[key])
 	// ASSERT: The escrow account should now have 520,750 $USDN.
 	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
 	require.NoError(t, err)
@@ -328,6 +330,9 @@ func TestIBCYieldDistributionTimeout(t *testing.T) {
 
 	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
 
+	// ASSERT: The retry amounts should be empty.
+	retryAmounts = getRetryAmounts(t, ctx, validator)
+	require.Empty(t, retryAmounts)
 	// ASSERT: The escrow account should now have 541,500 $USDN.
 	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
 	require.NoError(t, err)
@@ -358,11 +363,20 @@ func buildTransceiverMessage(payload []byte) []byte {
 
 // getYieldRecipients is a utility that queries the yield recipients.
 func getYieldRecipients(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) map[string]string {
-	raw, _, err := validator.ExecQuery(ctx, "dollar", "yield-recipients")
+	client := dollartypes.NewQueryClient(validator.GrpcConn)
+
+	res, err := client.YieldRecipients(ctx, &dollartypes.QueryYieldRecipients{})
 	require.NoError(t, err)
 
-	var res dollartypes.QueryYieldRecipientsResponse
-	require.NoError(t, json.Unmarshal(raw, &res))
-
 	return res.YieldRecipients
+}
+
+// getRetryAmounts is a utility that queries the retry amounts.
+func getRetryAmounts(t require.TestingT, ctx context.Context, validator *cosmos.ChainNode) map[string]string {
+	client := dollartypes.NewQueryClient(validator.GrpcConn)
+
+	res, err := client.RetryAmounts(ctx, &dollartypes.QueryRetryAmounts{})
+	require.NoError(t, err)
+
+	return res.RetryAmounts
 }

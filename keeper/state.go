@@ -219,6 +219,16 @@ func (k *Keeper) GetRetryAmount(ctx context.Context, provider v2.Provider, ident
 	return retryAmount
 }
 
+// GetRetryAmountAndRemove is a utility that returns the retry amount and removes it from state.
+func (k *Keeper) GetRetryAmountAndRemove(ctx context.Context, provider v2.Provider, identifier string) (math.Int, error) {
+	retryAmount := k.GetRetryAmount(ctx, provider, identifier)
+
+	key := collections.Join(int32(provider), identifier)
+	err := k.RetryAmounts.Remove(ctx, key)
+
+	return retryAmount, err
+}
+
 // IncrementRetryAmount is a utility that increments the retry amount for a specific provider and identifier.
 func (k *Keeper) IncrementRetryAmount(ctx context.Context, provider v2.Provider, identifier string, amount math.Int) error {
 	retryAmount := k.GetRetryAmount(ctx, provider, identifier)

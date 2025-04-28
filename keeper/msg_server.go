@@ -287,7 +287,10 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrapf(err, "unable to claim yield for %s/%s", provider, channelId)
 		}
-		retryAmount := k.GetRetryAmount(ctx, provider, channelId)
+		retryAmount, err := k.GetRetryAmountAndRemove(ctx, provider, channelId)
+		if err != nil {
+			return errors.Wrapf(err, "unable to get and remove retry amount for %s/%s", provider, channelId)
+		}
 		if !yield.Add(retryAmount).IsPositive() {
 			continue
 		}
