@@ -36,7 +36,7 @@ Retrieves the total amount and the specific positions pending rewards for a spec
 
 ```json
 {
-  "pending_rewards": "4000000",
+  "pending_rewards": "10500",
   "positions_rewards": [
     {
       "amount": "1000000",
