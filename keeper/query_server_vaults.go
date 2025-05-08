@@ -116,11 +116,13 @@ func (k vaultsQueryServer) PendingRewardsByProvider(ctx context.Context, req *va
 	}
 
 	totalUserPendingRewards := math.ZeroInt()
+	var positionsPendingRewards []vaults.PositionRewards
 	for _, position := range positions {
 		amountPrincipal := k.GetPrincipalAmountRoundedDown(position.Amount, position.Index)
 
 		// Iterate through the rewards to calculate the amount owed to the user, proportional to their position.
 		// NOTE: For the user to be eligible, they must have joined before and exited after a complete `UpdateIndex` cycle.
+		positionRewards := math.ZeroInt()
 		if err := k.VaultsRewards.Walk(
 			ctx,
 			new(collections.Range[int64]).StartExclusive(position.Index), // Exclude the entry point Index.
@@ -135,15 +137,21 @@ func (k vaultsQueryServer) PendingRewardsByProvider(ctx context.Context, req *va
 					userReward = record.Rewards.ToLegacyDec().Quo(record.Total.ToLegacyDec()).MulInt(amountPrincipal).TruncateInt()
 				}
 
+				positionRewards = positionRewards.Add(userReward)
 				totalUserPendingRewards = totalUserPendingRewards.Add(userReward)
 				return false, nil
 			}); err != nil {
 			return nil, err
 		}
+		positionsPendingRewards = append(positionsPendingRewards, vaults.PositionRewards{
+			Amount:         position.Amount,
+			PendingRewards: positionRewards,
+		})
 	}
 
 	return &vaults.QueryPendingRewardsByProviderResponse{
-		PendingRewards: totalUserPendingRewards,
+		PendingRewards:   totalUserPendingRewards,
+		PositionsRewards: positionsPendingRewards,
 	}, nil
 }
 

@@ -1,0 +1,1 @@
+- Include position details when querying a vault user's pending rewards. ([#39](https://github.com/noble-assets/dollar/pull/39))

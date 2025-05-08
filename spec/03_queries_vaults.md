@@ -32,11 +32,21 @@ Retrieves the total amount of rewards pending distribution.
 
 **Endpoint**: `/noble/dollar/vaults/v1/pending_rewards/{provider}`
 
-Retrieves the total amount of pending rewards for a specified provider.
+Retrieves the total amount and the specific positions pending rewards for a specified provider.
 
 ```json
 {
-  "pending_rewards": "4000000"
+  "pending_rewards": "10500",
+  "positions_rewards": [
+    {
+      "amount": "1000000",
+      "pending_rewards": "10000"
+    },
+    {
+      "amount": "1000000",
+      "pending_rewards": "500"
+    }
+  ]
 }
 ```
 

@@ -77,6 +77,10 @@ message QueryPendingRewardsByProviderResponse {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
+  repeated vaults.v1.PositionRewards positions_rewards = 2 [
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
 }
 
 message QueryStats {}
