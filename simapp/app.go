@@ -20,7 +20,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 
 	_ "cosmossdk.io/x/upgrade"
-	_ "dollar.noble.xyz"
+	_ "dollar.noble.xyz/v2"
+	_ "github.com/bcp-innovations/hyperlane-cosmos/x/core"
+	_ "github.com/bcp-innovations/hyperlane-cosmos/x/warp"
 	_ "github.com/cosmos/cosmos-sdk/x/auth"
 	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
 	_ "github.com/cosmos/cosmos-sdk/x/bank"
@@ -29,8 +31,8 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/x/staking"
 	_ "github.com/noble-assets/wormhole"
 
-	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	// Cosmos Modules
+	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	consensuskeeper "github.com/cosmos/cosmos-sdk/x/consensus/keeper"
@@ -39,11 +41,15 @@ import (
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	// Hyperlane Modules
+	hyperlanekeeper "github.com/bcp-innovations/hyperlane-cosmos/x/core/keeper"
+	warpkeeper "github.com/bcp-innovations/hyperlane-cosmos/x/warp/keeper"
 	// IBC Modules
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
+	transferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	// Custom Modules
-	dollarkeeper "dollar.noble.xyz/keeper"
+	dollarkeeper "dollar.noble.xyz/v2/keeper"
 	wormholekeeper "github.com/noble-assets/wormhole/keeper"
 )
 
@@ -74,9 +80,13 @@ type SimApp struct {
 	ParamsKeeper    paramskeeper.Keeper
 	StakingKeeper   *stakingkeeper.Keeper
 	UpgradeKeeper   *upgradekeeper.Keeper
+	// Hyperlane Modules
+	HyperlaneKeeper *hyperlanekeeper.Keeper
+	WarpKeeper      warpkeeper.Keeper
 	// IBC Modules
 	CapabilityKeeper *capabilitykeeper.Keeper
 	IBCKeeper        *ibckeeper.Keeper
+	TransferKeeper   transferkeeper.Keeper
 	// Custom Modules
 	DollarKeeper   *dollarkeeper.Keeper
 	WormholeKeeper *wormholekeeper.Keeper
@@ -138,6 +148,9 @@ func NewSimApp(
 		&app.ParamsKeeper,
 		&app.StakingKeeper,
 		&app.UpgradeKeeper,
+		// Hyperlane Modules
+		&app.HyperlaneKeeper,
+		&app.WarpKeeper,
 		// Custom Modules
 		&app.DollarKeeper,
 		&app.WormholeKeeper,

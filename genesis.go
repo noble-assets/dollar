@@ -29,10 +29,10 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/keeper"
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/keeper"
+	"dollar.noble.xyz/v2/types/portal"
+	types "dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, genesis types.GenesisState) {
@@ -68,6 +68,31 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	err = k.Stats.Set(ctx, genesis.Stats)
 	if err != nil {
 		panic(errors.Wrap(err, "unable to set genesis stats"))
+	}
+
+	for key, recipient := range genesis.YieldRecipients {
+		provider, identifier := types.ParseYieldRecipientKey(key)
+
+		key := collections.Join(int32(provider), identifier)
+		err = k.YieldRecipients.Set(ctx, key, recipient)
+		if err != nil {
+			panic(errors.Wrapf(err, "unable to set genesis yield recipient (%s/%s:%s)", provider, identifier, recipient))
+		}
+	}
+
+	for key, rawRetryAmount := range genesis.RetryAmounts {
+		retryAmount, ok := math.NewIntFromString(rawRetryAmount)
+		if !ok {
+			panic(fmt.Errorf("unable to decode retry amount %s", rawRetryAmount))
+		}
+
+		provider, identifier := types.ParseYieldRecipientKey(key)
+		key := collections.Join(int32(provider), identifier)
+
+		err = k.RetryAmounts.Set(ctx, key, retryAmount)
+		if err != nil {
+			panic(errors.Wrapf(err, "unable to set retry amount (%s/%s:%s)", provider, identifier, retryAmount))
+		}
 	}
 
 	if err = k.PortalOwner.Set(ctx, genesis.Portal.Owner); err != nil {
@@ -136,6 +161,8 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	index, _ := k.Index.Get(ctx)
 	principal, _ := k.GetPrincipal(ctx)
 	stats, _ := k.Stats.Get(ctx)
+	yieldRecipients, _ := k.GetYieldRecipients(ctx)
+	retryAmounts, _ := k.GetRetryAmounts(ctx)
 
 	portalOwner, _ := k.PortalOwner.Get(ctx)
 	portalPaused := k.GetPortalPaused(ctx)
@@ -164,9 +191,11 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Paused:                 vaultsPaused,
 			Stats:                  vaultsStats,
 		},
-		Paused:    paused,
-		Index:     index,
-		Principal: principal,
-		Stats:     stats,
+		Paused:          paused,
+		Index:           index,
+		Principal:       principal,
+		Stats:           stats,
+		YieldRecipients: yieldRecipients,
+		RetryAmounts:    retryAmounts,
 	}
 }

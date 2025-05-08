@@ -31,7 +31,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 var _ vaults.MsgServer = &vaultsMsgServer{}
@@ -350,6 +350,11 @@ func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetP
 }
 
 func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry, amount math.Int) (math.Int, error) {
+	userAddress, err := k.address.BytesToString(position.Address)
+	if err != nil {
+		return math.Int{}, err
+	}
+
 	// Get the total Vault rewards.
 	vaultRewardsPrincipal := math.ZeroInt()
 	if has, _ := k.Principal.Has(ctx, vaults.FlexibleVaultAddress); has {
@@ -414,15 +419,15 @@ func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry
 	}
 
 	return rewardsAmount, k.event.EventManager(ctx).Emit(ctx, &vaults.RewardClaimed{
-		Account: string(position.Address),
-		Amount:  amount,
+		Account: userAddress,
+		Amount:  rewardsAmount,
 	})
 }
 
 func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaults.VaultType, timestamp int64) string {
 	if vaultType == vaults.FLEXIBLE {
 		// Flexible Vaults use individual accounts for each user position.
-		return fmt.Sprintf("%s/%s/%s/%d", vaults.SubmoduleName, strings.ToLower(vaultType.String()), address, timestamp)
+		return fmt.Sprintf("%s/%s/%s/%d", vaults.SubmoduleName, strings.ToLower(vaultType.String()), strings.ToLower(address), timestamp)
 	} else {
 		// Staked Vaults use a shared account for all users.
 		return vaults.StakedVaultName

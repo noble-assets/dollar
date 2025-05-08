@@ -38,7 +38,13 @@ lint:
 BUF_VERSION=1.50
 BUILDER_VERSION=0.15.3
 
-proto-all: proto-format proto-lint proto-gen
+proto-all: proto-format proto-lint proto-breaking proto-gen
+
+proto-breaking:
+	@echo "🤖 Running protobuf breaking checks..."
+	@docker run --rm --volume "$(PWD)":/workspace --workdir /workspace \
+		bufbuild/buf:$(BUF_VERSION) breaking --against "https://github.com/noble-assets/dollar.git#branch=v1.0.1"
+	@echo "✅ Completed protobuf breaking checks!"
 
 proto-format:
 	@echo "🤖 Running protobuf formatter..."
@@ -66,14 +72,14 @@ local-image:
 ifeq (,$(shell which heighliner))
 	@echo heighliner not found. https://github.com/strangelove-ventures/heighliner
 else
-		@echo "🤖 Building image..."
-		@heighliner build --chain noble-dollar-simd --file e2e/chains.yaml --local
-		@echo "✅ Completed build!"
+	@echo "🤖 Building image..."
+	@heighliner build --chain noble-dollar-simd --file e2e/chains.yaml --local
+	@echo "✅ Completed build!"
 endif
 
 test-unit:
 	@echo "🤖 Running unit tests..."
-	@go test -cover -coverprofile=coverage.out -race -v ./keeper ./types/portal/ntt
+	@go test -cover -coverprofile=coverage.out -race -v . ./keeper ./types/portal/ntt
 	@go tool cover -html coverage.out -o coverage.html
 	@echo "✅ Completed unit tests!"
 

@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"cosmossdk.io/math"
-	portaltypes "dollar.noble.xyz/types/portal"
+	portaltypes "dollar.noble.xyz/v2/types/portal"
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
 	"github.com/stretchr/testify/require"
@@ -34,7 +34,7 @@ import (
 
 // TestMsgDeliverInjection ensures that the injected message can't be executed publicly.
 func TestMsgDeliverInjection(t *testing.T) {
-	ctx, _, chain := Suite(t)
+	ctx, _, chain, _, _, _, _, _ := Suite(t, false, false)
 
 	broadcaster := cosmos.NewBroadcaster(t, chain)
 	user := interchaintest.GetAndFundTestUsers(t, ctx, "wallet", math.OneInt(), chain)[0]

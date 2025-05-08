@@ -25,11 +25,17 @@ import (
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
+	hyperlaneutil "github.com/bcp-innovations/hyperlane-cosmos/util"
+	warptypes "github.com/bcp-innovations/hyperlane-cosmos/x/warp/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	"google.golang.org/protobuf/runtime/protoiface"
 
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 var _ types.MsgServer = &msgServer{}
@@ -184,6 +190,19 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 	}); err != nil {
 		return err
 	}
+
+	// Claim and transfer the yield of ibc external chains.
+	err = k.claimExternalYieldIBC(ctx)
+	if err != nil {
+		return err
+	}
+
+	// Claim and transfer the yield of hyperlane external chains.
+	err = k.claimExternalYieldHyperlane(ctx)
+	if err != nil {
+		return err
+	}
+
 	return k.event.EventManager(ctx).Emit(ctx, &types.IndexUpdated{
 		OldIndex:       oldIndex,
 		NewIndex:       index,
@@ -253,4 +272,137 @@ func (k *Keeper) claimStakedVaultYield(ctx context.Context) (math.Int, error) {
 		return math.ZeroInt(), err
 	}
 	return yield, nil
+}
+
+func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
+	provider := v2.Provider_IBC
+	yieldRecipients, err := k.GetYieldRecipientsByProvider(ctx, provider)
+	if err != nil {
+		return errors.Wrap(err, "unable to get ibc yield recipients from state")
+	}
+
+	for channelId, yieldRecipient := range yieldRecipients {
+		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelId)
+		yield, err := k.claimModuleYield(ctx, escrowAddress)
+		if err != nil {
+			return errors.Wrapf(err, "unable to claim yield for %s/%s", provider, channelId)
+		}
+		retryAmount, err := k.GetRetryAmountAndRemove(ctx, provider, channelId)
+		if err != nil {
+			return errors.Wrapf(err, "unable to get and remove retry amount for %s/%s", provider, channelId)
+		}
+		accruedYield := yield.Add(retryAmount)
+		if !accruedYield.IsPositive() {
+			continue
+		}
+
+		timeout := uint64(k.header.GetHeaderInfo(ctx).Time.UnixNano()) + transfertypes.DefaultRelativePacketTimeoutTimestamp
+		_, err = k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
+			SourcePort:       transfertypes.PortID,
+			SourceChannel:    channelId,
+			Token:            sdk.NewCoin(k.denom, accruedYield),
+			Sender:           escrowAddress.String(),
+			Receiver:         yieldRecipient,
+			TimeoutHeight:    clienttypes.ZeroHeight(),
+			TimeoutTimestamp: timeout,
+			Memo:             "",
+		})
+		if err != nil {
+			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, channelId)
+		}
+
+		err = k.IncrementTotalExternalYield(ctx, provider, channelId, yield)
+		if err != nil {
+			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, channelId)
+		}
+
+		k.logger.Info("claimed and transferred ibc yield", "amount", yield, "identifier", channelId)
+	}
+
+	return nil
+}
+
+func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
+	provider := v2.Provider_HYPERLANE
+	yieldRecipients, err := k.GetYieldRecipientsByProvider(ctx, provider)
+	if err != nil {
+		return errors.Wrap(err, "unable to get hyperlane yield recipients from state")
+	}
+
+	address := authtypes.NewModuleAddress(warptypes.ModuleName)
+	yield, err := k.claimModuleYield(ctx, address)
+	if err != nil {
+		return errors.Wrapf(err, "unable to claim yield for hyperlane")
+	}
+	if !yield.IsPositive() {
+		return nil
+	}
+
+	// NOTE: We iterate over the yield recipients twice to first calculate the
+	// total collateral across all supported routes. This is done so that we
+	// can safely calculate the yield portion of each route.
+
+	totalCollateral := math.ZeroInt()
+	tokens := make(map[string]warptypes.HypToken)
+	for identifier := range yieldRecipients {
+		rawIdentifier, err := hyperlaneutil.DecodeHexAddress(identifier)
+		if err != nil {
+			return errors.Wrap(err, "unable to decode hyperlane identifier")
+		}
+		tokenId := rawIdentifier.GetInternalId()
+
+		token, err := k.warp.HypTokens.Get(ctx, tokenId)
+		if err != nil {
+			return errors.Wrap(err, "unable to get hyperlane token from state")
+		}
+
+		totalCollateral = totalCollateral.Add(token.CollateralBalance)
+		tokens[identifier] = token
+	}
+
+	for identifier, yieldRecipient := range yieldRecipients {
+		token := tokens[identifier]
+		collateral := token.CollateralBalance
+		collateralPortion := math.LegacyNewDecFromInt(collateral).QuoInt(totalCollateral)
+		yieldPortion := collateralPortion.MulInt(yield).TruncateInt()
+		if !yieldPortion.IsPositive() {
+			continue
+		}
+
+		router, err := k.getHyperlaneRouter(ctx, token.Id.GetInternalId())
+		if err != nil {
+			return err
+		}
+
+		yieldRecipientBz, err := hyperlaneutil.DecodeHexAddress(yieldRecipient)
+		if err != nil {
+			return errors.Wrap(err, "unable to decode hyperlane yield recipient")
+		}
+
+		sdkCtx := sdk.UnwrapSDKContext(ctx)
+		_, err = k.warp.RemoteTransferCollateral(
+			sdkCtx,
+			token,
+			address.String(),
+			router.ReceiverDomain,
+			yieldRecipientBz,
+			yieldPortion,
+			nil,
+			math.ZeroInt(),
+			sdk.NewCoin(k.denom, math.ZeroInt()),
+			nil,
+		)
+		if err != nil {
+			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, identifier)
+		}
+
+		err = k.IncrementTotalExternalYield(ctx, provider, identifier, yieldPortion)
+		if err != nil {
+			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, identifier)
+		}
+
+		k.logger.Info("claimed and transferred hyperlane yield", "amount", yieldPortion, "identifier", identifier)
+	}
+
+	return nil
 }

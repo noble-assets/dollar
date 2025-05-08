@@ -6,7 +6,7 @@ import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "dollar.noble.xyz/types/portal";
+option go_package = "dollar.noble.xyz/v2/types/portal";
 
 // Delivered is the event emitted when a vaa is successfully delivered.
 message Delivered {

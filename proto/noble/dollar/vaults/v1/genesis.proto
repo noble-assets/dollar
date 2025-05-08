@@ -7,7 +7,7 @@ import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "noble/dollar/vaults/v1/vaults.proto";
 
-option go_package = "dollar.noble.xyz/types/vaults";
+option go_package = "dollar.noble.xyz/v2/types/vaults";
 
 // GenesisState defines the genesis state of the Noble Dollar Vaults submodule.
 message GenesisState {

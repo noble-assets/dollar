@@ -23,9 +23,6 @@ if ! [ -f .dollar/data/priv_validator_state.json ]; then
   dollard keys add user --recover --home .dollar --keyring-backend test --output json <<< "dice hill prepare foam tiny album cart steel pact say never hen" &> /dev/null
   dollard genesis add-genesis-account noble1zlxkchy77rp2tmknx5n8kckntyj3wp6h6c2edm 10000000uusdn --home .dollar --keyring-backend test
 
-
-
-
   TEMP=.dollar/genesis.json
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.dollar.portal.owner = "noble1s7evsmath5f3ef7vk97ru2tez9k5rs00klunzu"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json

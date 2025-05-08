@@ -23,7 +23,8 @@ package types
 import "cosmossdk.io/errors"
 
 var (
-	ErrInvalidRequest  = errors.Register(ModuleName, 0, "invalid request")
-	ErrPaused          = errors.Register(ModuleName, 1, "module is paused")
-	ErrDecreasingIndex = errors.Register(ModuleName, 2, "decreasing index")
+	ErrInvalidRequest   = errors.Register(ModuleName, 0, "invalid request")
+	ErrInvalidAuthority = errors.Register(ModuleName, 1, "invalid authority")
+	ErrPaused           = errors.Register(ModuleName, 2, "module is paused")
+	ErrDecreasingIndex  = errors.Register(ModuleName, 3, "decreasing index")
 )
