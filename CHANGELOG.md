@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v1.0.2
+
+*May 8, 2025*
+
+This is a non-consensus breaking patch to the `v1` release line.
+
+### FEATURES
+
+- Include position details when querying a vault user's pending rewards. ([#39](https://github.com/noble-assets/dollar/pull/39))
+
 ## v1.0.1
 
 *Mar 4, 2025*
