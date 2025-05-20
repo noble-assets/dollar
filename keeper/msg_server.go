@@ -282,7 +282,7 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		return errors.Wrap(err, "unable to get ibc yield recipients from state")
 	}
 
-	channelIds := make([]string, len(yieldRecipients))
+	channelIds := make([]string, 0, len(yieldRecipients))
 	for channelId := range yieldRecipients {
 		channelIds = append(channelIds, channelId)
 	}
@@ -338,7 +338,7 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		return errors.Wrap(err, "unable to get hyperlane yield recipients from state")
 	}
 
-	identifiers := make([]string, len(yieldRecipients))
+	identifiers := make([]string, 0, len(yieldRecipients))
 	for identifier := range yieldRecipients {
 		identifiers = append(identifiers, identifier)
 	}
