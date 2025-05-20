@@ -22,6 +22,7 @@ package keeper
 
 import (
 	"context"
+	"sort"
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
@@ -281,7 +282,15 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		return errors.Wrap(err, "unable to get ibc yield recipients from state")
 	}
 
-	for channelId, yieldRecipient := range yieldRecipients {
+	channelIds := make([]string, len(yieldRecipients))
+	for channelId := range yieldRecipients {
+		channelIds = append(channelIds, channelId)
+	}
+	sort.Strings(channelIds)
+
+	for _, channelId := range channelIds {
+		yieldRecipient := yieldRecipients[channelId]
+
 		escrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelId)
 		yield, err := k.claimModuleYield(ctx, escrowAddress)
 		if err != nil {
@@ -329,6 +338,12 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		return errors.Wrap(err, "unable to get hyperlane yield recipients from state")
 	}
 
+	identifiers := make([]string, len(yieldRecipients))
+	for identifier := range yieldRecipients {
+		identifiers = append(identifiers, identifier)
+	}
+	sort.Strings(identifiers)
+
 	address := authtypes.NewModuleAddress(warptypes.ModuleName)
 	yield, err := k.claimModuleYield(ctx, address)
 	if err != nil {
@@ -344,7 +359,7 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 
 	totalCollateral := math.ZeroInt()
 	tokens := make(map[string]warptypes.HypToken)
-	for identifier := range yieldRecipients {
+	for _, identifier := range identifiers {
 		rawIdentifier, err := hyperlaneutil.DecodeHexAddress(identifier)
 		if err != nil {
 			return errors.Wrap(err, "unable to decode hyperlane identifier")
@@ -360,7 +375,9 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		tokens[identifier] = token
 	}
 
-	for identifier, yieldRecipient := range yieldRecipients {
+	for _, identifier := range identifiers {
+		yieldRecipient := yieldRecipients[identifier]
+
 		token := tokens[identifier]
 		collateral := token.CollateralBalance
 		collateralPortion := math.LegacyNewDecFromInt(collateral).QuoInt(totalCollateral)
