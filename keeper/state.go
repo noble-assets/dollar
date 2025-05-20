@@ -22,6 +22,7 @@ package keeper
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"cosmossdk.io/collections"
@@ -149,7 +150,11 @@ func (k *Keeper) IncrementTotalExternalYield(ctx context.Context, provider v2.Pr
 	totalExternalYield := math.ZeroInt()
 	rawTotalExternalYield, exists := stats.TotalExternalYield[key]
 	if exists {
-		totalExternalYield, _ = math.NewIntFromString(rawTotalExternalYield)
+		var ok bool
+		totalExternalYield, ok = math.NewIntFromString(rawTotalExternalYield)
+		if !ok {
+			return fmt.Errorf("received an error converting %s to int", rawTotalExternalYield)
+		}
 	}
 
 	totalExternalYield = totalExternalYield.Add(amount)
