@@ -56,18 +56,29 @@ var (
 
 	// channelID is the IBC channel identifier of ibc-go-simd.
 	channelID = "channel-0"
+
 	// ibcYieldRecipient is the "gov" module account on ibc-go-simd.
 	ibcYieldRecipient = "cosmos10d07y265gmmuvt4z0w9aw880jnsr700j6zn9kn"
 )
 
+/**
+Add two yield recipients to two different chains
+Do a yield update to first chain
+Make assertions
+Do a yield update to second chain
+*/
+
 // TestIBCYieldDistribution tests $USDN yield distribution across IBC channels.
 func TestIBCYieldDistribution(t *testing.T) {
-	ctx, _, chain, externalChain, _, authority, guardians, _ := Suite(t, true, false)
+	ctx, _, chain, counterpartyChains, _, authority, guardians, _ := Suite(t, true, false, 2, 4)
+
 	validator := chain.Validators[0]
+	externalChain := counterpartyChains[0]
+	externalChain2 := counterpartyChains[1]
 
 	// ARRANGE: Create and fund test user accounts on both Noble and the external chain.
-	wallets := interchaintest.GetAndFundTestUsers(t, ctx, "user", math.OneInt(), chain, externalChain)
-	user, externalUser := wallets[0], wallets[1]
+	wallets := interchaintest.GetAndFundTestUsers(t, ctx, "user", math.OneInt(), chain, externalChain, externalChain2)
+	user, externalUser, externalUser2 := wallets[0], wallets[1], wallets[2]
 
 	// ARRANGE: Pad the user address to be compatible with Wormhole's NTT standard.
 	paddedAddress := make([]byte, 32)
@@ -117,14 +128,19 @@ func TestIBCYieldDistribution(t *testing.T) {
 	// ASSERT: The transfer should've failed as a yield recipient hasn't been set.
 	require.ErrorContains(t, err, fmt.Sprintf("ibc transfers of uusdn are currently disabled on %s", channelID))
 
-	// ACT: Set the yield recipient for the external chain.
+	// ACT: Set the yield recipient for the external chains.
 	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", channelID, ibcYieldRecipient)
 	require.NoError(t, err)
 
-	// ASSERT: There is one yield recipient.
+	_, err = validator.ExecTx(ctx, authority.KeyName(), "dollar", "set-yield-recipient", "IBC", "channel-1", ibcYieldRecipient)
+	require.NoError(t, err)
+
+	// ASSERT: There are two yield recipient.
 	yieldRecipients = getYieldRecipients(t, ctx, validator)
-	key := fmt.Sprintf("%s/%s", dollartypes.Provider_IBC, channelID)
-	require.Equal(t, ibcYieldRecipient, yieldRecipients[key])
+	key1 := fmt.Sprintf("%s/%s", dollartypes.Provider_IBC, channelID)
+	key2 := fmt.Sprintf("%s/%s", dollartypes.Provider_IBC, "channel-1")
+	require.Equal(t, ibcYieldRecipient, yieldRecipients[key1])
+	require.Equal(t, ibcYieldRecipient, yieldRecipients[key2])
 
 	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
 	_, err = chain.SendIBCTransfer(ctx, channelID, user.KeyName(), ibc.WalletAmount{
@@ -137,16 +153,21 @@ func TestIBCYieldDistribution(t *testing.T) {
 	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain))
 
 	// ASSERT: The escrow account should now have 500,000 $USDN.
+	expectedValue := math.NewInt(500_000 * 1e6)
+
 	rawEscrowAddress := transfertypes.GetEscrowAddress(transfertypes.PortID, channelID)
-	escrowAddress, _ := address.NewBech32Codec(chain.Config().Bech32Prefix).BytesToString(rawEscrowAddress)
+	escrowAddress, err := address.NewBech32Codec(chain.Config().Bech32Prefix).BytesToString(rawEscrowAddress)
+	require.NoError(t, err)
+
 	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
 	require.NoError(t, err)
-	require.True(t, math.NewInt(500_000*1e6).Equal(balance))
+	require.True(t, expectedValue.Equal(balance), fmt.Sprintf("expected %s, got %s", expectedValue, balance))
+
 	// ASSERT: The total supply should be 500,000 $USDN on the external chain.
 	ibcDenom := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(transfertypes.PortID, channelID, "uusdn")).IBCDenom()
 	totalSupply, err := externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
 	require.NoError(t, err)
-	require.True(t, math.NewInt(500_000*1e6).Equal(totalSupply.Amount))
+	require.True(t, expectedValue.Equal(totalSupply.Amount), fmt.Sprintf("expected %s, got %s", expectedValue, totalSupply.Amount))
 
 	// ARRANGE: Prepare a VAA to be delivered that accrues a 4.15% yield.
 	payload = portaltypes.EncodeIndexPayload(
@@ -174,16 +195,77 @@ func TestIBCYieldDistribution(t *testing.T) {
 	balance, err = chain.BankQueryBalance(ctx, escrowAddress, "uusdn")
 	require.NoError(t, err)
 	require.True(t, math.NewInt(520_750*1e6).Equal(balance))
+
 	// ASSERT: The total supply should be 520,750 $USDN on the external chain.
 	totalSupply, err = externalChain.BankQueryTotalSupplyOf(ctx, ibcDenom)
 	require.NoError(t, err)
 	require.True(t, math.NewInt(520_750*1e6).Equal(totalSupply.Amount))
+
+	// ----------- BEGIN YIELD UPDATE FOR SECOND YIELD RECIPIENT ---------------------------
+
+	// ACT: Send 500,000 $USDN from the user on Noble to the external chain.
+	_, err = chain.SendIBCTransfer(ctx, "channel-1", user.KeyName(), ibc.WalletAmount{
+		Address: externalUser2.FormattedAddress(),
+		Denom:   "uusdn",
+		Amount:  math.NewInt(500_000 * 1e6),
+	}, ibc.TransferOptions{})
+	require.NoError(t, err)
+
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain2))
+
+	// ASSERT: The escrow account should now have 500,000 $USDN.
+	rawEscrowAddress2 := transfertypes.GetEscrowAddress(transfertypes.PortID, "channel-1")
+	escrowAddress2, _ := address.NewBech32Codec(chain.Config().Bech32Prefix).BytesToString(rawEscrowAddress2)
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress2, "uusdn")
+	require.NoError(t, err)
+	require.True(t, expectedValue.Equal(balance), fmt.Sprintf("expected %s, got %s", expectedValue, balance))
+
+	// ASSERT: The total supply should be 500,000 $USDN on the external chain.
+	ibcDenom2 := transfertypes.ParseDenomTrace(transfertypes.GetPrefixedDenom(transfertypes.PortID, "channel-0", "uusdn")).IBCDenom()
+	totalSupply2, err := externalChain2.BankQueryTotalSupplyOf(ctx, ibcDenom2)
+	require.NoError(t, err)
+	require.True(t, expectedValue.Equal(totalSupply2.Amount), fmt.Sprintf("expected %s, got %s", expectedValue, totalSupply2.Amount))
+
+	// ARRANGE: Prepare a VAA to be delivered that accrues a 4.15% yield.
+	payload = portaltypes.EncodeIndexPayload(
+		1041600000000,
+		uint16(vaautils.ChainIDNoble),
+	)
+
+	transceiverMessage = buildTransceiverMessage(payload)
+	vaa = utils.NewVAA(guardians, transceiverMessage)
+
+	bz, err = vaa.Marshal()
+	require.NoError(t, err)
+
+	// ACT: Deliver the prepared VAA that accrues 4.15% yield.
+	_, err = validator.ExecTx(
+		ctx, user.KeyName(),
+		"dollar", "portal", "deliver", base64.StdEncoding.EncodeToString(bz),
+		"--gas", "500000",
+	)
+	require.NoError(t, err)
+
+	require.NoError(t, testutil.WaitForBlocks(ctx, 10, chain, externalChain2))
+
+	// ASSERT: The escrow account should now have 520,750 $USDN.
+	expectedValue = math.NewInt(520_750 * 1e6)
+
+	balance, err = chain.BankQueryBalance(ctx, escrowAddress2, "uusdn")
+	require.NoError(t, err)
+	require.True(t, expectedValue.Equal(balance), fmt.Sprintf("expected %s, got %s", expectedValue, balance))
+
+	// ASSERT: The total supply should be 520,750 $USDN on the external chain.
+	totalSupply, err = externalChain2.BankQueryTotalSupplyOf(ctx, ibcDenom2)
+	require.NoError(t, err)
+	require.True(t, expectedValue.Equal(totalSupply.Amount), fmt.Sprintf("expected %s, got %s", expectedValue, totalSupply.Amount))
 }
 
 // TestIBCYieldDistributionTimeout tests $USDN yield distribution across an IBC channel, while triggering a timeout.
 func TestIBCYieldDistributionTimeout(t *testing.T) {
-	ctx, execReporter, chain, externalChain, relayer, authority, guardians, _ := Suite(t, true, false)
+	ctx, execReporter, chain, counterpartyChains, relayer, authority, guardians, _ := Suite(t, true, false, 2, 4)
 	validator := chain.Validators[0]
+	externalChain := counterpartyChains[0]
 
 	// ARRANGE: Create and fund test user accounts on both Noble and the external chain.
 	wallets := interchaintest.GetAndFundTestUsers(t, ctx, "user", math.OneInt(), chain, externalChain)

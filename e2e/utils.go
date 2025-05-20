@@ -22,6 +22,7 @@ package e2e
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"cosmossdk.io/math"
@@ -48,7 +49,7 @@ import (
 )
 
 // Suite is a utility for spinning up a new E2E testing suite.
-func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Context, execReporter *testreporter.RelayerExecReporter, noble *cosmos.CosmosChain, ibcSimapp *cosmos.CosmosChain, relayer *rly.CosmosRelayer, authority ibc.Wallet, guardians []utils.Guardian, tokenId string) {
+func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool, numChains int, numValidators int) (ctx context.Context, execReporter *testreporter.RelayerExecReporter, noble *cosmos.CosmosChain, counterpartyChains []*cosmos.CosmosChain, relayer *rly.CosmosRelayer, authority ibc.Wallet, guardians []utils.Guardian, tokenId string) {
 	ctx = context.Background()
 	logger := zaptest.NewLogger(t)
 	reporter := testreporter.NewNopReporter()
@@ -58,7 +59,10 @@ func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Co
 	guardian := utils.NewGuardian(t)
 	guardians = []utils.Guardian{guardian}
 
-	numValidators, numFullNodes := 1, 0
+	if numValidators == 0 {
+		numValidators = 1
+	}
+	numFullNodes := 0
 
 	encodingConfig := cosmos.DefaultEncoding()
 	dollar.AppModule{}.RegisterInterfaces(encodingConfig.InterfaceRegistry)
@@ -121,16 +125,19 @@ func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Co
 			},
 		},
 	}
+
 	if ibcEnabled {
-		specs = append(specs, &interchaintest.ChainSpec{
-			Name:          "ibc-go-simd",
-			Version:       "v8.7.0",
-			NumValidators: &numValidators,
-			NumFullNodes:  &numFullNodes,
-			ChainConfig: ibc.ChainConfig{
-				ChainID: "ibc-go-simd-1",
-			},
-		})
+		for i := range numChains {
+			specs = append(specs, &interchaintest.ChainSpec{
+				Name:          "ibc-go-simd",
+				Version:       "v8.7.0",
+				NumValidators: &numValidators,
+				NumFullNodes:  &numFullNodes,
+				ChainConfig: ibc.ChainConfig{
+					ChainID: fmt.Sprintf("ibc-go-simd-%d", i+1),
+				},
+			})
+		}
 	}
 	factory := interchaintest.NewBuiltinChainFactory(logger, specs)
 
@@ -139,23 +146,28 @@ func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Co
 
 	noble = chains[0].(*cosmos.CosmosChain)
 	interchain := interchaintest.NewInterchain().AddChain(noble)
+
 	if ibcEnabled {
 		relayer = interchaintest.NewBuiltinRelayerFactory(
 			ibc.CosmosRly,
 			logger,
 		).Build(t, client, network).(*rly.CosmosRelayer)
 
-		ibcSimapp = chains[1].(*cosmos.CosmosChain)
+		interchain = interchain.AddRelayer(relayer, "relayer")
 
-		interchain = interchain.
-			AddChain(ibcSimapp).
-			AddRelayer(relayer, "relayer").
-			AddLink(interchaintest.InterchainLink{
-				Chain1:  noble,
-				Chain2:  ibcSimapp,
-				Relayer: relayer,
-				Path:    "transfer",
-			})
+		for i := range numChains {
+			ibcSimapp := chains[i+1].(*cosmos.CosmosChain)
+			counterpartyChains = append(counterpartyChains, ibcSimapp)
+
+			interchain = interchain.
+				AddChain(ibcSimapp).
+				AddLink(interchaintest.InterchainLink{
+					Chain1:  noble,
+					Chain2:  ibcSimapp,
+					Relayer: relayer,
+					Path:    fmt.Sprintf("transfer-%d", i),
+				})
+		}
 	}
 	require.NoError(t, interchain.Build(ctx, execReporter, interchaintest.InterchainBuildOptions{
 		TestName:  t.Name(),

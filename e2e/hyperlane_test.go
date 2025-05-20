@@ -50,7 +50,7 @@ var hyperlaneYieldRecipient = "0x00000000000000000000000000000000000000000000000
 
 // TestHyperlaneYieldDistribution tests $USDN yield distribution across Hyperlane routes.
 func TestHyperlaneYieldDistribution(t *testing.T) {
-	ctx, _, chain, _, _, authority, guardians, tokenId := Suite(t, false, true)
+	ctx, _, chain, _, _, authority, guardians, tokenId := Suite(t, false, true, 1, 1)
 	validator := chain.Validators[0]
 
 	// ARRANGE: Create and fund a test user account on Noble.
