@@ -22,13 +22,12 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/v2/types/v2"
+	v2 "dollar.noble.xyz/v2/types/v2"
 )
 
 // GetPaused is a utility that returns the current paused state.
