@@ -80,7 +80,7 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		key := collections.Join(int32(provider), identifier)
 		err = k.TotalExternalYield.Set(ctx, key, amount)
 		if err != nil {
-			panic(errors.Wrapf(err, "unable to set total external yield (%s/%s:%s)", provider, identifier, amount))
+			panic(errors.Wrapf(err, "unable to set genesis total external yield (%s/%s:%s)", provider, identifier, amount))
 		}
 	}
 
