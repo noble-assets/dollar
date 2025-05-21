@@ -9,7 +9,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "noble/dollar/vaults/v1/vaults.proto";
 
-option go_package = "dollar.noble.xyz/types/vaults";
+option go_package = "dollar.noble.xyz/v2/types/vaults";
 
 service Query {
   rpc PositionsByProvider(QueryPositionsByProvider) returns (QueryPositionsByProviderResponse) {

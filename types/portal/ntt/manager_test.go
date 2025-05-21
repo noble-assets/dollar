@@ -28,7 +28,7 @@ import (
 	"github.com/stretchr/testify/require"
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 
-	"dollar.noble.xyz/types/portal/ntt"
+	"dollar.noble.xyz/v2/types/portal/ntt"
 )
 
 func TestManagerMessageUtilities(t *testing.T) {

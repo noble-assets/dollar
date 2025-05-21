@@ -33,15 +33,18 @@ import (
 	"cosmossdk.io/core/header"
 	"cosmossdk.io/core/store"
 	sdkerrors "cosmossdk.io/errors"
+	"cosmossdk.io/log"
 	"cosmossdk.io/math"
+	warpkeeper "github.com/bcp-innovations/hyperlane-cosmos/x/warp/keeper"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"dollar.noble.xyz/types"
-	"dollar.noble.xyz/types/portal"
-	"dollar.noble.xyz/types/portal/ntt"
-	"dollar.noble.xyz/types/vaults"
+	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v2/types/portal/ntt"
+	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 type Keeper struct {
@@ -50,17 +53,27 @@ type Keeper struct {
 	vaultsMinimumLock   int64
 	vaultsMinimumUnlock int64
 
+	cdc   codec.Codec
+	store store.KVStoreService
+
+	logger   log.Logger
 	header   header.Service
 	event    event.Service
 	address  address.Codec
-	bank     types.BankKeeper
 	account  types.AccountKeeper
+	bank     types.BankKeeper
+	channel  types.ChannelKeeper
+	transfer types.TransferKeeper
+	warp     *warpkeeper.Keeper
 	wormhole portal.WormholeKeeper
 
-	Paused    collections.Item[bool]
-	Index     collections.Item[int64]
-	Principal collections.Map[[]byte, math.Int]
-	Stats     collections.Item[types.Stats]
+	Paused             collections.Item[bool]
+	Index              collections.Item[int64]
+	Principal          collections.Map[[]byte, math.Int]
+	Stats              collections.Item[v2.Stats]
+	TotalExternalYield collections.Map[collections.Pair[int32, string], math.Int]
+	YieldRecipients    collections.Map[collections.Pair[int32, string], string]
+	RetryAmounts       collections.Map[collections.Pair[int32, string], math.Int]
 
 	PortalOwner         collections.Item[string]
 	PortalPaused        collections.Item[bool]
@@ -75,7 +88,24 @@ type Keeper struct {
 	VaultsStats                  collections.Item[vaults.Stats]
 }
 
-func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMinimumUnlock int64, cdc codec.Codec, store store.KVStoreService, header header.Service, event event.Service, address address.Codec, bank types.BankKeeper, account types.AccountKeeper, wormhole portal.WormholeKeeper) *Keeper {
+func NewKeeper(
+	denom string,
+	authority string,
+	vaultsMinimumLock int64,
+	vaultsMinimumUnlock int64,
+	cdc codec.Codec,
+	store store.KVStoreService,
+	logger log.Logger,
+	header header.Service,
+	event event.Service,
+	address address.Codec,
+	account types.AccountKeeper,
+	bank types.BankKeeper,
+	channel types.ChannelKeeper,
+	transfer types.TransferKeeper,
+	warp *warpkeeper.Keeper,
+	wormhole portal.WormholeKeeper,
+) *Keeper {
 	transceiverAddress := authtypes.NewModuleAddress(fmt.Sprintf("%s/transceiver", portal.SubmoduleName))
 	copy(portal.PaddedTransceiverAddress[12:], transceiverAddress)
 	portal.TransceiverAddress, _ = address.BytesToString(transceiverAddress)
@@ -94,17 +124,28 @@ func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMi
 		authority:           authority,
 		vaultsMinimumLock:   vaultsMinimumLock,
 		vaultsMinimumUnlock: vaultsMinimumUnlock,
-		header:              header,
-		event:               event,
-		address:             address,
-		bank:                bank,
-		wormhole:            wormhole,
-		account:             account,
 
-		Paused:    collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
-		Index:     collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
-		Principal: collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
-		Stats:     collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[types.Stats](cdc)),
+		cdc:   cdc,
+		store: store,
+
+		logger:   logger.With("module", types.ModuleName),
+		header:   header,
+		event:    event,
+		address:  address,
+		account:  account,
+		bank:     bank,
+		channel:  channel,
+		transfer: transfer,
+		warp:     warp,
+		wormhole: wormhole,
+
+		Paused:             collections.NewItem(builder, types.PausedKey, "paused", collections.BoolValue),
+		Index:              collections.NewItem(builder, types.IndexKey, "index", collections.Int64Value),
+		Principal:          collections.NewMap(builder, types.PrincipalPrefix, "principal", collections.BytesKey, sdk.IntValue),
+		Stats:              collections.NewItem(builder, types.StatsKey, "stats", codec.CollValue[v2.Stats](cdc)),
+		TotalExternalYield: collections.NewMap(builder, types.TotalExternalYieldPrefix, "total_external_yield", collections.PairKeyCodec(collections.Int32Key, collections.StringKey), sdk.IntValue),
+		YieldRecipients:    collections.NewMap(builder, types.YieldRecipientPrefix, "yield_recipients", collections.PairKeyCodec(collections.Int32Key, collections.StringKey), collections.StringValue),
+		RetryAmounts:       collections.NewMap(builder, types.RetryAmountPrefix, "retry_amounts", collections.PairKeyCodec(collections.Int32Key, collections.StringKey), sdk.IntValue),
 
 		PortalOwner:         collections.NewItem(builder, portal.OwnerKey, "portal_owner", collections.StringValue),
 		PortalPaused:        collections.NewItem(builder, portal.PausedKey, "portal_paused", collections.BoolValue),
@@ -130,6 +171,13 @@ func NewKeeper(denom string, authority string, vaultsMinimumLock int64, vaultsMi
 // SetBankKeeper overwrites the bank keeper used in this module.
 func (k *Keeper) SetBankKeeper(bankKeeper types.BankKeeper) {
 	k.bank = bankKeeper
+}
+
+// SetIBCKeepers overrides the provided IBC specific keepers for this module.
+// This exists because IBC doesn't support dependency injection.
+func (k *Keeper) SetIBCKeepers(channel types.ChannelKeeper, transfer types.TransferKeeper) {
+	k.channel = channel
+	k.transfer = transfer
 }
 
 // SendRestrictionFn performs an underlying transfer of principal when executing a $USDN transfer.

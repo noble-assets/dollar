@@ -26,7 +26,7 @@ import (
 	"cosmossdk.io/math"
 
 	sdkerrors "cosmossdk.io/errors"
-	"dollar.noble.xyz/types"
+	"dollar.noble.xyz/v2/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
