@@ -138,7 +138,10 @@ func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int
 func (k *Keeper) IncrementTotalExternalYield(ctx context.Context, provider v2.Provider, identifier string, amount math.Int) error {
 	key := collections.Join(int32(provider), identifier)
 
-	current, _ := k.TotalExternalYield.Get(ctx, key)
+	current, err := k.TotalExternalYield.Get(ctx, key)
+	if err != nil {
+		current = math.ZeroInt()
+	}
 
 	return k.TotalExternalYield.Set(ctx, key, current.Add(amount))
 }
