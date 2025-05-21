@@ -375,6 +375,10 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		tokens[identifier] = token
 	}
 
+	if !totalCollateral.IsPositive() {
+		return nil
+	}
+
 	for _, identifier := range identifiers {
 		yieldRecipient := yieldRecipients[identifier]
 
