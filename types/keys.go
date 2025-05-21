@@ -36,10 +36,11 @@ var (
 )
 
 var (
-	PausedKey            = []byte("paused")
-	IndexKey             = []byte("index")
-	PrincipalPrefix      = []byte("principal/")
-	StatsKey             = []byte("stats")
-	YieldRecipientPrefix = []byte("yield_recipient/")
-	RetryAmountPrefix    = []byte("retry_amount/")
+	PausedKey                = []byte("paused")
+	IndexKey                 = []byte("index")
+	PrincipalPrefix          = []byte("principal/")
+	StatsKey                 = []byte("stats")
+	TotalExternalYieldPrefix = []byte("total_external_yield/")
+	YieldRecipientPrefix     = []byte("yield_recipient/")
+	RetryAmountPrefix        = []byte("retry_amount/")
 )

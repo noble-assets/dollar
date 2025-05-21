@@ -70,6 +70,20 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis stats"))
 	}
 
+	for key, rawAmount := range genesis.TotalExternalYield {
+		provider, identifier := types.ParseYieldRecipientKey(key)
+		amount, ok := math.NewIntFromString(rawAmount)
+		if !ok {
+			panic(fmt.Errorf("unable to parse total external yield %s", rawAmount))
+		}
+
+		key := collections.Join(int32(provider), identifier)
+		err = k.TotalExternalYield.Set(ctx, key, amount)
+		if err != nil {
+			panic(errors.Wrapf(err, "unable to set total external yield (%s/%s:%s)", provider, identifier, amount))
+		}
+	}
+
 	for key, recipient := range genesis.YieldRecipients {
 		provider, identifier := types.ParseYieldRecipientKey(key)
 
@@ -161,6 +175,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	index, _ := k.Index.Get(ctx)
 	principal, _ := k.GetPrincipal(ctx)
 	stats, _ := k.Stats.Get(ctx)
+	totalExternalYield, _ := k.GetTotalExternalYield(ctx)
 	yieldRecipients, _ := k.GetYieldRecipients(ctx)
 	retryAmounts, _ := k.GetRetryAmounts(ctx)
 
@@ -191,11 +206,12 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Paused:                 vaultsPaused,
 			Stats:                  vaultsStats,
 		},
-		Paused:          paused,
-		Index:           index,
-		Principal:       principal,
-		Stats:           stats,
-		YieldRecipients: yieldRecipients,
-		RetryAmounts:    retryAmounts,
+		Paused:             paused,
+		Index:              index,
+		Principal:          principal,
+		Stats:              stats,
+		TotalExternalYield: totalExternalYield,
+		YieldRecipients:    yieldRecipients,
+		RetryAmounts:       retryAmounts,
 	}
 }
