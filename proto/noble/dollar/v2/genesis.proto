@@ -29,9 +29,12 @@ message GenesisState {
   // stats contains the genesis statistics around the Noble Dollar.
   noble.dollar.v2.Stats stats = 6 [(gogoproto.nullable) = false];
 
+  // total_external_yield contains the genesis statistics around yield accrued on external chains.
+  map<string, string> total_external_yield = 7;
+
   // yield_recipients contains the genesis yield recipients for external chains.
-  map<string, string> yield_recipients = 7;
+  map<string, string> yield_recipients = 8;
 
   // retry_amounts contains the genesis retry amounts of yield for external chains.
-  map<string, string> retry_amounts = 8;
+  map<string, string> retry_amounts = 9;
 }

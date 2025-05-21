@@ -58,8 +58,13 @@ func (k queryServerV2) Stats(ctx context.Context, req *v2.QueryStats) (*v2.Query
 		return nil, errors.Wrap(err, "unable to get stats from state")
 	}
 
+	rawTotalExternalYield, err := k.GetTotalExternalYield(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to get total external yield from state")
+	}
+
 	totalExternalYield := make(map[string]v2.QueryStatsResponse_ExternalYield)
-	for key, rawAmount := range stats.TotalExternalYield {
+	for key, rawAmount := range rawTotalExternalYield {
 		provider, identifier := v2.ParseYieldRecipientKey(key)
 
 		chainId := "UNKNOWN"

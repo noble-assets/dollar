@@ -136,26 +136,30 @@ func (k *Keeper) IncrementTotalYieldAccrued(ctx context.Context, amount math.Int
 
 // IncrementTotalExternalYield is a utility that increments the total external yield stat.
 func (k *Keeper) IncrementTotalExternalYield(ctx context.Context, provider v2.Provider, identifier string, amount math.Int) error {
-	stats, err := k.Stats.Get(ctx)
+	key := collections.Join(int32(provider), identifier)
+
+	current, err := k.TotalExternalYield.Get(ctx, key)
 	if err != nil {
-		return err
-	}
-	if stats.TotalExternalYield == nil {
-		stats.TotalExternalYield = make(map[string]string)
+		current = math.ZeroInt()
 	}
 
-	key := fmt.Sprintf("%s/%s", provider, identifier)
+	return k.TotalExternalYield.Set(ctx, key, current.Add(amount))
+}
 
-	totalExternalYield := math.ZeroInt()
-	rawTotalExternalYield, exists := stats.TotalExternalYield[key]
-	if exists {
-		totalExternalYield, _ = math.NewIntFromString(rawTotalExternalYield)
-	}
+// GetTotalExternalYield is a utility that returns all total external yield stats from state.
+func (k *Keeper) GetTotalExternalYield(ctx context.Context) (map[string]string, error) {
+	totalExternalYield := make(map[string]string)
 
-	totalExternalYield = totalExternalYield.Add(amount)
-	stats.TotalExternalYield[key] = totalExternalYield.String()
+	err := k.TotalExternalYield.Walk(
+		ctx, nil,
+		func(key collections.Pair[int32, string], amount math.Int) (stop bool, err error) {
+			totalExternalYield[fmt.Sprintf("%s/%s", v2.Provider(key.K1()), key.K2())] = amount.String()
 
-	return k.Stats.Set(ctx, stats)
+			return false, nil
+		},
+	)
+
+	return totalExternalYield, err
 }
 
 // GetYieldRecipients is a utility that returns all yield recipients from state.

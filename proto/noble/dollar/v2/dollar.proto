@@ -13,6 +13,7 @@ enum Provider {
   HYPERLANE = 1;
 }
 
+// Stats is copied from the v1 definition to avoid cyclic imports.
 message Stats {
   uint64 total_holders = 1;
 
@@ -29,6 +30,4 @@ message Stats {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
-
-  map<string, string> total_external_yield = 4;
 }
