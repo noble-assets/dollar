@@ -99,7 +99,7 @@ func (k *Keeper) getHyperlaneRouter(ctx context.Context, tokenId uint64) (warpty
 		ctx, ranger,
 		func(key collections.Pair[uint64, uint32], router warptypes.RemoteRouter) (stop bool, err error) {
 			routers = append(routers, router)
-			return true, nil
+			return false, nil
 		},
 	)
 	if err != nil {
