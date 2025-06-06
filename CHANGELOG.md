@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## v2.0.0
+
+*Jun 6, 2025*
+
+Second major release of the `x/dollar` module, enabling composable yield for the Noble Dollar ($USDN).
+
+### BUG FIXES
+
+- Correctly emit values inside `RewardClaimed` event. ([#33](https://github.com/noble-assets/dollar/pull/33))
+
+### FEATURES
+
+- Enable transfers and yield distribution across specific IBC channels. ([#28](https://github.com/noble-assets/dollar/pull/28))
+- Enable transfers and yield distribution across specific Hyperlane routes. ([#31](https://github.com/noble-assets/dollar/pull/31))
+
+### IMPROVEMENTS
+
+- Update module path for v2 release line. ([#29](https://github.com/noble-assets/dollar/pull/29))
+- Migrate custom ICS4 wrapper from main Noble codebase. ([#30](https://github.com/noble-assets/dollar/pull/30))
+- Enforce lowercase user address when generating their flexible vault account. ([#36](https://github.com/noble-assets/dollar/pull/36))
+
 ## v1.0.2
 
 *May 8, 2025*
