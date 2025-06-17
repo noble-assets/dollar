@@ -1,0 +1,1 @@
+- Gracefully handle transfer errors when distributing external yield. ([#45](https://github.com/noble-assets/dollar/pull/45))
