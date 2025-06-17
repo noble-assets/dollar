@@ -306,7 +306,7 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		}
 
 		timeout := uint64(k.header.GetHeaderInfo(ctx).Time.UnixNano()) + transfertypes.DefaultRelativePacketTimeoutTimestamp
-		_, err = k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
+		_, transferErr := k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
 			SourcePort:       transfertypes.PortID,
 			SourceChannel:    channelId,
 			Token:            sdk.NewCoin(k.denom, accruedYield),
@@ -316,8 +316,13 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 			TimeoutTimestamp: timeout,
 			Memo:             "",
 		})
-		if err != nil {
-			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, channelId)
+		if transferErr != nil {
+			k.logger.Error("unable to transfer ibc yield", "identifier", channelId, "err", transferErr)
+
+			err = k.IncrementRetryAmount(ctx, provider, channelId, accruedYield)
+			if err != nil {
+				return errors.Wrapf(err, "unable to increment retry amount for %s/%s", provider, channelId)
+			}
 		}
 
 		err = k.IncrementTotalExternalYield(ctx, provider, channelId, yield)
@@ -325,7 +330,9 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, channelId)
 		}
 
-		k.logger.Info("claimed and transferred ibc yield", "amount", yield, "identifier", channelId)
+		if transferErr == nil {
+			k.logger.Info("claimed and transferred ibc yield", "amount", accruedYield, "identifier", channelId)
+		}
 	}
 
 	return nil
@@ -386,7 +393,12 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		collateral := token.CollateralBalance
 		collateralPortion := math.LegacyNewDecFromInt(collateral).QuoInt(totalCollateral)
 		yieldPortion := collateralPortion.MulInt(yield).TruncateInt()
-		if !yieldPortion.IsPositive() {
+		retryAmount, err := k.GetRetryAmountAndRemove(ctx, provider, identifier)
+		if err != nil {
+			return errors.Wrapf(err, "unable to get and remove retry amount for %s/%s", provider, identifier)
+		}
+		accruedYield := yieldPortion.Add(retryAmount)
+		if !accruedYield.IsPositive() {
 			continue
 		}
 
@@ -401,20 +413,25 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		}
 
 		sdkCtx := sdk.UnwrapSDKContext(ctx)
-		_, err = k.warp.RemoteTransferCollateral(
+		_, transferErr := k.warp.RemoteTransferCollateral(
 			sdkCtx,
 			token,
 			address.String(),
 			router.ReceiverDomain,
 			yieldRecipientBz,
-			yieldPortion,
+			accruedYield,
 			nil,
 			math.ZeroInt(),
 			sdk.NewCoin(k.denom, math.ZeroInt()),
 			nil,
 		)
-		if err != nil {
-			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, identifier)
+		if transferErr != nil {
+			k.logger.Error("unable to transfer hyperlane yield", "identifier", identifier, "err", transferErr)
+
+			err = k.IncrementRetryAmount(ctx, provider, identifier, accruedYield)
+			if err != nil {
+				return errors.Wrapf(err, "unable to increment retry amount for %s/%s", provider, identifier)
+			}
 		}
 
 		err = k.IncrementTotalExternalYield(ctx, provider, identifier, yieldPortion)
@@ -422,7 +439,9 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, identifier)
 		}
 
-		k.logger.Info("claimed and transferred hyperlane yield", "amount", yieldPortion, "identifier", identifier)
+		if transferErr == nil {
+			k.logger.Info("claimed and transferred hyperlane yield", "amount", accruedYield, "identifier", identifier)
+		}
 	}
 
 	return nil
