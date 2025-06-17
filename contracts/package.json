@@ -1,0 +1,8 @@
+{
+  "name": "@noble-assets/usdn",
+  "private": true,
+  "devDependencies": {
+    "@hyperlane-xyz/core": "8.0.0",
+    "forge-std": "github:foundry-rs/forge-std#v1.9.7"
+  }
+}
