@@ -1,0 +1,13 @@
+diff --git a/token/ERC20/ERC20Upgradeable.sol b/token/ERC20/ERC20Upgradeable.sol
+index c1e4704af659c6da46dda7c79f3b0742ff45e0f2..82b7e7e657da9c25a7b0ec504efb9175404ee0c1 100644
+--- a/token/ERC20/ERC20Upgradeable.sol
++++ b/token/ERC20/ERC20Upgradeable.sol
+@@ -43,7 +43,7 @@ abstract contract ERC20Upgradeable is Initializable, ContextUpgradeable, IERC20,
+     // keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.ERC20")) - 1)) & ~bytes32(uint256(0xff))
+     bytes32 private constant ERC20StorageLocation = 0x52c63247e1f47db19d5ce0460030c497f067ca4cebf71ba98eeadabe20bace00;
+ 
+-    function _getERC20Storage() private pure returns (ERC20Storage storage $) {
++    function _getERC20Storage() internal pure returns (ERC20Storage storage $) {
+         assembly {
+             $.slot := ERC20StorageLocation
+         }

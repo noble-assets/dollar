@@ -25,14 +25,14 @@ contract NobleDollarTest is Test {
 
     function setUp() public {
         // https://github.com/hyperlane-xyz/hyperlane-registry/blob/main/chains/ethereum/addresses.yaml
-        usdn = new NobleDollar(
-            address(0xc005dc82818d67AF737725bD4bf75435d065D239),
-            address(0x9e6B1022bE9BBF5aFd152483DAD9b88911bC8611),
-            address(0x1AB8c76BAD3829B46b738B61cC941b22bE82C16e)
+        usdn = new NobleDollar(address(0xc005dc82818d67AF737725bD4bf75435d065D239));
+        usdn.initialize(
+            address(0x9e6B1022bE9BBF5aFd152483DAD9b88911bC8611), address(0x1AB8c76BAD3829B46b738B61cC941b22bE82C16e)
         );
     }
 
-    function test_TotalSupply() public view {
+    function test_TotalSupplyAndPrincipal() public view {
         assertEq(usdn.totalSupply(), 0);
+        assertEq(usdn.totalPrincipal(), 0);
     }
 }
