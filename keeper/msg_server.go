@@ -317,7 +317,7 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 			Memo:             "",
 		})
 		if transferErr != nil {
-			k.logger.Error("unable to transfer ibc yield", "identifier", channelId, "err", err)
+			k.logger.Error("unable to transfer ibc yield", "identifier", channelId, "err", transferErr)
 
 			err = k.IncrementRetryAmount(ctx, provider, channelId, accruedYield)
 			if err != nil {
@@ -426,7 +426,7 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 			nil,
 		)
 		if transferErr != nil {
-			k.logger.Error("unable to transfer hyperlane yield", "identifier", identifier, "err", err)
+			k.logger.Error("unable to transfer hyperlane yield", "identifier", identifier, "err", transferErr)
 
 			err = k.IncrementRetryAmount(ctx, provider, identifier, accruedYield)
 			if err != nil {
