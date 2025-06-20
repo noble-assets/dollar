@@ -45,13 +45,48 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
  * @notice ERC20 Noble Dollar.
  */
 contract NobleDollar is ERC20Upgradeable, FungibleTokenRouter {
-    uint256 public index = 1e12;
+    /// @custom:storage-location erc7201:noble.storage.USDN
+    struct USDNStorage {
+        uint128 index;
+        mapping(address account => uint256) principal;
+        uint256 totalPrincipal;
+    }
+
+    // keccak256(abi.encode(uint256(keccak256("noble.storage.USDN")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant USDNStorageLocation = 0xccec1a0a356b34ea3899fbc248aeaeba5687659563a3acddccc6f1e8a5d84200;
+
+    function _getUSDNStorage() private pure returns (USDNStorage storage $) {
+        assembly {
+            $.slot := USDNStorageLocation
+        }
+    }
 
     constructor(address mailbox_) FungibleTokenRouter(1, mailbox_) {}
 
     function initialize(address hook_, address ism_) public virtual initializer {
         __ERC20_init("Noble Dollar", "USDN");
         _MailboxClient_initialize(hook_, ism_, msg.sender);
+
+        USDNStorage storage $ = _getUSDNStorage();
+        $.index = 1e12;
+    }
+
+    /// TODO: Add NatSpec.
+    function index() public view returns (uint256) {
+        USDNStorage storage $ = _getUSDNStorage();
+        return $.index;
+    }
+
+    /// TODO: Add NatSpec.
+    function totalPrincipal() public view returns (uint256) {
+        USDNStorage storage $ = _getUSDNStorage();
+        return $.totalPrincipal;
+    }
+
+    /// TODO: Add NatSpec.
+    function principalOf(address account) public view returns (uint256) {
+        USDNStorage storage $ = _getUSDNStorage();
+        return $.principal[account];
     }
 
     /// @inheritdoc ERC20Upgradeable
@@ -60,70 +95,49 @@ contract NobleDollar is ERC20Upgradeable, FungibleTokenRouter {
     }
 
     /// @inheritdoc ERC20Upgradeable
-    function totalSupply() public view override returns (uint256) {
-        ERC20Storage storage $ = super._getERC20Storage();
-        return $._totalSupply * index;
-    }
-
-    // TODO: Add NatSpec.
-    function totalPrincipal() public view returns (uint256) {
-        ERC20Storage storage $ = super._getERC20Storage();
-        return $._totalSupply;
-    }
-
-    /// @inheritdoc ERC20Upgradeable
     function balanceOf(address account) public view override(ERC20Upgradeable, TokenRouter) returns (uint256) {
-        ERC20Storage storage $ = super._getERC20Storage();
-        return $._balances[account] * index;
-    }
-
-    /// TODO: Add NatSpec.
-    function principalOf(address account) public view returns (uint256) {
-        ERC20Storage storage $ = super._getERC20Storage();
-        return $._balances[account];
+        return ERC20Upgradeable.balanceOf(account);
     }
 
     /// @inheritdoc ERC20Upgradeable
     function _update(address from, address to, uint256 value) internal virtual override {
-        uint256 principal = value / index;
+        USDNStorage storage $ = _getUSDNStorage();
 
-        ERC20Storage storage $ = super._getERC20Storage();
-        if (from == address(0)) {
-            if (to == address(this)) {
-                index = (totalSupply() + value) / totalSupply();
+        super._update(from, to, value);
 
-                // TODO(@john): Emit a rebasing event.
+        if (from == address(this)) {
+            // We don't want to perform any principal updates in the case of yield payout.
+            return;
+        }
+        if (to == address(this)) {
+            if (from == address(0)) {
+                // We don't want to perform any principal updates in the case of yield accrual.
+                $.index = uint128(super.totalSupply() / $.totalPrincipal);
 
                 return;
-            } else {
-                // Overflow check required: The rest of the code assumes that totalPrincipal never overflows
-                $._totalSupply += principal;
             }
-        } else {
-            uint256 fromPrincipal = $._balances[from];
-            if (fromPrincipal < principal) {
-                revert ERC20InsufficientBalance(from, balanceOf(from), value);
-            }
-            unchecked {
-                // Overflow not possible: principal <= fromPrincipal <= totalPrincipal.
-                $._balances[from] = fromPrincipal - principal;
-            }
+
+            // TODO: Should we block a user transfer to the contract like on Noble?
         }
 
-        if (to == address(0)) {
-            unchecked {
-                // Overflow not possible: principal <= totalPrincipal or principal <= fromPrincipal <= totalPrincipal.
-                $._totalSupply -= principal;
-            }
+        uint256 principal = ((value * 1e12) + $.index - 1) / $.index;
+
+        // We don't want to update the sender's principal in the case of issuance.
+        if (from != address(0)) {
+            $.principal[from] -= principal;
         } else {
-            unchecked {
-                // Overflow not possible: principal + toPrincipal is at most totalPrincipal, which we know fits into a uint256.
-                $._balances[to] += principal;
-            }
+            $.totalPrincipal += principal;
         }
 
-        if (from != address(0) && to != address(this)) {
-            emit Transfer(from, to, value);
+        // We don't want to update the recipient's principal in the case of withdrawal.
+        if (to != address(0)) {
+            if (from == address(0)) {
+                principal = (value * 1e12) / $.index;
+            }
+
+            $.principal[to] += principal;
+        } else {
+            $.totalPrincipal -= principal;
         }
     }
 

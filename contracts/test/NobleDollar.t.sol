@@ -17,7 +17,7 @@
  */
 pragma solidity >=0.8.0;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {NobleDollar} from "../src/NobleDollar.sol";
 
 contract NobleDollarTest is Test {
@@ -31,7 +31,8 @@ contract NobleDollarTest is Test {
         );
     }
 
-    function test_TotalSupplyAndPrincipal() public view {
+    function test_InitialValues() public view {
+        assertEq(usdn.index(), 1e12);
         assertEq(usdn.totalSupply(), 0);
         assertEq(usdn.totalPrincipal(), 0);
     }
