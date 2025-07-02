@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v2.0.1
+
+*Jul 2, 2025*
+
+This is a non-consensus breaking patch to the `v2` release line, if there are no yield recipients enabled.
+
+### BUG FIXES
+
+- Gracefully handle transfer errors when distributing external yield. ([#45](https://github.com/noble-assets/dollar/pull/45))
+
 ## v2.0.0
 
 *Jun 6, 2025*
