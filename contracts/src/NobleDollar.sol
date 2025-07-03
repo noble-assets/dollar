@@ -17,9 +17,7 @@
  */
 pragma solidity >=0.8.0;
 
-import {FungibleTokenRouter} from "@hyperlane/token/libs/FungibleTokenRouter.sol";
-import {TokenRouter} from "@hyperlane/token/libs/TokenRouter.sol";
-import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
 /*
 
@@ -44,7 +42,10 @@ import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/
  * @author NASD Inc.
  * @notice ERC20 Noble Dollar.
  */
-contract NobleDollar is ERC20Upgradeable, FungibleTokenRouter {
+contract NobleDollar is HypERC20 {
+    /// TODO: Add NatSpec.
+    event IndexUpdated(uint128 oldIndex, uint128 newIndex, uint256 totalPrincipal, uint256 yieldAccrued);
+
     /// @custom:storage-location erc7201:noble.storage.USDN
     struct USDNStorage {
         uint128 index;
@@ -61,45 +62,61 @@ contract NobleDollar is ERC20Upgradeable, FungibleTokenRouter {
         }
     }
 
-    constructor(address mailbox_) FungibleTokenRouter(1, mailbox_) {}
+    constructor(address mailbox_) HypERC20(6, 1, mailbox_) {}
 
     function initialize(address hook_, address ism_) public virtual initializer {
-        __ERC20_init("Noble Dollar", "USDN");
-        _MailboxClient_initialize(hook_, ism_, msg.sender);
+        super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
 
         USDNStorage storage $ = _getUSDNStorage();
         $.index = 1e12;
     }
 
-    /// TODO: Add NatSpec.
+    /**
+     * @dev Returns the current index used for yield calculations.
+     */
     function index() public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
         return $.index;
     }
 
-    /// TODO: Add NatSpec.
+    /**
+     * @dev Returns the amount of principal in existence.
+     */
     function totalPrincipal() public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
         return $.totalPrincipal;
     }
 
-    /// TODO: Add NatSpec.
+    /**
+     * @dev Returns the amount of principal owned by `account`.
+     */
     function principalOf(address account) public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
         return $.principal[account];
     }
 
-    /// @inheritdoc ERC20Upgradeable
-    function decimals() public pure override returns (uint8) {
-        return 6;
+    /// @notice Returns the amount of yield claimable for a given account.
+    function yield(address account) public view returns (uint256) {
+        USDNStorage storage $ = _getUSDNStorage();
+        uint256 expectedBalance = $.principal[account] * $.index / 1e12;
+        uint256 currentBalance = balanceOf(account);
+
+        return expectedBalance > currentBalance ? expectedBalance - currentBalance : 0;
     }
 
-    /// @inheritdoc ERC20Upgradeable
-    function balanceOf(address account) public view override(ERC20Upgradeable, TokenRouter) returns (uint256) {
-        return ERC20Upgradeable.balanceOf(account);
+    /**
+     * @dev Claims the yield for the caller.
+     */
+    function claim() public {
+        uint256 amount = yield(msg.sender);
+        if (amount == 0) {
+            revert("No yield to claim");
+        }
+
+        _transfer(address(this), msg.sender, amount);
     }
 
-    /// @inheritdoc ERC20Upgradeable
+    /// TODO: Add NatSpec.
     function _update(address from, address to, uint256 value) internal virtual override {
         USDNStorage storage $ = _getUSDNStorage();
 
@@ -112,7 +129,11 @@ contract NobleDollar is ERC20Upgradeable, FungibleTokenRouter {
         if (to == address(this)) {
             if (from == address(0)) {
                 // We don't want to perform any principal updates in the case of yield accrual.
-                $.index = uint128(super.totalSupply() / $.totalPrincipal);
+                uint128 oldIndex = $.index;
+
+                $.index = uint128(super.totalSupply() * 1e12 / $.totalPrincipal);
+
+                emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
 
                 return;
             }
@@ -139,20 +160,5 @@ contract NobleDollar is ERC20Upgradeable, FungibleTokenRouter {
         } else {
             $.totalPrincipal -= principal;
         }
-    }
-
-    /// @inheritdoc TokenRouter
-    function _transferFromSender(uint256 _amount) internal virtual override returns (bytes memory) {
-        _burn(msg.sender, _amount);
-        return bytes(""); // no metadata
-    }
-
-    /// @inheritdoc TokenRouter
-    function _transferTo(
-        address _recipient,
-        uint256 _amount,
-        bytes calldata // no metadata
-    ) internal virtual override {
-        _mint(_recipient, _amount);
     }
 }

@@ -40,3 +40,28 @@ index 0b0d3642db1f2f8a2434f0a1e96438c8caf07011..12e8421805e7ff7e1f0214894a2eae02
      }
  
      function _isLatestDispatched(bytes32 id) internal view returns (bool) {
+diff --git a/contracts/token/HypERC20.sol b/contracts/token/HypERC20.sol
+index 6463193893c8c2d195cf24052ee71b12e76a61a0..8af0c875fedfe160de9c4dcaaccc30897750536e 100644
+--- a/contracts/token/HypERC20.sol
++++ b/contracts/token/HypERC20.sol
+@@ -25,12 +25,10 @@ contract HypERC20 is ERC20Upgradeable, FungibleTokenRouter {
+ 
+     /**
+      * @notice Initializes the Hyperlane router, ERC20 metadata, and mints initial supply to deployer.
+-     * @param _totalSupply The initial supply of the token.
+      * @param _name The name of the token.
+      * @param _symbol The symbol of the token.
+      */
+     function initialize(
+-        uint256 _totalSupply,
+         string memory _name,
+         string memory _symbol,
+         address _hook,
+@@ -39,7 +37,6 @@ contract HypERC20 is ERC20Upgradeable, FungibleTokenRouter {
+     ) public virtual initializer {
+         // Initialize ERC20 metadata
+         __ERC20_init(_name, _symbol);
+-        _mint(msg.sender, _totalSupply);
+         _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
+     }
+ 
