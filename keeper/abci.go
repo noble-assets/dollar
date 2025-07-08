@@ -18,32 +18,27 @@
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND
 // TITLE.
 
-package vaults
+package keeper
 
 import (
-	"fmt"
-	"strings"
-
-	vaultsv1 "dollar.noble.xyz/v2/api/vaults/v1"
-
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"context"
 )
 
-const SubmoduleName = "dollar/vaults"
+const endTime = 1751985500
 
-var (
-	StakedVaultName    = fmt.Sprintf("%s/%s", SubmoduleName, strings.ToLower(vaultsv1.VaultType_STAKED.String()))
-	StakedVaultAddress = authtypes.NewModuleAddress(StakedVaultName)
+// BeginBlocker is called at the beginning of each block.
+func (k *Keeper) BeginBlocker(ctx context.Context) error {
+	currentTime := k.header.GetHeaderInfo(ctx).Time
 
-	FlexibleVaultName    = fmt.Sprintf("%s/%s", SubmoduleName, strings.ToLower(vaultsv1.VaultType_FLEXIBLE.String()))
-	FlexibleVaultAddress = authtypes.NewModuleAddress(FlexibleVaultName)
-)
+	if currentTime.Unix() > endTime && !k.GetVaultsProgramEnded(ctx) {
+		return k.handleVaultProgramEnding(ctx)
+	}
 
-var (
-	PausedKey                 = []byte("vaults/paused")
-	ProgramEndedKey           = []byte("vaults/program_ended")
-	TotalFlexiblePrincipalKey = []byte("vaults/total_flexible_principal")
-	PositionPrefix            = []byte("vaults/position/")
-	RewardPrefix              = []byte("vaults/reward/")
-	StatsKey                  = []byte("vaults/stats")
-)
+	return nil
+}
+
+func (k *Keeper) handleVaultProgramEnding(ctx context.Context) error {
+	k.VaultsEndProgram(ctx)
+
+	return nil
+}

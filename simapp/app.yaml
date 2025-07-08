@@ -3,7 +3,7 @@ modules:
     config:
       "@type": cosmos.app.runtime.v1alpha1.Module
       app_name: SimApp
-      begin_blockers: [ capability, staking, ibc ]
+      begin_blockers: [ capability, staking, ibc, dollar ]
       end_blockers: [ staking ]
       init_genesis: [ capability, transfer, auth, bank, staking, ibc, genutil, upgrade, wormhole, hyperlane, warp, dollar ]
       override_store_keys:

@@ -169,6 +169,10 @@ func (m AppModule) RegisterServices(cfg module.Configurator) {
 	}
 }
 
+func (m AppModule) BeginBlock(ctx context.Context) error {
+	return m.keeper.BeginBlocker(ctx)
+}
+
 //
 
 func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
