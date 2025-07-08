@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v2.0.2
+
+*Jul 8, 2025*
+
+This is a non-consensus breaking patch to the `v2` release line.
+
+### BUG FIXES
+
+- Correctly register `MsgSetYieldRecipient` in codecs. ([#47](https://github.com/noble-assets/dollar/pull/47))
+
 ## v2.0.1
 
 *Jul 2, 2025*
