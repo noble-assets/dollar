@@ -150,6 +150,10 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
+	return k.unlock(ctx, msg)
+}
+
+func (k *Keeper) unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
 	}
@@ -432,4 +436,83 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 		// Staked Vaults use a shared account for all users.
 		return vaults.StakedVaultName
 	}
+}
+
+func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
+	k.VaultsProgramEnded.Set(ctx, true)
+
+	k.handleVaultProgramEndUnlocks(ctx)
+
+	// Pause any further interaction with the vaults.
+	// This must be executed no matter what
+	k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
+
+	k.logger.Warn("Program Ended!")
+
+	return nil
+}
+
+func (k *Keeper) handleVaultProgramEndUnlocks(ctx context.Context) error {
+	/* k.VaultsProgramEnded.Set(ctx, true) */
+
+	// Pause any further interaction with the vaults.
+	k.logger.Warn("AAAA")
+
+	// Get all the Vaults positions.
+	positions, err := k.GetVaultsPositions(ctx)
+	if err != nil {
+		return err
+	}
+
+	k.logger.Info("Collecting Positions...")
+	// Create a mapping between the different vault types by the address and the total positions amount
+	stakedUsers := map[string]math.Int{}
+	flexibleUsers := map[string]math.Int{}
+
+	// Iterate through all the positions
+	for _, position := range positions {
+		addr, err := k.address.BytesToString(position.Address)
+		if err != nil {
+			//TODO: what to do with an invalid address? does this case even exists?
+			continue
+		}
+		if position.Vault == vaults.FLEXIBLE {
+			if _, exists := flexibleUsers[addr]; !exists {
+				flexibleUsers[addr] = position.Amount
+			} else {
+				flexibleUsers[addr] = flexibleUsers[addr].Add(position.Amount)
+			}
+		} else {
+			if _, exists := stakedUsers[addr]; !exists {
+				stakedUsers[addr] = position.Amount
+			} else {
+				stakedUsers[addr] = stakedUsers[addr].Add(position.Amount)
+			}
+		}
+	}
+
+	// First of all we remove all the Staked Vaults positions.
+	k.logger.Info("Unlocking staked vault positions...")
+	for stakedUserAddr, stakedUserTotalAmount := range stakedUsers {
+		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
+			Signer: stakedUserAddr,
+			Vault:  vaults.STAKED,
+			Amount: stakedUserTotalAmount,
+		}); err != nil {
+			k.logger.Error(err.Error())
+		}
+	}
+
+	k.logger.Info("Unlocking flexible vault positions...")
+	for flexibleUserAddr, flexibleUserTotalAmount := range flexibleUsers {
+		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
+			Signer: flexibleUserAddr,
+			Vault:  vaults.FLEXIBLE,
+			Amount: flexibleUserTotalAmount,
+		}); err != nil {
+			k.logger.Error(err.Error())
+		}
+	}
+
+	return nil
 }
