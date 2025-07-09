@@ -1,0 +1,67 @@
+diff --git a/contracts/client/MailboxClient.sol b/contracts/client/MailboxClient.sol
+index 0b0d3642db1f2f8a2434f0a1e96438c8caf07011..12e8421805e7ff7e1f0214894a2eae02653691a9 100644
+--- a/contracts/client/MailboxClient.sol
++++ b/contracts/client/MailboxClient.sol
+@@ -21,7 +21,6 @@ import {Message} from "../libs/Message.sol";
+ import {PackageVersioned} from "../PackageVersioned.sol";
+ 
+ // ============ External Imports ============
+-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+ 
+ abstract contract MailboxClient is OwnableUpgradeable, PackageVersioned {
+@@ -43,7 +42,7 @@ abstract contract MailboxClient is OwnableUpgradeable, PackageVersioned {
+     // ============ Modifiers ============
+     modifier onlyContract(address _contract) {
+         require(
+-            Address.isContract(_contract),
++            _contract.code.length > 0,
+             "MailboxClient: invalid mailbox"
+         );
+         _;
+@@ -51,7 +50,7 @@ abstract contract MailboxClient is OwnableUpgradeable, PackageVersioned {
+ 
+     modifier onlyContractOrNull(address _contract) {
+         require(
+-            Address.isContract(_contract) || _contract == address(0),
++            _contract.code.length > 0 || _contract == address(0),
+             "MailboxClient: invalid contract setting"
+         );
+         _;
+@@ -111,10 +110,9 @@ abstract contract MailboxClient is OwnableUpgradeable, PackageVersioned {
+         address __interchainSecurityModule,
+         address _owner
+     ) internal onlyInitializing {
+-        __Ownable_init();
++        __Ownable_init(_owner);
+         setHook(_hook);
+         setInterchainSecurityModule(__interchainSecurityModule);
+-        _transferOwnership(_owner);
+     }
+ 
+     function _isLatestDispatched(bytes32 id) internal view returns (bool) {
+diff --git a/contracts/token/HypERC20.sol b/contracts/token/HypERC20.sol
+index 6463193893c8c2d195cf24052ee71b12e76a61a0..8af0c875fedfe160de9c4dcaaccc30897750536e 100644
+--- a/contracts/token/HypERC20.sol
++++ b/contracts/token/HypERC20.sol
+@@ -25,12 +25,10 @@ contract HypERC20 is ERC20Upgradeable, FungibleTokenRouter {
+ 
+     /**
+      * @notice Initializes the Hyperlane router, ERC20 metadata, and mints initial supply to deployer.
+-     * @param _totalSupply The initial supply of the token.
+      * @param _name The name of the token.
+      * @param _symbol The symbol of the token.
+      */
+     function initialize(
+-        uint256 _totalSupply,
+         string memory _name,
+         string memory _symbol,
+         address _hook,
+@@ -39,7 +37,6 @@ contract HypERC20 is ERC20Upgradeable, FungibleTokenRouter {
+     ) public virtual initializer {
+         // Initialize ERC20 metadata
+         __ERC20_init(_name, _symbol);
+-        _mint(msg.sender, _totalSupply);
+         _MailboxClient_initialize(_hook, _interchainSecurityModule, _owner);
+     }
+ 
