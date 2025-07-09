@@ -39,12 +39,31 @@ import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
 /**
  * @title  NobleDollar
- * @author NASD Inc.
+ * @author John Letey <john@noble.xyz>
  * @notice ERC20 Noble Dollar.
  */
 contract NobleDollar is HypERC20 {
-    /// TODO: Add NatSpec.
+    /// @notice Thrown when a user attempts to claim yield but has no claimable yield available.
+    error NoClaimableYield();
+
+    /// @notice Thrown when an invalid transfer to the contract is attempted.
+    error InvalidTransfer();
+
+    /**
+     * @notice Emitted when the index is updated due to yield accrual.
+     * @param oldIndex The previous index value.
+     * @param newIndex The new index value.
+     * @param totalPrincipal The total principal amount at the time of update.
+     * @param yieldAccrued The amount of yield that was accrued.
+     */
     event IndexUpdated(uint128 oldIndex, uint128 newIndex, uint256 totalPrincipal, uint256 yieldAccrued);
+
+    /**
+     * @notice Emitted when yield is claimed by an account.
+     * @param account The account that claimed the yield.
+     * @param amount The amount of yield claimed.
+     */
+    event YieldClaimed(address indexed account, uint256 amount);
 
     /// @custom:storage-location erc7201:noble.storage.USDN
     struct USDNStorage {
@@ -71,31 +90,36 @@ contract NobleDollar is HypERC20 {
         $.index = 1e12;
     }
 
-    /**
-     * @dev Returns the current index used for yield calculations.
-     */
+    /// @dev Returns the current index used for yield calculations.
     function index() public view returns (uint256) {
-        USDNStorage storage $ = _getUSDNStorage();
-        return $.index;
+        return _getUSDNStorage().index;
     }
 
-    /**
-     * @dev Returns the amount of principal in existence.
-     */
+    /// @dev Returns the amount of principal in existence.
     function totalPrincipal() public view returns (uint256) {
-        USDNStorage storage $ = _getUSDNStorage();
-        return $.totalPrincipal;
+        return _getUSDNStorage().totalPrincipal;
+    }
+
+    /// @dev Returns the amount of principal owned for a given account.
+    function principalOf(address account) public view returns (uint256) {
+        return _getUSDNStorage().principal[account];
     }
 
     /**
-     * @dev Returns the amount of principal owned by `account`.
+     * @notice Returns the amount of yield claimable for a given account.
+     * @dev Calculates claimable yield by comparing the expected balance (principal * current index)
+     *      with the actual token balance. The yield represents the difference between what the
+     *      account should have based on yield accrual and what they currently hold.
+     *
+     *      Formula: max(0, (principal * index / 1e12) - currentBalance)
+     *
+     *      Returns 0 if the current balance is greater than or equal to the expected balance,
+     *      which can happen if the account has already claimed their yield or if no yield
+     *      has accrued since their last interaction.
+     *
+     * @param account The address to check yield for.
+     * @return The amount of yield claimable by the account.
      */
-    function principalOf(address account) public view returns (uint256) {
-        USDNStorage storage $ = _getUSDNStorage();
-        return $.principal[account];
-    }
-
-    /// @notice Returns the amount of yield claimable for a given account.
     function yield(address account) public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
         uint256 expectedBalance = $.principal[account] * $.index / 1e12;
@@ -105,18 +129,43 @@ contract NobleDollar is HypERC20 {
     }
 
     /**
-     * @dev Claims the yield for the caller.
+     * @notice Claims all available yield for the caller.
+     * @dev Calculates the claimable yield based on the difference between the expected balance
+     *      (principal * current index) and the actual token balance. Transfers the yield amount
+     *      from the contract to the caller and emits a YieldClaimed event.
+     * @custom:throws NoClaimableYield if the caller has no yield available to claim.
+     * @custom:emits YieldClaimed when yield is successfully claimed.
      */
     function claim() public {
         uint256 amount = yield(msg.sender);
         if (amount == 0) {
-            revert("No yield to claim");
+            revert NoClaimableYield();
         }
 
         _transfer(address(this), msg.sender, amount);
+
+        emit YieldClaimed(msg.sender, amount);
     }
 
-    /// TODO: Add NatSpec.
+    /**
+     * @notice Internal function that handles token transfers while managing principal accounting.
+     * @dev Overrides the base ERC20 _update function to implement yield-bearing token mechanics.
+     *      This function manages principal balances and index updates for different transfer scenarios:
+     *
+     *      1. Yield payout (from contract): No principal updates needed
+     *      2. Yield accrual (to contract from zero address): Updates index based on new yield
+     *      3. Regular transfers: Updates principal balances for both sender and recipient
+     *      4. Minting (from zero address): Increases recipient's principal and total principal
+     *      5. Burning (to zero address): Decreases sender's principal and total principal
+     *
+     * @param from The address tokens are transferred from (zero address for minting)
+     * @param to The address tokens are transferred to (zero address for burning)
+     * @param value The amount of tokens being transferred
+     *
+     * @custom:throws InvalidTransfer if attempting to transfer to the contract from a non-zero address
+     * @custom:emits IndexUpdated when yield is accrued and the index is updated
+     * @custom:security Principal is calculated using ceiling division to prevent rounding errors
+     */
     function _update(address from, address to, uint256 value) internal virtual override {
         USDNStorage storage $ = _getUSDNStorage();
 
@@ -131,14 +180,15 @@ contract NobleDollar is HypERC20 {
                 // We don't want to perform any principal updates in the case of yield accrual.
                 uint128 oldIndex = $.index;
 
-                $.index = uint128(super.totalSupply() * 1e12 / $.totalPrincipal);
+                $.index = uint128(totalSupply() * 1e12 / $.totalPrincipal);
 
                 emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
 
                 return;
             }
 
-            // TODO: Should we block a user transfer to the contract like on Noble?
+            // We don't want to allow any other transfers to the yield account.
+            revert InvalidTransfer();
         }
 
         uint256 principal = ((value * 1e12) + $.index - 1) / $.index;

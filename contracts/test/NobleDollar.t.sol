@@ -66,10 +66,15 @@ contract NobleDollarTest is Test {
         // ASSERT: The transfer was successful, USER1 has a balance of 1M $USDN with a principal of 1M.
         assertEq(mintSuccess, true);
 
+        assertEq(usdn.index(), 1e12);
         assertEq(usdn.totalSupply(), 1e12);
         assertEq(usdn.totalPrincipal(), 1e12);
         assertEq(usdn.balanceOf(USER1), 1e12);
         assertEq(usdn.principalOf(USER1), 1e12);
+        assertEq(usdn.yield(USER1), 0);
+        assertEq(usdn.balanceOf(USER2), 0);
+        assertEq(usdn.principalOf(USER2), 0);
+        assertEq(usdn.yield(USER2), 0);
 
         // ACT: Yield accrual of 111.506849 $USDN, 1 day's worth of 4.07% yield.
         bytes memory yieldPayload = abi.encodeWithSignature(
@@ -82,20 +87,47 @@ contract NobleDollarTest is Test {
         // ASSERT: The yield accrual was successful, USER1 has 111.506849 $USDN of claimable yield.
         assertEq(yieldSuccess, true);
 
+        assertEq(usdn.index(), 1000111506849);
+        assertEq(usdn.totalSupply(), 1000111506849);
+        assertEq(usdn.totalPrincipal(), 1e12);
+        assertEq(usdn.balanceOf(USER1), 1000000000000);
+        assertEq(usdn.principalOf(USER1), 1000000000000);
         assertEq(usdn.yield(USER1), 111506849);
+        assertEq(usdn.balanceOf(USER2), 0);
+        assertEq(usdn.principalOf(USER2), 0);
+        assertEq(usdn.yield(USER2), 0);
 
         // ACT: Transfer of 500k $USDN from USER1 to USER2.
         vm.prank(USER1);
         usdn.transfer(USER2, 5e11);
 
-        // ASSERT: The transfer was successful, TODO ...
+        // ASSERT: The transfer was successful.
+        assertEq(usdn.index(), 1000111506849);
+        assertEq(usdn.totalSupply(), 1000111506849);
         assertEq(usdn.totalPrincipal(), 1e12);
         assertEq(usdn.balanceOf(USER1), 5e11);
         assertEq(usdn.principalOf(USER1), 500055747208);
+        assertEq(usdn.yield(USER1), 111506848);
         assertEq(usdn.balanceOf(USER2), 5e11);
         assertEq(usdn.principalOf(USER2), 499944252792);
+        assertEq(usdn.yield(USER2), 0);
 
-        // ACT: Yield accrual of 55.753424 $USDN, 1 day's worth of 4.07% yield.
+        // ACT: Claim yield for USER1.
+        vm.prank(USER1);
+        usdn.claim();
+
+        // ASSERT: The yield was claimed.
+        assertEq(usdn.index(), 1000111506849);
+        assertEq(usdn.totalSupply(), 1000111506849);
+        assertEq(usdn.totalPrincipal(), 1e12);
+        assertEq(usdn.balanceOf(USER1), 500111506848);
+        assertEq(usdn.principalOf(USER1), 500055747208);
+        assertEq(usdn.yield(USER1), 0);
+        assertEq(usdn.balanceOf(USER2), 5e11);
+        assertEq(usdn.principalOf(USER2), 499944252792);
+        assertEq(usdn.yield(USER2), 0);
+
+        // ACT: Yield accrual of 111.506849 $USDN, 1 day's worth of 4.07% yield.
         bytes memory yieldPayload2 = abi.encodeWithSignature(
             "process(bytes,bytes)",
             0x0,
@@ -103,10 +135,17 @@ contract NobleDollarTest is Test {
         );
         (bool yieldSuccess2,) = MAILBOX.call(yieldPayload2);
 
-        // ASSERT: The yield accrual was successful, USER1 has 55.753424 $USDN of claimable yield.
+        // ASSERT: The yield accrual was successful.
         assertEq(yieldSuccess2, true);
 
-        assertEq(usdn.yield(USER1), 167266489);
+        assertEq(usdn.index(), 1000223013698);
+        assertEq(usdn.totalSupply(), 1000223013698);
+        assertEq(usdn.totalPrincipal(), 1e12);
+        assertEq(usdn.balanceOf(USER1), 500111506848);
+        assertEq(usdn.principalOf(USER1), 500055747208);
+        assertEq(usdn.yield(USER1), 55759641);
+        assertEq(usdn.balanceOf(USER2), 5e11);
+        assertEq(usdn.principalOf(USER2), 499944252792);
         assertEq(usdn.yield(USER2), 55747208);
     }
 }
