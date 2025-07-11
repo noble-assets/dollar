@@ -20,4 +20,7 @@ message Module {
 
   // vaults_minimum_unlock defines the minimum required amount to unlock from a Noble Dollar Vault.
   int64 vaults_minimum_unlock = 4;
+
+  // vaults_end_program_timestamp defines the timestamp in seconds of when the Vaults program is going to end.
+  int64 vaults_end_program_timestamp = 5;
 }

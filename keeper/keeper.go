@@ -48,10 +48,11 @@ import (
 )
 
 type Keeper struct {
-	denom               string
-	authority           string
-	vaultsMinimumLock   int64
-	vaultsMinimumUnlock int64
+	denom                     string
+	authority                 string
+	vaultsMinimumLock         int64
+	vaultsMinimumUnlock       int64
+	vaultsEndProgramTimestmap int64
 
 	cdc   codec.Codec
 	store store.KVStoreService
@@ -94,6 +95,7 @@ func NewKeeper(
 	authority string,
 	vaultsMinimumLock int64,
 	vaultsMinimumUnlock int64,
+	vaultsEndProgramTimestmap int64,
 	cdc codec.Codec,
 	store store.KVStoreService,
 	logger log.Logger,
@@ -121,10 +123,11 @@ func NewKeeper(
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
-		denom:               denom,
-		authority:           authority,
-		vaultsMinimumLock:   vaultsMinimumLock,
-		vaultsMinimumUnlock: vaultsMinimumUnlock,
+		denom:                     denom,
+		authority:                 authority,
+		vaultsMinimumLock:         vaultsMinimumLock,
+		vaultsMinimumUnlock:       vaultsMinimumUnlock,
+		vaultsEndProgramTimestmap: vaultsEndProgramTimestmap,
 
 		cdc:   cdc,
 		store: store,

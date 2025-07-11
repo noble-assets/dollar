@@ -415,6 +415,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		authority.String(),
 		in.Config.VaultsMinimumLock,
 		in.Config.VaultsMinimumUnlock,
+		in.Config.VaultsEndProgramTimestamp,
 		in.Cdc,
 		in.StoreService,
 		in.Logger,

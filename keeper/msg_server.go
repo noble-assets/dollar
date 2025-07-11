@@ -35,7 +35,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/v2"
+	v2 "dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 
@@ -160,36 +160,11 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		}
 	}
 
-	// Claim the yield of the Flexible vault.
-	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
-	if err != nil {
-		return err
-	}
-
-	// Claim the yield of the Staked vault and redirect it to the Flexible vault.
-	stakedYield, err := k.claimStakedVaultYield(ctx)
-	if err != nil {
-		return err
-	}
-
-	// get the current Flexible total principal.
-	totalFlexiblePrincipal := math.ZeroInt()
-	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
-		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
-		if err != nil {
+	// Handle the Vaults Yield logic only if the Program is not yet ended.
+	if !k.IsVaultsProgramEnded(ctx) {
+		if err := k.handleVaultsYield(ctx, index); err != nil {
 			return err
 		}
-		totalFlexiblePrincipal = totalFlexiblePrincipal.Add(current)
-	}
-
-	// Register the new Rewards record.
-	rewards := stakedYield.Add(flexibleYield)
-	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
-		Index:   index,
-		Total:   totalFlexiblePrincipal,
-		Rewards: rewards,
-	}); err != nil {
-		return err
 	}
 
 	// Claim and transfer the yield of ibc external chains.
@@ -442,6 +417,42 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		if transferErr == nil {
 			k.logger.Info("claimed and transferred hyperlane yield", "amount", accruedYield, "identifier", identifier)
 		}
+	}
+
+	return nil
+}
+
+func (k *Keeper) handleVaultsYield(ctx context.Context, index int64) error {
+	// Claim the yield of the Flexible vault.
+	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
+	if err != nil {
+		return err
+	}
+
+	// Claim the yield of the Staked vault and redirect it to the Flexible vault.
+	stakedYield, err := k.claimStakedVaultYield(ctx)
+	if err != nil {
+		return err
+	}
+
+	// get the current Flexible total principal.
+	totalFlexiblePrincipal := math.ZeroInt()
+	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
+		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
+		if err != nil {
+			return err
+		}
+		totalFlexiblePrincipal = totalFlexiblePrincipal.Add(current)
+	}
+
+	// Register the new Rewards record.
+	rewards := stakedYield.Add(flexibleYield)
+	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
+		Index:   index,
+		Total:   totalFlexiblePrincipal,
+		Rewards: rewards,
+	}); err != nil {
+		return err
 	}
 
 	return nil
