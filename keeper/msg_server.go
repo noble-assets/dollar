@@ -35,7 +35,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoiface"
 
 	"dollar.noble.xyz/v2/types"
-	v2 "dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 
