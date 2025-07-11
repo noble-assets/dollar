@@ -1890,3 +1890,143 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 		},
 	}, rewards)
 }
+
+func TestVaultsProgramEnd(t *testing.T) {
+	account := mocks.AccountKeeper{
+		Accounts: make(map[string]sdk.AccountI),
+	}
+	bank := mocks.BankKeeper{
+		Balances: make(map[string]sdk.Coins),
+	}
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	bank.Restriction = k.SendRestrictionFn
+	k.SetBankKeeper(bank)
+
+	vaultsServer := keeper.NewVaultsMsgServer(k)
+	vaultsQueryServer := keeper.NewVaultsQueryServer(k)
+	bob, alice := utils.TestAccount(), utils.TestAccount()
+
+	// ARRANGE: Set the default index to 1.01 .
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
+	_ = k.UpdateIndex(ctx, 1.01e12)
+
+	// ARRANGE: Bob mints 1000 USDN.
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
+
+	// ACT: Bob deposits 1000 USDN into the Staked Vault.
+	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1000 * ONE),
+	})
+	assert.NoError(t, err)
+
+	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC)})
+	_ = k.UpdateIndex(ctx, 1.1e12)
+
+	// ARRANGE: Bob mints 1000 USDN.
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(1000*ONE), nil)
+
+	// ACT: Bob deposits 1000 USDN into the Flexible Vault.
+	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
+	})
+	assert.NoError(t, err)
+
+	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
+	_ = k.UpdateIndex(ctx, 1.21e12)
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 2, 0, 0, 0, 0, time.UTC)})
+
+	// ARRANGE: Alice mints 9000 USDN.
+	_ = k.Mint(ctx, alice.Bytes, math.NewInt(9000*ONE), nil)
+
+	// ACT: Alice deposits 9000 USDN into the Flexible Vault.
+	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: alice.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(9000 * ONE),
+	})
+	assert.NoError(t, err)
+
+	// ARRANGE: Increase the index from 1.21 to 1.33 (~10%).
+	_ = k.UpdateIndex(ctx, 1.33e12)
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 3, 0, 0, 0, 0, time.UTC)})
+
+	// ACT: Bob withdraws 1000 USDN from the Flexible Vault.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1000 * ONE),
+	})
+	assert.NoError(t, err)
+
+	// ARRANGE: Vaults Program Ends!
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2031, 1, 3, 0, 0, 0, 0, time.UTC)})
+
+	// ACT: Trigger the BeginBlocker execution.
+	k.BeginBlocker(ctx)
+
+	// ASSERT: Bob balance is expected be as in the initial state + standard yield + boosted yield + staked yield. (1000/1,1*1,33)[yield] + 110[rewards] + 1000= ~2318
+	assert.Equal(t, math.NewInt(2318001800), bank.Balances[bob.Address].AmountOf("uusdn"))
+
+	// ASSERT: Alice balance is expected be as in the initial state + standard yield + boosted yield. (9000/1,21*1,33)[yield] + 0[rewards] = ~ 9892
+	assert.Equal(t, math.NewInt(9892561983), bank.Balances[alice.Address].AmountOf("uusdn"))
+
+	// ASSERT: Matching Alice's Positions state.
+	alicePositions, err := k.GetVaultsPositionsByProvider(ctx, alice.Bytes)
+	assert.NoError(t, err)
+	assert.Equal(t, 0, len(alicePositions))
+
+	// ASSERT: Matching Bob's Positions state.
+	bobPositions, err := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
+	assert.NoError(t, err)
+	assert.Equal(t, 0, len(bobPositions))
+
+	// ASSERT: Matching Vaults Stats state.
+	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
+	assert.Equal(t, uint64(0), stats.StakedTotalUsers)
+	assert.Equal(t, uint64(0), stats.FlexibleTotalUsers)
+
+	// ACT: Bob attempts to lock 1 USDN in the Flexible Vault.
+	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1 * ONE),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "lock is paused: action is paused", err.Error())
+
+	// ACT: Bob attempts to lock 1 USDN in the Staked Vault.
+	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1 * ONE),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "lock is paused: action is paused", err.Error())
+
+	// ACT: Bob attempts to withdraw 1 USDN from the Flexible Vault.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_FLEXIBLE),
+		Amount: math.NewInt(1 * ONE),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "unlock is paused: action is paused", err.Error())
+
+	// ACT: Bob attempts to withdraw 1 USDN from the Staked Vault.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(1 * ONE),
+	})
+	assert.Error(t, err)
+	assert.Equal(t, "unlock is paused: action is paused", err.Error())
+
+	// ARRANGE: Increase the index.
+	err = k.UpdateIndex(ctx, 1.4e12)
+	assert.NoError(t, err)
+}
