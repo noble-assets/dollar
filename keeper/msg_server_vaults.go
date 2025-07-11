@@ -438,42 +438,24 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 	}
 }
 
+// VaultsEndProgram handles the logic to close the Vaults program, unlocking all user positions.
 func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
-	k.VaultsProgramEnded.Set(ctx, true)
-
-	k.handleVaultProgramEndUnlocks(ctx)
-
-	// Pause any further interaction with the vaults.
-	// This must be executed no matter what
-	k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
-
-	k.logger.Warn("Program Ended!")
-
-	return nil
-}
-
-func (k *Keeper) handleVaultProgramEndUnlocks(ctx context.Context) error {
-	/* k.VaultsProgramEnded.Set(ctx, true) */
-
-	// Pause any further interaction with the vaults.
-	k.logger.Warn("AAAA")
-
 	// Get all the Vaults positions.
 	positions, err := k.GetVaultsPositions(ctx)
 	if err != nil {
 		return err
 	}
 
-	k.logger.Info("Collecting Positions...")
-	// Create a mapping between the different vault types by the address and the total positions amount
+	// Create a mapping between the different vault types by address and the total positions amount.
 	stakedUsers := map[string]math.Int{}
 	flexibleUsers := map[string]math.Int{}
 
-	// Iterate through all the positions
+	// Iterate through all the positions.
+	k.logger.Info("Collecting Positions...")
 	for _, position := range positions {
 		addr, err := k.address.BytesToString(position.Address)
 		if err != nil {
-			//TODO: what to do with an invalid address? does this case even exists?
+			k.logger.Warn("Invalid address encountered: " + err.Error())
 			continue
 		}
 		if position.Vault == vaults.FLEXIBLE {
@@ -491,28 +473,37 @@ func (k *Keeper) handleVaultProgramEndUnlocks(ctx context.Context) error {
 		}
 	}
 
-	// First of all we remove all the Staked Vaults positions.
-	k.logger.Info("Unlocking staked vault positions...")
+	// First, unlock all the Staked Vault positions.
+	k.logger.Info(fmt.Sprintf("Unlocking %d staked vault positions...", len(stakedUsers)))
+	var stakedUsersProcessed int
 	for stakedUserAddr, stakedUserTotalAmount := range stakedUsers {
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
 			Signer: stakedUserAddr,
 			Vault:  vaults.STAKED,
 			Amount: stakedUserTotalAmount,
 		}); err != nil {
-			k.logger.Error(err.Error())
+			k.logger.Error(fmt.Sprintf("Failed to unlock staked vault position for %s: %v", stakedUserAddr, err))
+			continue
 		}
+		stakedUsersProcessed += 1
 	}
+	k.logger.Info(fmt.Sprintf("Unlocked %d/%d staked vault positions!", len(stakedUsers), stakedUsersProcessed))
 
-	k.logger.Info("Unlocking flexible vault positions...")
+	// Then, unlock all the Flexible Vault positions.
+	k.logger.Info(fmt.Sprintf("Unlocking %d flexible vault positions...", len(flexibleUsers)))
+	var flexibleUsersProcessed int
 	for flexibleUserAddr, flexibleUserTotalAmount := range flexibleUsers {
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
 			Signer: flexibleUserAddr,
 			Vault:  vaults.FLEXIBLE,
 			Amount: flexibleUserTotalAmount,
 		}); err != nil {
-			k.logger.Error(err.Error())
+			k.logger.Error(fmt.Sprintf("Failed to unlock flexible vault position for %s: %v", flexibleUserAddr, err))
+			continue
 		}
+		flexibleUsersProcessed += 1
 	}
+	k.logger.Info(fmt.Sprintf("Unlocked %d/%d flexible vault positions!", len(flexibleUsers), flexibleUsersProcessed))
 
 	return nil
 }
