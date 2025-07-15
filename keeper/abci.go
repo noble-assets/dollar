@@ -23,33 +23,34 @@ package keeper
 import (
 	"context"
 
-	"dollar.noble.xyz/v2/types/vaults"
-
 	"github.com/cosmos/cosmos-sdk/types"
+
+	"dollar.noble.xyz/v2/types/vaults"
 )
 
 // BeginBlocker is called at the beginning of each block.
 func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	defer func() {
 		if r := recover(); r != nil {
-			k.logger.Error("recovered from x/dollar BeginBlocker panic handling the program end", r)
+			k.logger.Error("recovered from x/dollar BeginBlocker panic handling the vaults program end", "err", r)
 			return
 		}
 	}()
 
 	// If the current time exceeds EndTime and the program hasn't ended, handle it.
-	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsEndProgramTimestmap && !k.IsVaultsProgramEnded(ctx) {
+	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsEndProgramTimestamp && !k.IsVaultsProgramEnded(ctx) {
 		defer func() {
 			// No matter the result of the execution, the program must be marked as completed
 			// and any further interaction with the vaults module blocked.
 			k.VaultsProgramEnded.Set(ctx, true)
 			k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
 		}()
+
 		// Create a cached Context for the execution.
 		cacheCtx, commit := types.UnwrapSDKContext(ctx).CacheContext()
 
 		if err := k.VaultsEndProgram(cacheCtx); err != nil {
-			k.logger.Error("error executing the Vaults end program logic", err)
+			k.logger.Error("failed to execute vaults end program logic", "err", err)
 			return err
 		}
 

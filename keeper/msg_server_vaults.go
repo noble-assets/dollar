@@ -438,9 +438,9 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 	}
 }
 
-// VaultsEndProgram handles the logic to close the Vaults program, unlocking all user positions.
+// VaultsEndProgram handles the logic to end the vaults program, unlocking all user positions.
 func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
-	// Get all the Vaults positions.
+	// Get all the vaults positions.
 	positions, err := k.GetVaultsPositions(ctx)
 	if err != nil {
 		return err
@@ -451,11 +451,11 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 	flexibleUsers := map[string]math.Int{}
 
 	// Iterate through all the positions.
-	k.logger.Info("Collecting Positions...")
+	k.logger.Info("collecting Positions...")
 	for _, position := range positions {
 		addr, err := k.address.BytesToString(position.Address)
 		if err != nil {
-			k.logger.Warn("Invalid address encountered: " + err.Error())
+			k.logger.Warn("invalid address encountered: " + err.Error())
 			continue
 		}
 		if position.Vault == vaults.FLEXIBLE {
@@ -474,7 +474,7 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 	}
 
 	// First, unlock all the Staked Vault positions.
-	k.logger.Info(fmt.Sprintf("Unlocking %d staked vault positions...", len(stakedUsers)))
+	k.logger.Info(fmt.Sprintf("unlocking %d staked vault positions...", len(stakedUsers)))
 	var stakedUsersProcessed int
 	for stakedUserAddr, stakedUserTotalAmount := range stakedUsers {
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
@@ -482,15 +482,15 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 			Vault:  vaults.STAKED,
 			Amount: stakedUserTotalAmount,
 		}); err != nil {
-			k.logger.Error(fmt.Sprintf("Failed to unlock staked vault position for %s: %v", stakedUserAddr, err))
+			k.logger.Error(fmt.Sprintf("failed to unlock staked vault position for %s: %v", stakedUserAddr, err))
 			continue
 		}
 		stakedUsersProcessed += 1
 	}
-	k.logger.Info(fmt.Sprintf("Unlocked %d/%d staked vault positions!", len(stakedUsers), stakedUsersProcessed))
+	k.logger.Info(fmt.Sprintf("unlocked %d/%d staked vault positions!", len(stakedUsers), stakedUsersProcessed))
 
 	// Then, unlock all the Flexible Vault positions.
-	k.logger.Info(fmt.Sprintf("Unlocking %d flexible vault positions...", len(flexibleUsers)))
+	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions...", len(flexibleUsers)))
 	var flexibleUsersProcessed int
 	for flexibleUserAddr, flexibleUserTotalAmount := range flexibleUsers {
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
@@ -498,12 +498,12 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 			Vault:  vaults.FLEXIBLE,
 			Amount: flexibleUserTotalAmount,
 		}); err != nil {
-			k.logger.Error(fmt.Sprintf("Failed to unlock flexible vault position for %s: %v", flexibleUserAddr, err))
+			k.logger.Error(fmt.Sprintf("failed to unlock flexible vault position for %s: %v", flexibleUserAddr, err))
 			continue
 		}
 		flexibleUsersProcessed += 1
 	}
-	k.logger.Info(fmt.Sprintf("Unlocked %d/%d flexible vault positions!", len(flexibleUsers), flexibleUsersProcessed))
+	k.logger.Info(fmt.Sprintf("unlocked %d/%d flexible vault positions!", len(flexibleUsers), flexibleUsersProcessed))
 
 	return nil
 }

@@ -52,7 +52,7 @@ type Keeper struct {
 	authority                 string
 	vaultsMinimumLock         int64
 	vaultsMinimumUnlock       int64
-	vaultsEndProgramTimestmap int64
+	vaultsEndProgramTimestamp int64
 
 	cdc   codec.Codec
 	store store.KVStoreService
@@ -95,7 +95,7 @@ func NewKeeper(
 	authority string,
 	vaultsMinimumLock int64,
 	vaultsMinimumUnlock int64,
-	vaultsEndProgramTimestmap int64,
+	vaultsEndProgramTimestamp int64,
 	cdc codec.Codec,
 	store store.KVStoreService,
 	logger log.Logger,
@@ -127,7 +127,7 @@ func NewKeeper(
 		authority:                 authority,
 		vaultsMinimumLock:         vaultsMinimumLock,
 		vaultsMinimumUnlock:       vaultsMinimumUnlock,
-		vaultsEndProgramTimestmap: vaultsEndProgramTimestmap,
+		vaultsEndProgramTimestamp: vaultsEndProgramTimestamp,
 
 		cdc:   cdc,
 		store: store,

@@ -669,7 +669,7 @@ type Module struct {
 	VaultsMinimumLock int64 `protobuf:"varint,3,opt,name=vaults_minimum_lock,json=vaultsMinimumLock,proto3" json:"vaults_minimum_lock,omitempty"`
 	// vaults_minimum_unlock defines the minimum required amount to unlock from a Noble Dollar Vault.
 	VaultsMinimumUnlock int64 `protobuf:"varint,4,opt,name=vaults_minimum_unlock,json=vaultsMinimumUnlock,proto3" json:"vaults_minimum_unlock,omitempty"`
-	// vaults_end_program_timestamp defines the timestamp in seconds of when the Vaults program is going to end.
+	// vaults_end_program_timestamp defines the timestamp in seconds when the vaults program ends.
 	VaultsEndProgramTimestamp int64 `protobuf:"varint,5,opt,name=vaults_end_program_timestamp,json=vaultsEndProgramTimestamp,proto3" json:"vaults_end_program_timestamp,omitempty"`
 }
 

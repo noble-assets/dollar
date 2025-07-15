@@ -83,7 +83,7 @@ func (k *Keeper) GetVaultsPaused(ctx context.Context) vaults.PausedType {
 	return vaults.PausedType(value)
 }
 
-// IsVaultsProgramEnded is a utility  that return if the Vault program ended.
+// IsVaultsProgramEnded is a utility that returns if the vaults program has ended.
 func (k *Keeper) IsVaultsProgramEnded(ctx context.Context) bool {
 	ended, _ := k.VaultsProgramEnded.Get(ctx)
 	return ended
