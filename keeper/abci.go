@@ -49,7 +49,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		// Create a cached Context for the execution.
 		cacheCtx, commit := types.UnwrapSDKContext(ctx).CacheContext()
 
-		if err := k.VaultsEndProgram(cacheCtx); err != nil {
+		if err := k.endVaultsProgram(cacheCtx); err != nil {
 			k.logger.Error("failed to execute vaults end program logic", "err", err)
 			return err
 		}

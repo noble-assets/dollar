@@ -438,8 +438,8 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 	}
 }
 
-// VaultsEndProgram handles the logic to end the vaults program, unlocking all user positions.
-func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
+// endVaultsProgram handles the logic to end the vaults program, unlocking all user positions and blocking any interaction within the module.
+func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 	// Get all the vaults positions.
 	positions, err := k.GetVaultsPositions(ctx)
 	if err != nil {
@@ -487,7 +487,7 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 		}
 		stakedUsersProcessed += 1
 	}
-	k.logger.Info(fmt.Sprintf("unlocked %d/%d staked vault positions!", len(stakedUsers), stakedUsersProcessed))
+	k.logger.Info(fmt.Sprintf("unlocked %d/%d staked vault positions!", stakedUsersProcessed, len(stakedUsers)))
 
 	// Then, unlock all the Flexible Vault positions.
 	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions...", len(flexibleUsers)))
@@ -503,7 +503,7 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 		}
 		flexibleUsersProcessed += 1
 	}
-	k.logger.Info(fmt.Sprintf("unlocked %d/%d flexible vault positions!", len(flexibleUsers), flexibleUsersProcessed))
+	k.logger.Info(fmt.Sprintf("unlocked %d/%d flexible vault positions!", flexibleUsersProcessed, len(flexibleUsers)))
 
 	return nil
 }
