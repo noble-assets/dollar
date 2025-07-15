@@ -160,7 +160,7 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		}
 	}
 
-	// Handle the Vaults Yield logic only if the Program is not yet ended.
+	// Handle the vaults yield logic only if the program is not yet ended.
 	if !k.IsVaultsProgramEnded(ctx) {
 		if err := k.handleVaultsYield(ctx, index); err != nil {
 			return err

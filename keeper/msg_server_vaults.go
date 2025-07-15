@@ -475,7 +475,7 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 
 	// First, unlock all the Staked Vault positions.
 	k.logger.Info(fmt.Sprintf("unlocking %d staked vault positions...", len(stakedUsers)))
-	var stakedUsersProcessed int
+	stakedUsersProcessed := 0
 	for stakedUserAddr, stakedUserTotalAmount := range stakedUsers {
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
 			Signer: stakedUserAddr,
@@ -491,7 +491,7 @@ func (k *Keeper) VaultsEndProgram(ctx context.Context) error {
 
 	// Then, unlock all the Flexible Vault positions.
 	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions...", len(flexibleUsers)))
-	var flexibleUsersProcessed int
+	flexibleUsersProcessed := 0
 	for flexibleUserAddr, flexibleUserTotalAmount := range flexibleUsers {
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
 			Signer: flexibleUserAddr,
