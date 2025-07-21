@@ -23,6 +23,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 
 	"cosmossdk.io/collections"
@@ -150,14 +151,14 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
-	return k.unlock(ctx, msg)
-}
-
-func (k *Keeper) unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
 	}
 
+	return k.unlock(ctx, msg)
+}
+
+func (k *Keeper) unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
 	// Ensure that the signer is a valid address.
 	addr, err := k.address.StringToBytes(msg.Signer)
 	if err != nil {
@@ -448,7 +449,10 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 
 	// Create a mapping between the different vault types by address and the total positions amount.
 	stakedUsers := map[string]math.Int{}
+	var stakedUsersAddress []string
+
 	flexibleUsers := map[string]math.Int{}
+	var flexibleUsersAddress []string
 
 	// Iterate through all the positions.
 	k.logger.Info("collecting Positions...")
@@ -458,25 +462,33 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 			k.logger.Warn("invalid address encountered: " + err.Error())
 			continue
 		}
-		if position.Vault == vaults.FLEXIBLE {
+
+		switch position.Vault {
+		case vaults.FLEXIBLE:
 			if _, exists := flexibleUsers[addr]; !exists {
 				flexibleUsers[addr] = position.Amount
+				flexibleUsersAddress = append(flexibleUsersAddress, addr)
 			} else {
 				flexibleUsers[addr] = flexibleUsers[addr].Add(position.Amount)
 			}
-		} else {
+		case vaults.STAKED:
 			if _, exists := stakedUsers[addr]; !exists {
 				stakedUsers[addr] = position.Amount
+				stakedUsersAddress = append(stakedUsersAddress, addr)
 			} else {
 				stakedUsers[addr] = stakedUsers[addr].Add(position.Amount)
 			}
 		}
 	}
 
+	sort.Strings(stakedUsersAddress)
+	sort.Strings(flexibleUsersAddress)
+
 	// First, unlock all the Staked Vault positions.
 	k.logger.Info(fmt.Sprintf("unlocking %d staked vault positions...", len(stakedUsers)))
 	stakedUsersProcessed := 0
-	for stakedUserAddr, stakedUserTotalAmount := range stakedUsers {
+	for _, stakedUserAddr := range stakedUsersAddress {
+		stakedUserTotalAmount := stakedUsers[stakedUserAddr]
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
 			Signer: stakedUserAddr,
 			Vault:  vaults.STAKED,
@@ -492,7 +504,8 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 	// Then, unlock all the Flexible Vault positions.
 	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions...", len(flexibleUsers)))
 	flexibleUsersProcessed := 0
-	for flexibleUserAddr, flexibleUserTotalAmount := range flexibleUsers {
+	for _, flexibleUserAddr := range flexibleUsersAddress {
+		flexibleUserTotalAmount := flexibleUsers[flexibleUserAddr]
 		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
 			Signer: flexibleUserAddr,
 			Vault:  vaults.FLEXIBLE,
