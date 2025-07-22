@@ -1,0 +1,1 @@
+- Implement `BeginBlocker` logic to end the vaults program after a specific timestamp. ([#48](https://github.com/noble-assets/dollar/pull/48))
