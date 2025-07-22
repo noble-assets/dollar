@@ -162,7 +162,7 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 	}
 
 	if err = k.VaultsProgramEnded.Set(ctx, genesis.Vaults.ProgramEnded); err != nil {
-		panic(errors.Wrap(err, "unable to set genesis vaults program_ended state"))
+		panic(errors.Wrap(err, "unable to set genesis vaults program ended state"))
 	}
 
 	if err = k.VaultsStats.Set(ctx, genesis.Vaults.Stats); err != nil {

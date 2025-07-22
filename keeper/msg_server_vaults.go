@@ -455,11 +455,11 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 	var flexibleUsersAddress []string
 
 	// Iterate through all the positions.
-	k.logger.Info("collecting Positions...")
+	k.logger.Info("collecting vault positions")
 	for _, position := range positions {
 		addr, err := k.address.BytesToString(position.Address)
 		if err != nil {
-			k.logger.Warn("invalid address encountered: " + err.Error())
+			k.logger.Warn("invalid position address: " + err.Error())
 			continue
 		}
 
@@ -485,7 +485,7 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 	sort.Strings(flexibleUsersAddress)
 
 	// First, unlock all the Staked Vault positions.
-	k.logger.Info(fmt.Sprintf("unlocking %d staked vault positions...", len(stakedUsers)))
+	k.logger.Info(fmt.Sprintf("unlocking %d staked vault positions", len(stakedUsers)))
 	stakedUsersProcessed := 0
 	for _, stakedUserAddr := range stakedUsersAddress {
 		stakedUserTotalAmount := stakedUsers[stakedUserAddr]
@@ -499,10 +499,10 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 		}
 		stakedUsersProcessed += 1
 	}
-	k.logger.Info(fmt.Sprintf("unlocked %d/%d staked vault positions!", stakedUsersProcessed, len(stakedUsers)))
+	k.logger.Info(fmt.Sprintf("unlocked %d/%d staked vault positions successfully", stakedUsersProcessed, len(stakedUsers)))
 
 	// Then, unlock all the Flexible Vault positions.
-	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions...", len(flexibleUsers)))
+	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions", len(flexibleUsers)))
 	flexibleUsersProcessed := 0
 	for _, flexibleUserAddr := range flexibleUsersAddress {
 		flexibleUserTotalAmount := flexibleUsers[flexibleUserAddr]
@@ -516,7 +516,7 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 		}
 		flexibleUsersProcessed += 1
 	}
-	k.logger.Info(fmt.Sprintf("unlocked %d/%d flexible vault positions!", flexibleUsersProcessed, len(flexibleUsers)))
+	k.logger.Info(fmt.Sprintf("unlocked %d/%d flexible vault positions successfully", flexibleUsersProcessed, len(flexibleUsers)))
 
 	return nil
 }

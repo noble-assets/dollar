@@ -32,7 +32,7 @@ import (
 func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	defer func() {
 		if r := recover(); r != nil {
-			k.logger.Error("recovered from x/dollar BeginBlocker panic handling the vaults program end", "err", r)
+			k.logger.Error("recovered panic from x/dollar BeginBlocker while ending the vaults program", "err", r)
 			return
 		}
 	}()
@@ -41,16 +41,15 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsEndProgramTimestamp && !k.IsVaultsProgramEnded(ctx) {
 		defer func() {
 			// No matter the result of the execution, the program must be marked as completed
-			// and any further interaction with the vaults module blocked.
+			// and any further interaction with the vaults submodule blocked.
 			k.VaultsProgramEnded.Set(ctx, true)
 			k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
 		}()
 
-		// Create a cached Context for the execution.
-		cacheCtx, commit := types.UnwrapSDKContext(ctx).CacheContext()
+		// Create a cached context for the execution.
+		cachedCtx, commit := types.UnwrapSDKContext(ctx).CacheContext()
 
-		if err := k.endVaultsProgram(cacheCtx); err != nil {
-			k.logger.Error("failed to execute vaults end program logic", "err", err)
+		if err := k.endVaultsProgram(cachedCtx); err != nil {
 			return err
 		}
 
