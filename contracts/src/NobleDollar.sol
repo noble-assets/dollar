@@ -185,7 +185,9 @@ contract NobleDollar is HypERC20 {
                 // We don't want to perform any principal updates in the case of yield accrual.
                 uint128 oldIndex = $.index;
 
-                $.index = uint128(totalSupply() * IndexingMath.EXP_SCALED_ONE / $.totalPrincipal);
+                $.index = UIntMath.bound128(
+                    totalSupply() * IndexingMath.EXP_SCALED_ONE / $.totalPrincipal
+                );
 
                 emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
 
