@@ -19,6 +19,8 @@ pragma solidity >=0.8.0;
 
 import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
+import {IndexingMath} from "../m0/IndexingMath.sol";
+
 /*
 
 ███╗   ██╗ ██████╗ ██████╗ ██╗     ███████╗      
@@ -68,8 +70,8 @@ contract NobleDollar is HypERC20 {
     /// @custom:storage-location erc7201:noble.storage.USDN
     struct USDNStorage {
         uint128 index;
-        mapping(address account => uint256) principal;
-        uint256 totalPrincipal;
+        uint112 totalPrincipal;
+        mapping(address account => uint112) principal;
     }
 
     // keccak256(abi.encode(uint256(keccak256("noble.storage.USDN")) - 1)) & ~bytes32(uint256(0xff))
@@ -122,7 +124,10 @@ contract NobleDollar is HypERC20 {
      */
     function yield(address account) public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
-        uint256 expectedBalance = $.principal[account] * $.index / 1e12;
+
+        uint256 expectedBalance = IndexingMath
+            .getPresentAmountRoundedDown($.principal[account], $.index);
+        
         uint256 currentBalance = balanceOf(account);
 
         return expectedBalance > currentBalance ? expectedBalance - currentBalance : 0;
@@ -191,8 +196,9 @@ contract NobleDollar is HypERC20 {
             revert InvalidTransfer();
         }
 
-        uint256 principal = ((value * 1e12) + $.index - 1) / $.index;
-
+        uint256 principal = IndexingMath
+            .getPrincipalAmountRoundedUp(value, $.index);
+        
         // We don't want to update the sender's principal in the case of issuance.
         if (from != address(0)) {
             $.principal[from] -= principal;
@@ -203,7 +209,8 @@ contract NobleDollar is HypERC20 {
         // We don't want to update the recipient's principal in the case of withdrawal.
         if (to != address(0)) {
             if (from == address(0)) {
-                principal = (value * 1e12) / $.index;
+                principal = IndexingMath
+                    .getPrincipalAmountRoundedDown(value, $.index);
             }
 
             $.principal[to] += principal;
@@ -211,4 +218,5 @@ contract NobleDollar is HypERC20 {
             $.totalPrincipal -= principal;
         }
     }
+    
 }
