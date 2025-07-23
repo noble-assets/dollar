@@ -89,7 +89,7 @@ contract NobleDollar is HypERC20 {
         super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
 
         USDNStorage storage $ = _getUSDNStorage();
-        $.index = 1e12;
+        $.index = IndexingMath.EXP_SCALED_ONE;
     }
 
     /// @dev Returns the current index used for yield calculations.
@@ -185,7 +185,7 @@ contract NobleDollar is HypERC20 {
                 // We don't want to perform any principal updates in the case of yield accrual.
                 uint128 oldIndex = $.index;
 
-                $.index = uint128(totalSupply() * 1e12 / $.totalPrincipal);
+                $.index = uint128(totalSupply() * IndexingMath.EXP_SCALED_ONE / $.totalPrincipal);
 
                 emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
 
