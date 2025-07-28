@@ -58,7 +58,12 @@ contract NobleDollar is HypERC20 {
      * @param totalPrincipal The total principal amount at the time of update.
      * @param yieldAccrued The amount of yield that was accrued.
      */
-    event IndexUpdated(uint128 oldIndex, uint128 newIndex, uint256 totalPrincipal, uint256 yieldAccrued);
+    event IndexUpdated(
+        uint128 oldIndex,
+        uint128 newIndex,
+        uint112 totalPrincipal,
+        uint256 yieldAccrued
+    );
 
     /**
      * @notice Emitted when yield is claimed by an account.
@@ -75,7 +80,8 @@ contract NobleDollar is HypERC20 {
     }
 
     // keccak256(abi.encode(uint256(keccak256("noble.storage.USDN")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant USDNStorageLocation = 0xccec1a0a356b34ea3899fbc248aeaeba5687659563a3acddccc6f1e8a5d84200;
+    bytes32 private constant USDNStorageLocation =
+        0xccec1a0a356b34ea3899fbc248aeaeba5687659563a3acddccc6f1e8a5d84200;
 
     function _getUSDNStorage() private pure returns (USDNStorage storage $) {
         assembly {
@@ -85,7 +91,10 @@ contract NobleDollar is HypERC20 {
 
     constructor(address mailbox_) HypERC20(6, 1, mailbox_) {}
 
-    function initialize(address hook_, address ism_) public virtual initializer {
+    function initialize(
+        address hook_,
+        address ism_
+    ) public virtual initializer {
         super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
 
         USDNStorage storage $ = _getUSDNStorage();
@@ -93,17 +102,17 @@ contract NobleDollar is HypERC20 {
     }
 
     /// @dev Returns the current index used for yield calculations.
-    function index() public view returns (uint256) {
+    function index() public view returns (uint128) {
         return _getUSDNStorage().index;
     }
 
     /// @dev Returns the amount of principal in existence.
-    function totalPrincipal() public view returns (uint256) {
+    function totalPrincipal() public view returns (uint112) {
         return _getUSDNStorage().totalPrincipal;
     }
 
     /// @dev Returns the amount of principal owned for a given account.
-    function principalOf(address account) public view returns (uint256) {
+    function principalOf(address account) public view returns (uint112) {
         return _getUSDNStorage().principal[account];
     }
 
@@ -125,12 +134,17 @@ contract NobleDollar is HypERC20 {
     function yield(address account) public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
 
-        uint256 expectedBalance = IndexingMath
-            .getPresentAmountRoundedDown($.principal[account], $.index);
-        
+        uint256 expectedBalance = IndexingMath.getPresentAmountRoundedDown(
+            $.principal[account],
+            $.index
+        );
+
         uint256 currentBalance = balanceOf(account);
 
-        return expectedBalance > currentBalance ? expectedBalance - currentBalance : 0;
+        return
+            expectedBalance > currentBalance
+                ? expectedBalance - currentBalance
+                : 0;
     }
 
     /**
@@ -147,7 +161,7 @@ contract NobleDollar is HypERC20 {
             revert NoClaimableYield();
         }
 
-        _transfer(address(this), msg.sender, amount);
+        _transfer(address(this), msg.sender, amount); // Consider update() instead?
 
         emit YieldClaimed(msg.sender, amount);
     }
@@ -171,22 +185,28 @@ contract NobleDollar is HypERC20 {
      * @custom:emits IndexUpdated when yield is accrued and the index is updated
      * @custom:security Principal is calculated using ceiling division to prevent rounding errors
      */
-    function _update(address from, address to, uint256 value) internal virtual override {
-        USDNStorage storage $ = _getUSDNStorage();
-
+    function _update(
+        address from,
+        address to,
+        uint256 value
+    ) internal virtual override {
         super._update(from, to, value);
 
         if (from == address(this)) {
             // We don't want to perform any principal updates in the case of yield payout.
             return;
         }
+
+        USDNStorage storage $ = _getUSDNStorage();
+
         if (to == address(this)) {
             if (from == address(0)) {
                 // We don't want to perform any principal updates in the case of yield accrual.
                 uint128 oldIndex = $.index;
 
-                $.index = UIntMath.bound128(
-                    totalSupply() * IndexingMath.EXP_SCALED_ONE / $.totalPrincipal
+                $.index = UIntMath.safe128(
+                    (totalSupply() * IndexingMath.EXP_SCALED_ONE) /
+                        $.totalPrincipal
                 );
 
                 emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
@@ -198,9 +218,11 @@ contract NobleDollar is HypERC20 {
             revert InvalidTransfer();
         }
 
-        uint256 principal = IndexingMath
-            .getPrincipalAmountRoundedUp(value, $.index);
-        
+        uint112 principal = IndexingMath.getPrincipalAmountRoundedDown(
+            value,
+            $.index
+        );
+
         // We don't want to update the sender's principal in the case of issuance.
         if (from != address(0)) {
             $.principal[from] -= principal;
@@ -210,15 +232,9 @@ contract NobleDollar is HypERC20 {
 
         // We don't want to update the recipient's principal in the case of withdrawal.
         if (to != address(0)) {
-            if (from == address(0)) {
-                principal = IndexingMath
-                    .getPrincipalAmountRoundedDown(value, $.index);
-            }
-
             $.principal[to] += principal;
         } else {
             $.totalPrincipal -= principal;
         }
     }
-    
 }
