@@ -27,10 +27,7 @@ library IndexingMath {
      * @param  index     An index.
      * @return The present amount rounded down.
      */
-    function getPresentAmountRoundedDown(
-        uint112 principal,
-        uint128 index
-    ) internal pure returns (uint256) {
+    function getPresentAmountRoundedDown(uint112 principal, uint128 index) internal pure returns (uint256) {
         unchecked {
             return (uint256(principal) * index) / EXP_SCALED_ONE;
         }
@@ -42,10 +39,7 @@ library IndexingMath {
      * @param  index         An index.
      * @return The principal amount rounded down.
      */
-    function getPrincipalAmountRoundedDown(
-        uint256 presentAmount,
-        uint128 index
-    ) internal pure returns (uint112) {
+    function getPrincipalAmountRoundedDown(uint256 presentAmount, uint128 index) internal pure returns (uint112) {
         if (index == 0) revert DivisionByZero();
 
         unchecked {
