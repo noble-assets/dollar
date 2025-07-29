@@ -39,10 +39,8 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsSeasonOneEndTimestamp && !k.IsVaultsSeasonOneEnded(ctx) {
 		defer func() {
 			// No matter the result of the execution, Season One must be marked
-			// as completed and any further interaction with the Flexible vault
-			// blocked.
+			// as completed.
 			k.VaultsSeasonOneEnded.Set(ctx, true)
-			//k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
 		}()
 
 		// Create a cached context for the execution.
