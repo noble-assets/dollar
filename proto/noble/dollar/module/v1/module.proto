@@ -21,9 +21,9 @@ message Module {
   // vaults_minimum_unlock defines the minimum required amount to unlock from a Noble Dollar Vault.
   int64 vaults_minimum_unlock = 4;
 
-  // vaults_season_one_end_timestamp defines the timestamp in seconds when the Vaults Season One ends.
+  // vaults_season_one_end_timestamp defines the timestamp in seconds when Vaults Season One ends.
   int64 vaults_season_one_end_timestamp = 5;
 
-  // vaults_season_two_collector_address defines the address to collect Staked Vault yield in Season Two.
-  string vaults_season_two_collector_address = 6;
+  // vaults_interim_period_yield_collector defines the address to collect Staked vault yield.
+  string vaults_interim_period_yield_collector = 6;
 }

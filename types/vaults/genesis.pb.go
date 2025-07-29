@@ -38,7 +38,7 @@ type GenesisState struct {
 	Paused PausedType `protobuf:"varint,5,opt,name=paused,proto3,enum=noble.dollar.vaults.v1.PausedType" json:"paused,omitempty"`
 	// stats contains the genesis statistics around the Noble Dollar Vaults.
 	Stats Stats `protobuf:"bytes,6,opt,name=stats,proto3" json:"stats"`
-	// season_one_ended indicates whether the Vaults Season One has ended.
+	// season_one_ended indicates whether Vaults Season One has ended.
 	SeasonOneEnded bool `protobuf:"varint,7,opt,name=season_one_ended,json=seasonOneEnded,proto3" json:"season_one_ended,omitempty"`
 }
 

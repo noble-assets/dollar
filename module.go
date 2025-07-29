@@ -66,6 +66,7 @@ var (
 	_ module.HasGenesis          = AppModule{}
 	_ module.HasGenesisBasics    = AppModuleBasic{}
 	_ module.HasServices         = AppModule{}
+	_ appmodule.HasBeginBlocker  = AppModule{}
 )
 
 //
@@ -413,8 +414,8 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		panic("vaults season one end timestamp must be set")
 	}
 
-	if in.Config.VaultsSeasonTwoCollectorAddress == "" {
-		panic("vaults season two collector address must be set")
+	if in.Config.VaultsInterimPeriodYieldCollector == "" {
+		panic("vaults interim period yield collector must be set")
 	}
 
 	authority := authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
@@ -424,7 +425,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.Config.VaultsMinimumLock,
 		in.Config.VaultsMinimumUnlock,
 		in.Config.VaultsSeasonOneEndTimestamp,
-		in.Config.VaultsSeasonTwoCollectorAddress,
+		in.Config.VaultsInterimPeriodYieldCollector,
 		in.Cdc,
 		in.StoreService,
 		in.Logger,

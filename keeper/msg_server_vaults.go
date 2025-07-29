@@ -445,7 +445,8 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 	}
 }
 
-// endVaultsSeasonOne handles the logic to end Vaults Season One, unlocking all Flexible user positions.
+// endVaultsSeasonOne handles the logic to end Vaults Season One, unlocking all
+// Flexible vault user positions.
 func (k *Keeper) endVaultsSeasonOne(ctx context.Context) error {
 	// Get all the vaults positions.
 	positions, err := k.GetVaultsPositions(ctx)

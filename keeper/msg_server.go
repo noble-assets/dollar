@@ -160,14 +160,14 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		}
 	}
 
-	// Handle the vaults yield logic for Season One only if the program is not yet ended.
+	// Handle the vaults yield logic for Season One only if it has not ended.
 	if !k.IsVaultsSeasonOneEnded(ctx) {
 		if err := k.handleVaultsYieldSeasonOne(ctx, index); err != nil {
 			return err
 		}
 	} else {
-		// Handle the vaults yield logic for Season Two.
-		if err := k.handleVaultsYieldSeasonTwo(ctx); err != nil {
+		// Handle the vaults yield logic for the interim period.
+		if err := k.handleVaultsYieldInterimPeriod(ctx); err != nil {
 			return err
 		}
 	}
@@ -428,7 +428,7 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 }
 
 // handleVaultsYieldSeasonOne handles the logic of the vaults for Season One.
-// Yield from the Staked vault gets redirected to Flexible Vault users.
+// Yield from the Staked vault gets redirected to the Flexible vault.
 func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) error {
 	// Claim the yield of the Flexible vault.
 	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
@@ -465,22 +465,23 @@ func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) er
 	return nil
 }
 
-// handleVaultsYieldSeasonTwo handles the logic of the vaults for Season Two.
-// Yield from the Staked vault gets redirected to a Collector address.
-func (k *Keeper) handleVaultsYieldSeasonTwo(ctx context.Context) error {
+// handleVaultsYieldInterimPeriod handles the logic of the vaults between
+// Season One and Season Two. Yield from the Staked vault gets redirected to a
+// configured collector address.
+func (k *Keeper) handleVaultsYieldInterimPeriod(ctx context.Context) error {
 	// Get the address bytes of the Collector address.
-	addr, err := k.address.StringToBytes(k.vaultsSeasonsTwoCollectorAddress)
+	addr, err := k.address.StringToBytes(k.vaultsInterimPeriodYieldCollector)
 	if err != nil {
 		return err
 	}
 
-	// Claim the yield from the Staked Vault.
+	// Claim the yield of the Staked vault.
 	yield, err := k.claimModuleYield(ctx, vaults.StakedVaultAddress)
 	if err != nil {
 		return err
 	}
 
-	// Send the Staked Vault yield to the Collector address.
+	// Send the Staked vault yield to the Collector address.
 	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, addr, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
 	if err != nil {
 		return err

@@ -30,16 +30,16 @@ import (
 func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	defer func() {
 		if r := recover(); r != nil {
-			k.logger.Error("recovered panic from x/dollar BeginBlocker while ending the vaults program", "err", r)
+			k.logger.Error("recovered panic while ending vaults season one", "err", r)
 			return
 		}
 	}()
 
-	// If the current time exceeds the Season One end time, and it hasn't ended, handle it.
+	// If we haven't ended Vaults Season One, and the current time exceeds the
+	// configured end time, we end it.
 	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsSeasonOneEndTimestamp && !k.IsVaultsSeasonOneEnded(ctx) {
 		defer func() {
-			// No matter the result of the execution, Season One must be marked
-			// as completed.
+			// We mark Vaults Season One as ended even if there is an error.
 			k.VaultsSeasonOneEnded.Set(ctx, true)
 		}()
 

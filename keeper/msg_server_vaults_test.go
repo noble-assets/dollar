@@ -1892,7 +1892,7 @@ func TestFlexibleVaultRewardsEarlyExit(t *testing.T) {
 	}, rewards)
 }
 
-func TestVaultsProgramEnd(t *testing.T) {
+func TestVaultsSeasonOneEnd(t *testing.T) {
 	account := mocks.AccountKeeper{
 		Accounts: make(map[string]sdk.AccountI),
 	}
@@ -2030,7 +2030,7 @@ func TestVaultsProgramEnd(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestStakedVaultSeasonTwo(t *testing.T) {
+func TestStakedVaultInterimPeriod(t *testing.T) {
 	account := mocks.AccountKeeper{
 		Accounts: make(map[string]sdk.AccountI),
 	}
@@ -2061,7 +2061,7 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 	require.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(50*ONE)) // 50 USDN.
 
 	// ASSERT: Collector balance is empty.
-	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(0*ONE))
+	require.Equal(t, bank.Balances[k.GetVaultsInterimPeriodYieldCollector()].AmountOf("uusdn"), math.NewInt(0*ONE))
 
 	// ARRANGE: Vaults Program Ends!
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2031, 1, 3, 0, 0, 0, 0, time.UTC)})
@@ -2078,7 +2078,7 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 	require.NoError(t, err)
 
 	// ASSERT: Collector received 5$ from the Staked Vault rewards.
-	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+	require.Equal(t, bank.Balances[k.GetVaultsInterimPeriodYieldCollector()].AmountOf("uusdn"), math.NewInt(5*ONE))
 
 	// ACT: Collector claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
@@ -2087,7 +2087,7 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 	require.NoError(t, err)
 
 	// ASSERT: Collector balance didn't change.
-	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+	require.Equal(t, bank.Balances[k.GetVaultsInterimPeriodYieldCollector()].AmountOf("uusdn"), math.NewInt(5*ONE))
 
 	// ACT: Bob claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
@@ -2114,7 +2114,7 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 	require.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(105*ONE))
 
 	// ASSERT: Collector balance didn't change.
-	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+	require.Equal(t, bank.Balances[k.GetVaultsInterimPeriodYieldCollector()].AmountOf("uusdn"), math.NewInt(5*ONE))
 
 	// ACT: Bob attempts to claim the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
@@ -2126,18 +2126,18 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 
 	// ACT: Collector attempts to claim the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
-		Signer: k.GetVaultsSeasonTwoCollectorAddress(),
+		Signer: k.GetVaultsInterimPeriodYieldCollector(),
 	})
 	require.NoError(t, err)
 	// ASSERT: Collector does not have any yield to claim.
-	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+	require.Equal(t, bank.Balances[k.GetVaultsInterimPeriodYieldCollector()].AmountOf("uusdn"), math.NewInt(5*ONE))
 
 	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
 	err = k.UpdateIndex(ctx, 1.21e12)
 	require.NoError(t, err)
 
 	// ASSERT: Collector balance didn't change.
-	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+	require.Equal(t, bank.Balances[k.GetVaultsInterimPeriodYieldCollector()].AmountOf("uusdn"), math.NewInt(5*ONE))
 
 	// ACT: Bob claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
