@@ -469,12 +469,6 @@ func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) er
 // Season One and Season Two. Yield from the Staked vault gets redirected to a
 // configured collector address.
 func (k *Keeper) handleVaultsYieldInterimPeriod(ctx context.Context) error {
-	// Get the address bytes of the Collector address.
-	addr, err := k.address.StringToBytes(k.vaultsInterimPeriodYieldCollector)
-	if err != nil {
-		return err
-	}
-
 	// Claim the yield of the Staked vault.
 	yield, err := k.claimModuleYield(ctx, vaults.StakedVaultAddress)
 	if err != nil {
@@ -482,7 +476,7 @@ func (k *Keeper) handleVaultsYieldInterimPeriod(ctx context.Context) error {
 	}
 
 	// Send the Staked vault yield to the Collector address.
-	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, addr, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
+	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, k.vaultsInterimPeriodYieldCollector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
 	if err != nil {
 		return err
 	}

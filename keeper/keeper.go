@@ -53,7 +53,7 @@ type Keeper struct {
 	vaultsMinimumLock                 int64
 	vaultsMinimumUnlock               int64
 	vaultsSeasonOneEndTimestamp       int64
-	vaultsInterimPeriodYieldCollector string
+	vaultsInterimPeriodYieldCollector sdk.AccAddress
 
 	cdc   codec.Codec
 	store store.KVStoreService
@@ -97,7 +97,7 @@ func NewKeeper(
 	vaultsMinimumLock int64,
 	vaultsMinimumUnlock int64,
 	vaultsSeasonOneEndTimestamp int64,
-	vaultsInterimPeriodYieldCollector string,
+	vaultsInterimPeriodYieldCollector sdk.AccAddress,
 	cdc codec.Codec,
 	store store.KVStoreService,
 	logger log.Logger,
@@ -303,7 +303,7 @@ func (k *Keeper) GetDenom() string {
 // GetVaultsInterimPeriodYieldCollector is a utility that returns the
 // configured yield collector address for the staked vault between Season One
 // and Season Two.
-func (k *Keeper) GetVaultsInterimPeriodYieldCollector() string {
+func (k *Keeper) GetVaultsInterimPeriodYieldCollector() sdk.AccAddress {
 	return k.vaultsInterimPeriodYieldCollector
 }
 
