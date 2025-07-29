@@ -196,20 +196,30 @@ contract NobleDollar is HypERC20 {
             revert InvalidTransfer();
         }
 
-        uint112 principal = IndexingMath.getPrincipalAmountRoundedDown(value, $.index);
+        // Special case, no-op operation.
+        if (from == address(0) && to == address(0)) return;
 
-        // We don't want to update the sender's principal in the case of issuance.
-        if (from != address(0)) {
-            $.principal[from] -= principal;
-        } else {
-            $.totalPrincipal += principal;
+        // Burning
+        if (to == address(0)) {
+            uint112 fromPrincipal = $.principal[from];
+            uint112 principalUp = IndexingMath.getSafePrincipalAmountRoundedUp(value, $.index, fromPrincipal);
+
+            $.principal[from] = fromPrincipal - principalUp;
+            $.totalPrincipal -= principalUp;
+
+            return;
         }
 
-        // We don't want to update the recipient's principal in the case of withdrawal.
-        if (to != address(0)) {
-            $.principal[to] += principal;
+        uint112 principalDown = IndexingMath.getPrincipalAmountRoundedDown(value, $.index);
+
+        if (from == address(0)) {
+            // Minting
+            $.principal[to] += principalDown;
+            $.totalPrincipal += principalDown;
         } else {
-            $.totalPrincipal -= principal;
+            // Transfer
+            $.principal[from] -= principalDown;
+            $.principal[to] += principalDown;
         }
     }
 }

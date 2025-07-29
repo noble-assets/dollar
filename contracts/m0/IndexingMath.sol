@@ -51,4 +51,20 @@ library IndexingMath {
             return UIntMath.safe112((presentAmount * EXP_SCALED_ONE) / index);
         }
     }
+
+    /**
+     * @dev    Returns the safely capped principal amount given the present amount, using the current index.
+     * @param  presentAmount The present amount.
+     * @param  index         An index.
+     * @param  maxPrincipalAmount The maximum principal amount.
+     * @return The principal amount rounded up, capped at maxPrincipalAmount.
+     */
+    function getSafePrincipalAmountRoundedUp(uint256 presentAmount, uint128 index, uint112 maxPrincipalAmount)
+        internal
+        pure
+        returns (uint112)
+    {
+        uint112 principalAmount = getPrincipalAmountRoundedUp(presentAmount, index);
+        return principalAmount > maxPrincipalAmount ? maxPrincipalAmount : principalAmount;
+    }
 }
