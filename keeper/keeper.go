@@ -48,11 +48,12 @@ import (
 )
 
 type Keeper struct {
-	denom                     string
-	authority                 string
-	vaultsMinimumLock         int64
-	vaultsMinimumUnlock       int64
-	vaultsEndProgramTimestamp int64
+	denom                            string
+	authority                        string
+	vaultsMinimumLock                int64
+	vaultsMinimumUnlock              int64
+	vaultsSeasonOneEndTimestamp      int64
+	vaultsSeasonsTwoCollectorAddress string
 
 	cdc   codec.Codec
 	store store.KVStoreService
@@ -84,7 +85,7 @@ type Keeper struct {
 
 	VaultsPaused                 collections.Item[int32]
 	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
-	VaultsProgramEnded           collections.Item[bool]
+	VaultsSeasonOneEnded         collections.Item[bool]
 	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
 	VaultsRewards                collections.Map[int64, vaults.Reward]
 	VaultsStats                  collections.Item[vaults.Stats]
@@ -95,7 +96,8 @@ func NewKeeper(
 	authority string,
 	vaultsMinimumLock int64,
 	vaultsMinimumUnlock int64,
-	vaultsEndProgramTimestamp int64,
+	vaultsSeasonOneEndTimestamp int64,
+	vaultsSeasonsTwoCollectorAddress string,
 	cdc codec.Codec,
 	store store.KVStoreService,
 	logger log.Logger,
@@ -123,11 +125,12 @@ func NewKeeper(
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
-		denom:                     denom,
-		authority:                 authority,
-		vaultsMinimumLock:         vaultsMinimumLock,
-		vaultsMinimumUnlock:       vaultsMinimumUnlock,
-		vaultsEndProgramTimestamp: vaultsEndProgramTimestamp,
+		denom:                            denom,
+		authority:                        authority,
+		vaultsMinimumLock:                vaultsMinimumLock,
+		vaultsMinimumUnlock:              vaultsMinimumUnlock,
+		vaultsSeasonOneEndTimestamp:      vaultsSeasonOneEndTimestamp,
+		vaultsSeasonsTwoCollectorAddress: vaultsSeasonsTwoCollectorAddress,
 
 		cdc:   cdc,
 		store: store,
@@ -157,9 +160,9 @@ func NewKeeper(
 		PortalBridgingPaths: collections.NewMap(builder, portal.BridgingPathPrefix, "portal_bridging_paths", collections.PairKeyCodec(collections.Uint16Key, collections.BytesKey), collections.BoolValue),
 		PortalNonce:         collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
 
-		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
+		VaultsPaused:                 collections.NewItem(builder, vaults.PausedPrefix, "vaults_paused", collections.Int32Value),
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
-		VaultsProgramEnded:           collections.NewItem(builder, vaults.ProgramEndedKey, "vaults_program_ended", collections.BoolValue),
+		VaultsSeasonOneEnded:         collections.NewItem(builder, vaults.SeasonOneEndedKey, "vaults_season_one_ended", collections.BoolValue),
 		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
 		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
 		VaultsStats:                  collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
@@ -295,6 +298,11 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 // GetDenom is a utility that returns the configured denomination of $USDN.
 func (k *Keeper) GetDenom() string {
 	return k.denom
+}
+
+// GetVaultsSeasonTwoCollectorAddress returns the Collector address of Season Two.
+func (k *Keeper) GetVaultsSeasonTwoCollectorAddress() string {
+	return k.vaultsSeasonsTwoCollectorAddress
 }
 
 // GetYield is a utility that returns the user's current amount of claimable $USDN yield.

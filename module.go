@@ -409,13 +409,22 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		panic("authority for Noble Dollar module must be set")
 	}
 
+	if in.Config.VaultsSeasonOneEndTimestamp == 0 {
+		panic("vaults season one end timestamp must be set")
+	}
+
+	if in.Config.VaultsSeasonTwoCollectorAddress == "" {
+		panic("vaults season two collector address must be set")
+	}
+
 	authority := authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
 	k := keeper.NewKeeper(
 		in.Config.Denom,
 		authority.String(),
 		in.Config.VaultsMinimumLock,
 		in.Config.VaultsMinimumUnlock,
-		in.Config.VaultsEndProgramTimestamp,
+		in.Config.VaultsSeasonOneEndTimestamp,
+		in.Config.VaultsSeasonTwoCollectorAddress,
 		in.Cdc,
 		in.StoreService,
 		in.Logger,

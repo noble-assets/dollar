@@ -73,6 +73,7 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 		1e6,
 		1e6,
 		1893499200,
+		"noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69",
 		cfg.Codec,
 		runtime.NewKVStoreService(keys[types.ModuleName]),
 		log.NewTestLogger(t),

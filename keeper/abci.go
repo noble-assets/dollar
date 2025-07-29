@@ -24,8 +24,6 @@ import (
 	"context"
 
 	"github.com/cosmos/cosmos-sdk/types"
-
-	"dollar.noble.xyz/v2/types/vaults"
 )
 
 // BeginBlocker is called at the beginning of each block.
@@ -37,19 +35,20 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 	}()
 
-	// If the current time exceeds EndTime and the program hasn't ended, handle it.
-	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsEndProgramTimestamp && !k.IsVaultsProgramEnded(ctx) {
+	// If the current time exceeds the Season One end time, and it hasn't ended, handle it.
+	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsSeasonOneEndTimestamp && !k.IsVaultsSeasonOneEnded(ctx) {
 		defer func() {
-			// No matter the result of the execution, the program must be marked as completed
-			// and any further interaction with the vaults submodule blocked.
-			k.VaultsProgramEnded.Set(ctx, true)
-			k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
+			// No matter the result of the execution, Season One must be marked
+			// as completed and any further interaction with the Flexible vault
+			// blocked.
+			k.VaultsSeasonOneEnded.Set(ctx, true)
+			//k.VaultsPaused.Set(ctx, vaults.PausedType_value[vaults.ALL.String()])
 		}()
 
 		// Create a cached context for the execution.
 		cachedCtx, commit := types.UnwrapSDKContext(ctx).CacheContext()
 
-		if err := k.endVaultsProgram(cachedCtx); err != nil {
+		if err := k.endVaultsSeasonOne(cachedCtx); err != nil {
 			return err
 		}
 

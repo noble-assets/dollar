@@ -46,6 +46,9 @@ func NewVaultsMsgServer(keeper *Keeper) vaults.MsgServer {
 }
 
 func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults.MsgLockResponse, error) {
+	if msg.Vault == vaults.FLEXIBLE && k.IsVaultsSeasonOneEnded(ctx) {
+		return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused")
+	}
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.LOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused")
 	}
@@ -151,6 +154,9 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
+	if msg.Vault == vaults.FLEXIBLE && k.IsVaultsSeasonOneEnded(ctx) {
+		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
+	}
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
 	}
@@ -439,18 +445,15 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 	}
 }
 
-// endVaultsProgram handles the logic to end the vaults program, unlocking all user positions and blocking any interaction within the module.
-func (k *Keeper) endVaultsProgram(ctx context.Context) error {
+// endVaultsSeasonOne handles the logic to end Vaults Season One, unlocking all Flexible user positions.
+func (k *Keeper) endVaultsSeasonOne(ctx context.Context) error {
 	// Get all the vaults positions.
 	positions, err := k.GetVaultsPositions(ctx)
 	if err != nil {
 		return err
 	}
 
-	// Create a mapping between the different vault types by address and the total positions amount.
-	stakedUsers := map[string]math.Int{}
-	var stakedUsersAddress []string
-
+	// Create a mapping by address and the total positions amount.
 	flexibleUsers := map[string]math.Int{}
 	var flexibleUsersAddress []string
 
@@ -471,37 +474,12 @@ func (k *Keeper) endVaultsProgram(ctx context.Context) error {
 			} else {
 				flexibleUsers[addr] = flexibleUsers[addr].Add(position.Amount)
 			}
-		case vaults.STAKED:
-			if _, exists := stakedUsers[addr]; !exists {
-				stakedUsers[addr] = position.Amount
-				stakedUsersAddress = append(stakedUsersAddress, addr)
-			} else {
-				stakedUsers[addr] = stakedUsers[addr].Add(position.Amount)
-			}
 		}
 	}
 
-	sort.Strings(stakedUsersAddress)
 	sort.Strings(flexibleUsersAddress)
 
-	// First, unlock all the Staked Vault positions.
-	k.logger.Info(fmt.Sprintf("unlocking %d staked vault positions", len(stakedUsers)))
-	stakedUsersProcessed := 0
-	for _, stakedUserAddr := range stakedUsersAddress {
-		stakedUserTotalAmount := stakedUsers[stakedUserAddr]
-		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
-			Signer: stakedUserAddr,
-			Vault:  vaults.STAKED,
-			Amount: stakedUserTotalAmount,
-		}); err != nil {
-			k.logger.Error(fmt.Sprintf("failed to unlock staked vault position for %s: %v", stakedUserAddr, err))
-			continue
-		}
-		stakedUsersProcessed += 1
-	}
-	k.logger.Info(fmt.Sprintf("unlocked %d/%d staked vault positions successfully", stakedUsersProcessed, len(stakedUsers)))
-
-	// Then, unlock all the Flexible Vault positions.
+	// Unlock all the Flexible vault positions.
 	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions", len(flexibleUsers)))
 	flexibleUsersProcessed := 0
 	for _, flexibleUserAddr := range flexibleUsersAddress {

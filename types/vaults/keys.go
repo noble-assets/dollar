@@ -40,8 +40,8 @@ var (
 )
 
 var (
-	PausedKey                 = []byte("vaults/paused")
-	ProgramEndedKey           = []byte("vaults/program_ended")
+	PausedPrefix              = []byte("vaults/paused/")
+	SeasonOneEndedKey         = []byte("vaults/season_one_ended")
 	TotalFlexiblePrincipalKey = []byte("vaults/total_flexible_principal")
 	PositionPrefix            = []byte("vaults/position/")
 	RewardPrefix              = []byte("vaults/reward/")

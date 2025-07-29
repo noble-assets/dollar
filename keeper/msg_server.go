@@ -160,9 +160,14 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		}
 	}
 
-	// Handle the vaults yield logic only if the program is not yet ended.
-	if !k.IsVaultsProgramEnded(ctx) {
-		if err := k.handleVaultsYield(ctx, index); err != nil {
+	// Handle the vaults yield logic for Season One only if the program is not yet ended.
+	if !k.IsVaultsSeasonOneEnded(ctx) {
+		if err := k.handleVaultsYieldSeasonOne(ctx, index); err != nil {
+			return err
+		}
+	} else {
+		// Handle the vaults yield logic for Season Two.
+		if err := k.handleVaultsYieldSeasonTwo(ctx); err != nil {
 			return err
 		}
 	}
@@ -422,7 +427,9 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 	return nil
 }
 
-func (k *Keeper) handleVaultsYield(ctx context.Context, index int64) error {
+// handleVaultsYieldSeasonOne handles the logic of the vaults for Season One.
+// Yield from the Staked vault gets redirected to Flexible Vault users.
+func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) error {
 	// Claim the yield of the Flexible vault.
 	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
 	if err != nil {
@@ -452,6 +459,30 @@ func (k *Keeper) handleVaultsYield(ctx context.Context, index int64) error {
 		Total:   totalFlexiblePrincipal,
 		Rewards: rewards,
 	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// handleVaultsYieldSeasonTwo handles the logic of the vaults for Season Two.
+// Yield from the Staked vault gets redirected to a Collector address.
+func (k *Keeper) handleVaultsYieldSeasonTwo(ctx context.Context) error {
+	// Get the address bytes of the Collector address.
+	addr, err := k.address.StringToBytes(k.vaultsSeasonsTwoCollectorAddress)
+	if err != nil {
+		return err
+	}
+
+	// Claim the yield from the Staked Vault.
+	yield, err := k.claimModuleYield(ctx, vaults.StakedVaultAddress)
+	if err != nil {
+		return err
+	}
+
+	// Send the Staked Vault yield to the Collector address.
+	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, addr, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
+	if err != nil {
 		return err
 	}
 

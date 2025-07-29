@@ -24,6 +24,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
 	"cosmossdk.io/core/header"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -1969,8 +1971,8 @@ func TestVaultsProgramEnd(t *testing.T) {
 	// ACT: Trigger the BeginBlocker execution.
 	k.BeginBlocker(ctx)
 
-	// ASSERT: Bob balance is expected be as in the initial state + standard yield + boosted yield + staked yield. (1000/1,1*1,33)[yield] + 110[rewards] + 1000= ~2318
-	assert.Equal(t, math.NewInt(2318001800), bank.Balances[bob.Address].AmountOf("uusdn"))
+	// ASSERT: Bob balance is expected be as in the initial state + standard yield + boosted yield. (1000/1,1*1,33)[yield] + 110[rewards] = ~1318
+	assert.Equal(t, math.NewInt(1318001800), bank.Balances[bob.Address].AmountOf("uusdn"))
 
 	// ASSERT: Alice balance is expected be as in the initial state + standard yield + boosted yield. (9000/1,21*1,33)[yield] + 0[rewards] = ~ 9892
 	assert.Equal(t, math.NewInt(9892561983), bank.Balances[alice.Address].AmountOf("uusdn"))
@@ -1983,11 +1985,11 @@ func TestVaultsProgramEnd(t *testing.T) {
 	// ASSERT: Matching Bob's Positions state.
 	bobPositions, err := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	assert.NoError(t, err)
-	assert.Equal(t, 0, len(bobPositions))
+	assert.Equal(t, 1, len(bobPositions))
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
-	assert.Equal(t, uint64(0), stats.StakedTotalUsers)
+	assert.Equal(t, uint64(1), stats.StakedTotalUsers)
 	assert.Equal(t, uint64(0), stats.FlexibleTotalUsers)
 
 	// ACT: Bob attempts to lock 1 USDN in the Flexible Vault.
@@ -2005,8 +2007,7 @@ func TestVaultsProgramEnd(t *testing.T) {
 		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
 		Amount: math.NewInt(1 * ONE),
 	})
-	assert.Error(t, err)
-	assert.Equal(t, "lock is paused: action is paused", err.Error())
+	assert.NoError(t, err)
 
 	// ACT: Bob attempts to withdraw 1 USDN from the Flexible Vault.
 	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
@@ -2023,10 +2024,127 @@ func TestVaultsProgramEnd(t *testing.T) {
 		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
 		Amount: math.NewInt(1 * ONE),
 	})
-	assert.Error(t, err)
-	assert.Equal(t, "unlock is paused: action is paused", err.Error())
+	assert.NoError(t, err)
 
 	// ARRANGE: Increase the index.
 	err = k.UpdateIndex(ctx, 1.4e12)
 	assert.NoError(t, err)
+}
+
+func TestStakedVaultSeasonTwo(t *testing.T) {
+	account := mocks.AccountKeeper{
+		Accounts: make(map[string]sdk.AccountI),
+	}
+	bank := mocks.BankKeeper{
+		Balances: make(map[string]sdk.Coins),
+	}
+	k, _, ctx := mocks.DollarKeeperWithKeepers(t, bank, account)
+	bank.Restriction = k.SendRestrictionFn
+	k.SetBankKeeper(bank)
+
+	server := keeper.NewMsgServer(k)
+	vaultsServer := keeper.NewVaultsMsgServer(k)
+	vaultsQueryServer := keeper.NewVaultsQueryServer(k)
+	bob := utils.TestAccount()
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
+	_ = k.UpdateIndex(ctx, 1e12)
+
+	// ARRANGE: Bob mints 100 USDN.
+	_ = k.Mint(ctx, bob.Bytes, math.NewInt(100*ONE), nil)
+
+	// ACT: Bob deposits 50 USDN into the Staked Vault.
+	_, err := vaultsServer.Lock(ctx, &vaults.MsgLock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50 * ONE),
+	})
+	require.NoError(t, err)
+	require.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(50*ONE)) // 50 USDN.
+
+	// ASSERT: Collector balance is empty.
+	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(0*ONE))
+
+	// ARRANGE: Vaults Program Ends!
+	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2031, 1, 3, 0, 0, 0, 0, time.UTC)})
+
+	k.BeginBlocker(ctx)
+
+	// ASSERT: Matching Vaults Stats state.
+	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
+	require.Equal(t, stats.StakedTotalUsers, uint64(1))
+	require.Equal(t, stats.StakedTotalPrincipal, math.NewInt(50*ONE))
+
+	// ARRANGE: Increase the index from 1.0 to 1.1 (~10%).
+	err = k.UpdateIndex(ctx, 1.1e12)
+	require.NoError(t, err)
+
+	// ASSERT: Collector received 5$ from the Staked Vault rewards.
+	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+
+	// ACT: Collector claims the yield.
+	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
+		Signer: bob.Address,
+	})
+	require.NoError(t, err)
+
+	// ASSERT: Collector balance didn't change.
+	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+
+	// ACT: Bob claims the yield.
+	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
+		Signer: bob.Address,
+	})
+	require.NoError(t, err)
+	// ASSERT: Bob balance is expected to increase by a factor of 1.1. (has 50$ in the wallet)
+	require.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(55*ONE))
+
+	// ACT: Bob withdraws everything from the Staked Vault.
+	_, err = vaultsServer.Unlock(ctx, &vaults.MsgUnlock{
+		Signer: bob.Address,
+		Vault:  vaults.VaultType(vaultsv1.VaultType_STAKED),
+		Amount: math.NewInt(50000000),
+	})
+	require.NoError(t, err)
+
+	// ASSERT: Matching Vaults Stats state.
+	stats, _ = vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
+	require.Equal(t, stats.StakedTotalUsers, uint64(0))
+	require.Equal(t, stats.StakedTotalPrincipal, math.ZeroInt())
+
+	// ASSERT: Bob receives back the deposited amount.
+	require.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(105*ONE))
+
+	// ASSERT: Collector balance didn't change.
+	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+
+	// ACT: Bob attempts to claim the yield.
+	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
+		Signer: bob.Address,
+	})
+	require.NoError(t, err)
+	// ASSERT: Bob does not have any yield to claim.
+	require.Equal(t, bank.Balances[bob.Address].AmountOf("uusdn"), math.NewInt(105*ONE))
+
+	// ACT: Collector attempts to claim the yield.
+	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
+		Signer: k.GetVaultsSeasonTwoCollectorAddress(),
+	})
+	require.NoError(t, err)
+	// ASSERT: Collector does not have any yield to claim.
+	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+
+	// ARRANGE: Increase the index from 1.1 to 1.21 (~10%).
+	err = k.UpdateIndex(ctx, 1.21e12)
+	require.NoError(t, err)
+
+	// ASSERT: Collector balance didn't change.
+	require.Equal(t, bank.Balances[k.GetVaultsSeasonTwoCollectorAddress()].AmountOf("uusdn"), math.NewInt(5*ONE))
+
+	// ACT: Bob claims the yield.
+	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
+		Signer: bob.Address,
+	})
+	require.NoError(t, err)
+	// ASSERT: Bob balance is expected to increase by the yield.
+	require.Equal(t, math.NewInt(115500000), bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt())
 }

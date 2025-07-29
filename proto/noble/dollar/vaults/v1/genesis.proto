@@ -31,6 +31,6 @@ message GenesisState {
   // stats contains the genesis statistics around the Noble Dollar Vaults.
   vaults.v1.Stats stats = 6 [(gogoproto.nullable) = false];
 
-  // program_ended indicates whether the vaults program has ended.
-  bool program_ended = 7;
+  // season_one_ended indicates whether the Vaults Season One has ended.
+  bool season_one_ended = 7;
 }
