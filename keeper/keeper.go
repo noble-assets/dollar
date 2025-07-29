@@ -160,7 +160,7 @@ func NewKeeper(
 		PortalBridgingPaths: collections.NewMap(builder, portal.BridgingPathPrefix, "portal_bridging_paths", collections.PairKeyCodec(collections.Uint16Key, collections.BytesKey), collections.BoolValue),
 		PortalNonce:         collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
 
-		VaultsPaused:                 collections.NewItem(builder, vaults.PausedPrefix, "vaults_paused", collections.Int32Value),
+		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
 		VaultsSeasonOneEnded:         collections.NewItem(builder, vaults.SeasonOneEndedKey, "vaults_season_one_ended", collections.BoolValue),
 		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
