@@ -461,14 +461,14 @@ func (k *Keeper) endVaultsSeasonOne(ctx context.Context) error {
 	// Iterate through all the positions.
 	k.logger.Info("collecting vault positions")
 	for _, position := range positions {
-		addr, err := k.address.BytesToString(position.Address)
-		if err != nil {
-			k.logger.Warn("invalid position address: " + err.Error())
-			continue
-		}
-
 		switch position.Vault {
 		case vaults.FLEXIBLE:
+			addr, err := k.address.BytesToString(position.Address)
+			if err != nil {
+				k.logger.Warn("invalid position address: " + err.Error())
+				continue
+			}
+
 			if _, exists := flexibleUsers[addr]; !exists {
 				flexibleUsers[addr] = position.Amount
 				flexibleUsersAddress = append(flexibleUsersAddress, addr)

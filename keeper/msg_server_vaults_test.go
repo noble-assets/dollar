@@ -1971,6 +1971,13 @@ func TestVaultsSeasonOneEnd(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	// ACT: Trigger a BeginBlocker execution before Vaults Season One ending.
+	err = k.BeginBlocker(ctx)
+	require.NoError(t, err)
+
+	// ASSERT: Season One is marked as non-completed.
+	require.Equal(t, false, k.IsVaultsSeasonOneEnded(ctx))
+
 	// ARRANGE: Vaults Program Ends!
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2031, 1, 3, 0, 0, 0, 0, time.UTC)})
 
@@ -1995,7 +2002,8 @@ func TestVaultsSeasonOneEnd(t *testing.T) {
 	// ASSERT: Matching Bob's Positions state.
 	bobPositions, err := k.GetVaultsPositionsByProvider(ctx, bob.Bytes)
 	require.NoError(t, err)
-	require.Equal(t, 1, len(bobPositions))
+	require.Len(t, bobPositions, 1)
+	require.Equal(t, bobPositions[0].Vault, vaults.STAKED)
 
 	// ASSERT: Matching Vaults Stats state.
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
@@ -2042,9 +2050,12 @@ func TestVaultsSeasonOneEnd(t *testing.T) {
 	err = k.UpdateIndex(ctx, 1.4e12)
 	require.NoError(t, err)
 
-	// ACT: Trigger the BeginBlocker execution.
+	// ACT: Trigger a BeginBlocker execution after Vaults Season One ending.
 	err = k.BeginBlocker(ctx)
 	require.NoError(t, err)
+
+	// ASSERT: Season One is still marked as completed.
+	require.Equal(t, true, k.IsVaultsSeasonOneEnded(ctx))
 }
 
 func TestStakedVaultSeasonTwo(t *testing.T) {
@@ -2176,5 +2187,5 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 	})
 	require.NoError(t, err)
 	// ASSERT: Bob balance is expected to increase by the yield.
-	require.Equal(t, math.NewInt(115500000), bank.Balances[bob.Address].AmountOf("uusdn").ToLegacyDec().TruncateInt())
+	require.Equal(t, math.NewInt(115500000), bank.Balances[bob.Address].AmountOf("uusdn"))
 }
