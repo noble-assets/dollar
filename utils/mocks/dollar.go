@@ -66,12 +66,15 @@ func DollarKeeperWithKeepers(t testing.TB, bank BankKeeper, account AccountKeepe
 		nil,
 		nil,
 	)
+	vaultsSeasonTwoYieldCollectorAddress, _ := addressCdc.StringToBytes("noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69")
 
 	k := keeper.NewKeeper(
 		"uusdn",
 		"authority",
 		1e6,
 		1e6,
+		1893499200,
+		vaultsSeasonTwoYieldCollectorAddress,
 		cfg.Codec,
 		runtime.NewKVStoreService(keys[types.ModuleName]),
 		log.NewTestLogger(t),

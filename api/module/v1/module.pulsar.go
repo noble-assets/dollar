@@ -14,11 +14,13 @@ import (
 )
 
 var (
-	md_Module                       protoreflect.MessageDescriptor
-	fd_Module_denom                 protoreflect.FieldDescriptor
-	fd_Module_authority             protoreflect.FieldDescriptor
-	fd_Module_vaults_minimum_lock   protoreflect.FieldDescriptor
-	fd_Module_vaults_minimum_unlock protoreflect.FieldDescriptor
+	md_Module                                   protoreflect.MessageDescriptor
+	fd_Module_denom                             protoreflect.FieldDescriptor
+	fd_Module_authority                         protoreflect.FieldDescriptor
+	fd_Module_vaults_minimum_lock               protoreflect.FieldDescriptor
+	fd_Module_vaults_minimum_unlock             protoreflect.FieldDescriptor
+	fd_Module_vaults_season_one_end_timestamp   protoreflect.FieldDescriptor
+	fd_Module_vaults_season_two_yield_collector protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -28,6 +30,8 @@ func init() {
 	fd_Module_authority = md_Module.Fields().ByName("authority")
 	fd_Module_vaults_minimum_lock = md_Module.Fields().ByName("vaults_minimum_lock")
 	fd_Module_vaults_minimum_unlock = md_Module.Fields().ByName("vaults_minimum_unlock")
+	fd_Module_vaults_season_one_end_timestamp = md_Module.Fields().ByName("vaults_season_one_end_timestamp")
+	fd_Module_vaults_season_two_yield_collector = md_Module.Fields().ByName("vaults_season_two_yield_collector")
 }
 
 var _ protoreflect.Message = (*fastReflection_Module)(nil)
@@ -119,6 +123,18 @@ func (x *fastReflection_Module) Range(f func(protoreflect.FieldDescriptor, proto
 			return
 		}
 	}
+	if x.VaultsSeasonOneEndTimestamp != int64(0) {
+		value := protoreflect.ValueOfInt64(x.VaultsSeasonOneEndTimestamp)
+		if !f(fd_Module_vaults_season_one_end_timestamp, value) {
+			return
+		}
+	}
+	if x.VaultsSeasonTwoYieldCollector != "" {
+		value := protoreflect.ValueOfString(x.VaultsSeasonTwoYieldCollector)
+		if !f(fd_Module_vaults_season_two_yield_collector, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -142,6 +158,10 @@ func (x *fastReflection_Module) Has(fd protoreflect.FieldDescriptor) bool {
 		return x.VaultsMinimumLock != int64(0)
 	case "noble.dollar.module.v1.Module.vaults_minimum_unlock":
 		return x.VaultsMinimumUnlock != int64(0)
+	case "noble.dollar.module.v1.Module.vaults_season_one_end_timestamp":
+		return x.VaultsSeasonOneEndTimestamp != int64(0)
+	case "noble.dollar.module.v1.Module.vaults_season_two_yield_collector":
+		return x.VaultsSeasonTwoYieldCollector != ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.module.v1.Module"))
@@ -166,6 +186,10 @@ func (x *fastReflection_Module) Clear(fd protoreflect.FieldDescriptor) {
 		x.VaultsMinimumLock = int64(0)
 	case "noble.dollar.module.v1.Module.vaults_minimum_unlock":
 		x.VaultsMinimumUnlock = int64(0)
+	case "noble.dollar.module.v1.Module.vaults_season_one_end_timestamp":
+		x.VaultsSeasonOneEndTimestamp = int64(0)
+	case "noble.dollar.module.v1.Module.vaults_season_two_yield_collector":
+		x.VaultsSeasonTwoYieldCollector = ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.module.v1.Module"))
@@ -194,6 +218,12 @@ func (x *fastReflection_Module) Get(descriptor protoreflect.FieldDescriptor) pro
 	case "noble.dollar.module.v1.Module.vaults_minimum_unlock":
 		value := x.VaultsMinimumUnlock
 		return protoreflect.ValueOfInt64(value)
+	case "noble.dollar.module.v1.Module.vaults_season_one_end_timestamp":
+		value := x.VaultsSeasonOneEndTimestamp
+		return protoreflect.ValueOfInt64(value)
+	case "noble.dollar.module.v1.Module.vaults_season_two_yield_collector":
+		value := x.VaultsSeasonTwoYieldCollector
+		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.module.v1.Module"))
@@ -222,6 +252,10 @@ func (x *fastReflection_Module) Set(fd protoreflect.FieldDescriptor, value proto
 		x.VaultsMinimumLock = value.Int()
 	case "noble.dollar.module.v1.Module.vaults_minimum_unlock":
 		x.VaultsMinimumUnlock = value.Int()
+	case "noble.dollar.module.v1.Module.vaults_season_one_end_timestamp":
+		x.VaultsSeasonOneEndTimestamp = value.Int()
+	case "noble.dollar.module.v1.Module.vaults_season_two_yield_collector":
+		x.VaultsSeasonTwoYieldCollector = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.module.v1.Module"))
@@ -250,6 +284,10 @@ func (x *fastReflection_Module) Mutable(fd protoreflect.FieldDescriptor) protore
 		panic(fmt.Errorf("field vaults_minimum_lock of message noble.dollar.module.v1.Module is not mutable"))
 	case "noble.dollar.module.v1.Module.vaults_minimum_unlock":
 		panic(fmt.Errorf("field vaults_minimum_unlock of message noble.dollar.module.v1.Module is not mutable"))
+	case "noble.dollar.module.v1.Module.vaults_season_one_end_timestamp":
+		panic(fmt.Errorf("field vaults_season_one_end_timestamp of message noble.dollar.module.v1.Module is not mutable"))
+	case "noble.dollar.module.v1.Module.vaults_season_two_yield_collector":
+		panic(fmt.Errorf("field vaults_season_two_yield_collector of message noble.dollar.module.v1.Module is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.module.v1.Module"))
@@ -271,6 +309,10 @@ func (x *fastReflection_Module) NewField(fd protoreflect.FieldDescriptor) protor
 		return protoreflect.ValueOfInt64(int64(0))
 	case "noble.dollar.module.v1.Module.vaults_minimum_unlock":
 		return protoreflect.ValueOfInt64(int64(0))
+	case "noble.dollar.module.v1.Module.vaults_season_one_end_timestamp":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "noble.dollar.module.v1.Module.vaults_season_two_yield_collector":
+		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.module.v1.Module"))
@@ -354,6 +396,13 @@ func (x *fastReflection_Module) ProtoMethods() *protoiface.Methods {
 		if x.VaultsMinimumUnlock != 0 {
 			n += 1 + runtime.Sov(uint64(x.VaultsMinimumUnlock))
 		}
+		if x.VaultsSeasonOneEndTimestamp != 0 {
+			n += 1 + runtime.Sov(uint64(x.VaultsSeasonOneEndTimestamp))
+		}
+		l = len(x.VaultsSeasonTwoYieldCollector)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -382,6 +431,18 @@ func (x *fastReflection_Module) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.VaultsSeasonTwoYieldCollector) > 0 {
+			i -= len(x.VaultsSeasonTwoYieldCollector)
+			copy(dAtA[i:], x.VaultsSeasonTwoYieldCollector)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.VaultsSeasonTwoYieldCollector)))
+			i--
+			dAtA[i] = 0x32
+		}
+		if x.VaultsSeasonOneEndTimestamp != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultsSeasonOneEndTimestamp))
+			i--
+			dAtA[i] = 0x28
 		}
 		if x.VaultsMinimumUnlock != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultsMinimumUnlock))
@@ -558,6 +619,57 @@ func (x *fastReflection_Module) ProtoMethods() *protoiface.Methods {
 						break
 					}
 				}
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultsSeasonOneEndTimestamp", wireType)
+				}
+				x.VaultsSeasonOneEndTimestamp = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.VaultsSeasonOneEndTimestamp |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultsSeasonTwoYieldCollector", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.VaultsSeasonTwoYieldCollector = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -621,6 +733,10 @@ type Module struct {
 	VaultsMinimumLock int64 `protobuf:"varint,3,opt,name=vaults_minimum_lock,json=vaultsMinimumLock,proto3" json:"vaults_minimum_lock,omitempty"`
 	// vaults_minimum_unlock defines the minimum required amount to unlock from a Noble Dollar Vault.
 	VaultsMinimumUnlock int64 `protobuf:"varint,4,opt,name=vaults_minimum_unlock,json=vaultsMinimumUnlock,proto3" json:"vaults_minimum_unlock,omitempty"`
+	// vaults_season_one_end_timestamp defines the Unix timestamp in seconds when Vaults Season One ends.
+	VaultsSeasonOneEndTimestamp int64 `protobuf:"varint,5,opt,name=vaults_season_one_end_timestamp,json=vaultsSeasonOneEndTimestamp,proto3" json:"vaults_season_one_end_timestamp,omitempty"`
+	// vaults_season_two_yield_collector defines the address to collect Staked vault yield during Season Two.
+	VaultsSeasonTwoYieldCollector string `protobuf:"bytes,6,opt,name=vaults_season_two_yield_collector,json=vaultsSeasonTwoYieldCollector,proto3" json:"vaults_season_two_yield_collector,omitempty"`
 }
 
 func (x *Module) Reset() {
@@ -671,6 +787,20 @@ func (x *Module) GetVaultsMinimumUnlock() int64 {
 	return 0
 }
 
+func (x *Module) GetVaultsSeasonOneEndTimestamp() int64 {
+	if x != nil {
+		return x.VaultsSeasonOneEndTimestamp
+	}
+	return 0
+}
+
+func (x *Module) GetVaultsSeasonTwoYieldCollector() string {
+	if x != nil {
+		return x.VaultsSeasonTwoYieldCollector
+	}
+	return ""
+}
+
 var File_noble_dollar_module_v1_module_proto protoreflect.FileDescriptor
 
 var file_noble_dollar_module_v1_module_proto_rawDesc = []byte{
@@ -680,7 +810,7 @@ var file_noble_dollar_module_v1_module_proto_rawDesc = []byte{
 	0x6c, 0x61, 0x72, 0x2e, 0x6d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x1a, 0x20, 0x63,
 	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x61, 0x70, 0x70, 0x2f, 0x76, 0x31, 0x61, 0x6c, 0x70, 0x68,
 	0x61, 0x31, 0x2f, 0x6d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
-	0xbd, 0x01, 0x0a, 0x06, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x64, 0x65,
+	0xcd, 0x02, 0x0a, 0x06, 0x4d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x64, 0x65,
 	0x6e, 0x6f, 0x6d, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x64, 0x65, 0x6e, 0x6f, 0x6d,
 	0x12, 0x1c, 0x0a, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x18, 0x02, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x09, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x12, 0x2e,
@@ -690,7 +820,16 @@ var file_noble_dollar_module_v1_module_proto_rawDesc = []byte{
 	0x0a, 0x15, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5f, 0x6d, 0x69, 0x6e, 0x69, 0x6d, 0x75, 0x6d,
 	0x5f, 0x75, 0x6e, 0x6c, 0x6f, 0x63, 0x6b, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x13, 0x76,
 	0x61, 0x75, 0x6c, 0x74, 0x73, 0x4d, 0x69, 0x6e, 0x69, 0x6d, 0x75, 0x6d, 0x55, 0x6e, 0x6c, 0x6f,
-	0x63, 0x6b, 0x3a, 0x1b, 0xba, 0xc0, 0x96, 0xda, 0x01, 0x15, 0x0a, 0x13, 0x64, 0x6f, 0x6c, 0x6c,
+	0x63, 0x6b, 0x12, 0x44, 0x0a, 0x1f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5f, 0x73, 0x65, 0x61,
+	0x73, 0x6f, 0x6e, 0x5f, 0x6f, 0x6e, 0x65, 0x5f, 0x65, 0x6e, 0x64, 0x5f, 0x74, 0x69, 0x6d, 0x65,
+	0x73, 0x74, 0x61, 0x6d, 0x70, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52, 0x1b, 0x76, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0x53, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x4f, 0x6e, 0x65, 0x45, 0x6e, 0x64, 0x54,
+	0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x12, 0x48, 0x0a, 0x21, 0x76, 0x61, 0x75, 0x6c,
+	0x74, 0x73, 0x5f, 0x73, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x5f, 0x74, 0x77, 0x6f, 0x5f, 0x79, 0x69,
+	0x65, 0x6c, 0x64, 0x5f, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x18, 0x06, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x1d, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x53, 0x65, 0x61, 0x73, 0x6f,
+	0x6e, 0x54, 0x77, 0x6f, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74,
+	0x6f, 0x72, 0x3a, 0x1b, 0xba, 0xc0, 0x96, 0xda, 0x01, 0x15, 0x0a, 0x13, 0x64, 0x6f, 0x6c, 0x6c,
 	0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32, 0x42,
 	0xdd, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
 	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6d, 0x6f, 0x64, 0x75, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x42, 0x0b,

@@ -43,7 +43,7 @@ proto-all: proto-format proto-lint proto-breaking proto-gen
 proto-breaking:
 	@echo "🤖 Running protobuf breaking checks..."
 	@docker run --rm --volume "$(PWD)":/workspace --workdir /workspace \
-		bufbuild/buf:$(BUF_VERSION) breaking --against "https://github.com/noble-assets/dollar.git#branch=v1.0.2"
+		bufbuild/buf:$(BUF_VERSION) breaking --against "https://github.com/noble-assets/dollar.git#branch=v2.0.2"
 	@echo "✅ Completed protobuf breaking checks!"
 
 proto-format:

@@ -48,10 +48,12 @@ import (
 )
 
 type Keeper struct {
-	denom               string
-	authority           string
-	vaultsMinimumLock   int64
-	vaultsMinimumUnlock int64
+	denom                         string
+	authority                     string
+	vaultsMinimumLock             int64
+	vaultsMinimumUnlock           int64
+	vaultsSeasonOneEndTimestamp   int64
+	vaultsSeasonTwoYieldCollector sdk.AccAddress
 
 	cdc   codec.Codec
 	store store.KVStoreService
@@ -82,6 +84,7 @@ type Keeper struct {
 	PortalNonce         collections.Item[uint32]
 
 	VaultsPaused                 collections.Item[int32]
+	VaultsSeasonOneEnded         collections.Item[bool]
 	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
 	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
 	VaultsRewards                collections.Map[int64, vaults.Reward]
@@ -93,6 +96,8 @@ func NewKeeper(
 	authority string,
 	vaultsMinimumLock int64,
 	vaultsMinimumUnlock int64,
+	vaultsSeasonOneEndTimestamp int64,
+	vaultsSeasonTwoYieldCollector sdk.AccAddress,
 	cdc codec.Codec,
 	store store.KVStoreService,
 	logger log.Logger,
@@ -120,10 +125,12 @@ func NewKeeper(
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
-		denom:               denom,
-		authority:           authority,
-		vaultsMinimumLock:   vaultsMinimumLock,
-		vaultsMinimumUnlock: vaultsMinimumUnlock,
+		denom:                         denom,
+		authority:                     authority,
+		vaultsMinimumLock:             vaultsMinimumLock,
+		vaultsMinimumUnlock:           vaultsMinimumUnlock,
+		vaultsSeasonOneEndTimestamp:   vaultsSeasonOneEndTimestamp,
+		vaultsSeasonTwoYieldCollector: vaultsSeasonTwoYieldCollector,
 
 		cdc:   cdc,
 		store: store,
@@ -154,6 +161,7 @@ func NewKeeper(
 		PortalNonce:         collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
 
 		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
+		VaultsSeasonOneEnded:         collections.NewItem(builder, vaults.SeasonOneEndedKey, "vaults_season_one_ended", collections.BoolValue),
 		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
 		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
 		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
@@ -290,6 +298,12 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 // GetDenom is a utility that returns the configured denomination of $USDN.
 func (k *Keeper) GetDenom() string {
 	return k.denom
+}
+
+// GetVaultsSeasonTwoYieldCollector is a utility that returns the
+// configured yield collector address for Vaults Season Two.
+func (k *Keeper) GetVaultsSeasonTwoYieldCollector() sdk.AccAddress {
+	return k.vaultsSeasonTwoYieldCollector
 }
 
 // GetYield is a utility that returns the user's current amount of claimable $USDN yield.

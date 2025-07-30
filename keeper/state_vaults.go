@@ -83,6 +83,12 @@ func (k *Keeper) GetVaultsPaused(ctx context.Context) vaults.PausedType {
 	return vaults.PausedType(value)
 }
 
+// IsVaultsSeasonOneEnded is a utility that returns if Vaults Season One has ended.
+func (k *Keeper) IsVaultsSeasonOneEnded(ctx context.Context) bool {
+	ended, _ := k.VaultsSeasonOneEnded.Get(ctx)
+	return ended
+}
+
 // GetVaultsPositions is a utility that returns all vaults positions from state.
 func (k *Keeper) GetVaultsPositions(ctx context.Context) ([]vaults.PositionEntry, error) {
 	var positions []vaults.PositionEntry

@@ -161,6 +161,10 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis vaults paused state"))
 	}
 
+	if err = k.VaultsSeasonOneEnded.Set(ctx, genesis.Vaults.SeasonOneEnded); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis vaults season one ended state"))
+	}
+
 	if err = k.VaultsStats.Set(ctx, genesis.Vaults.Stats); err != nil {
 		panic(errors.Wrapf(err, "unable to set genesis vaults stats"))
 	}
@@ -189,6 +193,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	vaultsPositions, _ := k.GetVaultsPositions(ctx)
 	vaultsTotalFlexiblePrincipal, _ := k.GetVaultsTotalFlexiblePrincipal(ctx)
 	vaultsPaused := k.GetVaultsPaused(ctx)
+	vaultsSeasonOneEnded := k.IsVaultsSeasonOneEnded(ctx)
 	vaultsStats, _ := k.GetVaultsStats(ctx)
 
 	return &types.GenesisState{
@@ -204,6 +209,7 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Rewards:                vaultsRewards,
 			TotalFlexiblePrincipal: vaultsTotalFlexiblePrincipal,
 			Paused:                 vaultsPaused,
+			SeasonOneEnded:         vaultsSeasonOneEnded,
 			Stats:                  vaultsStats,
 		},
 		Paused:             paused,

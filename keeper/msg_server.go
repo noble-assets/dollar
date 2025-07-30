@@ -160,36 +160,16 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		}
 	}
 
-	// Claim the yield of the Flexible vault.
-	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
-	if err != nil {
-		return err
-	}
-
-	// Claim the yield of the Staked vault and redirect it to the Flexible vault.
-	stakedYield, err := k.claimStakedVaultYield(ctx)
-	if err != nil {
-		return err
-	}
-
-	// get the current Flexible total principal.
-	totalFlexiblePrincipal := math.ZeroInt()
-	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
-		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
-		if err != nil {
+	// Handle the vaults yield logic for Season One only if it has not ended.
+	if !k.IsVaultsSeasonOneEnded(ctx) {
+		if err := k.handleVaultsYieldSeasonOne(ctx, index); err != nil {
 			return err
 		}
-		totalFlexiblePrincipal = totalFlexiblePrincipal.Add(current)
-	}
-
-	// Register the new Rewards record.
-	rewards := stakedYield.Add(flexibleYield)
-	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
-		Index:   index,
-		Total:   totalFlexiblePrincipal,
-		Rewards: rewards,
-	}); err != nil {
-		return err
+	} else {
+		// Handle the vaults yield logic for Season Two.
+		if err := k.handleVaultsYieldSeasonTwo(ctx); err != nil {
+			return err
+		}
 	}
 
 	// Claim and transfer the yield of ibc external chains.
@@ -442,6 +422,67 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		if transferErr == nil {
 			k.logger.Info("claimed and transferred hyperlane yield", "amount", accruedYield, "identifier", identifier)
 		}
+	}
+
+	return nil
+}
+
+// handleVaultsYieldSeasonOne handles the logic of the vaults for Season One.
+// Yield from the Staked vault gets redirected to the Flexible vault.
+func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) error {
+	// Claim the yield of the Flexible vault.
+	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
+	if err != nil {
+		return err
+	}
+
+	// Claim the yield of the Staked vault and redirect it to the Flexible vault.
+	stakedYield, err := k.claimStakedVaultYield(ctx)
+	if err != nil {
+		return err
+	}
+
+	// get the current Flexible total principal.
+	totalFlexiblePrincipal := math.ZeroInt()
+	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
+		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
+		if err != nil {
+			return err
+		}
+		totalFlexiblePrincipal = totalFlexiblePrincipal.Add(current)
+	}
+
+	// Register the new Rewards record.
+	rewards := stakedYield.Add(flexibleYield)
+	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
+		Index:   index,
+		Total:   totalFlexiblePrincipal,
+		Rewards: rewards,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// handleVaultsYieldSeasonTwo handles the logic of the vaults for Season Two.
+// Yield from the Staked vault gets redirected to a configured collector address.
+func (k *Keeper) handleVaultsYieldSeasonTwo(ctx context.Context) error {
+	// Claim the yield of the Staked vault.
+	yield, err := k.claimModuleYield(ctx, vaults.StakedVaultAddress)
+	if err != nil {
+		return err
+	}
+
+	// Ensure that there is a valid amount of yield to send.
+	if !yield.IsPositive() {
+		return nil
+	}
+
+	// Send the Staked vault yield to the Collector address.
+	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, k.vaultsSeasonTwoYieldCollector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
+	if err != nil {
+		return err
 	}
 
 	return nil
