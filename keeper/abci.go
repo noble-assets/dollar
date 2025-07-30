@@ -40,7 +40,9 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	if k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsSeasonOneEndTimestamp && !k.IsVaultsSeasonOneEnded(ctx) {
 		defer func() {
 			// We mark Vaults Season One as ended even if there is an error.
-			k.VaultsSeasonOneEnded.Set(ctx, true)
+			if err := k.VaultsSeasonOneEnded.Set(ctx, true); err != nil {
+				k.logger.Error("failed to set season one as ended", "err", err)
+			}
 		}()
 
 		// Create a cached context for the execution.

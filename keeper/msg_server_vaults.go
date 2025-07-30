@@ -47,7 +47,7 @@ func NewVaultsMsgServer(keeper *Keeper) vaults.MsgServer {
 
 func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults.MsgLockResponse, error) {
 	if msg.Vault == vaults.FLEXIBLE && k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsSeasonOneEndTimestamp {
-		return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused")
+		return nil, errors.Wrapf(vaults.ErrActionPaused, "cannot lock because season one has ended")
 	}
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.LOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused")
@@ -155,7 +155,7 @@ func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
 	if msg.Vault == vaults.FLEXIBLE && k.header.GetHeaderInfo(ctx).Time.Unix() > k.vaultsSeasonOneEndTimestamp {
-		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
+		return nil, errors.Wrapf(vaults.ErrActionPaused, "cannot unlock because season one has ended")
 	}
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
