@@ -414,13 +414,13 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		panic("vaults season one end timestamp must be set")
 	}
 
-	if in.Config.VaultsInterimPeriodYieldCollector == "" {
-		panic("vaults interim period yield collector must be set")
+	if in.Config.VaultsSeasonTwoYieldCollector == "" {
+		panic("vaults season two yield collector must be set")
 	}
 	// Get the address bytes of the Collector address.
-	vaultsInterimPeriodYieldCollectorAddress, err := in.AddressCodec.StringToBytes(in.Config.VaultsInterimPeriodYieldCollector)
+	vaultsSeasonTwoYieldCollectorAddress, err := in.AddressCodec.StringToBytes(in.Config.VaultsSeasonTwoYieldCollector)
 	if err != nil {
-		panic("vaults interim period yield collector must be a valid address")
+		panic("vaults season two yield collector must be a valid address")
 	}
 
 	authority := authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
@@ -430,7 +430,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.Config.VaultsMinimumLock,
 		in.Config.VaultsMinimumUnlock,
 		in.Config.VaultsSeasonOneEndTimestamp,
-		vaultsInterimPeriodYieldCollectorAddress,
+		vaultsSeasonTwoYieldCollectorAddress,
 		in.Cdc,
 		in.StoreService,
 		in.Logger,

@@ -166,8 +166,8 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 			return err
 		}
 	} else {
-		// Handle the vaults yield logic for the interim period.
-		if err := k.handleVaultsYieldInterimPeriod(ctx); err != nil {
+		// Handle the vaults yield logic for Season Two.
+		if err := k.handleVaultsYieldSeasonTwo(ctx); err != nil {
 			return err
 		}
 	}
@@ -465,10 +465,9 @@ func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) er
 	return nil
 }
 
-// handleVaultsYieldInterimPeriod handles the logic of the vaults between
-// Season One and Season Two. Yield from the Staked vault gets redirected to a
-// configured collector address.
-func (k *Keeper) handleVaultsYieldInterimPeriod(ctx context.Context) error {
+// handleVaultsYieldSeasonTwo handles the logic of the vaults for Season Two.
+// Yield from the Staked vault gets redirected to a configured collector address.
+func (k *Keeper) handleVaultsYieldSeasonTwo(ctx context.Context) error {
 	// Claim the yield of the Staked vault.
 	yield, err := k.claimModuleYield(ctx, vaults.StakedVaultAddress)
 	if err != nil {
@@ -476,7 +475,7 @@ func (k *Keeper) handleVaultsYieldInterimPeriod(ctx context.Context) error {
 	}
 
 	// Send the Staked vault yield to the Collector address.
-	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, k.vaultsInterimPeriodYieldCollector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
+	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, k.vaultsSeasonTwoYieldCollector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
 	if err != nil {
 		return err
 	}

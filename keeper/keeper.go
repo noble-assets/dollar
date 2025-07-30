@@ -48,12 +48,12 @@ import (
 )
 
 type Keeper struct {
-	denom                             string
-	authority                         string
-	vaultsMinimumLock                 int64
-	vaultsMinimumUnlock               int64
-	vaultsSeasonOneEndTimestamp       int64
-	vaultsInterimPeriodYieldCollector sdk.AccAddress
+	denom                         string
+	authority                     string
+	vaultsMinimumLock             int64
+	vaultsMinimumUnlock           int64
+	vaultsSeasonOneEndTimestamp   int64
+	vaultsSeasonTwoYieldCollector sdk.AccAddress
 
 	cdc   codec.Codec
 	store store.KVStoreService
@@ -97,7 +97,7 @@ func NewKeeper(
 	vaultsMinimumLock int64,
 	vaultsMinimumUnlock int64,
 	vaultsSeasonOneEndTimestamp int64,
-	vaultsInterimPeriodYieldCollector sdk.AccAddress,
+	vaultsSeasonTwoYieldCollector sdk.AccAddress,
 	cdc codec.Codec,
 	store store.KVStoreService,
 	logger log.Logger,
@@ -125,12 +125,12 @@ func NewKeeper(
 	builder := collections.NewSchemaBuilder(store)
 
 	keeper := &Keeper{
-		denom:                             denom,
-		authority:                         authority,
-		vaultsMinimumLock:                 vaultsMinimumLock,
-		vaultsMinimumUnlock:               vaultsMinimumUnlock,
-		vaultsSeasonOneEndTimestamp:       vaultsSeasonOneEndTimestamp,
-		vaultsInterimPeriodYieldCollector: vaultsInterimPeriodYieldCollector,
+		denom:                         denom,
+		authority:                     authority,
+		vaultsMinimumLock:             vaultsMinimumLock,
+		vaultsMinimumUnlock:           vaultsMinimumUnlock,
+		vaultsSeasonOneEndTimestamp:   vaultsSeasonOneEndTimestamp,
+		vaultsSeasonTwoYieldCollector: vaultsSeasonTwoYieldCollector,
 
 		cdc:   cdc,
 		store: store,
@@ -300,11 +300,10 @@ func (k *Keeper) GetDenom() string {
 	return k.denom
 }
 
-// GetVaultsInterimPeriodYieldCollector is a utility that returns the
-// configured yield collector address for the staked vault between Season One
-// and Season Two.
-func (k *Keeper) GetVaultsInterimPeriodYieldCollector() sdk.AccAddress {
-	return k.vaultsInterimPeriodYieldCollector
+// GetVaultsSeasonTwoYieldCollector is a utility that returns the
+// configured yield collector address for Vaults Season Two.
+func (k *Keeper) GetVaultsSeasonTwoYieldCollector() sdk.AccAddress {
+	return k.vaultsSeasonTwoYieldCollector
 }
 
 // GetYield is a utility that returns the user's current amount of claimable $USDN yield.

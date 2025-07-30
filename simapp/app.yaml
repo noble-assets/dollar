@@ -73,7 +73,7 @@ modules:
       vaults_minimum_lock: 1e6
       vaults_minimum_unlock: 1e6
       vaults_season_one_end_timestamp: 1752223200
-      vaults_interim_period_yield_collector: noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69
+      vaults_season_two_yield_collector: noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69
   - name: wormhole
     config:
       "@type": wormhole.module.v1.Module
