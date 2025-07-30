@@ -26,6 +26,8 @@ if ! [ -f .dollar/data/priv_validator_state.json ]; then
   TEMP=.dollar/genesis.json
   touch $TEMP && jq '.app_state.staking.params.bond_denom = "ustake"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.dollar.portal.owner = "noble1s7evsmath5f3ef7vk97ru2tez9k5rs00klunzu"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
+  touch $TEMP && jq '.app_state.dollar.vaults.season_one_ended = true' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
+  touch $TEMP && jq '.app_state.dollar.vaults.season_two_yield_collector = "noble1s7evsmath5f3ef7vk97ru2tez9k5rs00klunzu"' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.wormhole.config.chain_id = 4009' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.wormhole.config.gov_chain = 1' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json
   touch $TEMP && jq '.app_state.wormhole.config.gov_address = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ="' .dollar/config/genesis.json > $TEMP && mv $TEMP .dollar/config/genesis.json

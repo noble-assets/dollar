@@ -2073,7 +2073,7 @@ func TestStakedVaultSeasonTwo(t *testing.T) {
 	vaultsServer := keeper.NewVaultsMsgServer(k)
 	vaultsQueryServer := keeper.NewVaultsQueryServer(k)
 	bob := utils.TestAccount()
-	vaultsSeasonTwoYieldCollectorAddress := k.GetVaultsSeasonTwoYieldCollector().String()
+	vaultsSeasonTwoYieldCollectorAddress := k.GetVaultsSeasonTwoYieldCollector(ctx).String()
 	ctx = ctx.WithHeaderInfo(header.Info{Time: time.Date(2020, 1, 0, 0, 0, 0, 0, time.UTC)})
 
 	// ARRANGE: Bob mints 100 USDN.
