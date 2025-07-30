@@ -1990,6 +1990,8 @@ func TestVaultsSeasonOneEnd(t *testing.T) {
 	stats, _ := vaultsQueryServer.Stats(ctx, &vaults.QueryStats{})
 	assert.Equal(t, uint64(1), stats.StakedTotalUsers)
 	assert.Equal(t, uint64(0), stats.FlexibleTotalUsers)
+	flexiblePrincipal, _ := k.Principal.Get(ctx, vaults.FlexibleVaultAddress)
+	assert.Equal(t, math.NewInt(156331422), flexiblePrincipal) // non-claimed rewards
 
 	// ACT: Bob attempts to lock 1 USDN in the Flexible Vault.
 	_, err = vaultsServer.Lock(ctx, &vaults.MsgLock{
@@ -2083,7 +2085,7 @@ func TestStakedVaultInterimPeriod(t *testing.T) {
 
 	// ACT: Collector claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
-		Signer: bob.Address,
+		Signer: vaultsInterimPeriodYieldCollectorAddress,
 	})
 	require.NoError(t, err)
 
@@ -2139,6 +2141,15 @@ func TestStakedVaultInterimPeriod(t *testing.T) {
 
 	// ASSERT: Collector balance didn't change.
 	require.Equal(t, bank.Balances[vaultsInterimPeriodYieldCollectorAddress].AmountOf("uusdn"), math.NewInt(5*ONE))
+
+	// ACT: Collector claims the yield.
+	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
+		Signer: vaultsInterimPeriodYieldCollectorAddress,
+	})
+	require.NoError(t, err)
+
+	// ASSERT: Collector earned yield on top of the 5$ received from the Staked Vault rewards.
+	require.Equal(t, bank.Balances[vaultsInterimPeriodYieldCollectorAddress].AmountOf("uusdn"), math.NewInt(5.5*ONE))
 
 	// ACT: Bob claims the yield.
 	_, err = server.ClaimYield(ctx, &types.MsgClaimYield{
