@@ -41,7 +41,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		defer func() {
 			// We mark Vaults Season One as ended even if there is an error.
 			if err := k.VaultsSeasonOneEnded.Set(ctx, true); err != nil {
-				k.logger.Error("failed to set season one as ended", "err", err)
+				k.logger.Error("failed to set vaults season one as ended", "err", err)
 			}
 		}()
 
