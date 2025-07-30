@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v2.1.0
+
+*Jul 30, 2025*
+
+This is a consensus-breaking minor release to the `v2` line.
+
+### FEATURES
+
+- Implement `BeginBlocker` to end Vaults Season One after a specific timestamp. ([#48](https://github.com/noble-assets/dollar/pull/48))
+
 ## v2.0.2
 
 *Jul 8, 2025*

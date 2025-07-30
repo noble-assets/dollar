@@ -1,0 +1,1 @@
+- Implement `BeginBlocker` to end Vaults Season One after a specific timestamp. ([#48](https://github.com/noble-assets/dollar/pull/48))
