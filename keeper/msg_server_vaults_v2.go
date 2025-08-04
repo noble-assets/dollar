@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/big"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
@@ -41,6 +42,12 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 	// Validate deposit amount
 	if msg.Amount.IsZero() || msg.Amount.IsNegative() {
 		return nil, fmt.Errorf("deposit amount must be positive")
+	}
+
+	// Check for potential overflow - prevent deposits that are too large
+	maxSafeInt := math.NewIntFromBigInt(new(big.Int).Rsh(new(big.Int).Sub(new(big.Int).Exp(big.NewInt(2), big.NewInt(255), nil), big.NewInt(1)), 1))
+	if msg.Amount.GT(maxSafeInt) {
+		return nil, fmt.Errorf("deposit amount too large, risk of overflow")
 	}
 
 	// Get or create vault state
@@ -83,9 +90,17 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 			ActiveExitRequests: 0,
 		}
 	} else {
-		// Update existing position
-		userPosition.Shares = userPosition.Shares.Add(sharesToMint)
-		userPosition.OriginalDeposit = userPosition.OriginalDeposit.Add(msg.Amount)
+		// Update existing position with overflow protection
+		newShares := userPosition.Shares.Add(sharesToMint)
+		newDeposit := userPosition.OriginalDeposit.Add(msg.Amount)
+
+		// Verify no overflow occurred
+		if newShares.LT(userPosition.Shares) || newDeposit.LT(userPosition.OriginalDeposit) {
+			return nil, fmt.Errorf("deposit would cause integer overflow")
+		}
+
+		userPosition.Shares = newShares
+		userPosition.OriginalDeposit = newDeposit
 		userPosition.LastActivityTime = blockTime
 		if msg.ReceiveYield {
 			userPosition.ReceiveYield = true // User can opt into yield but not out once opted in
@@ -97,9 +112,17 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 		return nil, fmt.Errorf("failed to save user position: %w", err)
 	}
 
-	// Update vault state
-	vaultState.TotalShares = vaultState.TotalShares.Add(sharesToMint)
-	vaultState.TotalNav = vaultState.TotalNav.Add(msg.Amount)
+	// Update vault state with overflow protection
+	newTotalShares := vaultState.TotalShares.Add(sharesToMint)
+	newTotalNav := vaultState.TotalNav.Add(msg.Amount)
+
+	// Verify no overflow occurred
+	if newTotalShares.LT(vaultState.TotalShares) || newTotalNav.LT(vaultState.TotalNav) {
+		return nil, fmt.Errorf("deposit would cause vault state overflow")
+	}
+
+	vaultState.TotalShares = newTotalShares
+	vaultState.TotalNav = newTotalNav
 
 	// Recalculate share price (should be same or very close due to proportional increase)
 	vaultState.SharePrice = k.calculateV2SharePrice(vaultState)
@@ -274,7 +297,19 @@ func (k vaultV2MsgServer) UpdateNAV(ctx context.Context, msg *vaultsv2.MsgUpdate
 	var changeBps int32
 	if !previousNav.IsZero() {
 		change := math.LegacyNewDecFromInt(msg.NewNav.Sub(previousNav)).Quo(math.LegacyNewDecFromInt(previousNav))
-		changeBps = int32(change.MulInt64(10000).TruncateInt64()) // Convert to basis points
+		changeBpsDec := change.MulInt64(10000)
+
+		// Check bounds to prevent int64 overflow
+		maxInt64 := math.LegacyNewDec(9223372036854775807)  // math.MaxInt64
+		minInt64 := math.LegacyNewDec(-9223372036854775808) // math.MinInt64
+
+		if changeBpsDec.GT(maxInt64) {
+			changeBps = int32(9999) // Cap at 99.99% change
+		} else if changeBpsDec.LT(minInt64) {
+			changeBps = int32(-9999) // Cap at -99.99% change
+		} else {
+			changeBps = int32(changeBpsDec.TruncateInt64()) // Convert to basis points
+		}
 	}
 
 	if err := k.SetV2VaultState(ctx, msg.VaultType, vaultState); err != nil {
