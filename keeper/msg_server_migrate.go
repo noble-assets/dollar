@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -438,8 +439,22 @@ func (k *Keeper) CancelMigration(ctx context.Context) error {
 // These would be fully implemented in state_vaults_v2.go
 
 func (k *Keeper) GetUserLockedLegacyPositions(ctx context.Context, user sdk.AccAddress, vaultType vaults.VaultType) ([]vaults.LockedLegacyPosition, error) {
-	// Implementation would iterate through V2LockedLegacyPositionPrefix for user
-	return nil, nil // Placeholder
+	var lockedPositions []vaults.LockedLegacyPosition
+
+	// Iterate through all locked positions for this user
+	err := k.V2Collections.LockedLegacyPositions.Walk(ctx, collections.NewPrefixedTripleRange[[]byte, int32, int64](user.Bytes()), func(key collections.Triple[[]byte, int32, int64], position vaults.LockedLegacyPosition) (bool, error) {
+		// Check if this position matches the requested vault type
+		if vaults.VaultType(key.K2()) == vaultType {
+			lockedPositions = append(lockedPositions, position)
+		}
+		return false, nil // Continue iteration
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to iterate locked legacy positions: %w", err)
+	}
+
+	return lockedPositions, nil
 }
 
 func (k *Keeper) SetMigrationState(ctx context.Context, state vaults.MigrationState) error {
@@ -447,8 +462,7 @@ func (k *Keeper) SetMigrationState(ctx context.Context, state vaults.MigrationSt
 }
 
 func (k *Keeper) SetBlockMigrationCount(ctx context.Context, blockHeight, count int64) error {
-	// Implementation would track per-block migration counts
-	return nil // Placeholder
+	return k.V2Collections.BlockMigrationCounts.Set(ctx, blockHeight, count)
 }
 
 func (k *Keeper) SetMigrationStats(ctx context.Context, stats vaults.MigrationStats) error {
@@ -456,6 +470,60 @@ func (k *Keeper) SetMigrationStats(ctx context.Context, stats vaults.MigrationSt
 }
 
 func (k *Keeper) GetMigrationBlockReason(ctx context.Context, user sdk.AccAddress, vaultType vaults.VaultType) (*vaults.MigrationBlockReason, error) {
-	// Implementation would check for blocking conditions
-	return nil, nil // Placeholder
+	// Check if user has already migrated
+	hasMigrated, err := k.HasUserMigrated(ctx, user, vaultType)
+	if err != nil {
+		return &vaults.MigrationBlockReason{
+			ReasonCode:    "MIGRATION_CHECK_FAILED",
+			ReasonMessage: fmt.Sprintf("Failed to check migration status: %v", err),
+			Temporary:     true,
+		}, nil
+	}
+
+	if hasMigrated {
+		return &vaults.MigrationBlockReason{
+			ReasonCode:    "ALREADY_MIGRATED",
+			ReasonMessage: "User has already migrated for this vault type",
+			Temporary:     false,
+		}, nil
+	}
+
+	// Check if migration is in a valid state
+	migrationState, err := k.GetMigrationState(ctx)
+	if err != nil {
+		return &vaults.MigrationBlockReason{
+			ReasonCode:    "STATE_CHECK_FAILED",
+			ReasonMessage: fmt.Sprintf("Failed to check migration state: %v", err),
+			Temporary:     true,
+		}, nil
+	}
+
+	if migrationState != vaults.MIGRATION_STATE_ACTIVE && migrationState != vaults.MIGRATION_STATE_CLOSING {
+		return &vaults.MigrationBlockReason{
+			ReasonCode:    "MIGRATION_NOT_ACTIVE",
+			ReasonMessage: fmt.Sprintf("Migration is not active, current state: %s", migrationState.String()),
+			Temporary:     false,
+		}, nil
+	}
+
+	// Check if user has any legacy positions to migrate
+	positions, err := k.GetUserLegacyPositions(ctx, user, vaultType)
+	if err != nil {
+		return &vaults.MigrationBlockReason{
+			ReasonCode:    "POSITION_CHECK_FAILED",
+			ReasonMessage: fmt.Sprintf("Failed to check legacy positions: %v", err),
+			Temporary:     true,
+		}, nil
+	}
+
+	if len(positions) == 0 {
+		return &vaults.MigrationBlockReason{
+			ReasonCode:    "NO_POSITIONS",
+			ReasonMessage: "User has no legacy positions to migrate",
+			Temporary:     false,
+		}, nil
+	}
+
+	// No blocking conditions found
+	return nil, nil
 }

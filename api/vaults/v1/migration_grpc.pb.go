@@ -205,3 +205,191 @@ var MigrationMsg_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "noble/dollar/vaults/v1/migration.proto",
 }
+
+const (
+	MigrationQuery_MigrationStatus_FullMethodName     = "/noble.dollar.vaults.v1.MigrationQuery/MigrationStatus"
+	MigrationQuery_UserMigrationStatus_FullMethodName = "/noble.dollar.vaults.v1.MigrationQuery/UserMigrationStatus"
+	MigrationQuery_MigrationPreview_FullMethodName    = "/noble.dollar.vaults.v1.MigrationQuery/MigrationPreview"
+)
+
+// MigrationQueryClient is the client API for MigrationQuery service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// Migration query service
+type MigrationQueryClient interface {
+	// Get current migration status
+	MigrationStatus(ctx context.Context, in *QueryMigrationStatusRequest, opts ...grpc.CallOption) (*QueryMigrationStatusResponse, error)
+	// Get user's migration status
+	UserMigrationStatus(ctx context.Context, in *QueryUserMigrationStatusRequest, opts ...grpc.CallOption) (*QueryUserMigrationStatusResponse, error)
+	// Preview migration outcome for a user
+	MigrationPreview(ctx context.Context, in *QueryMigrationPreviewRequest, opts ...grpc.CallOption) (*QueryMigrationPreviewResponse, error)
+}
+
+type migrationQueryClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMigrationQueryClient(cc grpc.ClientConnInterface) MigrationQueryClient {
+	return &migrationQueryClient{cc}
+}
+
+func (c *migrationQueryClient) MigrationStatus(ctx context.Context, in *QueryMigrationStatusRequest, opts ...grpc.CallOption) (*QueryMigrationStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryMigrationStatusResponse)
+	err := c.cc.Invoke(ctx, MigrationQuery_MigrationStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *migrationQueryClient) UserMigrationStatus(ctx context.Context, in *QueryUserMigrationStatusRequest, opts ...grpc.CallOption) (*QueryUserMigrationStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryUserMigrationStatusResponse)
+	err := c.cc.Invoke(ctx, MigrationQuery_UserMigrationStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *migrationQueryClient) MigrationPreview(ctx context.Context, in *QueryMigrationPreviewRequest, opts ...grpc.CallOption) (*QueryMigrationPreviewResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryMigrationPreviewResponse)
+	err := c.cc.Invoke(ctx, MigrationQuery_MigrationPreview_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MigrationQueryServer is the server API for MigrationQuery service.
+// All implementations must embed UnimplementedMigrationQueryServer
+// for forward compatibility.
+//
+// Migration query service
+type MigrationQueryServer interface {
+	// Get current migration status
+	MigrationStatus(context.Context, *QueryMigrationStatusRequest) (*QueryMigrationStatusResponse, error)
+	// Get user's migration status
+	UserMigrationStatus(context.Context, *QueryUserMigrationStatusRequest) (*QueryUserMigrationStatusResponse, error)
+	// Preview migration outcome for a user
+	MigrationPreview(context.Context, *QueryMigrationPreviewRequest) (*QueryMigrationPreviewResponse, error)
+	mustEmbedUnimplementedMigrationQueryServer()
+}
+
+// UnimplementedMigrationQueryServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedMigrationQueryServer struct{}
+
+func (UnimplementedMigrationQueryServer) MigrationStatus(context.Context, *QueryMigrationStatusRequest) (*QueryMigrationStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MigrationStatus not implemented")
+}
+func (UnimplementedMigrationQueryServer) UserMigrationStatus(context.Context, *QueryUserMigrationStatusRequest) (*QueryUserMigrationStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserMigrationStatus not implemented")
+}
+func (UnimplementedMigrationQueryServer) MigrationPreview(context.Context, *QueryMigrationPreviewRequest) (*QueryMigrationPreviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MigrationPreview not implemented")
+}
+func (UnimplementedMigrationQueryServer) mustEmbedUnimplementedMigrationQueryServer() {}
+func (UnimplementedMigrationQueryServer) testEmbeddedByValue()                        {}
+
+// UnsafeMigrationQueryServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MigrationQueryServer will
+// result in compilation errors.
+type UnsafeMigrationQueryServer interface {
+	mustEmbedUnimplementedMigrationQueryServer()
+}
+
+func RegisterMigrationQueryServer(s grpc.ServiceRegistrar, srv MigrationQueryServer) {
+	// If the following call pancis, it indicates UnimplementedMigrationQueryServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&MigrationQuery_ServiceDesc, srv)
+}
+
+func _MigrationQuery_MigrationStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMigrationStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MigrationQueryServer).MigrationStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MigrationQuery_MigrationStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MigrationQueryServer).MigrationStatus(ctx, req.(*QueryMigrationStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MigrationQuery_UserMigrationStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryUserMigrationStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MigrationQueryServer).UserMigrationStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MigrationQuery_UserMigrationStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MigrationQueryServer).UserMigrationStatus(ctx, req.(*QueryUserMigrationStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MigrationQuery_MigrationPreview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryMigrationPreviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MigrationQueryServer).MigrationPreview(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MigrationQuery_MigrationPreview_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MigrationQueryServer).MigrationPreview(ctx, req.(*QueryMigrationPreviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// MigrationQuery_ServiceDesc is the grpc.ServiceDesc for MigrationQuery service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var MigrationQuery_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "noble.dollar.vaults.v1.MigrationQuery",
+	HandlerType: (*MigrationQueryServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "MigrationStatus",
+			Handler:    _MigrationQuery_MigrationStatus_Handler,
+		},
+		{
+			MethodName: "UserMigrationStatus",
+			Handler:    _MigrationQuery_UserMigrationStatus_Handler,
+		},
+		{
+			MethodName: "MigrationPreview",
+			Handler:    _MigrationQuery_MigrationPreview_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "noble/dollar/vaults/v1/migration.proto",
+}

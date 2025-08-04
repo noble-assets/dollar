@@ -472,8 +472,22 @@ func (k *Keeper) GetBlockMigrationCount(ctx context.Context, blockHeight int64) 
 }
 
 func (k *Keeper) GetUserLegacyPositions(ctx context.Context, user sdk.AccAddress, vaultType vaults.VaultType) ([]vaults.Position, error) {
-	// Implementation would read from existing VaultsPositions
-	return nil, nil // Placeholder
+	var positions []vaults.Position
+
+	// Iterate through all positions for this user and vault type
+	err := k.VaultsPositions.Walk(ctx, collections.NewPrefixedTripleRange[[]byte, int32, int64](user.Bytes()), func(key collections.Triple[[]byte, int32, int64], position vaults.Position) (bool, error) {
+		// Check if this position matches the requested vault type
+		if vaults.VaultType(key.K2()) == vaultType {
+			positions = append(positions, position)
+		}
+		return false, nil // Continue iteration
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to iterate user positions: %w", err)
+	}
+
+	return positions, nil
 }
 
 func (k *Keeper) GetV2VaultState(ctx context.Context, vaultType vaults.VaultType) (vaults.VaultState, error) {
@@ -504,9 +518,8 @@ func (k *Keeper) SetV2UserPosition(ctx context.Context, vaultType vaults.VaultTy
 	return k.V2Collections.UserPositions.Set(ctx, key, position)
 }
 
-func (k *Keeper) SetLockedLegacyPosition(ctx context.Context, key collections.Triple[[]byte, int32, int64], position V2LockedLegacyPosition) error {
-	// Implementation would write to V2LockedLegacyPositionPrefix
-	return nil // Placeholder
+func (k *Keeper) SetLockedLegacyPosition(ctx context.Context, key collections.Triple[[]byte, int32, int64], position vaults.LockedLegacyPosition) error {
+	return k.V2Collections.LockedLegacyPositions.Set(ctx, key, position)
 }
 
 func (k *Keeper) RemoveLockedLegacyPosition(ctx context.Context, key collections.Triple[[]byte, int32, int64]) error {
@@ -522,6 +535,35 @@ func (k *Keeper) GetUserMigrationRecord(ctx context.Context, user sdk.AccAddress
 }
 
 func (k *Keeper) UpdateMigrationStats(ctx context.Context, vaultType vaults.VaultType, migratedValue, shares math.Int) error {
-	// Implementation would update V2MigrationStatsKey
-	return nil // Placeholder
+	// Get current migration stats
+	stats, err := k.V2Collections.MigrationStats.Get(ctx)
+	if errors.Is(err, collections.ErrNotFound) {
+		// Initialize new stats if not found
+		stats = vaults.MigrationStats{
+			TotalUsers:             0,
+			UsersMigrated:          0,
+			TotalValueLocked:       math.ZeroInt(),
+			ValueMigrated:          math.ZeroInt(),
+			TotalSharesIssued:      math.ZeroInt(),
+			LastMigrationTime:      sdk.UnwrapSDKContext(ctx).BlockTime(),
+			AverageGasPerMigration: 0,
+			CompletionPercentage:   0,
+		}
+	} else if err != nil {
+		return fmt.Errorf("failed to get migration stats: %w", err)
+	}
+
+	// Update stats
+	stats.UsersMigrated++
+	stats.ValueMigrated = stats.ValueMigrated.Add(migratedValue)
+	stats.TotalSharesIssued = stats.TotalSharesIssued.Add(shares)
+	stats.LastMigrationTime = sdk.UnwrapSDKContext(ctx).BlockTime()
+
+	// Calculate completion percentage if we have total users
+	if stats.TotalUsers > 0 {
+		stats.CompletionPercentage = int32((stats.UsersMigrated * 10000) / stats.TotalUsers) // basis points
+	}
+
+	// Save updated stats
+	return k.V2Collections.MigrationStats.Set(ctx, stats)
 }

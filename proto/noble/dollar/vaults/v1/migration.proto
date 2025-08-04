@@ -25,6 +25,18 @@ service MigrationMsg {
   rpc UpdateMigrationState(MsgUpdateMigrationState) returns (MsgUpdateMigrationStateResponse);
 }
 
+// Migration query service
+service MigrationQuery {
+  // Get current migration status
+  rpc MigrationStatus(QueryMigrationStatusRequest) returns (QueryMigrationStatusResponse);
+
+  // Get user's migration status
+  rpc UserMigrationStatus(QueryUserMigrationStatusRequest) returns (QueryUserMigrationStatusResponse);
+
+  // Preview migration outcome for a user
+  rpc MigrationPreview(QueryMigrationPreviewRequest) returns (QueryMigrationPreviewResponse);
+}
+
 // MsgMigratePosition allows users to migrate their legacy positions to the new vault system
 message MsgMigratePosition {
   option (cosmos.msg.v1.signer) = "signer";
@@ -384,4 +396,101 @@ message MigrationBlockReason {
     (gogoproto.nullable) = true,
     (gogoproto.stdtime) = true
   ];
+}
+
+// Migration query messages
+
+message QueryMigrationStatusRequest {}
+
+message QueryMigrationStatusResponse {
+  // Current migration state
+  MigrationState state = 1;
+  // Total value migrated
+  string total_migrated = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Total value remaining to migrate
+  string total_remaining = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Number of users migrated
+  int64 users_migrated = 4;
+  // Number of users remaining
+  int64 users_remaining = 5;
+}
+
+message QueryUserMigrationStatusRequest {
+  // User address to check
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // Vault type (optional, defaults to all)
+  VaultType vault_type = 2;
+}
+
+message QueryUserMigrationStatusResponse {
+  // Whether user has migrated
+  bool has_migrated = 1;
+  // Legacy positions (if not migrated)
+  repeated vaults.v1.Position legacy_positions = 2;
+  // Migration record (if migrated)
+  UserMigrationRecord migration_record = 3;
+  // Estimated shares if they migrate now
+  string estimated_shares = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+message QueryMigrationPreviewRequest {
+  // User address
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // Vault type
+  VaultType vault_type = 2;
+}
+
+message QueryMigrationPreviewResponse {
+  // Total value to be migrated
+  string total_value = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Principal component
+  string principal_amount = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Accrued rewards component
+  string accrued_rewards = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Estimated shares to receive
+  string estimated_shares = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Current NAV used for calculation
+  string current_nav = 5 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Number of positions to be migrated
+  int64 position_count = 6;
 }
