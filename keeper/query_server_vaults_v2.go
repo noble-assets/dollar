@@ -10,6 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"dollar.noble.xyz/v2/types/vaults"
+	vaultsv2 "dollar.noble.xyz/v2/types/vaults/v2"
 )
 
 // vaultV2QueryServer is the server API for VaultV2Query service
@@ -18,14 +19,14 @@ type vaultV2QueryServer struct {
 }
 
 // NewVaultV2QueryServer returns an implementation of the V2 vault QueryServer interface
-func NewVaultV2QueryServer(keeper *Keeper) vaults.VaultV2QueryServer {
+func NewVaultV2QueryServer(keeper *Keeper) vaultsv2.QueryServer {
 	return &vaultV2QueryServer{Keeper: keeper}
 }
 
-var _ vaults.VaultV2QueryServer = vaultV2QueryServer{}
+var _ vaultsv2.QueryServer = vaultV2QueryServer{}
 
-// VaultState implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) VaultState(ctx context.Context, req *vaults.QueryVaultStateRequest) (*vaults.QueryVaultStateResponse, error) {
+// VaultInfo implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) VaultInfo(ctx context.Context, req *vaultsv2.QueryVaultInfoRequest) (*vaultsv2.QueryVaultInfoResponse, error) {
 	if req.VaultType == vaults.UNSPECIFIED {
 		return nil, fmt.Errorf("vault type must be specified")
 	}
@@ -33,30 +34,61 @@ func (k vaultV2QueryServer) VaultState(ctx context.Context, req *vaults.QueryVau
 	// Get vault state
 	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
 	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			// Return default state for non-existent vault
+			return &vaultsv2.QueryVaultInfoResponse{
+				Config: vaultsv2.VaultConfig{
+					VaultType: req.VaultType,
+					Enabled:   true,
+				},
+				TotalShares:     math.ZeroInt().String(),
+				TotalNav:        math.ZeroInt().String(),
+				SharePrice:      math.LegacyOneDec().String(),
+				TotalDepositors: 0,
+			}, nil
+		}
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	// Get NAV config
-	navConfig, err := k.getNAVConfig(ctx, req.VaultType)
-	if err != nil && !errors.Is(err, collections.ErrNotFound) {
-		return nil, fmt.Errorf("failed to get NAV config: %w", err)
+	// TODO: Get actual vault config
+	config := vaultsv2.VaultConfig{
+		VaultType: req.VaultType,
+		Enabled:   vaultState.DepositsEnabled,
 	}
 
-	// Get fee config
-	feeConfig, err := k.getFeeConfig(ctx, req.VaultType)
-	if err != nil && !errors.Is(err, collections.ErrNotFound) {
-		return nil, fmt.Errorf("failed to get fee config: %w", err)
-	}
-
-	return &vaults.QueryVaultStateResponse{
-		VaultState: &vaultState,
-		NavConfig:  &navConfig,
-		FeeConfig:  &feeConfig,
+	return &vaultsv2.QueryVaultInfoResponse{
+		Config:          config,
+		TotalShares:     vaultState.TotalShares.String(),
+		TotalNav:        vaultState.TotalNav.String(),
+		SharePrice:      vaultState.SharePrice.String(),
+		TotalDepositors: vaultState.TotalUsers,
 	}, nil
 }
 
-// UserPosition implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaults.QueryUserPositionRequest) (*vaults.QueryUserPositionResponse, error) {
+// AllVaults implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) AllVaults(ctx context.Context, req *vaultsv2.QueryAllVaultsRequest) (*vaultsv2.QueryAllVaultsResponse, error) {
+	var vaultList []vaultsv2.QueryVaultInfoResponse
+
+	// Query for STAKED vault
+	stakedResp, err := k.VaultInfo(ctx, &vaultsv2.QueryVaultInfoRequest{VaultType: vaults.STAKED})
+	if err == nil {
+		vaultList = append(vaultList, *stakedResp)
+	}
+
+	// Query for FLEXIBLE vault
+	flexibleResp, err := k.VaultInfo(ctx, &vaultsv2.QueryVaultInfoRequest{VaultType: vaults.FLEXIBLE})
+	if err == nil {
+		vaultList = append(vaultList, *flexibleResp)
+	}
+
+	return &vaultsv2.QueryAllVaultsResponse{
+		Vaults: vaultList,
+		// TODO: Implement pagination
+	}, nil
+}
+
+// UserPosition implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaultsv2.QueryUserPositionRequest) (*vaultsv2.QueryUserPositionResponse, error) {
 	// Validate address
 	userAddr, err := k.address.StringToBytes(req.Address)
 	if err != nil {
@@ -72,18 +104,18 @@ func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaults.QueryU
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			// Return empty position for user with no position
-			return &vaults.QueryUserPositionResponse{
-				Position: &vaults.UserPosition{
+			return &vaultsv2.QueryUserPositionResponse{
+				Position: &vaultsv2.UserPosition{
 					Shares:             math.ZeroInt(),
-					PrincipalDeposited: math.ZeroInt(),
-					AvgEntryPrice:      math.LegacyZeroDec(),
-					FirstDeposit:       sdk.UnwrapSDKContext(ctx).BlockTime(),
-					LastActivity:       sdk.UnwrapSDKContext(ctx).BlockTime(),
-					ForgoYield:         false,
-					ExitRequests:       []*vaults.ExitRequest{},
+					OriginalDeposit:    math.ZeroInt(),
+					FirstDepositTime:   sdk.UnwrapSDKContext(ctx).BlockTime(),
+					LastActivityTime:   sdk.UnwrapSDKContext(ctx).BlockTime(),
+					ReceiveYield:       false,
+					SharesPendingExit:  math.ZeroInt(),
+					ActiveExitRequests: 0,
 				},
-				CurrentValue:   math.ZeroInt(),
-				UnrealizedGain: math.ZeroInt(),
+				CurrentValue:    math.ZeroInt().String(),
+				UnrealizedYield: math.ZeroInt().String(),
 			}, nil
 		}
 		return nil, fmt.Errorf("failed to get user position: %w", err)
@@ -95,178 +127,85 @@ func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaults.QueryU
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	sharePrice := k.calculateSharePrice(vaultState)
+	sharePrice := k.calculateV2SharePrice(vaultState)
 	currentValue := sharePrice.MulInt(position.Shares).TruncateInt()
-	unrealizedGain := currentValue.Sub(position.PrincipalDeposited)
+	unrealizedGain := currentValue.Sub(position.OriginalDeposit)
 
-	return &vaults.QueryUserPositionResponse{
-		Position:       &position,
-		CurrentValue:   currentValue,
-		UnrealizedGain: unrealizedGain,
+	return &vaultsv2.QueryUserPositionResponse{
+		Position:        position,
+		CurrentValue:    currentValue.String(),
+		UnrealizedYield: unrealizedGain.String(),
 	}, nil
 }
 
-// SharePrice implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) SharePrice(ctx context.Context, req *vaults.QuerySharePriceRequest) (*vaults.QuerySharePriceResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
+// UserPositions implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) UserPositions(ctx context.Context, req *vaultsv2.QueryUserPositionsRequest) (*vaultsv2.QueryUserPositionsResponse, error) {
+	var positions []vaultsv2.UserPositionWithVault
 
-	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get vault state: %w", err)
-	}
-
-	sharePrice := k.calculateSharePrice(vaultState)
-
-	return &vaults.QuerySharePriceResponse{
-		SharePrice: sharePrice,
-		LastUpdate: vaultState.LastNavUpdate,
-	}, nil
-}
-
-// PricingInfo implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) PricingInfo(ctx context.Context, req *vaults.QueryPricingInfoRequest) (*vaults.QueryPricingInfoResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
-	if req.Amount.IsZero() || req.Amount.IsNegative() {
-		return nil, fmt.Errorf("amount must be positive")
-	}
-
-	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get vault state: %w", err)
-	}
-
-	var pricingInfo vaults.PricingInfo
-
-	if req.IsDeposit {
-		// Calculate deposit pricing
-		shareCalc, err := k.calculateDepositShares(ctx, req.VaultType, req.Amount, vaultState)
-		if err != nil {
-			return nil, fmt.Errorf("failed to calculate deposit shares: %w", err)
-		}
-
-		pricingInfo = vaults.PricingInfo{
-			SharePrice:       shareCalc.SharePrice,
-			EffectiveFeeRate: k.getEffectiveDepositFeeRate(ctx, req.VaultType),
-			ExpectedAmount:   shareCalc.SharesAfterFees,
-		}
-	} else {
-		// Calculate withdrawal pricing
-		// Convert amount to shares first
-		sharePrice := k.calculateSharePrice(vaultState)
-		shares := sharePrice.Quo(math.LegacyOneDec()).MulInt(req.Amount).TruncateInt()
-
-		withdrawCalc, err := k.calculateWithdrawalTokens(ctx, req.VaultType, shares, vaultState)
-		if err != nil {
-			return nil, fmt.Errorf("failed to calculate withdrawal tokens: %w", err)
-		}
-
-		pricingInfo = vaults.PricingInfo{
-			SharePrice:       withdrawCalc.SharePrice,
-			EffectiveFeeRate: k.getEffectiveWithdrawalFeeRate(ctx, req.VaultType),
-			ExpectedAmount:   withdrawCalc.TokensAfterFees,
-		}
-	}
-
-	return &vaults.QueryPricingInfoResponse{
-		PricingInfo: &pricingInfo,
-	}, nil
-}
-
-// ExitQueue implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) ExitQueue(ctx context.Context, req *vaults.QueryExitQueueRequest) (*vaults.QueryExitQueueResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
-	var userRequests []*vaults.ExitRequest
-	var totalQueueLength uint64
-	var totalQueuedShares math.Int = math.ZeroInt()
-
-	// If user address is provided, get their specific requests
-	if req.UserAddress != "" {
-		userAddr, err := k.address.StringToBytes(req.UserAddress)
-		if err != nil {
-			return nil, fmt.Errorf("invalid user address: %w", err)
-		}
-
-		position, err := k.GetV2UserPosition(ctx, req.VaultType, userAddr)
-		if err != nil && !errors.Is(err, collections.ErrNotFound) {
-			return nil, fmt.Errorf("failed to get user position: %w", err)
-		}
-
-		if !errors.Is(err, collections.ErrNotFound) {
-			userRequests = position.ExitRequests
-		}
-	}
-
-	// Count total queue length and shares
-	err := k.V2Collections.ExitQueue.Walk(ctx, collections.NewPrefixedPairRange[int32, uint64](int32(req.VaultType)), func(key collections.Pair[int32, uint64], exitRequestID string) (bool, error) {
-		totalQueueLength++
-
-		// Get the exit request to sum shares
-		exitRequest, err := k.V2Collections.ExitRequests.Get(ctx, exitRequestID)
-		if err == nil && exitRequest.Status == vaults.EXIT_STATUS_PENDING {
-			totalQueuedShares = totalQueuedShares.Add(exitRequest.Shares)
-		}
-
-		return false, nil // Continue iteration
+	// Check STAKED vault
+	stakedPos, err := k.UserPosition(ctx, &vaultsv2.QueryUserPositionRequest{
+		Address:   req.Address,
+		VaultType: vaults.STAKED,
 	})
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to iterate exit queue: %w", err)
+	if err == nil && !stakedPos.Position.Shares.IsZero() {
+		positions = append(positions, vaultsv2.UserPositionWithVault{
+			VaultType:    vaults.STAKED,
+			Position:     *stakedPos.Position,
+			CurrentValue: stakedPos.CurrentValue,
+		})
 	}
 
-	return &vaults.QueryExitQueueResponse{
-		UserRequests:      userRequests,
-		TotalQueueLength:  totalQueueLength,
-		TotalQueuedShares: totalQueuedShares,
+	// Check FLEXIBLE vault
+	flexiblePos, err := k.UserPosition(ctx, &vaultsv2.QueryUserPositionRequest{
+		Address:   req.Address,
+		VaultType: vaults.FLEXIBLE,
+	})
+	if err == nil && !flexiblePos.Position.Shares.IsZero() {
+		positions = append(positions, vaultsv2.UserPositionWithVault{
+			VaultType:    vaults.FLEXIBLE,
+			Position:     *flexiblePos.Position,
+			CurrentValue: flexiblePos.CurrentValue,
+		})
+	}
+
+	return &vaultsv2.QueryUserPositionsResponse{
+		Positions: positions,
+		// TODO: Implement pagination
 	}, nil
 }
 
-// DepositPreview implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) DepositPreview(ctx context.Context, req *vaults.QueryDepositPreviewRequest) (*vaults.QueryDepositPreviewResponse, error) {
+// SharePrice implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) SharePrice(ctx context.Context, req *vaultsv2.QuerySharePriceRequest) (*vaultsv2.QuerySharePriceResponse, error) {
 	if req.VaultType == vaults.UNSPECIFIED {
 		return nil, fmt.Errorf("vault type must be specified")
-	}
-
-	if req.Amount.IsZero() || req.Amount.IsNegative() {
-		return nil, fmt.Errorf("deposit amount must be positive")
 	}
 
 	// Get vault state
-	vaultState, err := k.getOrCreateVaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
 	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			return &vaultsv2.QuerySharePriceResponse{
+				SharePrice:  math.LegacyOneDec().String(),
+				TotalShares: math.ZeroInt().String(),
+				TotalNav:    math.ZeroInt().String(),
+			}, nil
+		}
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	// Calculate shares and fees
-	shareCalc, err := k.calculateDepositShares(ctx, req.VaultType, req.Amount, vaultState)
-	if err != nil {
-		return nil, fmt.Errorf("failed to calculate deposit shares: %w", err)
-	}
+	sharePrice := k.calculateV2SharePrice(vaultState)
 
-	return &vaults.QueryDepositPreviewResponse{
-		EstimatedShares: shareCalc.SharesAfterFees,
-		SharePrice:      shareCalc.SharePrice,
-		FeeAmount:       shareCalc.FeeAmount,
+	return &vaultsv2.QuerySharePriceResponse{
+		SharePrice:  sharePrice.String(),
+		TotalShares: vaultState.TotalShares.String(),
+		TotalNav:    vaultState.TotalNav.String(),
 	}, nil
 }
 
-// WithdrawalPreview implements vaults.VaultV2QueryServer.
-func (k vaultV2QueryServer) WithdrawalPreview(ctx context.Context, req *vaults.QueryWithdrawalPreviewRequest) (*vaults.QueryWithdrawalPreviewResponse, error) {
+// NAVInfo implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) NAVInfo(ctx context.Context, req *vaultsv2.QueryNAVInfoRequest) (*vaultsv2.QueryNAVInfoResponse, error) {
 	if req.VaultType == vaults.UNSPECIFIED {
 		return nil, fmt.Errorf("vault type must be specified")
-	}
-
-	if req.Shares.IsZero() || req.Shares.IsNegative() {
-		return nil, fmt.Errorf("withdrawal shares must be positive")
 	}
 
 	// Get vault state
@@ -275,179 +214,197 @@ func (k vaultV2QueryServer) WithdrawalPreview(ctx context.Context, req *vaults.Q
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	// Calculate tokens and fees
-	withdrawCalc, err := k.calculateWithdrawalTokens(ctx, req.VaultType, req.Shares, vaultState)
-	if err != nil {
-		return nil, fmt.Errorf("failed to calculate withdrawal tokens: %w", err)
+	navInfo := vaultsv2.NAVInfo{
+		CurrentNav:           vaultState.TotalNav,
+		PreviousNav:          vaultState.TotalNav, // TODO: Track previous NAV
+		LastUpdate:           vaultState.LastNavUpdate,
+		ChangeBps:            0,     // TODO: Calculate change
+		CircuitBreakerActive: false, // TODO: Implement circuit breaker
 	}
 
-	return &vaults.QueryWithdrawalPreviewResponse{
-		EstimatedTokens: withdrawCalc.TokensAfterFees,
-		SharePrice:      withdrawCalc.SharePrice,
-		FeeAmount:       withdrawCalc.FeeAmount,
+	return &vaultsv2.QueryNAVInfoResponse{
+		NavInfo: navInfo,
 	}, nil
 }
 
-// Helper functions for query server
-
-func (k *Keeper) getEffectiveDepositFeeRate(ctx context.Context, vaultType vaults.VaultType) int32 {
-	feeConfig, err := k.getFeeConfig(ctx, vaultType)
-	if err != nil || !feeConfig.FeesEnabled {
-		return 0
+// DepositPreview implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) DepositPreview(ctx context.Context, req *vaultsv2.QueryDepositPreviewRequest) (*vaultsv2.QueryDepositPreviewResponse, error) {
+	if req.VaultType == vaults.UNSPECIFIED {
+		return nil, fmt.Errorf("vault type must be specified")
 	}
-	return feeConfig.DepositFeeRate
-}
 
-func (k *Keeper) getEffectiveWithdrawalFeeRate(ctx context.Context, vaultType vaults.VaultType) int32 {
-	feeConfig, err := k.getFeeConfig(ctx, vaultType)
-	if err != nil || !feeConfig.FeesEnabled {
-		return 0
+	// Parse amount
+	amount, ok := math.NewIntFromString(req.Amount)
+	if !ok || amount.IsZero() || amount.IsNegative() {
+		return nil, fmt.Errorf("invalid deposit amount")
 	}
-	return feeConfig.WithdrawalFeeRate
-}
 
-// Migration-related query methods
-
-// MigrationStatus returns the current migration status
-func (k vaultV2QueryServer) MigrationStatus(ctx context.Context, req *vaults.QueryMigrationStatusRequest) (*vaults.QueryMigrationStatusResponse, error) {
-	// Get migration state
-	migrationState, err := k.GetMigrationState(ctx)
+	// Get vault state
+	vaultState, err := k.getOrCreateV2VaultState(ctx, req.VaultType)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get migration state: %w", err)
+		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	// Get migration stats
-	stats, err := k.V2Collections.MigrationStats.Get(ctx)
-	if err != nil && !errors.Is(err, collections.ErrNotFound) {
-		return nil, fmt.Errorf("failed to get migration stats: %w", err)
-	}
+	// Calculate shares to receive
+	sharePrice := k.calculateV2SharePrice(vaultState)
+	sharesToReceive := math.LegacyNewDecFromInt(amount).Quo(sharePrice).TruncateInt()
 
-	if errors.Is(err, collections.ErrNotFound) {
-		// Return default stats if not found
-		stats = vaults.MigrationStats{
-			TotalUsers:        0,
-			UsersMigrated:     0,
-			TotalValueLocked:  math.ZeroInt(),
-			ValueMigrated:     math.ZeroInt(),
-			TotalSharesIssued: math.ZeroInt(),
-		}
-	}
-
-	return &vaults.QueryMigrationStatusResponse{
-		State:          migrationState,
-		TotalMigrated:  stats.ValueMigrated,
-		TotalRemaining: stats.TotalValueLocked.Sub(stats.ValueMigrated),
-		UsersMigrated:  int64(stats.UsersMigrated),
-		UsersRemaining: int64(stats.TotalUsers - stats.UsersMigrated),
+	return &vaultsv2.QueryDepositPreviewResponse{
+		SharesToReceive: sharesToReceive.String(),
+		FeesToPay:       math.ZeroInt().String(), // TODO: Implement fees
+		NetAmount:       amount.String(),
+		SharePrice:      sharePrice.String(),
+		FeeRateBps:      0, // TODO: Get from fee config
 	}, nil
 }
 
-// UserMigrationStatus returns a user's migration status
-func (k vaultV2QueryServer) UserMigrationStatus(ctx context.Context, req *vaults.QueryUserMigrationStatusRequest) (*vaults.QueryUserMigrationStatusResponse, error) {
-	// Validate address
-	userAddr, err := k.address.StringToBytes(req.Address)
+// WithdrawalPreview implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) WithdrawalPreview(ctx context.Context, req *vaultsv2.QueryWithdrawalPreviewRequest) (*vaultsv2.QueryWithdrawalPreviewResponse, error) {
+	if req.VaultType == vaults.UNSPECIFIED {
+		return nil, fmt.Errorf("vault type must be specified")
+	}
+
+	// Parse shares
+	shares, ok := math.NewIntFromString(req.Shares)
+	if !ok || shares.IsZero() || shares.IsNegative() {
+		return nil, fmt.Errorf("invalid withdrawal shares")
+	}
+
+	// Get vault state
+	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
 	if err != nil {
-		return nil, fmt.Errorf("invalid user address: %w", err)
+		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	// Check if user has migrated
-	migrationRecord, err := k.GetUserMigrationRecord(ctx, userAddr)
-	hasMigrated := !errors.Is(err, collections.ErrNotFound)
+	// Calculate amount to receive
+	sharePrice := k.calculateV2SharePrice(vaultState)
+	amountToReceive := sharePrice.MulInt(shares).TruncateInt()
 
-	if err != nil && !errors.Is(err, collections.ErrNotFound) {
-		return nil, fmt.Errorf("failed to get migration record: %w", err)
+	return &vaultsv2.QueryWithdrawalPreviewResponse{
+		AmountToReceive: amountToReceive.String(),
+		FeesToPay:       math.ZeroInt().String(), // TODO: Implement fees
+		GrossAmount:     amountToReceive.String(),
+		SharePrice:      sharePrice.String(),
+		FeeRateBps:      0, // TODO: Get from fee config
+	}, nil
+}
+
+// ExitQueue implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) ExitQueue(ctx context.Context, req *vaultsv2.QueryExitQueueRequest) (*vaultsv2.QueryExitQueueResponse, error) {
+	// In the simplified design, we don't implement exit queues
+	return &vaultsv2.QueryExitQueueResponse{
+		ExitRequests: []vaultsv2.ExitRequestWithUser{},
+		// TODO: Implement pagination
+	}, nil
+}
+
+// UserExitRequests implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) UserExitRequests(ctx context.Context, req *vaultsv2.QueryUserExitRequestsRequest) (*vaultsv2.QueryUserExitRequestsResponse, error) {
+	// In the simplified design, we don't implement exit queues
+	return &vaultsv2.QueryUserExitRequestsResponse{
+		ExitRequests: []vaultsv2.ExitRequestWithVault{},
+		// TODO: Implement pagination
+	}, nil
+}
+
+// FeeInfo implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) FeeInfo(ctx context.Context, req *vaultsv2.QueryFeeInfoRequest) (*vaultsv2.QueryFeeInfoResponse, error) {
+	if req.VaultType == vaults.UNSPECIFIED {
+		return nil, fmt.Errorf("vault type must be specified")
 	}
 
-	response := &vaults.QueryUserMigrationStatusResponse{
-		HasMigrated: hasMigrated,
+	// TODO: Get actual fee config
+	feeConfig := vaultsv2.FeeConfig{
+		DepositFeeRate:    0,
+		WithdrawalFeeRate: 0,
 	}
 
-	if hasMigrated {
-		response.MigrationRecord = &migrationRecord
-	} else {
-		// Get legacy positions for estimation
-		legacyPositions, err := k.GetUserLegacyPositions(ctx, userAddr, vaults.FLEXIBLE)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get legacy positions: %w", err)
-		}
+	return &vaultsv2.QueryFeeInfoResponse{
+		FeeConfig: feeConfig,
+	}, nil
+}
 
-		// Convert slice of values to slice of pointers
-		legacyPositionPtrs := make([]*vaults.Position, len(legacyPositions))
-		for i := range legacyPositions {
-			legacyPositionPtrs[i] = &legacyPositions[i]
-		}
-		response.LegacyPositions = legacyPositionPtrs
+// Stats implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) Stats(ctx context.Context, req *vaultsv2.QueryStatsRequest) (*vaultsv2.QueryStatsResponse, error) {
+	if req.VaultType == vaults.UNSPECIFIED {
+		return nil, fmt.Errorf("vault type must be specified")
+	}
 
-		// Calculate estimated shares if they have positions
-		if len(legacyPositions) > 0 {
-			migrationAmounts, err := k.CalculateMigrationAmounts(ctx, legacyPositions, math.ZeroInt())
-			if err == nil {
-				estimatedShares, err := k.CalculateMigrationShares(ctx, vaults.FLEXIBLE, migrationAmounts.TotalAmount)
-				if err == nil {
-					response.EstimatedShares = estimatedShares
-				}
+	// Get vault state
+	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			// Return zero stats for non-existent vault
+			stats := vaultsv2.VaultStatsEntry{
+				VaultType:             req.VaultType,
+				TotalDepositors:       0,
+				TotalDeposited:        math.ZeroInt(),
+				TotalWithdrawn:        math.ZeroInt(),
+				TotalFeesCollected:    math.ZeroInt(),
+				TotalYieldDistributed: math.ZeroInt(),
+				ActivePositions:       0,
+				AveragePositionSize:   math.LegacyZeroDec(),
 			}
+			return &vaultsv2.QueryStatsResponse{Stats: stats}, nil
 		}
-	}
-
-	return response, nil
-}
-
-// MigrationPreview calculates what a user would receive from migration
-func (k vaultV2QueryServer) MigrationPreview(ctx context.Context, req *vaults.QueryMigrationPreviewRequest) (*vaults.QueryMigrationPreviewResponse, error) {
-	// Validate address
-	userAddr, err := k.address.StringToBytes(req.Address)
-	if err != nil {
-		return nil, fmt.Errorf("invalid user address: %w", err)
-	}
-
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
-	// Get legacy positions
-	legacyPositions, err := k.GetUserLegacyPositions(ctx, userAddr, req.VaultType)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get legacy positions: %w", err)
-	}
-
-	if len(legacyPositions) == 0 {
-		return &vaults.QueryMigrationPreviewResponse{
-			TotalValue:      math.ZeroInt(),
-			PrincipalAmount: math.ZeroInt(),
-			AccruedRewards:  math.ZeroInt(),
-			EstimatedShares: math.ZeroInt(),
-			CurrentNav:      math.LegacyZeroDec(),
-			PositionCount:   0,
-		}, nil
-	}
-
-	// Calculate migration amounts
-	migrationAmounts, err := k.CalculateMigrationAmounts(ctx, legacyPositions, math.ZeroInt())
-	if err != nil {
-		return nil, fmt.Errorf("failed to calculate migration amounts: %w", err)
-	}
-
-	// Calculate estimated shares
-	estimatedShares, err := k.CalculateMigrationShares(ctx, req.VaultType, migrationAmounts.TotalAmount)
-	if err != nil {
-		return nil, fmt.Errorf("failed to calculate migration shares: %w", err)
-	}
-
-	// Get current NAV
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
-	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
-	currentNAV := k.calculateSharePrice(vaultState)
+	// TODO: Calculate actual stats from historical data
+	stats := vaultsv2.VaultStatsEntry{
+		VaultType:             req.VaultType,
+		TotalDepositors:       vaultState.TotalUsers,
+		TotalDeposited:        vaultState.TotalNav,   // Simplified
+		TotalWithdrawn:        math.ZeroInt(),        // TODO: Track withdrawals
+		TotalFeesCollected:    math.ZeroInt(),        // TODO: Track fees
+		TotalYieldDistributed: math.ZeroInt(),        // TODO: Track yield
+		ActivePositions:       vaultState.TotalUsers, // Simplified
+		AveragePositionSize:   math.LegacyZeroDec(),  // TODO: Calculate
+	}
 
-	return &vaults.QueryMigrationPreviewResponse{
-		TotalValue:      migrationAmounts.TotalAmount,
-		PrincipalAmount: migrationAmounts.Principal,
-		AccruedRewards:  migrationAmounts.Rewards,
-		EstimatedShares: estimatedShares,
-		CurrentNav:      currentNAV,
-		PositionCount:   migrationAmounts.PositionCount,
+	return &vaultsv2.QueryStatsResponse{
+		Stats: stats,
+	}, nil
+}
+
+// AllStats implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) AllStats(ctx context.Context, req *vaultsv2.QueryAllStatsRequest) (*vaultsv2.QueryAllStatsResponse, error) {
+	var allStats []vaultsv2.VaultStatsEntry
+
+	// Get stats for STAKED vault
+	stakedResp, err := k.Stats(ctx, &vaultsv2.QueryStatsRequest{VaultType: vaults.STAKED})
+	if err == nil {
+		allStats = append(allStats, stakedResp.Stats)
+	}
+
+	// Get stats for FLEXIBLE vault
+	flexibleResp, err := k.Stats(ctx, &vaultsv2.QueryStatsRequest{VaultType: vaults.FLEXIBLE})
+	if err == nil {
+		allStats = append(allStats, flexibleResp.Stats)
+	}
+
+	return &vaultsv2.QueryAllStatsResponse{
+		Stats: allStats,
+		// TODO: Implement pagination
+	}, nil
+}
+
+// Params implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) Params(ctx context.Context, req *vaultsv2.QueryParamsRequest) (*vaultsv2.QueryParamsResponse, error) {
+	// TODO: Get actual params from state
+	params := vaultsv2.Params{
+		Authority:                k.authority,
+		DefaultDepositFeeRate:    0,
+		DefaultWithdrawalFeeRate: 0,
+		MinDepositAmount:         math.NewInt(1000000), // 1 USDC
+		MinWithdrawalAmount:      math.NewInt(1000000), // 1 USDC
+		MaxNavChangeBps:          1000,                 // 10%
+		ExitRequestTimeout:       86400,                // 24 hours
+		MaxExitRequestsPerBlock:  100,
+		VaultsEnabled:            true,
+	}
+
+	return &vaultsv2.QueryParamsResponse{
+		Params: params,
 	}, nil
 }

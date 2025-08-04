@@ -1,0 +1,274 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v2;
+
+import "amino/amino.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+import "noble/dollar/vaults/v2/vaults.proto";
+import "noble/dollar/vaults/v2/nav.proto";
+import "noble/dollar/vaults/v2/fees.proto";
+import "noble/dollar/vaults/v2/genesis.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
+
+// Query defines the gRPC querier service for V2 vaults
+service Query {
+  // VaultInfo returns configuration and state for a specific vault type
+  rpc VaultInfo(QueryVaultInfoRequest) returns (QueryVaultInfoResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/vault/{vault_type}";
+  }
+
+  // AllVaults returns information for all vault types
+  rpc AllVaults(QueryAllVaultsRequest) returns (QueryAllVaultsResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/vaults";
+  }
+
+  // UserPosition returns a user's position in a specific vault
+  rpc UserPosition(QueryUserPositionRequest) returns (QueryUserPositionResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/position/{address}/{vault_type}";
+  }
+
+  // UserPositions returns all of a user's positions across vault types
+  rpc UserPositions(QueryUserPositionsRequest) returns (QueryUserPositionsResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/positions/{address}";
+  }
+
+  // SharePrice returns the current share price for a vault type
+  rpc SharePrice(QuerySharePriceRequest) returns (QuerySharePriceResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/price/{vault_type}";
+  }
+
+  // NAVInfo returns NAV information for a vault type
+  rpc NAVInfo(QueryNAVInfoRequest) returns (QueryNAVInfoResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/nav/{vault_type}";
+  }
+
+  // DepositPreview shows what a user would receive for a deposit
+  rpc DepositPreview(QueryDepositPreviewRequest) returns (QueryDepositPreviewResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/preview/deposit/{vault_type}/{amount}";
+  }
+
+  // WithdrawalPreview shows what a user would receive for a withdrawal
+  rpc WithdrawalPreview(QueryWithdrawalPreviewRequest) returns (QueryWithdrawalPreviewResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/preview/withdrawal/{vault_type}/{shares}";
+  }
+
+  // ExitQueue returns pending exit requests for a vault type
+  rpc ExitQueue(QueryExitQueueRequest) returns (QueryExitQueueResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/exit-queue/{vault_type}";
+  }
+
+  // UserExitRequests returns a user's pending exit requests
+  rpc UserExitRequests(QueryUserExitRequestsRequest) returns (QueryUserExitRequestsResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/exit-requests/{address}";
+  }
+
+  // FeeInfo returns fee configuration for a vault type
+  rpc FeeInfo(QueryFeeInfoRequest) returns (QueryFeeInfoResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/fees/{vault_type}";
+  }
+
+  // Stats returns statistics for a vault type
+  rpc Stats(QueryStatsRequest) returns (QueryStatsResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/stats/{vault_type}";
+  }
+
+  // AllStats returns statistics for all vault types
+  rpc AllStats(QueryAllStatsRequest) returns (QueryAllStatsResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/stats";
+  }
+
+  // Params returns the module parameters
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/noble/dollar/vaults/v2/params";
+  }
+}
+
+// QueryVaultInfoRequest requests information about a specific vault
+message QueryVaultInfoRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+}
+
+// QueryVaultInfoResponse returns vault information
+message QueryVaultInfoResponse {
+  VaultConfig config = 1 [(gogoproto.nullable) = false];
+  string total_shares = 2;
+  string total_nav = 3;
+  string share_price = 4;
+  uint64 total_depositors = 5;
+}
+
+// QueryAllVaultsRequest requests information about all vaults
+message QueryAllVaultsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllVaultsResponse returns information about all vaults
+message QueryAllVaultsResponse {
+  repeated QueryVaultInfoResponse vaults = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryUserPositionRequest requests a user's position in a specific vault
+message QueryUserPositionRequest {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+}
+
+// QueryUserPositionResponse returns a user's position
+message QueryUserPositionResponse {
+  UserPosition position = 1;
+  string current_value = 2;
+  string unrealized_yield = 3;
+}
+
+// QueryUserPositionsRequest requests all of a user's positions
+message QueryUserPositionsRequest {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryUserPositionsResponse returns all of a user's positions
+message QueryUserPositionsResponse {
+  repeated UserPositionWithVault positions = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// UserPositionWithVault includes the vault type with the position
+message UserPositionWithVault {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+  UserPosition position = 2 [(gogoproto.nullable) = false];
+  string current_value = 3;
+}
+
+// QuerySharePriceRequest requests the share price for a vault
+message QuerySharePriceRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+}
+
+// QuerySharePriceResponse returns the share price
+message QuerySharePriceResponse {
+  string share_price = 1;
+  string total_shares = 2;
+  string total_nav = 3;
+}
+
+// QueryNAVInfoRequest requests NAV information
+message QueryNAVInfoRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+}
+
+// QueryNAVInfoResponse returns NAV information
+message QueryNAVInfoResponse {
+  NAVInfo nav_info = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryDepositPreviewRequest requests a deposit preview
+message QueryDepositPreviewRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+  string amount = 2;
+}
+
+// QueryDepositPreviewResponse returns deposit preview information
+message QueryDepositPreviewResponse {
+  string shares_to_receive = 1;
+  string fees_to_pay = 2;
+  string net_amount = 3;
+  string share_price = 4;
+  int32 fee_rate_bps = 5;
+}
+
+// QueryWithdrawalPreviewRequest requests a withdrawal preview
+message QueryWithdrawalPreviewRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+  string shares = 2;
+}
+
+// QueryWithdrawalPreviewResponse returns withdrawal preview information
+message QueryWithdrawalPreviewResponse {
+  string amount_to_receive = 1;
+  string fees_to_pay = 2;
+  string gross_amount = 3;
+  string share_price = 4;
+  int32 fee_rate_bps = 5;
+}
+
+// QueryExitQueueRequest requests the exit queue for a vault
+message QueryExitQueueRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryExitQueueResponse returns the exit queue
+message QueryExitQueueResponse {
+  repeated ExitRequestWithUser exit_requests = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// ExitRequestWithUser includes the user address with the exit request
+message ExitRequestWithUser {
+  string user = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  ExitRequest exit_request = 2 [(gogoproto.nullable) = false];
+}
+
+// QueryUserExitRequestsRequest requests a user's exit requests
+message QueryUserExitRequestsRequest {
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryUserExitRequestsResponse returns a user's exit requests
+message QueryUserExitRequestsResponse {
+  repeated ExitRequestWithVault exit_requests = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// ExitRequestWithVault includes the vault type with the exit request
+message ExitRequestWithVault {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+  ExitRequest exit_request = 2 [(gogoproto.nullable) = false];
+}
+
+// QueryFeeInfoRequest requests fee information
+message QueryFeeInfoRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+}
+
+// QueryFeeInfoResponse returns fee information
+message QueryFeeInfoResponse {
+  FeeConfig fee_config = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryStatsRequest requests statistics for a vault
+message QueryStatsRequest {
+  noble.dollar.vaults.v1.VaultType vault_type = 1;
+}
+
+// QueryStatsResponse returns vault statistics
+message QueryStatsResponse {
+  VaultStatsEntry stats = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllStatsRequest requests statistics for all vaults
+message QueryAllStatsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllStatsResponse returns statistics for all vaults
+message QueryAllStatsResponse {
+  repeated VaultStatsEntry stats = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParamsRequest requests module parameters
+message QueryParamsRequest {}
+
+// QueryParamsResponse returns module parameters
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

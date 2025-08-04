@@ -1,0 +1,443 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v2;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+import "noble/dollar/vaults/v2/genesis.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
+
+// Msg defines the V2 vaults transaction service
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  // Deposit into a V2 vault
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+
+  // Withdraw from a V2 vault (flexible vaults only)
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+
+  // Request exit from a staked vault
+  rpc RequestExit(MsgRequestExit) returns (MsgRequestExitResponse);
+
+  // Cancel a pending exit request
+  rpc CancelExit(MsgCancelExit) returns (MsgCancelExitResponse);
+
+  // Set yield preference for a user's position
+  rpc SetYieldPreference(MsgSetYieldPreference) returns (MsgSetYieldPreferenceResponse);
+
+  // Process exit queue (admin only)
+  rpc ProcessExitQueue(MsgProcessExitQueue) returns (MsgProcessExitQueueResponse);
+
+  // Update NAV for a vault (authority only)
+  rpc UpdateNAV(MsgUpdateNAV) returns (MsgUpdateNAVResponse);
+
+  // Update vault configuration (authority only)
+  rpc UpdateVaultConfig(MsgUpdateVaultConfig) returns (MsgUpdateVaultConfigResponse);
+
+  // Update module parameters (authority only)
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+}
+
+// MsgDeposit allows users to deposit into a V2 vault
+message MsgDeposit {
+  option (cosmos.msg.v1.signer) = "depositor";
+  option (amino.name) = "dollar/vaults/v2/Deposit";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User making the deposit
+  string depositor = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to deposit into
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // Amount to deposit
+  string amount = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Whether user wants to receive yield
+  bool receive_yield = 4;
+
+  // Minimum shares to receive (slippage protection)
+  string min_shares = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgDepositResponse returns the results of a deposit
+message MsgDepositResponse {
+  // Shares received
+  string shares_received = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Amount actually deposited (after fees)
+  string amount_deposited = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Fees paid
+  string fees_paid = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Share price at time of deposit
+  string share_price = 4 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgWithdraw allows users to withdraw from flexible V2 vaults
+message MsgWithdraw {
+  option (cosmos.msg.v1.signer) = "withdrawer";
+  option (amino.name) = "dollar/vaults/v2/Withdraw";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User making the withdrawal
+  string withdrawer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to withdraw from
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // Shares to redeem
+  string shares = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Minimum amount to receive (slippage protection)
+  string min_amount = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgWithdrawResponse returns the results of a withdrawal
+message MsgWithdrawResponse {
+  // Amount withdrawn
+  string amount_withdrawn = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Shares redeemed
+  string shares_redeemed = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Fees paid
+  string fees_paid = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Share price at time of withdrawal
+  string share_price = 4 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgRequestExit allows users to request exit from staked vaults
+message MsgRequestExit {
+  option (cosmos.msg.v1.signer) = "requester";
+  option (amino.name) = "dollar/vaults/v2/RequestExit";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User requesting exit
+  string requester = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to exit from
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // Shares to exit
+  string shares = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgRequestExitResponse returns the results of an exit request
+message MsgRequestExitResponse {
+  // Exit request ID
+  string exit_request_id = 1;
+
+  // Shares to be exited
+  string shares_to_exit = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Expected unlock time
+  google.protobuf.Timestamp expected_unlock_time = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Estimated amount to receive (subject to change)
+  string estimated_amount = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgCancelExit allows users to cancel pending exit requests
+message MsgCancelExit {
+  option (cosmos.msg.v1.signer) = "requester";
+  option (amino.name) = "dollar/vaults/v2/CancelExit";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User cancelling the exit request
+  string requester = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // Exit request ID to cancel
+  string exit_request_id = 3;
+}
+
+// MsgCancelExitResponse returns the results of cancelling an exit request
+message MsgCancelExitResponse {
+  // Shares returned to staking
+  string shares_returned = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Exit request ID that was cancelled
+  string cancelled_exit_request_id = 2;
+}
+
+// MsgSetYieldPreference allows users to set their yield preference
+message MsgSetYieldPreference {
+  option (cosmos.msg.v1.signer) = "user";
+  option (amino.name) = "dollar/vaults/v2/SetYieldPreference";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User setting the preference
+  string user = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // Whether to receive yield
+  bool receive_yield = 3;
+}
+
+// MsgSetYieldPreferenceResponse confirms yield preference update
+message MsgSetYieldPreferenceResponse {
+  // Previous yield preference
+  bool previous_preference = 1;
+
+  // New yield preference
+  bool new_preference = 2;
+}
+
+// MsgProcessExitQueue allows processing of exit requests (admin only)
+message MsgProcessExitQueue {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "dollar/vaults/v2/ProcessExitQueue";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // Authority processing the queue
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to process
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // Maximum number of requests to process
+  int32 max_requests = 3;
+}
+
+// MsgProcessExitQueueResponse returns processing results
+message MsgProcessExitQueueResponse {
+  // Number of requests processed
+  int32 requests_processed = 1;
+
+  // Total shares processed
+  string total_shares_processed = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total amount distributed
+  string total_amount_distributed = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Remaining requests in queue
+  int32 remaining_requests = 4;
+}
+
+// MsgUpdateNAV allows authority to update NAV for a vault
+message MsgUpdateNAV {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "dollar/vaults/v2/UpdateNAV";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // Authority updating NAV
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to update
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // New NAV value
+  string new_nav = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Reason for NAV update
+  string reason = 4;
+}
+
+// MsgUpdateNAVResponse returns NAV update results
+message MsgUpdateNAVResponse {
+  // Previous NAV
+  string previous_nav = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // New NAV
+  string new_nav = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // NAV change percentage (basis points)
+  int32 change_bps = 3;
+
+  // New share price
+  string new_share_price = 4 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgUpdateVaultConfig allows authority to update vault configuration
+message MsgUpdateVaultConfig {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "dollar/vaults/v2/UpdateVaultConfig";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // Authority updating the config
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to update
+  noble.dollar.vaults.v1.VaultType vault_type = 2;
+
+  // New vault configuration
+  VaultConfig config = 3 [(gogoproto.nullable) = false];
+
+  // Reason for config update
+  string reason = 4;
+}
+
+// MsgUpdateVaultConfigResponse confirms config update
+message MsgUpdateVaultConfigResponse {
+  // Previous configuration (JSON)
+  string previous_config = 1;
+
+  // New configuration (JSON)
+  string new_config = 2;
+}
+
+// MsgUpdateParams allows authority to update module parameters
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "dollar/vaults/v2/UpdateParams";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // Authority updating the parameters
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // New parameters
+  Params params = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgUpdateParamsResponse confirms parameter update
+message MsgUpdateParamsResponse {
+  // Previous parameters (JSON)
+  string previous_params = 1;
+
+  // New parameters (JSON)
+  string new_params = 2;
+}

@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"dollar.noble.xyz/v2/types/vaults"
+	vaultsv2 "dollar.noble.xyz/v2/types/vaults/v2"
 )
 
 // V2 Collections for share-based vault system
@@ -14,23 +15,16 @@ import (
 // V2VaultCollections contains all collections for the V2 vault system
 type V2VaultCollections struct {
 	// V2 Vault State Collections
-	VaultStates       collections.Map[int32, vaults.VaultState]                                // vault_type -> VaultState
-	UserPositions     collections.Map[collections.Pair[int32, []byte], vaults.UserPosition]    // (vault_type, address) -> UserPosition
-	ExitRequests      collections.Map[string, vaults.ExitRequest]                              // request_id -> ExitRequest
+	VaultStates       collections.Map[int32, vaultsv2.VaultState]                              // vault_type -> VaultState
+	UserPositions     collections.Map[collections.Pair[int32, []byte], vaultsv2.UserPosition]  // (vault_type, address) -> UserPosition
+	ExitRequests      collections.Map[string, vaultsv2.ExitRequest]                            // request_id -> ExitRequest
 	ExitQueue         collections.Map[collections.Pair[int32, uint64], string]                 // (vault_type, queue_pos) -> request_id
 	RemotePositions   collections.Map[collections.Pair[string, []byte], vaults.RemotePosition] // (route_id, address) -> RemotePosition
 	InFlightPositions collections.Map[uint64, vaults.InFlightPosition]                         // nonce -> InFlightPosition
 
-	// Migration State Collections
-	MigrationState        collections.Item[int32]                                                                // Current migration state
-	MigrationConfig       collections.Item[vaults.MigrationConfig]                                               // Migration configuration
-	MigrationStats        collections.Item[vaults.MigrationStats]                                                // Migration statistics
-	UserMigrationRecords  collections.Map[[]byte, vaults.UserMigrationRecord]                                    // address -> MigrationRecord
-	LockedLegacyPositions collections.Map[collections.Triple[[]byte, int32, int64], vaults.LockedLegacyPosition] // (address, vault_type, index) -> LockedPosition
-
 	// Configuration Collections
-	NAVConfigs       collections.Map[int32, vaults.NAVConfig]        // vault_type -> NAVConfig
-	FeeConfigs       collections.Map[int32, vaults.FeeConfig]        // vault_type -> FeeConfig
+	NAVConfigs       collections.Map[int32, vaultsv2.NAVConfig]      // vault_type -> NAVConfig
+	FeeConfigs       collections.Map[int32, vaultsv2.FeeConfig]      // vault_type -> FeeConfig
 	CrossChainRoutes collections.Map[string, vaults.CrossChainRoute] // route_id -> CrossChainRoute
 
 	// Fee Management Collections
@@ -44,9 +38,8 @@ type V2VaultCollections struct {
 	CrossChainSnapshots collections.Map[collections.Pair[int32, int64], vaults.CrossChainPositionSnapshot] // (vault_type, timestamp) -> Snapshot
 
 	// Operational Collections
-	BlockMigrationCounts collections.Map[int64, int64]                                        // block_height -> count
-	DriftAlerts          collections.Map[collections.Pair[string, []byte], vaults.DriftAlert] // (route_id, address) -> DriftAlert
-	LossEvents           collections.Map[collections.Pair[int32, int64], vaults.LossEvent]    // (vault_type, timestamp) -> LossEvent
+	DriftAlerts collections.Map[collections.Pair[string, []byte], vaults.DriftAlert] // (route_id, address) -> DriftAlert
+	LossEvents  collections.Map[collections.Pair[int32, int64], vaults.LossEvent]    // (vault_type, timestamp) -> LossEvent
 }
 
 // InitializeV2Collections initializes all V2 collections in the keeper
@@ -58,21 +51,21 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			collections.NewPrefix(200),
 			"v2_vault_states",
 			collections.Int32Key,
-			codec.CollValue[vaults.VaultState](k.cdc),
+			codec.CollValue[vaultsv2.VaultState](k.cdc),
 		),
 		UserPositions: collections.NewMap(
 			builder,
 			collections.NewPrefix(201),
 			"v2_user_positions",
 			collections.PairKeyCodec(collections.Int32Key, collections.BytesKey),
-			codec.CollValue[vaults.UserPosition](k.cdc),
+			codec.CollValue[vaultsv2.UserPosition](k.cdc),
 		),
 		ExitRequests: collections.NewMap(
 			builder,
 			collections.NewPrefix(202),
 			"v2_exit_requests",
 			collections.StringKey,
-			codec.CollValue[vaults.ExitRequest](k.cdc),
+			codec.CollValue[vaultsv2.ExitRequest](k.cdc),
 		),
 		ExitQueue: collections.NewMap(
 			builder,
@@ -96,54 +89,20 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			codec.CollValue[vaults.InFlightPosition](k.cdc),
 		),
 
-		// Migration State Collections
-		MigrationState: collections.NewItem(
-			builder,
-			collections.NewPrefix(210),
-			"v2_migration_state",
-			collections.Int32Value,
-		),
-		MigrationConfig: collections.NewItem(
-			builder,
-			collections.NewPrefix(211),
-			"v2_migration_config",
-			codec.CollValue[vaults.MigrationConfig](k.cdc),
-		),
-		MigrationStats: collections.NewItem(
-			builder,
-			collections.NewPrefix(212),
-			"v2_migration_stats",
-			codec.CollValue[vaults.MigrationStats](k.cdc),
-		),
-		UserMigrationRecords: collections.NewMap(
-			builder,
-			collections.NewPrefix(213),
-			"v2_user_migration_records",
-			collections.BytesKey,
-			codec.CollValue[vaults.UserMigrationRecord](k.cdc),
-		),
-		LockedLegacyPositions: collections.NewMap(
-			builder,
-			collections.NewPrefix(214),
-			"v2_locked_legacy_positions",
-			collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key),
-			codec.CollValue[vaults.LockedLegacyPosition](k.cdc),
-		),
-
 		// Configuration Collections
 		NAVConfigs: collections.NewMap(
 			builder,
 			collections.NewPrefix(220),
 			"v2_nav_configs",
 			collections.Int32Key,
-			codec.CollValue[vaults.NAVConfig](k.cdc),
+			codec.CollValue[vaultsv2.NAVConfig](k.cdc),
 		),
 		FeeConfigs: collections.NewMap(
 			builder,
 			collections.NewPrefix(221),
 			"v2_fee_configs",
 			collections.Int32Key,
-			codec.CollValue[vaults.FeeConfig](k.cdc),
+			codec.CollValue[vaultsv2.FeeConfig](k.cdc),
 		),
 		CrossChainRoutes: collections.NewMap(
 			builder,
@@ -200,13 +159,6 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 		),
 
 		// Operational Collections
-		BlockMigrationCounts: collections.NewMap(
-			builder,
-			collections.NewPrefix(250),
-			"v2_block_migration_counts",
-			collections.Int64Key,
-			collections.Int64Value,
-		),
 		DriftAlerts: collections.NewMap(
 			builder,
 			collections.NewPrefix(251),
@@ -239,11 +191,6 @@ func V2ExitQueueKey(vaultType vaults.VaultType, queuePosition uint64) collection
 // V2RemotePositionKey creates a key for remote positions
 func V2RemotePositionKey(routeID string, address sdk.AccAddress) collections.Pair[string, []byte] {
 	return collections.Join(routeID, address.Bytes())
-}
-
-// V2LockedPositionKey creates a key for locked legacy positions
-func V2LockedPositionKey(address sdk.AccAddress, vaultType vaults.VaultType, index int64) collections.Triple[[]byte, int32, int64] {
-	return collections.Join3(address.Bytes(), int32(vaultType), index)
 }
 
 // V2FeeAccrualKey creates a key for fee accruals

@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package noble.dollar.vaults.v1;
+package noble.dollar.vaults.v2;
 
 import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "dollar.noble.xyz/v2/types/vaults";
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
 
 // CrossChainRoute defines a route for cross-chain operations
 message CrossChainRoute {

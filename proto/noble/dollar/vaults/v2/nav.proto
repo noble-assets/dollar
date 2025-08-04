@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package noble.dollar.vaults.v1;
+package noble.dollar.vaults.v2;
 
 import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "dollar.noble.xyz/v2/types/vaults";
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
 
 // NAVBand defines the pricing bands for deposits and withdrawals
 message NAVBand {
@@ -33,51 +33,39 @@ message NAVConfig {
   int32 circuit_breaker_threshold = 5;
 }
 
-// VaultState represents the current state of a vault with share-based accounting
-message VaultState {
-  // Total shares outstanding
-  string total_shares = 1 [
+// NAVInfo represents current NAV information for a vault
+message NAVInfo {
+  // Current NAV value
+  string current_nav = 1 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
 
-  // Current NAV point (total value of all assets)
-  string nav_point = 2 [
+  // Previous NAV value
+  string previous_nav = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
 
-  // Last NAV update timestamp
-  google.protobuf.Timestamp last_nav_update = 3 [
+  // Last update timestamp
+  google.protobuf.Timestamp last_update = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true
   ];
 
-  // Total principal deposited (for tracking)
-  string total_principal = 4 [
-    (cosmos_proto.scalar) = "cosmos.Int",
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false,
-    (amino.dont_omitempty) = true
-  ];
+  // NAV change since last update (basis points)
+  int32 change_bps = 4;
 
-  // Accumulated yield
-  string accumulated_yield = 5 [
-    (cosmos_proto.scalar) = "cosmos.Int",
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false,
-    (amino.dont_omitempty) = true
-  ];
-
-  // Emergency flags
-  bool circuit_breaker_active = 6;
-  bool deposits_paused = 7;
-  bool withdrawals_paused = 8;
+  // Whether circuit breaker is active
+  bool circuit_breaker_active = 5;
 }
+
+
+
 
 // NAVUpdate represents a NAV update event
 message NAVUpdate {

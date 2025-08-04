@@ -1,12 +1,15 @@
 package keeper
 
 import (
+	"context"
+
 	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"dollar.noble.xyz/v2/types/vaults"
+	vaultsv2 "dollar.noble.xyz/v2/types/vaults/v2"
 )
 
 // V2VaultState represents the core state of a V2 vault with share-based accounting
@@ -337,3 +340,35 @@ var (
 	V2LastNAVUpdatePrefix = collections.NewPrefix(240) // Last NAV update by vault type
 	V2NAVHistoryPrefix    = collections.NewPrefix(241) // NAV history: (vault_type, timestamp) -> NAV
 )
+
+// Helper methods for V2 vault operations
+
+// GetV2UserPosition retrieves a user's position in a V2 vault
+func (k *Keeper) GetV2UserPosition(ctx context.Context, vaultType vaults.VaultType, userAddr sdk.AccAddress) (*vaultsv2.UserPosition, error) {
+	key := V2VaultUserKey(vaultType, userAddr)
+	position, err := k.V2Collections.UserPositions.Get(ctx, key)
+	if err != nil {
+		return nil, err
+	}
+	return &position, nil
+}
+
+// SetV2UserPosition stores a user's position in a V2 vault
+func (k *Keeper) SetV2UserPosition(ctx context.Context, vaultType vaults.VaultType, userAddr sdk.AccAddress, position *vaultsv2.UserPosition) error {
+	key := V2VaultUserKey(vaultType, userAddr)
+	return k.V2Collections.UserPositions.Set(ctx, key, *position)
+}
+
+// GetV2VaultState retrieves the state of a V2 vault
+func (k *Keeper) GetV2VaultState(ctx context.Context, vaultType vaults.VaultType) (*vaultsv2.VaultState, error) {
+	state, err := k.V2Collections.VaultStates.Get(ctx, int32(vaultType))
+	if err != nil {
+		return nil, err
+	}
+	return &state, nil
+}
+
+// SetV2VaultState stores the state of a V2 vault
+func (k *Keeper) SetV2VaultState(ctx context.Context, vaultType vaults.VaultType, state *vaultsv2.VaultState) error {
+	return k.V2Collections.VaultStates.Set(ctx, int32(vaultType), *state)
+}
