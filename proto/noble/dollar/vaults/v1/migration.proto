@@ -1,0 +1,387 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v1;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults";
+
+// Migration message service
+service MigrationMsg {
+  option (cosmos.msg.v1.service) = true;
+
+  // Migrate user position from legacy vault to new share-based vault
+  rpc MigratePosition(MsgMigratePosition) returns (MsgMigratePositionResponse);
+
+  // Emergency withdrawal from legacy vault (when migration is cancelled/failed)
+  rpc EmergencyWithdrawLegacy(MsgEmergencyWithdrawLegacy) returns (MsgEmergencyWithdrawLegacyResponse);
+
+  // Update migration state (authority only)
+  rpc UpdateMigrationState(MsgUpdateMigrationState) returns (MsgUpdateMigrationStateResponse);
+}
+
+// MsgMigratePosition allows users to migrate their legacy positions to the new vault system
+message MsgMigratePosition {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/vaults/MigratePosition";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User initiating the migration
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to migrate from
+  VaultType vault_type = 2;
+
+  // Amount to migrate (0 = migrate all positions)
+  string amount = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Whether user wants to forgo yield (for yield redistribution)
+  bool forgo_yield = 4;
+}
+
+// MsgMigratePositionResponse returns the results of a position migration
+message MsgMigratePositionResponse {
+  // Shares received in the new vault system
+  string shares_received = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Principal amount migrated
+  string principal_migrated = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Rewards included in migration
+  string rewards_migrated = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Transaction hash for reference
+  string migration_tx_hash = 4;
+
+  // Gas used for the migration
+  uint64 gas_used = 5;
+}
+
+// MsgEmergencyWithdrawLegacy allows users to withdraw from legacy positions in emergency scenarios
+message MsgEmergencyWithdrawLegacy {
+  option (cosmos.msg.v1.signer) = "signer";
+  option (amino.name) = "dollar/vaults/EmergencyWithdrawLegacy";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // User requesting emergency withdrawal
+  string signer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Vault type to withdraw from
+  VaultType vault_type = 2;
+
+  // Specific position indices to withdraw (empty = all positions)
+  repeated int64 position_indices = 3;
+}
+
+// MsgEmergencyWithdrawLegacyResponse returns the results of emergency withdrawal
+message MsgEmergencyWithdrawLegacyResponse {
+  // Amount withdrawn
+  string amount_withdrawn = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Number of positions withdrawn
+  int64 positions_withdrawn = 2;
+}
+
+// MsgUpdateMigrationState allows authority to update migration state
+message MsgUpdateMigrationState {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "dollar/vaults/UpdateMigrationState";
+
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // Authority address
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // New migration state
+  MigrationState new_state = 2;
+
+  // Reason for state change
+  string reason = 3;
+}
+
+// MsgUpdateMigrationStateResponse confirms migration state update
+message MsgUpdateMigrationStateResponse {
+  // Previous state
+  MigrationState previous_state = 1;
+
+  // New state
+  MigrationState new_state = 2;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// MigrationState represents the current state of the migration process
+enum MigrationState {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  // Migration has not started yet
+  MIGRATION_STATE_NOT_STARTED = 0;
+  // Migration is active, users can migrate
+  MIGRATION_STATE_ACTIVE = 1;
+  // Migration is in closing period (grace period warning)
+  MIGRATION_STATE_CLOSING = 2;
+  // Migration is locked, no new migrations allowed
+  MIGRATION_STATE_LOCKED = 3;
+  // Legacy vault is deprecated
+  MIGRATION_STATE_DEPRECATED = 4;
+  // Migration has been cancelled
+  MIGRATION_STATE_CANCELLED = 5;
+}
+
+// MigrationConfig defines configuration parameters for the migration process
+message MigrationConfig {
+  // Migration start time
+  google.protobuf.Timestamp start_time = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Time when migration enters closing period
+  google.protobuf.Timestamp closing_time = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Final deadline for migrations
+  google.protobuf.Timestamp final_deadline = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Maximum number of migrations allowed per block
+  int64 max_migration_per_block = 4;
+
+  // Minimum amount required for migration
+  string min_migration_amount = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Whether full migration is required (cannot partial migrate)
+  bool require_full_migration = 6;
+
+  // Whether migration is enabled
+  bool migration_enabled = 7;
+}
+
+// UserMigrationRecord tracks migration details for a specific user
+message UserMigrationRecord {
+  // When the user migrated
+  google.protobuf.Timestamp migrated_at = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Vault type migrated from
+  VaultType from_vault_type = 2;
+
+  // Number of legacy positions migrated
+  int64 legacy_position_count = 3;
+
+  // Principal amount migrated
+  string principal_migrated = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Rewards amount migrated
+  string rewards_migrated = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Shares received in new system
+  string shares_received = 6 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Migration transaction hash
+  string migration_tx_hash = 7;
+
+  // Gas used for migration
+  uint64 gas_used = 8;
+
+  // Whether user chose to forgo yield
+  bool yield_forgone = 9;
+}
+
+// MigrationStats tracks overall migration progress and statistics
+message MigrationStats {
+  // Total number of users in legacy system
+  uint64 total_users = 1;
+
+  // Number of users who have migrated
+  uint64 users_migrated = 2;
+
+  // Total value locked in legacy system
+  string total_value_locked = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total value migrated to new system
+  string value_migrated = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total shares issued through migration
+  string total_shares_issued = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Last migration timestamp
+  google.protobuf.Timestamp last_migration_time = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Average gas used per migration
+  uint64 average_gas_per_migration = 7;
+
+  // Migration completion percentage (basis points)
+  int32 completion_percentage = 8;
+}
+
+// LockedLegacyPosition represents a legacy position that has been locked during migration
+message LockedLegacyPosition {
+  // Original position details
+  Position position = 1;
+
+  // When the position was locked
+  google.protobuf.Timestamp locked_at = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Address it was migrated to (in new system)
+  bytes migrated_to = 3;
+
+  // Unique migration ID
+  string migration_id = 4;
+
+  // Whether unlock is enabled (for emergency scenarios)
+  bool unlock_enabled = 5;
+
+  // Lock reason
+  string lock_reason = 6;
+}
+
+// MigrationPreview provides a preview of what a user would receive from migration
+message MigrationPreview {
+  // Total value to be migrated
+  string total_value = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Principal component
+  string principal_amount = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Accrued rewards component
+  string accrued_rewards = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Estimated shares to receive
+  string estimated_shares = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Current NAV used for calculation
+  string current_nav = 5 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Number of positions to be migrated
+  int64 position_count = 6;
+}
+
+// MigrationBlockReason represents reasons why a user cannot migrate
+message MigrationBlockReason {
+  // Block reason code
+  string reason_code = 1;
+
+  // Human readable reason
+  string reason_message = 2;
+
+  // Whether this is a temporary block
+  bool temporary = 3;
+
+  // When the block expires (if temporary)
+  google.protobuf.Timestamp expires_at = 4 [
+    (gogoproto.nullable) = true,
+    (gogoproto.stdtime) = true
+  ];
+}
