@@ -42,10 +42,10 @@ enum PausedType {
   option (gogoproto.goproto_enum_prefix) = false;
 
   // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
-  NONE = 0;        // No operations paused
-  LOCK = 1;        // Deposits paused (N/A for V1 - already disabled)
-  UNLOCK = 2;      // Withdrawals paused
-  ALL = 3;         // All operations paused
+  NONE = 0; // No operations paused
+  LOCK = 1; // Deposits paused (N/A for V1 - already disabled)
+  UNLOCK = 2; // Withdrawals paused
+  ALL = 3; // All operations paused
 }
 
 // Reward represents accumulated rewards in legacy V1 vault system

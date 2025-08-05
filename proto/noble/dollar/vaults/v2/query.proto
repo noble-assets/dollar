@@ -9,11 +9,11 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 import "noble/dollar/vaults/v1/vaults.proto";
-import "noble/dollar/vaults/v2/vaults.proto";
-import "noble/dollar/vaults/v2/nav.proto";
+import "noble/dollar/vaults/v2/cross_chain.proto";
 import "noble/dollar/vaults/v2/fees.proto";
 import "noble/dollar/vaults/v2/genesis.proto";
-import "noble/dollar/vaults/v2/cross_chain.proto";
+import "noble/dollar/vaults/v2/nav.proto";
+import "noble/dollar/vaults/v2/vaults.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
 
@@ -133,8 +133,7 @@ service Query {
 }
 
 // QueryVaultInfoRequest requests information about a specific vault
-message QueryVaultInfoRequest {
-}
+message QueryVaultInfoRequest {}
 
 // QueryVaultInfoResponse returns vault information
 message QueryVaultInfoResponse {
@@ -187,8 +186,7 @@ message UserPositionWithVault {
 }
 
 // QuerySharePriceRequest requests the share price for a vault
-message QuerySharePriceRequest {
-}
+message QuerySharePriceRequest {}
 
 // QuerySharePriceResponse returns the share price
 message QuerySharePriceResponse {
@@ -198,8 +196,7 @@ message QuerySharePriceResponse {
 }
 
 // QueryNAVInfoRequest requests NAV information
-message QueryNAVInfoRequest {
-}
+message QueryNAVInfoRequest {}
 
 // QueryNAVInfoResponse returns NAV information
 message QueryNAVInfoResponse {
@@ -269,8 +266,7 @@ message ExitRequestWithVault {
 }
 
 // QueryFeeInfoRequest requests fee information
-message QueryFeeInfoRequest {
-}
+message QueryFeeInfoRequest {}
 
 // QueryFeeInfoResponse returns fee information
 message QueryFeeInfoResponse {
@@ -278,8 +274,7 @@ message QueryFeeInfoResponse {
 }
 
 // QueryStatsRequest requests statistics for a vault
-message QueryStatsRequest {
-}
+message QueryStatsRequest {}
 
 // QueryStatsResponse returns vault statistics
 message QueryStatsResponse {

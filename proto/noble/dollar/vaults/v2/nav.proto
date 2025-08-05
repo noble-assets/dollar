@@ -64,9 +64,6 @@ message NAVInfo {
   bool circuit_breaker_active = 5;
 }
 
-
-
-
 // NAVUpdate represents a NAV update event
 message NAVUpdate {
   // Previous NAV point

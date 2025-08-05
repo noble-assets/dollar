@@ -6,9 +6,9 @@ import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "noble/dollar/vaults/v1/vaults.proto";
-import "noble/dollar/vaults/v2/vaults.proto";
-import "noble/dollar/vaults/v2/nav.proto";
 import "noble/dollar/vaults/v2/fees.proto";
+import "noble/dollar/vaults/v2/nav.proto";
+import "noble/dollar/vaults/v2/vaults.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
 

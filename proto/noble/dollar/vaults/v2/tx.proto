@@ -8,8 +8,8 @@ import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 import "noble/dollar/vaults/v1/vaults.proto";
-import "noble/dollar/vaults/v2/genesis.proto";
 import "noble/dollar/vaults/v2/cross_chain.proto";
+import "noble/dollar/vaults/v2/genesis.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
 
