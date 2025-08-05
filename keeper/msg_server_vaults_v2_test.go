@@ -279,7 +279,7 @@ func (suite *V2VaultTestSuite) TestSlippageProtection() {
 
 	// Deposit with minimum shares protection
 	depositAmount := math.NewInt(1000000)
-	minShares := math.NewInt(100000) // Expecting at least 100K shares
+	minShares := math.NewInt(500000) // Expecting at least 500K shares (based on old price)
 	_, err = suite.msgServer.Deposit(suite.ctx, &vaultsv2.MsgDeposit{
 		Depositor:    user2,
 		Amount:       depositAmount,

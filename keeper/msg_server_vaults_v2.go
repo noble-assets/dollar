@@ -60,8 +60,8 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 	sharesToMint := math.LegacyNewDecFromInt(msg.Amount).Quo(sharePrice).TruncateInt()
 
 	// Apply slippage protection
-	if sharesToMint.LT(msg.MinShares) {
-		return nil, fmt.Errorf("insufficient shares received: expected at least %s, got %s",
+	if msg.MinShares.IsPositive() && sharesToMint.LT(msg.MinShares) {
+		return nil, fmt.Errorf("insufficient shares received due to slippage: expected at least %s, got %s",
 			msg.MinShares.String(), sharesToMint.String())
 	}
 
@@ -158,6 +158,9 @@ func (k vaultV2MsgServer) Withdraw(ctx context.Context, msg *vaultsv2.MsgWithdra
 	// Get vault state
 	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			return nil, fmt.Errorf("cannot withdraw from empty vault - no deposits have been made")
+		}
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
@@ -271,8 +274,13 @@ func (k vaultV2MsgServer) UpdateNAV(ctx context.Context, msg *vaultsv2.MsgUpdate
 		return nil, fmt.Errorf("invalid authority: expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	// Get current vault state
-	vaultState, err := k.GetV2VaultState(ctx)
+	// Validate NAV value
+	if msg.NewNav.IsZero() || msg.NewNav.IsNegative() {
+		return nil, fmt.Errorf("NAV must be positive, got: %s", msg.NewNav.String())
+	}
+
+	// Get or create vault state
+	vaultState, err := k.getOrCreateV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
