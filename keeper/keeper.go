@@ -43,7 +43,7 @@ import (
 	"dollar.noble.xyz/v2/types"
 	"dollar.noble.xyz/v2/types/portal"
 	"dollar.noble.xyz/v2/types/portal/ntt"
-	"dollar.noble.xyz/v2/types/v2"
+	v2 "dollar.noble.xyz/v2/types/v2"
 	"dollar.noble.xyz/v2/types/vaults"
 )
 
@@ -89,6 +89,9 @@ type Keeper struct {
 	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
 	VaultsRewards                collections.Map[int64, vaults.Reward]
 	VaultsStats                  collections.Item[vaults.Stats]
+
+	// V2 Vault Collections for share-based system
+	V2Collections V2VaultCollections
 }
 
 func NewKeeper(
@@ -167,6 +170,9 @@ func NewKeeper(
 		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
 		VaultsStats:                  collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
 	}
+
+	// Initialize V2 collections
+	keeper.V2Collections = keeper.InitializeV2Collections(builder)
 
 	_, err := builder.Build()
 	if err != nil {

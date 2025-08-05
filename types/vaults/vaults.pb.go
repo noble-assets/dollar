@@ -61,6 +61,8 @@ func (VaultType) EnumDescriptor() ([]byte, []int) {
 }
 
 // buf:lint:ignore ENUM_VALUE_PREFIX
+// PausedType controls which operations are paused on legacy V1 vaults
+// Note: V1 vaults only support withdrawals, so LOCK pauses withdrawals
 type PausedType int32
 
 const (
@@ -93,6 +95,7 @@ func (PausedType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_1a185cec7ba75cfc, []int{1}
 }
 
+// Reward represents accumulated rewards in legacy V1 vault system
 type Reward struct {
 	Index   int64                 `protobuf:"varint,1,opt,name=index,proto3" json:"index,omitempty"`
 	Total   cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=total,proto3,customtype=cosmossdk.io/math.Int" json:"total"`
@@ -139,6 +142,8 @@ func (m *Reward) GetIndex() int64 {
 	return 0
 }
 
+// Position represents a legacy V1 vault position (withdrawal-only)
+// Users should withdraw these positions and deposit into V2 vaults for new features
 type Position struct {
 	Principal cosmossdk_io_math.Int `protobuf:"bytes,1,opt,name=principal,proto3,customtype=cosmossdk.io/math.Int" json:"principal"`
 	Index     int64                 `protobuf:"varint,2,opt,name=index,proto3" json:"index,omitempty"`

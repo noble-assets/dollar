@@ -1,0 +1,321 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v2;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
+
+// EventDeposit is emitted when a user deposits into a V2 vault
+message EventDeposit {
+  // User address making the deposit
+  string depositor = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Amount deposited
+  string amount_deposited = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Shares received
+  string shares_received = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Share price at time of deposit
+  string share_price = 4 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Fees paid
+  string fees_paid = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Block height
+  int64 block_height = 6;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventWithdraw is emitted when a user withdraws from a V2 vault
+message EventWithdraw {
+  // User address making the withdrawal
+  string withdrawer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Shares redeemed
+  string shares_redeemed = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Amount withdrawn
+  string amount_withdrawn = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Share price at time of withdrawal
+  string share_price = 4 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Fees paid
+  string fees_paid = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Block height
+  int64 block_height = 6;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventExitRequested is emitted when a user requests an exit from a staked vault
+message EventExitRequested {
+  // User address requesting exit
+  string requester = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Shares to exit
+  string shares_to_exit = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Exit request ID
+  string exit_request_id = 3;
+
+  // Expected unlock time
+  google.protobuf.Timestamp expected_unlock_time = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Block height
+  int64 block_height = 5;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventExitCancelled is emitted when a user cancels an exit request
+message EventExitCancelled {
+  // User address cancelling exit
+  string requester = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Exit request ID that was cancelled
+  string exit_request_id = 2;
+
+  // Shares returned to staking
+  string shares_returned = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Block height
+  int64 block_height = 4;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventExitProcessed is emitted when exit requests are processed
+message EventExitProcessed {
+  // Number of exit requests processed
+  int32 requests_processed = 1;
+
+  // Total shares processed
+  string total_shares_processed = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total amount distributed
+  string total_amount_distributed = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Block height
+  int64 block_height = 4;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventNAVUpdated is emitted when NAV is updated for a vault
+message EventNAVUpdated {
+  // Previous NAV
+  string previous_nav = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // New NAV
+  string new_nav = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // NAV change percentage (basis points)
+  int32 change_bps = 3;
+
+  // Total shares outstanding
+  string total_shares = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // New share price
+  string share_price = 5 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Authority that updated NAV
+  string authority = 6 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Update reason
+  string reason = 7;
+
+  // Block height
+  int64 block_height = 8;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 9 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventFeeCollected is emitted when fees are collected
+message EventFeeCollected {
+  // Fee type (deposit, withdrawal, etc.)
+  string fee_type = 1;
+
+  // Amount collected
+  string amount_collected = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Fee rate used (basis points)
+  int32 fee_rate_bps = 3;
+
+  // User who triggered the fee
+  string payer = 4 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Block height
+  int64 block_height = 5;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventYieldPreferenceUpdated is emitted when a user updates their yield preference
+message EventYieldPreferenceUpdated {
+  // User address
+  string user = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Previous yield preference
+  bool previous_yield_preference = 2;
+
+  // New yield preference
+  bool new_yield_preference = 3;
+
+  // Block height
+  int64 block_height = 4;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// EventVaultConfigUpdated is emitted when vault configuration is updated
+message EventVaultConfigUpdated {
+  // Previous config (JSON serialized)
+  string previous_config = 1;
+
+  // New config (JSON serialized)
+  string new_config = 2;
+
+  // Authority that made the update
+  string authority = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Update reason
+  string reason = 4;
+
+  // Block height
+  int64 block_height = 5;
+
+  // Timestamp
+  google.protobuf.Timestamp timestamp = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
