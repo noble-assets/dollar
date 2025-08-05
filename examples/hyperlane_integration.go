@@ -10,6 +10,7 @@ import (
 	"dollar.noble.xyz/v2/keeper/crosschain"
 	dollarv2 "dollar.noble.xyz/v2/types/v2"
 	vaultsv2 "dollar.noble.xyz/v2/types/vaults/v2"
+	"github.com/bcp-innovations/hyperlane-cosmos/util"
 )
 
 // HyperlaneIntegrationExample demonstrates how to set up and use cross-chain vaults
@@ -45,12 +46,16 @@ func (e *HyperlaneIntegrationExample) setupProviders() {
 	)
 
 	// Setup Hyperlane Provider
+	// Create example mailbox ID
+	exampleMailboxId, _ := util.DecodeHexAddress("0x1234567890123456789012345678901234567890")
+
 	e.hyperlaneProvider = crosschain.NewHyperlaneProvider(
-		nil,       // HyperlaneMailboxKeeper - would be injected
-		nil,       // HyperlaneGasPriceFeed - would be injected
-		4,         // Noble domain ID (example)
-		200000,    // Default gas limit
-		time.Hour, // Default timeout
+		nil,              // CoreKeeper - would be injected
+		nil,              // WarpKeeper - would be injected
+		4,                // Noble domain ID (example)
+		200000,           // Default gas limit
+		time.Hour,        // Default timeout
+		exampleMailboxId, // Mailbox ID
 	)
 
 	// Register providers with keeper
