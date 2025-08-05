@@ -16,31 +16,31 @@ import (
 // V2VaultCollections contains all collections for the V2 vault system
 type V2VaultCollections struct {
 	// V2 Vault State Collections
-	VaultStates       collections.Map[int32, vaultsv2.VaultState]                                // vault_type -> VaultState
-	UserPositions     collections.Map[collections.Pair[int32, []byte], vaultsv2.UserPosition]    // (vault_type, address) -> UserPosition
+	VaultStates       collections.Item[vaultsv2.VaultState]                                      // Single vault state
+	UserPositions     collections.Map[[]byte, vaultsv2.UserPosition]                             // address -> UserPosition
 	ExitRequests      collections.Map[string, vaultsv2.ExitRequest]                              // request_id -> ExitRequest
-	ExitQueue         collections.Map[collections.Pair[int32, uint64], string]                   // (vault_type, queue_pos) -> request_id
+	ExitQueue         collections.Map[uint64, string]                                            // queue_pos -> request_id
 	RemotePositions   collections.Map[collections.Pair[string, []byte], vaultsv2.RemotePosition] // (route_id, address) -> RemotePosition
 	InFlightPositions collections.Map[uint64, vaultsv2.InFlightPosition]                         // nonce -> InFlightPosition
 
 	// Configuration Collections
-	NAVConfigs       collections.Map[int32, vaultsv2.NAVConfig]        // vault_type -> NAVConfig
-	FeeConfigs       collections.Map[int32, vaultsv2.FeeConfig]        // vault_type -> FeeConfig
+	NAVConfig        collections.Item[vaultsv2.NAVConfig]              // Single NAV config
+	FeeConfig        collections.Item[vaultsv2.FeeConfig]              // Single fee config
 	CrossChainRoutes collections.Map[string, vaultsv2.CrossChainRoute] // route_id -> CrossChainRoute
 
 	// Fee Management Collections
-	FeeAccruals    collections.Map[collections.Triple[int32, int32, int64], vaultsv2.FeeAccrual] // (vault_type, fee_type, period) -> FeeAccrual
-	LastFeeAccrual collections.Map[int32, int64]                                                 // vault_type -> timestamp
-	FeeCollections collections.Map[collections.Pair[int32, int64], vaultsv2.FeeCollection]       // (vault_type, timestamp) -> FeeCollection
+	FeeAccruals    collections.Map[collections.Pair[int32, int64], vaultsv2.FeeAccrual] // (fee_type, period) -> FeeAccrual
+	LastFeeAccrual collections.Item[int64]                                              // timestamp
+	FeeCollections collections.Map[int64, vaultsv2.FeeCollection]                       // timestamp -> FeeCollection
 
 	// NAV and Pricing Collections
-	NAVUpdates          collections.Map[collections.Pair[int32, int64], vaultsv2.NAVUpdate]                  // (vault_type, timestamp) -> NAVUpdate
-	LastNAVUpdate       collections.Map[int32, int64]                                                        // vault_type -> timestamp
-	CrossChainSnapshots collections.Map[collections.Pair[int32, int64], vaultsv2.CrossChainPositionSnapshot] // (vault_type, timestamp) -> Snapshot
+	NAVUpdates          collections.Map[int64, vaultsv2.NAVUpdate]                  // timestamp -> NAVUpdate
+	LastNAVUpdate       collections.Item[int64]                                     // timestamp
+	CrossChainSnapshots collections.Map[int64, vaultsv2.CrossChainPositionSnapshot] // timestamp -> Snapshot
 
 	// Operational Collections
 	DriftAlerts collections.Map[collections.Pair[string, []byte], vaultsv2.DriftAlert] // (route_id, address) -> DriftAlert
-	LossEvents  collections.Map[collections.Pair[int32, int64], vaultsv2.LossEvent]    // (vault_type, timestamp) -> LossEvent
+	LossEvents  collections.Map[int64, vaultsv2.LossEvent]                             // timestamp -> LossEvent
 
 	// Cross-chain configuration
 	CrossChainConfig collections.Item[vaultsv2.CrossChainConfig] // Global cross-chain configuration
@@ -53,18 +53,17 @@ type V2VaultCollections struct {
 func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2VaultCollections {
 	v2Collections := V2VaultCollections{
 		// V2 Vault State Collections
-		VaultStates: collections.NewMap(
+		VaultStates: collections.NewItem(
 			builder,
 			collections.NewPrefix(200),
-			"v2_vault_states",
-			collections.Int32Key,
+			"v2_vault_state",
 			codec.CollValue[vaultsv2.VaultState](k.cdc),
 		),
 		UserPositions: collections.NewMap(
 			builder,
 			collections.NewPrefix(201),
 			"v2_user_positions",
-			collections.PairKeyCodec(collections.Int32Key, collections.BytesKey),
+			collections.BytesKey,
 			codec.CollValue[vaultsv2.UserPosition](k.cdc),
 		),
 		ExitRequests: collections.NewMap(
@@ -78,7 +77,7 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			builder,
 			collections.NewPrefix(203),
 			"v2_exit_queue",
-			collections.PairKeyCodec(collections.Int32Key, collections.Uint64Key),
+			collections.Uint64Key,
 			collections.StringValue,
 		),
 		RemotePositions: collections.NewMap(
@@ -97,18 +96,16 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 		),
 
 		// Configuration Collections
-		NAVConfigs: collections.NewMap(
+		NAVConfig: collections.NewItem(
 			builder,
 			collections.NewPrefix(220),
-			"v2_nav_configs",
-			collections.Int32Key,
+			"v2_nav_config",
 			codec.CollValue[vaultsv2.NAVConfig](k.cdc),
 		),
-		FeeConfigs: collections.NewMap(
+		FeeConfig: collections.NewItem(
 			builder,
 			collections.NewPrefix(221),
-			"v2_fee_configs",
-			collections.Int32Key,
+			"v2_fee_config",
 			codec.CollValue[vaultsv2.FeeConfig](k.cdc),
 		),
 		CrossChainRoutes: collections.NewMap(
@@ -124,21 +121,20 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			builder,
 			collections.NewPrefix(230),
 			"v2_fee_accruals",
-			collections.TripleKeyCodec(collections.Int32Key, collections.Int32Key, collections.Int64Key),
+			collections.PairKeyCodec(collections.Int32Key, collections.Int64Key),
 			codec.CollValue[vaultsv2.FeeAccrual](k.cdc),
 		),
-		LastFeeAccrual: collections.NewMap(
+		LastFeeAccrual: collections.NewItem(
 			builder,
 			collections.NewPrefix(231),
 			"v2_last_fee_accrual",
-			collections.Int32Key,
 			collections.Int64Value,
 		),
 		FeeCollections: collections.NewMap(
 			builder,
 			collections.NewPrefix(232),
 			"v2_fee_collections",
-			collections.PairKeyCodec(collections.Int32Key, collections.Int64Key),
+			collections.Int64Key,
 			codec.CollValue[vaultsv2.FeeCollection](k.cdc),
 		),
 
@@ -147,21 +143,20 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			builder,
 			collections.NewPrefix(240),
 			"v2_nav_updates",
-			collections.PairKeyCodec(collections.Int32Key, collections.Int64Key),
+			collections.Int64Key,
 			codec.CollValue[vaultsv2.NAVUpdate](k.cdc),
 		),
-		LastNAVUpdate: collections.NewMap(
+		LastNAVUpdate: collections.NewItem(
 			builder,
 			collections.NewPrefix(241),
 			"v2_last_nav_update",
-			collections.Int32Key,
 			collections.Int64Value,
 		),
 		CrossChainSnapshots: collections.NewMap(
 			builder,
 			collections.NewPrefix(242),
 			"v2_cross_chain_snapshots",
-			collections.PairKeyCodec(collections.Int32Key, collections.Int64Key),
+			collections.Int64Key,
 			codec.CollValue[vaultsv2.CrossChainPositionSnapshot](k.cdc),
 		),
 
@@ -177,7 +172,7 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			builder,
 			collections.NewPrefix(252),
 			"v2_loss_events",
-			collections.PairKeyCodec(collections.Int32Key, collections.Int64Key),
+			collections.Int64Key,
 			codec.CollValue[vaultsv2.LossEvent](k.cdc),
 		),
 		CrossChainConfig: collections.NewItem(
@@ -188,37 +183,30 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 		),
 	}
 
-	// Create nonce counter for cross-chain operations
-	nonceCounter := collections.NewSequence(
-		builder,
-		collections.NewPrefix(254),
-		"v2_cross_chain_nonce",
-	)
-
-	// Initialize cross-chain keeper
-	v2Collections.CrossChainStore = crosschain.NewCrossChainKeeper(
-		v2Collections.CrossChainRoutes,
-		v2Collections.RemotePositions,
-		v2Collections.InFlightPositions,
-		v2Collections.CrossChainSnapshots,
-		v2Collections.DriftAlerts,
-		v2Collections.CrossChainConfig,
-		nonceCounter,
-	)
+	// TODO: Initialize cross-chain keeper after updating collection types
+	// v2Collections.CrossChainStore = crosschain.NewCrossChainKeeper(
+	//	v2Collections.CrossChainRoutes,
+	//	v2Collections.RemotePositions,
+	//	v2Collections.InFlightPositions,
+	//	v2Collections.CrossChainSnapshots,
+	//	v2Collections.DriftAlerts,
+	//	v2Collections.CrossChainConfig,
+	//	nonceCounter,
+	// )
 
 	return v2Collections
 }
 
 // Helper functions for creating composite keys
 
-// V2VaultUserKey creates a key for vault-user combinations
-func V2VaultUserKey(vaultType vaults.VaultType, address sdk.AccAddress) collections.Pair[int32, []byte] {
-	return collections.Join(int32(vaultType), address.Bytes())
+// V2VaultUserKey creates a key for user positions (single vault)
+func V2VaultUserKey(address sdk.AccAddress) []byte {
+	return address.Bytes()
 }
 
-// V2ExitQueueKey creates a key for exit queue positions
-func V2ExitQueueKey(vaultType vaults.VaultType, queuePosition uint64) collections.Pair[int32, uint64] {
-	return collections.Join(int32(vaultType), queuePosition)
+// V2ExitQueueKey creates a key for exit queue positions (single vault)
+func V2ExitQueueKey(queuePosition uint64) uint64 {
+	return queuePosition
 }
 
 // V2RemotePositionKey creates a key for remote positions
@@ -227,18 +215,18 @@ func V2RemotePositionKey(routeID string, address sdk.AccAddress) collections.Pai
 }
 
 // V2FeeAccrualKey creates a key for fee accruals
-func V2FeeAccrualKey(vaultType vaults.VaultType, feeType vaults.FeeType, period int64) collections.Triple[int32, int32, int64] {
-	return collections.Join3(int32(vaultType), int32(feeType), period)
+func V2FeeAccrualKey(feeType vaults.FeeType, period int64) collections.Pair[int32, int64] {
+	return collections.Join(int32(feeType), period)
 }
 
 // V2NAVHistoryKey creates a key for NAV history
-func V2NAVHistoryKey(vaultType vaults.VaultType, timestamp int64) collections.Pair[int32, int64] {
-	return collections.Join(int32(vaultType), timestamp)
+func V2NAVHistoryKey(timestamp int64) int64 {
+	return timestamp
 }
 
 // V2CrossChainSnapshotKey creates a key for cross-chain snapshots
-func V2CrossChainSnapshotKey(vaultType vaults.VaultType, timestamp int64) collections.Pair[int32, int64] {
-	return collections.Join(int32(vaultType), timestamp)
+func V2CrossChainSnapshotKey(timestamp int64) int64 {
+	return timestamp
 }
 
 // RegisterCrossChainProvider registers a cross-chain provider
@@ -254,13 +242,13 @@ func (collections *V2VaultCollections) GetCrossChainKeeper() *crosschain.CrossCh
 }
 
 // V2FeeCollectionKey creates a key for fee collections
-func V2FeeCollectionKey(vaultType vaults.VaultType, timestamp int64) collections.Pair[int32, int64] {
-	return collections.Join(int32(vaultType), timestamp)
+func V2FeeCollectionKey(timestamp int64) int64 {
+	return timestamp
 }
 
 // V2LossEventKey creates a key for loss events
-func V2LossEventKey(vaultType vaults.VaultType, timestamp int64) collections.Pair[int32, int64] {
-	return collections.Join(int32(vaultType), timestamp)
+func V2LossEventKey(timestamp int64) int64 {
+	return timestamp
 }
 
 // V2DriftAlertKey creates a key for drift alerts

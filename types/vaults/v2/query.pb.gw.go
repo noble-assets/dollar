@@ -13,7 +13,6 @@ import (
 	"io"
 	"net/http"
 
-	"dollar.noble.xyz/v2/types/vaults"
 	"github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -38,27 +37,6 @@ func request_Query_VaultInfo_0(ctx context.Context, marshaler runtime.Marshaler,
 	var protoReq QueryVaultInfoRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
-
 	msg, err := client.VaultInfo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -67,27 +45,6 @@ func request_Query_VaultInfo_0(ctx context.Context, marshaler runtime.Marshaler,
 func local_request_Query_VaultInfo_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryVaultInfoRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := server.VaultInfo(ctx, &protoReq)
 	return msg, metadata, err
@@ -136,7 +93,6 @@ func request_Query_UserPosition_0(ctx context.Context, marshaler runtime.Marshal
 
 	var (
 		val string
-		e   int32
 		ok  bool
 		err error
 		_   = err
@@ -152,19 +108,6 @@ func request_Query_UserPosition_0(ctx context.Context, marshaler runtime.Marshal
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
 	}
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := client.UserPosition(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -177,7 +120,6 @@ func local_request_Query_UserPosition_0(ctx context.Context, marshaler runtime.M
 
 	var (
 		val string
-		e   int32
 		ok  bool
 		err error
 		_   = err
@@ -193,19 +135,6 @@ func local_request_Query_UserPosition_0(ctx context.Context, marshaler runtime.M
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
 	}
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := server.UserPosition(ctx, &protoReq)
 	return msg, metadata, err
@@ -288,27 +217,6 @@ func request_Query_SharePrice_0(ctx context.Context, marshaler runtime.Marshaler
 	var protoReq QuerySharePriceRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
-
 	msg, err := client.SharePrice(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -317,27 +225,6 @@ func request_Query_SharePrice_0(ctx context.Context, marshaler runtime.Marshaler
 func local_request_Query_SharePrice_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QuerySharePriceRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := server.SharePrice(ctx, &protoReq)
 	return msg, metadata, err
@@ -348,27 +235,6 @@ func request_Query_NAVInfo_0(ctx context.Context, marshaler runtime.Marshaler, c
 	var protoReq QueryNAVInfoRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
-
 	msg, err := client.NAVInfo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -377,27 +243,6 @@ func request_Query_NAVInfo_0(ctx context.Context, marshaler runtime.Marshaler, c
 func local_request_Query_NAVInfo_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryNAVInfoRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := server.NAVInfo(ctx, &protoReq)
 	return msg, metadata, err
@@ -769,33 +614,12 @@ func local_request_Query_InFlightPositions_0(ctx context.Context, marshaler runt
 }
 
 var (
-	filter_Query_CrossChainSnapshot_0 = &utilities.DoubleArray{Encoding: map[string]int{"vault_type": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_CrossChainSnapshot_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
 func request_Query_CrossChainSnapshot_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryCrossChainSnapshotRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -812,27 +636,6 @@ func request_Query_CrossChainSnapshot_0(ctx context.Context, marshaler runtime.M
 func local_request_Query_CrossChainSnapshot_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryCrossChainSnapshotRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -888,24 +691,10 @@ func request_Query_DepositPreview_0(ctx context.Context, marshaler runtime.Marsh
 
 	var (
 		val string
-		e   int32
 		ok  bool
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	val, ok = pathParams["amount"]
 	if !ok {
@@ -929,24 +718,10 @@ func local_request_Query_DepositPreview_0(ctx context.Context, marshaler runtime
 
 	var (
 		val string
-		e   int32
 		ok  bool
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	val, ok = pathParams["amount"]
 	if !ok {
@@ -970,24 +745,10 @@ func request_Query_WithdrawalPreview_0(ctx context.Context, marshaler runtime.Ma
 
 	var (
 		val string
-		e   int32
 		ok  bool
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	val, ok = pathParams["shares"]
 	if !ok {
@@ -1011,24 +772,10 @@ func local_request_Query_WithdrawalPreview_0(ctx context.Context, marshaler runt
 
 	var (
 		val string
-		e   int32
 		ok  bool
 		err error
 		_   = err
 	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	val, ok = pathParams["shares"]
 	if !ok {
@@ -1047,33 +794,12 @@ func local_request_Query_WithdrawalPreview_0(ctx context.Context, marshaler runt
 }
 
 var (
-	filter_Query_ExitQueue_0 = &utilities.DoubleArray{Encoding: map[string]int{"vault_type": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_ExitQueue_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
 func request_Query_ExitQueue_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryExitQueueRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -1090,27 +816,6 @@ func request_Query_ExitQueue_0(ctx context.Context, marshaler runtime.Marshaler,
 func local_request_Query_ExitQueue_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryExitQueueRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	if err := req.ParseForm(); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
@@ -1200,27 +905,6 @@ func request_Query_FeeInfo_0(ctx context.Context, marshaler runtime.Marshaler, c
 	var protoReq QueryFeeInfoRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
-
 	msg, err := client.FeeInfo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -1229,27 +913,6 @@ func request_Query_FeeInfo_0(ctx context.Context, marshaler runtime.Marshaler, c
 func local_request_Query_FeeInfo_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryFeeInfoRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := server.FeeInfo(ctx, &protoReq)
 	return msg, metadata, err
@@ -1260,27 +923,6 @@ func request_Query_Stats_0(ctx context.Context, marshaler runtime.Marshaler, cli
 	var protoReq QueryStatsRequest
 	var metadata runtime.ServerMetadata
 
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
-
 	msg, err := client.Stats(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
@@ -1289,27 +931,6 @@ func request_Query_Stats_0(ctx context.Context, marshaler runtime.Marshaler, cli
 func local_request_Query_Stats_0(ctx context.Context, marshaler runtime.Marshaler, server QueryServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryStatsRequest
 	var metadata runtime.ServerMetadata
-
-	var (
-		val string
-		e   int32
-		ok  bool
-		err error
-		_   = err
-	)
-
-	val, ok = pathParams["vault_type"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vault_type")
-	}
-
-	e, err = runtime.Enum(val, vaults.VaultType_value)
-
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vault_type", err)
-	}
-
-	protoReq.VaultType = vaults.VaultType(e)
 
 	msg, err := server.Stats(ctx, &protoReq)
 	return msg, metadata, err
@@ -2367,17 +1988,17 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_VaultInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "vault", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_VaultInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "vault"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_AllVaults_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 2}, []string{"noble", "dollar", "vaults", "v2"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_UserPosition_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6}, []string{"noble", "dollar", "vaults", "v2", "position", "address", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_UserPosition_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "position", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_UserPositions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "positions", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_SharePrice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "price", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_SharePrice_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "price"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_NAVInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "nav", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_NAVInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "nav"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_CrossChainRoutes_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"noble", "dollar", "vaults", "v2", "crosschain", "routes"}, "", runtime.AssumeColonVerbOpt(false)))
 
@@ -2391,21 +2012,21 @@ var (
 
 	pattern_Query_InFlightPositions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 2, 6, 1, 0, 4, 1, 5, 7}, []string{"noble", "dollar", "vaults", "v2", "crosschain", "inflight", "user", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_CrossChainSnapshot_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"noble", "dollar", "vaults", "v2", "crosschain", "snapshot", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_CrossChainSnapshot_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"noble", "dollar", "vaults", "v2", "crosschain", "snapshot"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_DriftAlerts_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5}, []string{"noble", "dollar", "vaults", "v2", "crosschain", "drift"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_DepositPreview_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6, 1, 0, 4, 1, 5, 7}, []string{"noble", "dollar", "vaults", "v2", "preview", "deposit", "vault_type", "amount"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_DepositPreview_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"noble", "dollar", "vaults", "v2", "preview", "deposit", "amount"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_WithdrawalPreview_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6, 1, 0, 4, 1, 5, 7}, []string{"noble", "dollar", "vaults", "v2", "preview", "withdrawal", "vault_type", "shares"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_WithdrawalPreview_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 5, 1, 0, 4, 1, 5, 6}, []string{"noble", "dollar", "vaults", "v2", "preview", "withdrawal", "shares"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ExitQueue_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "exit-queue", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ExitQueue_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "exit-queue"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_UserExitRequests_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "exit-requests", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_FeeInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "fees", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_FeeInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "fees"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Stats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"noble", "dollar", "vaults", "v2", "stats", "vault_type"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Stats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "stats"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_AllStats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4}, []string{"noble", "dollar", "vaults", "v2", "stats"}, "", runtime.AssumeColonVerbOpt(false)))
 

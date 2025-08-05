@@ -127,11 +127,8 @@ enum ExitRequestStatus {
 
 // VaultState represents the current state of a V2 vault
 message VaultState {
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 1;
-
   // Total shares issued
-  string total_shares = 2 [
+  string total_shares = 1 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -139,7 +136,7 @@ message VaultState {
   ];
 
   // Total Net Asset Value
-  string total_nav = 3 [
+  string total_nav = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -147,7 +144,7 @@ message VaultState {
   ];
 
   // Current share price (NAV per share)
-  string share_price = 4 [
+  string share_price = 3 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false,
@@ -155,22 +152,22 @@ message VaultState {
   ];
 
   // Total number of users with positions
-  uint64 total_users = 5;
+  uint64 total_users = 4;
 
   // Whether deposits are currently enabled
-  bool deposits_enabled = 6;
+  bool deposits_enabled = 5;
 
   // Whether withdrawals are currently enabled
-  bool withdrawals_enabled = 7;
+  bool withdrawals_enabled = 6;
 
   // Last NAV update timestamp
-  google.protobuf.Timestamp last_nav_update = 8 [
+  google.protobuf.Timestamp last_nav_update = 7 [
     (gogoproto.nullable) = false,
     (gogoproto.stdtime) = true
   ];
 
   // Total shares pending exit
-  string total_shares_pending_exit = 9 [
+  string total_shares_pending_exit = 8 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -178,7 +175,7 @@ message VaultState {
   ];
 
   // Number of pending exit requests
-  int32 pending_exit_requests = 10;
+  int32 pending_exit_requests = 9;
 }
 
 // ShareCalculation contains details about share price calculations

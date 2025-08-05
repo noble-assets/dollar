@@ -5,7 +5,7 @@ package v2
 
 import (
 	cosmossdk_io_math "cosmossdk.io/math"
-	vaults "dollar.noble.xyz/v2/types/vaults"
+	_ "dollar.noble.xyz/v2/types/vaults"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	_ "github.com/cosmos/cosmos-sdk/types/tx/amino"
@@ -35,20 +35,18 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type EventDeposit struct {
 	// User address making the deposit
 	Depositor string `protobuf:"bytes,1,opt,name=depositor,proto3" json:"depositor,omitempty"`
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Amount deposited
-	AmountDeposited cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=amount_deposited,json=amountDeposited,proto3,customtype=cosmossdk.io/math.Int" json:"amount_deposited"`
+	AmountDeposited cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=amount_deposited,json=amountDeposited,proto3,customtype=cosmossdk.io/math.Int" json:"amount_deposited"`
 	// Shares received
-	SharesReceived cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=shares_received,json=sharesReceived,proto3,customtype=cosmossdk.io/math.Int" json:"shares_received"`
+	SharesReceived cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=shares_received,json=sharesReceived,proto3,customtype=cosmossdk.io/math.Int" json:"shares_received"`
 	// Share price at time of deposit
-	SharePrice cosmossdk_io_math.LegacyDec `protobuf:"bytes,5,opt,name=share_price,json=sharePrice,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"share_price"`
+	SharePrice cosmossdk_io_math.LegacyDec `protobuf:"bytes,4,opt,name=share_price,json=sharePrice,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"share_price"`
 	// Fees paid
-	FeesPaid cosmossdk_io_math.Int `protobuf:"bytes,6,opt,name=fees_paid,json=feesPaid,proto3,customtype=cosmossdk.io/math.Int" json:"fees_paid"`
+	FeesPaid cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=fees_paid,json=feesPaid,proto3,customtype=cosmossdk.io/math.Int" json:"fees_paid"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,7,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,6,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,8,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,7,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventDeposit) Reset()         { *m = EventDeposit{} }
@@ -91,13 +89,6 @@ func (m *EventDeposit) GetDepositor() string {
 	return ""
 }
 
-func (m *EventDeposit) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
-
 func (m *EventDeposit) GetBlockHeight() int64 {
 	if m != nil {
 		return m.BlockHeight
@@ -116,20 +107,18 @@ func (m *EventDeposit) GetTimestamp() time.Time {
 type EventWithdraw struct {
 	// User address making the withdrawal
 	Withdrawer string `protobuf:"bytes,1,opt,name=withdrawer,proto3" json:"withdrawer,omitempty"`
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Shares redeemed
-	SharesRedeemed cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=shares_redeemed,json=sharesRedeemed,proto3,customtype=cosmossdk.io/math.Int" json:"shares_redeemed"`
+	SharesRedeemed cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=shares_redeemed,json=sharesRedeemed,proto3,customtype=cosmossdk.io/math.Int" json:"shares_redeemed"`
 	// Amount withdrawn
-	AmountWithdrawn cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=amount_withdrawn,json=amountWithdrawn,proto3,customtype=cosmossdk.io/math.Int" json:"amount_withdrawn"`
+	AmountWithdrawn cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=amount_withdrawn,json=amountWithdrawn,proto3,customtype=cosmossdk.io/math.Int" json:"amount_withdrawn"`
 	// Share price at time of withdrawal
-	SharePrice cosmossdk_io_math.LegacyDec `protobuf:"bytes,5,opt,name=share_price,json=sharePrice,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"share_price"`
+	SharePrice cosmossdk_io_math.LegacyDec `protobuf:"bytes,4,opt,name=share_price,json=sharePrice,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"share_price"`
 	// Fees paid
-	FeesPaid cosmossdk_io_math.Int `protobuf:"bytes,6,opt,name=fees_paid,json=feesPaid,proto3,customtype=cosmossdk.io/math.Int" json:"fees_paid"`
+	FeesPaid cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=fees_paid,json=feesPaid,proto3,customtype=cosmossdk.io/math.Int" json:"fees_paid"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,7,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,6,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,8,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,7,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventWithdraw) Reset()         { *m = EventWithdraw{} }
@@ -172,13 +161,6 @@ func (m *EventWithdraw) GetWithdrawer() string {
 	return ""
 }
 
-func (m *EventWithdraw) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
-
 func (m *EventWithdraw) GetBlockHeight() int64 {
 	if m != nil {
 		return m.BlockHeight
@@ -197,18 +179,16 @@ func (m *EventWithdraw) GetTimestamp() time.Time {
 type EventExitRequested struct {
 	// User address requesting exit
 	Requester string `protobuf:"bytes,1,opt,name=requester,proto3" json:"requester,omitempty"`
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Shares to exit
-	SharesToExit cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=shares_to_exit,json=sharesToExit,proto3,customtype=cosmossdk.io/math.Int" json:"shares_to_exit"`
+	SharesToExit cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=shares_to_exit,json=sharesToExit,proto3,customtype=cosmossdk.io/math.Int" json:"shares_to_exit"`
 	// Exit request ID
-	ExitRequestId string `protobuf:"bytes,4,opt,name=exit_request_id,json=exitRequestId,proto3" json:"exit_request_id,omitempty"`
+	ExitRequestId string `protobuf:"bytes,3,opt,name=exit_request_id,json=exitRequestId,proto3" json:"exit_request_id,omitempty"`
 	// Expected unlock time
-	ExpectedUnlockTime time.Time `protobuf:"bytes,5,opt,name=expected_unlock_time,json=expectedUnlockTime,proto3,stdtime" json:"expected_unlock_time"`
+	ExpectedUnlockTime time.Time `protobuf:"bytes,4,opt,name=expected_unlock_time,json=expectedUnlockTime,proto3,stdtime" json:"expected_unlock_time"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,6,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,5,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,7,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,6,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventExitRequested) Reset()         { *m = EventExitRequested{} }
@@ -251,13 +231,6 @@ func (m *EventExitRequested) GetRequester() string {
 	return ""
 }
 
-func (m *EventExitRequested) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
-
 func (m *EventExitRequested) GetExitRequestId() string {
 	if m != nil {
 		return m.ExitRequestId
@@ -290,16 +263,14 @@ func (m *EventExitRequested) GetTimestamp() time.Time {
 type EventExitCancelled struct {
 	// User address cancelling exit
 	Requester string `protobuf:"bytes,1,opt,name=requester,proto3" json:"requester,omitempty"`
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Exit request ID that was cancelled
-	ExitRequestId string `protobuf:"bytes,3,opt,name=exit_request_id,json=exitRequestId,proto3" json:"exit_request_id,omitempty"`
+	ExitRequestId string `protobuf:"bytes,2,opt,name=exit_request_id,json=exitRequestId,proto3" json:"exit_request_id,omitempty"`
 	// Shares returned to staking
-	SharesReturned cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=shares_returned,json=sharesReturned,proto3,customtype=cosmossdk.io/math.Int" json:"shares_returned"`
+	SharesReturned cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=shares_returned,json=sharesReturned,proto3,customtype=cosmossdk.io/math.Int" json:"shares_returned"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,5,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,4,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,6,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,5,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventExitCancelled) Reset()         { *m = EventExitCancelled{} }
@@ -340,13 +311,6 @@ func (m *EventExitCancelled) GetRequester() string {
 		return m.Requester
 	}
 	return ""
-}
-
-func (m *EventExitCancelled) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
 }
 
 func (m *EventExitCancelled) GetExitRequestId() string {
@@ -440,26 +404,24 @@ func (m *EventExitProcessed) GetTimestamp() time.Time {
 
 // EventNAVUpdated is emitted when NAV is updated for a vault
 type EventNAVUpdated struct {
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Previous NAV
-	PreviousNav cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=previous_nav,json=previousNav,proto3,customtype=cosmossdk.io/math.Int" json:"previous_nav"`
+	PreviousNav cosmossdk_io_math.Int `protobuf:"bytes,1,opt,name=previous_nav,json=previousNav,proto3,customtype=cosmossdk.io/math.Int" json:"previous_nav"`
 	// New NAV
-	NewNav cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=new_nav,json=newNav,proto3,customtype=cosmossdk.io/math.Int" json:"new_nav"`
+	NewNav cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=new_nav,json=newNav,proto3,customtype=cosmossdk.io/math.Int" json:"new_nav"`
 	// NAV change percentage (basis points)
-	ChangeBps int32 `protobuf:"varint,4,opt,name=change_bps,json=changeBps,proto3" json:"change_bps,omitempty"`
+	ChangeBps int32 `protobuf:"varint,3,opt,name=change_bps,json=changeBps,proto3" json:"change_bps,omitempty"`
 	// Total shares outstanding
-	TotalShares cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=total_shares,json=totalShares,proto3,customtype=cosmossdk.io/math.Int" json:"total_shares"`
+	TotalShares cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=total_shares,json=totalShares,proto3,customtype=cosmossdk.io/math.Int" json:"total_shares"`
 	// New share price
-	SharePrice cosmossdk_io_math.LegacyDec `protobuf:"bytes,6,opt,name=share_price,json=sharePrice,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"share_price"`
+	SharePrice cosmossdk_io_math.LegacyDec `protobuf:"bytes,5,opt,name=share_price,json=sharePrice,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"share_price"`
 	// Authority that updated NAV
-	Authority string `protobuf:"bytes,7,opt,name=authority,proto3" json:"authority,omitempty"`
+	Authority string `protobuf:"bytes,6,opt,name=authority,proto3" json:"authority,omitempty"`
 	// Update reason
-	Reason string `protobuf:"bytes,8,opt,name=reason,proto3" json:"reason,omitempty"`
+	Reason string `protobuf:"bytes,7,opt,name=reason,proto3" json:"reason,omitempty"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,9,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,8,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,10,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,9,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventNAVUpdated) Reset()         { *m = EventNAVUpdated{} }
@@ -494,13 +456,6 @@ func (m *EventNAVUpdated) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_EventNAVUpdated proto.InternalMessageInfo
-
-func (m *EventNAVUpdated) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
 
 func (m *EventNAVUpdated) GetChangeBps() int32 {
 	if m != nil {
@@ -539,20 +494,18 @@ func (m *EventNAVUpdated) GetTimestamp() time.Time {
 
 // EventFeeCollected is emitted when fees are collected
 type EventFeeCollected struct {
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Fee type (deposit, withdrawal, etc.)
-	FeeType string `protobuf:"bytes,2,opt,name=fee_type,json=feeType,proto3" json:"fee_type,omitempty"`
+	FeeType string `protobuf:"bytes,1,opt,name=fee_type,json=feeType,proto3" json:"fee_type,omitempty"`
 	// Amount collected
-	AmountCollected cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=amount_collected,json=amountCollected,proto3,customtype=cosmossdk.io/math.Int" json:"amount_collected"`
+	AmountCollected cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=amount_collected,json=amountCollected,proto3,customtype=cosmossdk.io/math.Int" json:"amount_collected"`
 	// Fee rate used (basis points)
-	FeeRateBps int32 `protobuf:"varint,4,opt,name=fee_rate_bps,json=feeRateBps,proto3" json:"fee_rate_bps,omitempty"`
+	FeeRateBps int32 `protobuf:"varint,3,opt,name=fee_rate_bps,json=feeRateBps,proto3" json:"fee_rate_bps,omitempty"`
 	// User who triggered the fee
-	Payer string `protobuf:"bytes,5,opt,name=payer,proto3" json:"payer,omitempty"`
+	Payer string `protobuf:"bytes,4,opt,name=payer,proto3" json:"payer,omitempty"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,6,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,5,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,7,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,6,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventFeeCollected) Reset()         { *m = EventFeeCollected{} }
@@ -587,13 +540,6 @@ func (m *EventFeeCollected) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_EventFeeCollected proto.InternalMessageInfo
-
-func (m *EventFeeCollected) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
 
 func (m *EventFeeCollected) GetFeeType() string {
 	if m != nil {
@@ -634,16 +580,14 @@ func (m *EventFeeCollected) GetTimestamp() time.Time {
 type EventYieldPreferenceUpdated struct {
 	// User address
 	User string `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Previous yield preference
-	PreviousYieldPreference bool `protobuf:"varint,3,opt,name=previous_yield_preference,json=previousYieldPreference,proto3" json:"previous_yield_preference,omitempty"`
+	PreviousYieldPreference bool `protobuf:"varint,2,opt,name=previous_yield_preference,json=previousYieldPreference,proto3" json:"previous_yield_preference,omitempty"`
 	// New yield preference
-	NewYieldPreference bool `protobuf:"varint,4,opt,name=new_yield_preference,json=newYieldPreference,proto3" json:"new_yield_preference,omitempty"`
+	NewYieldPreference bool `protobuf:"varint,3,opt,name=new_yield_preference,json=newYieldPreference,proto3" json:"new_yield_preference,omitempty"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,5,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,4,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,6,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,5,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventYieldPreferenceUpdated) Reset()         { *m = EventYieldPreferenceUpdated{} }
@@ -686,13 +630,6 @@ func (m *EventYieldPreferenceUpdated) GetUser() string {
 	return ""
 }
 
-func (m *EventYieldPreferenceUpdated) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
-
 func (m *EventYieldPreferenceUpdated) GetPreviousYieldPreference() bool {
 	if m != nil {
 		return m.PreviousYieldPreference
@@ -723,20 +660,18 @@ func (m *EventYieldPreferenceUpdated) GetTimestamp() time.Time {
 
 // EventVaultConfigUpdated is emitted when vault configuration is updated
 type EventVaultConfigUpdated struct {
-	// Vault type
-	VaultType vaults.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Previous config (JSON serialized)
-	PreviousConfig string `protobuf:"bytes,2,opt,name=previous_config,json=previousConfig,proto3" json:"previous_config,omitempty"`
+	PreviousConfig string `protobuf:"bytes,1,opt,name=previous_config,json=previousConfig,proto3" json:"previous_config,omitempty"`
 	// New config (JSON serialized)
-	NewConfig string `protobuf:"bytes,3,opt,name=new_config,json=newConfig,proto3" json:"new_config,omitempty"`
+	NewConfig string `protobuf:"bytes,2,opt,name=new_config,json=newConfig,proto3" json:"new_config,omitempty"`
 	// Authority that made the update
-	Authority string `protobuf:"bytes,4,opt,name=authority,proto3" json:"authority,omitempty"`
+	Authority string `protobuf:"bytes,3,opt,name=authority,proto3" json:"authority,omitempty"`
 	// Update reason
-	Reason string `protobuf:"bytes,5,opt,name=reason,proto3" json:"reason,omitempty"`
+	Reason string `protobuf:"bytes,4,opt,name=reason,proto3" json:"reason,omitempty"`
 	// Block height
-	BlockHeight int64 `protobuf:"varint,6,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+	BlockHeight int64 `protobuf:"varint,5,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
 	// Timestamp
-	Timestamp time.Time `protobuf:"bytes,7,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
+	Timestamp time.Time `protobuf:"bytes,6,opt,name=timestamp,proto3,stdtime" json:"timestamp"`
 }
 
 func (m *EventVaultConfigUpdated) Reset()         { *m = EventVaultConfigUpdated{} }
@@ -771,13 +706,6 @@ func (m *EventVaultConfigUpdated) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_EventVaultConfigUpdated proto.InternalMessageInfo
-
-func (m *EventVaultConfigUpdated) GetVaultType() vaults.VaultType {
-	if m != nil {
-		return m.VaultType
-	}
-	return vaults.UNSPECIFIED
-}
 
 func (m *EventVaultConfigUpdated) GetPreviousConfig() string {
 	if m != nil {
@@ -838,78 +766,75 @@ func init() {
 }
 
 var fileDescriptor_653788f3253d7e19 = []byte{
-	// 1126 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x58, 0x4f, 0x6f, 0x1b, 0x45,
-	0x14, 0xcf, 0x26, 0xb6, 0x93, 0x7d, 0x49, 0x1b, 0xba, 0x0a, 0xad, 0x93, 0x0a, 0x27, 0x6d, 0x25,
-	0x88, 0x10, 0xd9, 0x6d, 0x83, 0x14, 0x21, 0x24, 0x24, 0xf2, 0xa7, 0x88, 0x48, 0x50, 0x45, 0x9b,
-	0x34, 0x55, 0xe1, 0xb0, 0x1a, 0xef, 0x3e, 0xdb, 0x4b, 0xd7, 0x3b, 0xcb, 0xce, 0xd8, 0x8e, 0xf9,
-	0x00, 0x9c, 0xfb, 0x31, 0x38, 0x72, 0xe8, 0x87, 0xe8, 0x05, 0x51, 0xe5, 0x84, 0x7a, 0x28, 0x28,
-	0x39, 0xf0, 0x11, 0xe0, 0x84, 0xd0, 0xfc, 0x59, 0xdb, 0x89, 0x43, 0x13, 0x6d, 0x4c, 0xb9, 0x70,
-	0x89, 0x66, 0x66, 0xdf, 0xfc, 0xe6, 0xcd, 0xef, 0xf7, 0xcb, 0x7b, 0x23, 0xc3, 0x9d, 0x98, 0x56,
-	0x23, 0x74, 0x02, 0x1a, 0x45, 0x24, 0x75, 0xda, 0xa4, 0x15, 0x71, 0xe6, 0xb4, 0x57, 0x1d, 0x6c,
-	0x63, 0xcc, 0x99, 0x9d, 0xa4, 0x94, 0x53, 0xeb, 0xba, 0x0c, 0xb2, 0x55, 0x90, 0xad, 0x82, 0xec,
-	0xf6, 0xea, 0xc2, 0x35, 0xd2, 0x0c, 0x63, 0xea, 0xc8, 0xbf, 0x2a, 0x74, 0x61, 0xde, 0xa7, 0xac,
-	0x49, 0x99, 0x27, 0x67, 0x8e, 0x9a, 0xe8, 0x4f, 0x73, 0x75, 0x5a, 0xa7, 0x6a, 0x5d, 0x8c, 0xf4,
-	0xea, 0x62, 0x9d, 0xd2, 0x7a, 0x84, 0x8e, 0x9c, 0x55, 0x5b, 0x35, 0x87, 0x87, 0x4d, 0x64, 0x9c,
-	0x34, 0x13, 0x1d, 0x70, 0x76, 0x86, 0xf7, 0xf4, 0x48, 0x05, 0xdd, 0xfe, 0xb9, 0x00, 0x33, 0xf7,
-	0x45, 0xca, 0x5b, 0x98, 0x50, 0x16, 0x72, 0x6b, 0x0d, 0xcc, 0x40, 0x0d, 0x69, 0x5a, 0x36, 0x96,
-	0x8c, 0x65, 0x73, 0xa3, 0x7c, 0xf8, 0x6c, 0x65, 0x4e, 0x67, 0xb4, 0x1e, 0x04, 0x29, 0x32, 0xb6,
-	0xcb, 0xd3, 0x30, 0xae, 0xbb, 0xfd, 0x50, 0xeb, 0x53, 0x00, 0x09, 0xec, 0xf1, 0x6e, 0x82, 0xe5,
-	0xf1, 0x25, 0x63, 0xf9, 0xea, 0xea, 0x2d, 0xfb, 0xcc, 0xfb, 0xdf, 0xb3, 0xf7, 0xc5, 0x68, 0xaf,
-	0x9b, 0xa0, 0x6b, 0xb6, 0xb3, 0xa1, 0xf5, 0x35, 0xbc, 0x45, 0x9a, 0xb4, 0x15, 0x73, 0x4f, 0xa3,
-	0x62, 0x50, 0x9e, 0x90, 0x09, 0xdc, 0x7d, 0xfe, 0x6a, 0x71, 0xec, 0xe5, 0xab, 0xc5, 0xb7, 0x55,
-	0x12, 0x2c, 0x78, 0x62, 0x87, 0xd4, 0x69, 0x12, 0xde, 0xb0, 0xb7, 0x63, 0x7e, 0xf8, 0x6c, 0x05,
-	0x74, 0x76, 0xdb, 0x31, 0xff, 0xe1, 0xf7, 0x1f, 0xdf, 0x37, 0xdc, 0x59, 0x85, 0xb4, 0x95, 0x01,
-	0x59, 0x8f, 0x61, 0x96, 0x35, 0x48, 0x8a, 0xcc, 0x4b, 0xd1, 0xc7, 0xb0, 0x8d, 0x41, 0xb9, 0x90,
-	0x13, 0xfb, 0xaa, 0x02, 0x72, 0x35, 0x8e, 0xf5, 0x08, 0xa6, 0xe5, 0x8a, 0x97, 0xa4, 0xa1, 0x8f,
-	0xe5, 0xa2, 0x84, 0x5d, 0xd3, 0xb0, 0x37, 0x87, 0x61, 0xbf, 0xc0, 0x3a, 0xf1, 0xbb, 0x5b, 0xe8,
-	0x0f, 0x80, 0x6f, 0xa1, 0xaf, 0xc0, 0x41, 0x42, 0xed, 0x08, 0x24, 0xeb, 0x4b, 0x30, 0x6b, 0x88,
-	0xcc, 0x4b, 0x48, 0x18, 0x94, 0x4b, 0x39, 0xb3, 0x9d, 0x12, 0x10, 0x3b, 0x24, 0x0c, 0xac, 0x5b,
-	0x30, 0x53, 0x8d, 0xa8, 0xff, 0xc4, 0x6b, 0x60, 0x58, 0x6f, 0xf0, 0xf2, 0xe4, 0x92, 0xb1, 0x3c,
-	0xe1, 0x4e, 0xcb, 0xb5, 0xcf, 0xe5, 0x92, 0xb5, 0x01, 0x66, 0xcf, 0x45, 0xe5, 0xa9, 0x25, 0x63,
-	0x79, 0x7a, 0x75, 0xc1, 0x56, 0x3e, 0xb3, 0x33, 0x9f, 0xd9, 0x7b, 0x59, 0xc4, 0xc6, 0x94, 0xc8,
-	0xe6, 0xe9, 0xaf, 0x8b, 0x86, 0xdb, 0xdf, 0x76, 0xfb, 0xb0, 0x00, 0x57, 0xa4, 0xa3, 0x1e, 0x85,
-	0xbc, 0x11, 0xa4, 0xa4, 0x63, 0x7d, 0x04, 0xd0, 0xd1, 0x63, 0x3c, 0xdf, 0x53, 0x03, 0xb1, 0x23,
-	0x30, 0xd5, 0xa0, 0xee, 0x01, 0x62, 0xf3, 0x12, 0x9e, 0xea, 0xe9, 0xae, 0x70, 0x06, 0xfc, 0x9a,
-	0x65, 0x1c, 0xe7, 0xf6, 0x94, 0xf6, 0x6b, 0x46, 0x59, 0xfc, 0xbf, 0xa9, 0x4e, 0x9a, 0xea, 0xa7,
-	0x09, 0xb0, 0xa4, 0xa9, 0xee, 0x1f, 0x84, 0xdc, 0xc5, 0x6f, 0x5b, 0xc8, 0xc4, 0x7f, 0xf5, 0x1a,
-	0x98, 0xa9, 0x9e, 0x5c, 0xa0, 0x58, 0xf5, 0x42, 0x47, 0xe0, 0xab, 0x7d, 0xd0, 0x76, 0xf0, 0x38,
-	0xf5, 0xf0, 0x20, 0xe4, 0xb9, 0x6d, 0x35, 0xa3, 0x70, 0xf6, 0xa8, 0xb8, 0x9a, 0xf5, 0x2e, 0xcc,
-	0x0a, 0x34, 0x4f, 0xe7, 0xea, 0x85, 0xba, 0x4e, 0xb9, 0x57, 0xb0, 0x7f, 0xf3, 0xed, 0xc0, 0xda,
-	0x87, 0x39, 0x3c, 0x48, 0xd0, 0xe7, 0x18, 0x78, 0xad, 0x58, 0x2a, 0x20, 0xd8, 0x92, 0x46, 0xb9,
-	0x28, 0xbf, 0x56, 0x86, 0xf0, 0x50, 0x02, 0x88, 0x90, 0x21, 0x3d, 0x4b, 0xe7, 0xe8, 0x39, 0x99,
-	0x4f, 0xcf, 0x3f, 0xc7, 0x07, 0xf4, 0xdc, 0x24, 0xb1, 0x8f, 0x51, 0xf4, 0x9f, 0xea, 0x79, 0x06,
-	0xef, 0x13, 0x67, 0xf1, 0x3e, 0x58, 0x4f, 0x78, 0x2b, 0x8d, 0x47, 0xd1, 0x47, 0x14, 0xce, 0x10,
-	0xf5, 0xc5, 0x73, 0xa8, 0x2f, 0xe5, 0xa3, 0xfe, 0xaf, 0x41, 0xea, 0x77, 0x52, 0xea, 0x23, 0x63,
-	0x18, 0x58, 0x2b, 0x60, 0xe9, 0xbb, 0xcb, 0x37, 0x88, 0x5a, 0x95, 0x1a, 0x14, 0xdd, 0x6b, 0xd9,
-	0x97, 0x7e, 0x78, 0x0d, 0xae, 0x73, 0xca, 0x49, 0xe4, 0x69, 0x36, 0xfa, 0x5b, 0xc6, 0x73, 0xd2,
-	0x31, 0x27, 0xf1, 0x76, 0x25, 0x5c, 0xff, 0x9c, 0x6f, 0xa0, 0xac, 0xce, 0xc9, 0x9e, 0x06, 0x21,
-	0xe3, 0x69, 0x58, 0x6d, 0x5d, 0xe6, 0x71, 0xa0, 0x32, 0x5f, 0x57, 0x2f, 0x84, 0x3e, 0xde, 0x90,
-	0x00, 0x85, 0x73, 0x04, 0x28, 0xe6, 0x13, 0xe0, 0x8f, 0x02, 0xcc, 0x4a, 0x01, 0x1e, 0xac, 0xef,
-	0x3f, 0x4c, 0x02, 0x22, 0x8e, 0x3e, 0x69, 0x60, 0x23, 0x87, 0x81, 0x77, 0x61, 0x26, 0x49, 0xb1,
-	0x1d, 0xd2, 0x16, 0xf3, 0x62, 0xd2, 0xce, 0x2d, 0xc3, 0x74, 0x86, 0xf2, 0x80, 0xb4, 0xad, 0x6d,
-	0x98, 0x8c, 0xb1, 0x23, 0xf1, 0xf2, 0x92, 0x5d, 0x8a, 0xb1, 0x23, 0xa0, 0xde, 0x01, 0xf0, 0x1b,
-	0x24, 0xae, 0xa3, 0x57, 0x4d, 0x98, 0xa4, 0xb6, 0xe8, 0x9a, 0x6a, 0x65, 0x23, 0x61, 0x22, 0xfd,
-	0x41, 0x3f, 0xe9, 0x86, 0x97, 0x23, 0xfd, 0x01, 0x17, 0x9d, 0x6e, 0xa2, 0xa5, 0x91, 0x35, 0xd1,
-	0x35, 0x30, 0x49, 0x8b, 0x37, 0x68, 0x1a, 0xf2, 0xae, 0x2c, 0x81, 0xaf, 0xad, 0x53, 0xbd, 0x50,
-	0xeb, 0x3a, 0x94, 0x52, 0x24, 0x8c, 0xc6, 0xb2, 0x0f, 0x9a, 0xae, 0x9e, 0x0d, 0x39, 0xcf, 0x3c,
-	0xc7, 0x79, 0x90, 0xcf, 0x79, 0xdf, 0x4f, 0xc0, 0x35, 0xe9, 0xbc, 0xcf, 0x10, 0x37, 0x69, 0x14,
-	0xc9, 0xe2, 0x3f, 0x02, 0xef, 0xcd, 0x83, 0x78, 0x10, 0xf4, 0x8b, 0xaf, 0xe9, 0x4e, 0xd6, 0x10,
-	0x4f, 0x3d, 0xea, 0xfd, 0xec, 0xc0, 0xcb, 0x3e, 0xea, 0xfb, 0x99, 0x2f, 0xc1, 0x8c, 0x38, 0x37,
-	0x25, 0x7c, 0xd0, 0x55, 0x50, 0x43, 0x74, 0x09, 0x97, 0xb6, 0xb2, 0xa1, 0x98, 0x90, 0x2e, 0xa6,
-	0xda, 0x4f, 0xff, 0x2c, 0x92, 0x0a, 0x7b, 0x53, 0xed, 0xef, 0x68, 0x1c, 0x6e, 0x4a, 0x21, 0x1e,
-	0x87, 0x18, 0x05, 0x3b, 0x29, 0xd6, 0x30, 0xc5, 0xd8, 0xc7, 0xac, 0x1c, 0x7c, 0x00, 0x85, 0x16,
-	0xbb, 0x40, 0x0b, 0x94, 0x51, 0x23, 0xe8, 0x7e, 0x1f, 0xc3, 0x7c, 0xaf, 0x78, 0x74, 0x45, 0x4a,
-	0x5e, 0xd2, 0xcb, 0x49, 0xca, 0x35, 0xe5, 0xde, 0xc8, 0x02, 0x4e, 0xa5, 0x6c, 0xdd, 0x85, 0x39,
-	0x51, 0x23, 0x86, 0xb6, 0x15, 0xe4, 0x36, 0x2b, 0xc6, 0xce, 0xe9, 0x1d, 0x6f, 0xa8, 0xd1, 0xbd,
-	0x1c, 0x87, 0x1b, 0x92, 0x64, 0x79, 0xe5, 0x4d, 0x1a, 0xd7, 0xc2, 0xfa, 0xe8, 0xea, 0xed, 0x7b,
-	0x30, 0xdb, 0xa3, 0xcc, 0x97, 0xd8, 0xda, 0xfa, 0x57, 0xb3, 0x65, 0x75, 0xa2, 0x28, 0x7c, 0x82,
-	0x1f, 0x1d, 0xa3, 0x1e, 0x15, 0x66, 0x8c, 0x1d, 0xfd, 0xf9, 0x44, 0x29, 0x29, 0xe4, 0x29, 0x25,
-	0xc5, 0xd7, 0x96, 0x92, 0x7f, 0xc7, 0xc1, 0x1b, 0x9f, 0x3c, 0x3f, 0xaa, 0x18, 0x2f, 0x8e, 0x2a,
-	0xc6, 0x6f, 0x47, 0x15, 0xe3, 0xe9, 0x71, 0x65, 0xec, 0xc5, 0x71, 0x65, 0xec, 0x97, 0xe3, 0xca,
-	0xd8, 0x57, 0x77, 0x34, 0x7f, 0x8a, 0xcc, 0x83, 0xee, 0x77, 0x4e, 0x7b, 0xd5, 0x11, 0x34, 0xb3,
-	0xfe, 0xaf, 0x24, 0xd5, 0x92, 0x3c, 0xe7, 0xc3, 0xbf, 0x03, 0x00, 0x00, 0xff, 0xff, 0xdf, 0xa5,
-	0x08, 0xb1, 0x46, 0x11, 0x00, 0x00,
+	// 1079 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x57, 0x4f, 0x6f, 0x1b, 0x45,
+	0x14, 0x8f, 0x1d, 0x3b, 0x8d, 0x5f, 0xd2, 0x86, 0x8c, 0x42, 0xea, 0xa4, 0xc2, 0x09, 0xad, 0x04,
+	0x11, 0x22, 0x76, 0x09, 0x52, 0x84, 0x90, 0x38, 0xe4, 0x4f, 0x11, 0x91, 0xa0, 0x8a, 0x36, 0x69,
+	0xaa, 0xc2, 0x61, 0x35, 0xde, 0x7d, 0xb6, 0x97, 0xae, 0x67, 0x96, 0x9d, 0xb1, 0x1d, 0xf3, 0x15,
+	0x10, 0x52, 0x8e, 0x1c, 0x39, 0x72, 0xe4, 0x50, 0xf8, 0x04, 0x1c, 0x7a, 0xac, 0x7a, 0x42, 0x1c,
+	0x0a, 0x4a, 0x0e, 0x7c, 0x0b, 0x84, 0xe6, 0xcf, 0xda, 0x9b, 0x3f, 0x34, 0x61, 0x53, 0x72, 0xe2,
+	0x62, 0xed, 0xbe, 0xfd, 0xcd, 0xef, 0xbd, 0x79, 0xef, 0xf7, 0xe6, 0x79, 0xe0, 0x0e, 0xe3, 0xf5,
+	0x10, 0x6b, 0x3e, 0x0f, 0x43, 0x1a, 0xd7, 0xba, 0xb4, 0x13, 0x4a, 0x51, 0xeb, 0xae, 0xd4, 0xb0,
+	0x8b, 0x4c, 0x8a, 0x6a, 0x14, 0x73, 0xc9, 0xc9, 0xac, 0x06, 0x55, 0x0d, 0xa8, 0x6a, 0x40, 0xd5,
+	0xee, 0xca, 0xfc, 0x34, 0x6d, 0x07, 0x8c, 0xd7, 0xf4, 0xaf, 0x81, 0xce, 0xcf, 0x79, 0x5c, 0xb4,
+	0xb9, 0x70, 0xf5, 0x5b, 0xcd, 0xbc, 0xd8, 0x4f, 0x33, 0x4d, 0xde, 0xe4, 0xc6, 0xae, 0x9e, 0xac,
+	0x75, 0xa1, 0xc9, 0x79, 0x33, 0xc4, 0x9a, 0x7e, 0xab, 0x77, 0x1a, 0x35, 0x19, 0xb4, 0x51, 0x48,
+	0xda, 0x8e, 0x2c, 0xe0, 0xec, 0x08, 0xdf, 0xb3, 0x4f, 0x06, 0x74, 0xfb, 0xdb, 0x02, 0x4c, 0xde,
+	0x53, 0x21, 0x6f, 0x62, 0xc4, 0x45, 0x20, 0xc9, 0x2a, 0x94, 0x7c, 0xf3, 0xc8, 0xe3, 0x72, 0x6e,
+	0x31, 0xb7, 0x54, 0x5a, 0x2f, 0x3f, 0x7f, 0xb2, 0x3c, 0x63, 0x23, 0x5a, 0xf3, 0xfd, 0x18, 0x85,
+	0xd8, 0x91, 0x71, 0xc0, 0x9a, 0xce, 0x10, 0x4a, 0xbe, 0x80, 0xd7, 0x68, 0x9b, 0x77, 0x98, 0x74,
+	0xad, 0x0d, 0xfd, 0x72, 0x5e, 0x2f, 0xbf, 0xfb, 0xf4, 0xc5, 0xc2, 0xc8, 0x6f, 0x2f, 0x16, 0x5e,
+	0x37, 0x14, 0xc2, 0x7f, 0x5c, 0x0d, 0x78, 0xad, 0x4d, 0x65, 0xab, 0xba, 0xc5, 0xe4, 0xf3, 0x27,
+	0xcb, 0x60, 0xb9, 0xb7, 0x98, 0xfc, 0xe1, 0xcf, 0x1f, 0xdf, 0xc9, 0x39, 0x53, 0x86, 0x69, 0x33,
+	0x21, 0x22, 0x8f, 0x60, 0x4a, 0xb4, 0x68, 0x8c, 0xc2, 0x8d, 0xd1, 0xc3, 0xa0, 0x8b, 0x7e, 0x79,
+	0x34, 0x23, 0xf7, 0x0d, 0x43, 0xe4, 0x58, 0x1e, 0xf2, 0x10, 0x26, 0xb4, 0xc5, 0x8d, 0xe2, 0xc0,
+	0xc3, 0x72, 0x41, 0xd3, 0xae, 0x5a, 0xda, 0x5b, 0xa7, 0x69, 0x3f, 0xc5, 0x26, 0xf5, 0xfa, 0x9b,
+	0xe8, 0xa5, 0xc8, 0x37, 0xd1, 0x33, 0xe4, 0xa0, 0xa9, 0xb6, 0x15, 0x13, 0xf9, 0x0c, 0x4a, 0x0d,
+	0x44, 0xe1, 0x46, 0x34, 0xf0, 0xcb, 0xc5, 0x8c, 0xd1, 0x8e, 0x2b, 0x8a, 0x6d, 0x1a, 0xf8, 0xe4,
+	0x4d, 0x98, 0xac, 0x87, 0xdc, 0x7b, 0xec, 0xb6, 0x30, 0x68, 0xb6, 0x64, 0x79, 0x6c, 0x31, 0xb7,
+	0x34, 0xea, 0x4c, 0x68, 0xdb, 0x27, 0xda, 0x44, 0xd6, 0xa1, 0x34, 0xd0, 0x40, 0xf9, 0xda, 0x62,
+	0x6e, 0x69, 0x62, 0x65, 0xbe, 0x6a, 0x54, 0x52, 0x4d, 0x54, 0x52, 0xdd, 0x4d, 0x10, 0xeb, 0xe3,
+	0x2a, 0x9a, 0x83, 0xdf, 0x17, 0x72, 0xce, 0x70, 0xd9, 0xed, 0x83, 0x02, 0x5c, 0xd7, 0x7a, 0x78,
+	0x18, 0xc8, 0x96, 0x1f, 0xd3, 0x1e, 0xf9, 0x00, 0xa0, 0x67, 0x9f, 0xf1, 0x7c, 0x45, 0xa4, 0xb0,
+	0xc7, 0xaa, 0xe6, 0x23, 0xb6, 0x2f, 0xa1, 0x88, 0x41, 0xd5, 0x0c, 0x4f, 0x4a, 0x6d, 0x89, 0x3f,
+	0x96, 0x59, 0x11, 0x56, 0x6d, 0xc9, 0x86, 0xd9, 0xff, 0x92, 0x38, 0x2e, 0x89, 0x6f, 0x46, 0x81,
+	0x68, 0x49, 0xdc, 0xdb, 0x0f, 0xa4, 0x83, 0x5f, 0x75, 0x50, 0xa8, 0x9e, 0x5c, 0x85, 0x52, 0x6c,
+	0x5f, 0x2e, 0x70, 0x50, 0x0c, 0xa0, 0x64, 0x0f, 0x6c, 0x31, 0x5d, 0xc9, 0x5d, 0xdc, 0x0f, 0x64,
+	0x66, 0x51, 0x4c, 0x1a, 0x9e, 0x5d, 0xae, 0x02, 0x23, 0x6f, 0xc1, 0x94, 0x62, 0x73, 0xad, 0x27,
+	0x37, 0xb0, 0x67, 0x84, 0x73, 0x1d, 0x87, 0x71, 0x6f, 0xf9, 0x64, 0x0f, 0x66, 0x70, 0x3f, 0x42,
+	0x4f, 0xa2, 0xef, 0x76, 0x98, 0xce, 0x9f, 0xda, 0xab, 0x2e, 0xf3, 0x45, 0xb3, 0x43, 0x12, 0x86,
+	0x07, 0x9a, 0x40, 0x41, 0x4e, 0x55, 0xa3, 0x78, 0x4e, 0x35, 0xc6, 0xb2, 0x55, 0xe3, 0xe7, 0x7c,
+	0xaa, 0x1a, 0x1b, 0x94, 0x79, 0x18, 0x86, 0x97, 0xa8, 0xc6, 0x19, 0x59, 0xcb, 0x9f, 0x95, 0xb5,
+	0x74, 0x2f, 0xcb, 0x4e, 0xcc, 0x5e, 0xc5, 0x09, 0x6c, 0x78, 0x4e, 0x25, 0xae, 0x70, 0x4e, 0xe2,
+	0x8a, 0xd9, 0x12, 0xf7, 0x57, 0x3a, 0x71, 0xdb, 0x31, 0xf7, 0x50, 0x08, 0xf4, 0xc9, 0x32, 0x10,
+	0xbb, 0x77, 0x3d, 0x7b, 0x8d, 0x55, 0x67, 0xb0, 0xe8, 0x4c, 0x27, 0x5f, 0x86, 0xf0, 0x06, 0xcc,
+	0x4a, 0x2e, 0x69, 0xe8, 0xda, 0x6c, 0x0c, 0x97, 0x64, 0x55, 0xf1, 0x8c, 0xe6, 0xdb, 0xd1, 0x74,
+	0x43, 0x3f, 0x5f, 0x42, 0xd9, 0xf8, 0x49, 0x86, 0x6a, 0x20, 0x64, 0x1c, 0xd4, 0x3b, 0xf2, 0x12,
+	0x89, 0x37, 0x91, 0xaf, 0x99, 0xd9, 0x3a, 0xe4, 0xbb, 0xaa, 0x02, 0xfc, 0x54, 0x80, 0x29, 0x5d,
+	0x80, 0xfb, 0x6b, 0x7b, 0x0f, 0x22, 0x9f, 0x2a, 0xd7, 0x3b, 0x30, 0x19, 0xc5, 0xd8, 0x0d, 0x78,
+	0x47, 0xb8, 0x8c, 0x76, 0xad, 0x72, 0xff, 0xfd, 0xd6, 0x26, 0x12, 0x96, 0xfb, 0xb4, 0x4b, 0xb6,
+	0xe0, 0x1a, 0xc3, 0x9e, 0xe6, 0xcb, 0x5a, 0x94, 0x31, 0x86, 0x3d, 0x45, 0xf5, 0x06, 0x80, 0xd7,
+	0xa2, 0xac, 0x89, 0x6e, 0x3d, 0x12, 0x3a, 0xf1, 0x45, 0xa7, 0x64, 0x2c, 0xeb, 0x91, 0x50, 0xe1,
+	0xa7, 0xd5, 0x60, 0x47, 0x45, 0x86, 0xf0, 0x53, 0x1a, 0x38, 0x39, 0x7e, 0x8a, 0xaf, 0x6c, 0xfc,
+	0xac, 0x42, 0x89, 0x76, 0x64, 0x8b, 0xc7, 0x81, 0xec, 0xeb, 0xe3, 0xe7, 0xa5, 0x67, 0xc4, 0x00,
+	0x4a, 0x66, 0x61, 0x2c, 0x46, 0x2a, 0x38, 0xd3, 0x13, 0xa4, 0xe4, 0xd8, 0xb7, 0x53, 0xba, 0x19,
+	0x3f, 0x47, 0x37, 0xa5, 0x6c, 0xba, 0xf9, 0x25, 0x0f, 0xd3, 0x5a, 0x37, 0x1f, 0x23, 0x6e, 0xf0,
+	0x30, 0xd4, 0x07, 0x2f, 0x99, 0x03, 0x35, 0x08, 0x5d, 0xd9, 0x8f, 0xd0, 0xa8, 0xc6, 0xb9, 0xd6,
+	0x40, 0xdc, 0xed, 0x47, 0x98, 0xfa, 0x73, 0xe0, 0x25, 0xf0, 0xcb, 0xfe, 0x15, 0x1d, 0xfa, 0x5d,
+	0x84, 0x49, 0xe5, 0x37, 0xa6, 0x32, 0xad, 0x09, 0x68, 0x20, 0x3a, 0x54, 0x6a, 0x51, 0x54, 0xa1,
+	0x18, 0xd1, 0x3e, 0xc6, 0x56, 0x0d, 0xff, 0x9c, 0x62, 0x03, 0xbb, 0xaa, 0xc1, 0xf1, 0x7d, 0x1e,
+	0x6e, 0xe9, 0x34, 0x3e, 0x0a, 0x30, 0xf4, 0xb7, 0x63, 0x6c, 0x60, 0x8c, 0xcc, 0xc3, 0xa4, 0x15,
+	0xdf, 0x85, 0x42, 0x47, 0x5c, 0x60, 0x78, 0x68, 0x14, 0xf9, 0x10, 0xe6, 0x06, 0x8d, 0xdb, 0x57,
+	0x84, 0x6e, 0x34, 0x60, 0xd4, 0xc9, 0x1e, 0x77, 0x6e, 0x26, 0x80, 0x13, 0x0e, 0xc9, 0x5d, 0x98,
+	0x51, 0xfd, 0x79, 0x6a, 0xd9, 0xa8, 0x5e, 0x46, 0x18, 0xf6, 0x4e, 0xae, 0xb8, 0xa2, 0x13, 0xea,
+	0xbb, 0x3c, 0xdc, 0xd4, 0x29, 0xda, 0x53, 0x57, 0xa4, 0x0d, 0xce, 0x1a, 0x41, 0x33, 0x49, 0xcf,
+	0xdb, 0x30, 0x35, 0xd8, 0xb0, 0xa7, 0xbf, 0x58, 0xd9, 0xdd, 0x48, 0xcc, 0x06, 0xaf, 0x8e, 0x0c,
+	0xb5, 0x3b, 0x8b, 0x31, 0xc3, 0xb4, 0xc4, 0xb0, 0x67, 0x3f, 0x1f, 0x6b, 0xc2, 0xd1, 0x2c, 0x4d,
+	0x58, 0x78, 0x69, 0x13, 0xfe, 0x37, 0xea, 0x59, 0xff, 0xe8, 0xe9, 0x61, 0x25, 0xf7, 0xec, 0xb0,
+	0x92, 0xfb, 0xe3, 0xb0, 0x92, 0x3b, 0x38, 0xaa, 0x8c, 0x3c, 0x3b, 0xaa, 0x8c, 0xfc, 0x7a, 0x54,
+	0x19, 0xf9, 0xfc, 0x8e, 0xbd, 0xdd, 0x9a, 0xab, 0xee, 0x7e, 0xff, 0x6b, 0x75, 0x0b, 0x56, 0x6d,
+	0x29, 0x86, 0xb7, 0xe2, 0xfa, 0x98, 0xf6, 0xf3, 0xfe, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x4a,
+	0xde, 0x49, 0x6e, 0x36, 0x0f, 0x00, 0x00,
 }
 
 func (m *EventDeposit) Marshal() (dAtA []byte, err error) {
@@ -939,11 +864,11 @@ func (m *EventDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n1
 	i = encodeVarintEvents(dAtA, i, uint64(n1))
 	i--
-	dAtA[i] = 0x42
+	dAtA[i] = 0x3a
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x30
 	}
 	{
 		size := m.FeesPaid.Size()
@@ -954,7 +879,7 @@ func (m *EventDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x32
+	dAtA[i] = 0x2a
 	{
 		size := m.SharePrice.Size()
 		i -= size
@@ -964,7 +889,7 @@ func (m *EventDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x2a
+	dAtA[i] = 0x22
 	{
 		size := m.SharesReceived.Size()
 		i -= size
@@ -974,7 +899,7 @@ func (m *EventDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x22
+	dAtA[i] = 0x1a
 	{
 		size := m.AmountDeposited.Size()
 		i -= size
@@ -984,12 +909,7 @@ func (m *EventDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x10
-	}
+	dAtA[i] = 0x12
 	if len(m.Depositor) > 0 {
 		i -= len(m.Depositor)
 		copy(dAtA[i:], m.Depositor)
@@ -1027,11 +947,11 @@ func (m *EventWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n2
 	i = encodeVarintEvents(dAtA, i, uint64(n2))
 	i--
-	dAtA[i] = 0x42
+	dAtA[i] = 0x3a
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x30
 	}
 	{
 		size := m.FeesPaid.Size()
@@ -1042,7 +962,7 @@ func (m *EventWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x32
+	dAtA[i] = 0x2a
 	{
 		size := m.SharePrice.Size()
 		i -= size
@@ -1052,7 +972,7 @@ func (m *EventWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x2a
+	dAtA[i] = 0x22
 	{
 		size := m.AmountWithdrawn.Size()
 		i -= size
@@ -1062,7 +982,7 @@ func (m *EventWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x22
+	dAtA[i] = 0x1a
 	{
 		size := m.SharesRedeemed.Size()
 		i -= size
@@ -1072,12 +992,7 @@ func (m *EventWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x10
-	}
+	dAtA[i] = 0x12
 	if len(m.Withdrawer) > 0 {
 		i -= len(m.Withdrawer)
 		copy(dAtA[i:], m.Withdrawer)
@@ -1115,11 +1030,11 @@ func (m *EventExitRequested) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n3
 	i = encodeVarintEvents(dAtA, i, uint64(n3))
 	i--
-	dAtA[i] = 0x3a
+	dAtA[i] = 0x32
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x28
 	}
 	n4, err4 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.ExpectedUnlockTime, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.ExpectedUnlockTime):])
 	if err4 != nil {
@@ -1128,13 +1043,13 @@ func (m *EventExitRequested) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n4
 	i = encodeVarintEvents(dAtA, i, uint64(n4))
 	i--
-	dAtA[i] = 0x2a
+	dAtA[i] = 0x22
 	if len(m.ExitRequestId) > 0 {
 		i -= len(m.ExitRequestId)
 		copy(dAtA[i:], m.ExitRequestId)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.ExitRequestId)))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x1a
 	}
 	{
 		size := m.SharesToExit.Size()
@@ -1145,12 +1060,7 @@ func (m *EventExitRequested) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x10
-	}
+	dAtA[i] = 0x12
 	if len(m.Requester) > 0 {
 		i -= len(m.Requester)
 		copy(dAtA[i:], m.Requester)
@@ -1188,11 +1098,11 @@ func (m *EventExitCancelled) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n5
 	i = encodeVarintEvents(dAtA, i, uint64(n5))
 	i--
-	dAtA[i] = 0x32
+	dAtA[i] = 0x2a
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x20
 	}
 	{
 		size := m.SharesReturned.Size()
@@ -1203,18 +1113,13 @@ func (m *EventExitCancelled) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x22
+	dAtA[i] = 0x1a
 	if len(m.ExitRequestId) > 0 {
 		i -= len(m.ExitRequestId)
 		copy(dAtA[i:], m.ExitRequestId)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.ExitRequestId)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x12
 	}
 	if len(m.Requester) > 0 {
 		i -= len(m.Requester)
@@ -1314,25 +1219,25 @@ func (m *EventNAVUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n7
 	i = encodeVarintEvents(dAtA, i, uint64(n7))
 	i--
-	dAtA[i] = 0x52
+	dAtA[i] = 0x4a
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x48
+		dAtA[i] = 0x40
 	}
 	if len(m.Reason) > 0 {
 		i -= len(m.Reason)
 		copy(dAtA[i:], m.Reason)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.Reason)))
 		i--
-		dAtA[i] = 0x42
+		dAtA[i] = 0x3a
 	}
 	if len(m.Authority) > 0 {
 		i -= len(m.Authority)
 		copy(dAtA[i:], m.Authority)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.Authority)))
 		i--
-		dAtA[i] = 0x3a
+		dAtA[i] = 0x32
 	}
 	{
 		size := m.SharePrice.Size()
@@ -1343,7 +1248,7 @@ func (m *EventNAVUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x32
+	dAtA[i] = 0x2a
 	{
 		size := m.TotalShares.Size()
 		i -= size
@@ -1353,11 +1258,11 @@ func (m *EventNAVUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x2a
+	dAtA[i] = 0x22
 	if m.ChangeBps != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.ChangeBps))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	{
 		size := m.NewNav.Size()
@@ -1368,7 +1273,7 @@ func (m *EventNAVUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
+	dAtA[i] = 0x12
 	{
 		size := m.PreviousNav.Size()
 		i -= size
@@ -1378,12 +1283,7 @@ func (m *EventNAVUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x12
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x8
-	}
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -1414,23 +1314,23 @@ func (m *EventFeeCollected) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i -= n8
 	i = encodeVarintEvents(dAtA, i, uint64(n8))
 	i--
-	dAtA[i] = 0x3a
+	dAtA[i] = 0x32
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x28
 	}
 	if len(m.Payer) > 0 {
 		i -= len(m.Payer)
 		copy(dAtA[i:], m.Payer)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.Payer)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if m.FeeRateBps != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.FeeRateBps))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	{
 		size := m.AmountCollected.Size()
@@ -1441,18 +1341,13 @@ func (m *EventFeeCollected) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x1a
+	dAtA[i] = 0x12
 	if len(m.FeeType) > 0 {
 		i -= len(m.FeeType)
 		copy(dAtA[i:], m.FeeType)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.FeeType)))
 		i--
-		dAtA[i] = 0x12
-	}
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1484,11 +1379,11 @@ func (m *EventYieldPreferenceUpdated) MarshalToSizedBuffer(dAtA []byte) (int, er
 	i -= n9
 	i = encodeVarintEvents(dAtA, i, uint64(n9))
 	i--
-	dAtA[i] = 0x32
+	dAtA[i] = 0x2a
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x20
 	}
 	if m.NewYieldPreference {
 		i--
@@ -1498,7 +1393,7 @@ func (m *EventYieldPreferenceUpdated) MarshalToSizedBuffer(dAtA []byte) (int, er
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.PreviousYieldPreference {
 		i--
@@ -1507,11 +1402,6 @@ func (m *EventYieldPreferenceUpdated) MarshalToSizedBuffer(dAtA []byte) (int, er
 		} else {
 			dAtA[i] = 0
 		}
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -1552,44 +1442,39 @@ func (m *EventVaultConfigUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	i -= n10
 	i = encodeVarintEvents(dAtA, i, uint64(n10))
 	i--
-	dAtA[i] = 0x3a
+	dAtA[i] = 0x32
 	if m.BlockHeight != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.BlockHeight))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x28
 	}
 	if len(m.Reason) > 0 {
 		i -= len(m.Reason)
 		copy(dAtA[i:], m.Reason)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.Reason)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x22
 	}
 	if len(m.Authority) > 0 {
 		i -= len(m.Authority)
 		copy(dAtA[i:], m.Authority)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.Authority)))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x1a
 	}
 	if len(m.NewConfig) > 0 {
 		i -= len(m.NewConfig)
 		copy(dAtA[i:], m.NewConfig)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.NewConfig)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x12
 	}
 	if len(m.PreviousConfig) > 0 {
 		i -= len(m.PreviousConfig)
 		copy(dAtA[i:], m.PreviousConfig)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.PreviousConfig)))
 		i--
-		dAtA[i] = 0x12
-	}
-	if m.VaultType != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.VaultType))
-		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1614,9 +1499,6 @@ func (m *EventDeposit) Size() (n int) {
 	l = len(m.Depositor)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
-	}
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
 	}
 	l = m.AmountDeposited.Size()
 	n += 1 + l + sovEvents(uint64(l))
@@ -1644,9 +1526,6 @@ func (m *EventWithdraw) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
-	}
 	l = m.SharesRedeemed.Size()
 	n += 1 + l + sovEvents(uint64(l))
 	l = m.AmountWithdrawn.Size()
@@ -1673,9 +1552,6 @@ func (m *EventExitRequested) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
-	}
 	l = m.SharesToExit.Size()
 	n += 1 + l + sovEvents(uint64(l))
 	l = len(m.ExitRequestId)
@@ -1701,9 +1577,6 @@ func (m *EventExitCancelled) Size() (n int) {
 	l = len(m.Requester)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
-	}
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
 	}
 	l = len(m.ExitRequestId)
 	if l > 0 {
@@ -1746,9 +1619,6 @@ func (m *EventNAVUpdated) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
-	}
 	l = m.PreviousNav.Size()
 	n += 1 + l + sovEvents(uint64(l))
 	l = m.NewNav.Size()
@@ -1782,9 +1652,6 @@ func (m *EventFeeCollected) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
-	}
 	l = len(m.FeeType)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
@@ -1816,9 +1683,6 @@ func (m *EventYieldPreferenceUpdated) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
-	}
 	if m.PreviousYieldPreference {
 		n += 2
 	}
@@ -1839,9 +1703,6 @@ func (m *EventVaultConfigUpdated) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VaultType != 0 {
-		n += 1 + sovEvents(uint64(m.VaultType))
-	}
 	l = len(m.PreviousConfig)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
@@ -1934,25 +1795,6 @@ func (m *EventDeposit) Unmarshal(dAtA []byte) error {
 			m.Depositor = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AmountDeposited", wireType)
 			}
@@ -1986,7 +1828,7 @@ func (m *EventDeposit) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharesReceived", wireType)
 			}
@@ -2020,7 +1862,7 @@ func (m *EventDeposit) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharePrice", wireType)
 			}
@@ -2054,7 +1896,7 @@ func (m *EventDeposit) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FeesPaid", wireType)
 			}
@@ -2088,7 +1930,7 @@ func (m *EventDeposit) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -2107,7 +1949,7 @@ func (m *EventDeposit) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 8:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -2223,25 +2065,6 @@ func (m *EventWithdraw) Unmarshal(dAtA []byte) error {
 			m.Withdrawer = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharesRedeemed", wireType)
 			}
@@ -2275,7 +2098,7 @@ func (m *EventWithdraw) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AmountWithdrawn", wireType)
 			}
@@ -2309,7 +2132,7 @@ func (m *EventWithdraw) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharePrice", wireType)
 			}
@@ -2343,7 +2166,7 @@ func (m *EventWithdraw) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FeesPaid", wireType)
 			}
@@ -2377,7 +2200,7 @@ func (m *EventWithdraw) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -2396,7 +2219,7 @@ func (m *EventWithdraw) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 8:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -2512,25 +2335,6 @@ func (m *EventExitRequested) Unmarshal(dAtA []byte) error {
 			m.Requester = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharesToExit", wireType)
 			}
@@ -2564,7 +2368,7 @@ func (m *EventExitRequested) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ExitRequestId", wireType)
 			}
@@ -2596,7 +2400,7 @@ func (m *EventExitRequested) Unmarshal(dAtA []byte) error {
 			}
 			m.ExitRequestId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ExpectedUnlockTime", wireType)
 			}
@@ -2629,7 +2433,7 @@ func (m *EventExitRequested) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -2648,7 +2452,7 @@ func (m *EventExitRequested) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 7:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -2764,25 +2568,6 @@ func (m *EventExitCancelled) Unmarshal(dAtA []byte) error {
 			m.Requester = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ExitRequestId", wireType)
 			}
@@ -2814,7 +2599,7 @@ func (m *EventExitCancelled) Unmarshal(dAtA []byte) error {
 			}
 			m.ExitRequestId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharesReturned", wireType)
 			}
@@ -2848,7 +2633,7 @@ func (m *EventExitCancelled) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -2867,7 +2652,7 @@ func (m *EventExitCancelled) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -3140,25 +2925,6 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PreviousNav", wireType)
 			}
@@ -3192,7 +2958,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NewNav", wireType)
 			}
@@ -3226,7 +2992,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ChangeBps", wireType)
 			}
@@ -3245,7 +3011,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TotalShares", wireType)
 			}
@@ -3279,7 +3045,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SharePrice", wireType)
 			}
@@ -3313,7 +3079,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
 			}
@@ -3345,7 +3111,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 			}
 			m.Authority = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 8:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
 			}
@@ -3377,7 +3143,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 			}
 			m.Reason = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 9:
+		case 8:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -3396,7 +3162,7 @@ func (m *EventNAVUpdated) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 10:
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -3480,25 +3246,6 @@ func (m *EventFeeCollected) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FeeType", wireType)
 			}
@@ -3530,7 +3277,7 @@ func (m *EventFeeCollected) Unmarshal(dAtA []byte) error {
 			}
 			m.FeeType = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AmountCollected", wireType)
 			}
@@ -3564,7 +3311,7 @@ func (m *EventFeeCollected) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field FeeRateBps", wireType)
 			}
@@ -3583,7 +3330,7 @@ func (m *EventFeeCollected) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Payer", wireType)
 			}
@@ -3615,7 +3362,7 @@ func (m *EventFeeCollected) Unmarshal(dAtA []byte) error {
 			}
 			m.Payer = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -3634,7 +3381,7 @@ func (m *EventFeeCollected) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 7:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -3751,25 +3498,6 @@ func (m *EventYieldPreferenceUpdated) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PreviousYieldPreference", wireType)
 			}
 			var v int
@@ -3788,7 +3516,7 @@ func (m *EventYieldPreferenceUpdated) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.PreviousYieldPreference = bool(v != 0)
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NewYieldPreference", wireType)
 			}
@@ -3808,7 +3536,7 @@ func (m *EventYieldPreferenceUpdated) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.NewYieldPreference = bool(v != 0)
-		case 5:
+		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -3827,7 +3555,7 @@ func (m *EventYieldPreferenceUpdated) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 6:
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}
@@ -3911,25 +3639,6 @@ func (m *EventVaultConfigUpdated) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-			}
-			m.VaultType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VaultType |= vaults.VaultType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field PreviousConfig", wireType)
 			}
@@ -3961,7 +3670,7 @@ func (m *EventVaultConfigUpdated) Unmarshal(dAtA []byte) error {
 			}
 			m.PreviousConfig = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field NewConfig", wireType)
 			}
@@ -3993,7 +3702,7 @@ func (m *EventVaultConfigUpdated) Unmarshal(dAtA []byte) error {
 			}
 			m.NewConfig = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
 			}
@@ -4025,7 +3734,7 @@ func (m *EventVaultConfigUpdated) Unmarshal(dAtA []byte) error {
 			}
 			m.Authority = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 5:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
 			}
@@ -4057,7 +3766,7 @@ func (m *EventVaultConfigUpdated) Unmarshal(dAtA []byte) error {
 			}
 			m.Reason = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 6:
+		case 5:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
 			}
@@ -4076,7 +3785,7 @@ func (m *EventVaultConfigUpdated) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 7:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
 			}

@@ -10,7 +10,6 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"dollar.noble.xyz/v2/types/vaults"
 	vaultsv2 "dollar.noble.xyz/v2/types/vaults/v2"
 )
 
@@ -34,11 +33,6 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 		return nil, fmt.Errorf("invalid depositor address: %w", err)
 	}
 
-	// Validate vault type
-	if msg.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// Validate deposit amount
 	if msg.Amount.IsZero() || msg.Amount.IsNegative() {
 		return nil, fmt.Errorf("deposit amount must be positive")
@@ -51,14 +45,14 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 	}
 
 	// Get or create vault state
-	vaultState, err := k.getOrCreateV2VaultState(ctx, msg.VaultType)
+	vaultState, err := k.getOrCreateV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
 	// Check if deposits are enabled
 	if !vaultState.DepositsEnabled {
-		return nil, fmt.Errorf("deposits are currently disabled for vault type %s", msg.VaultType.String())
+		return nil, fmt.Errorf("deposits are currently disabled")
 	}
 
 	// Calculate shares to mint
@@ -72,7 +66,7 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 	}
 
 	// Update or create user position
-	userPosition, err := k.GetV2UserPosition(ctx, msg.VaultType, signer)
+	userPosition, err := k.GetV2UserPosition(ctx, signer)
 	if err != nil && !errors.Is(err, collections.ErrNotFound) {
 		return nil, fmt.Errorf("failed to get user position: %w", err)
 	}
@@ -108,7 +102,7 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 	}
 
 	// Save user position
-	if err := k.SetV2UserPosition(ctx, msg.VaultType, signer, userPosition); err != nil {
+	if err := k.SetV2UserPosition(ctx, signer, userPosition); err != nil {
 		return nil, fmt.Errorf("failed to save user position: %w", err)
 	}
 
@@ -133,7 +127,7 @@ func (k vaultV2MsgServer) Deposit(ctx context.Context, msg *vaultsv2.MsgDeposit)
 		vaultState.TotalUsers++
 	}
 
-	if err := k.SetV2VaultState(ctx, msg.VaultType, vaultState); err != nil {
+	if err := k.SetV2VaultState(ctx, vaultState); err != nil {
 		return nil, fmt.Errorf("failed to update vault state: %w", err)
 	}
 
@@ -156,29 +150,24 @@ func (k vaultV2MsgServer) Withdraw(ctx context.Context, msg *vaultsv2.MsgWithdra
 		return nil, fmt.Errorf("invalid withdrawer address: %w", err)
 	}
 
-	// Validate vault type
-	if msg.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// Validate withdrawal shares
 	if msg.Shares.IsZero() || msg.Shares.IsNegative() {
 		return nil, fmt.Errorf("withdrawal shares must be positive")
 	}
 
 	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, msg.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
 
 	// Check if withdrawals are enabled
 	if !vaultState.WithdrawalsEnabled {
-		return nil, fmt.Errorf("withdrawals are currently disabled for vault type %s", msg.VaultType.String())
+		return nil, fmt.Errorf("withdrawals are currently disabled")
 	}
 
 	// Get user position
-	userPosition, err := k.GetV2UserPosition(ctx, msg.VaultType, signer)
+	userPosition, err := k.GetV2UserPosition(ctx, signer)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user position: %w", err)
 	}
@@ -205,7 +194,7 @@ func (k vaultV2MsgServer) Withdraw(ctx context.Context, msg *vaultsv2.MsgWithdra
 
 	// If user has no shares left, we could remove the position entirely
 	// For now, keep it to maintain history
-	if err := k.SetV2UserPosition(ctx, msg.VaultType, signer, userPosition); err != nil {
+	if err := k.SetV2UserPosition(ctx, signer, userPosition); err != nil {
 		return nil, fmt.Errorf("failed to update user position: %w", err)
 	}
 
@@ -215,7 +204,7 @@ func (k vaultV2MsgServer) Withdraw(ctx context.Context, msg *vaultsv2.MsgWithdra
 	vaultState.SharePrice = k.calculateV2SharePrice(vaultState)
 	vaultState.LastNavUpdate = sdk.UnwrapSDKContext(ctx).BlockTime()
 
-	if err := k.SetV2VaultState(ctx, msg.VaultType, vaultState); err != nil {
+	if err := k.SetV2VaultState(ctx, vaultState); err != nil {
 		return nil, fmt.Errorf("failed to update vault state: %w", err)
 	}
 
@@ -251,7 +240,7 @@ func (k vaultV2MsgServer) SetYieldPreference(ctx context.Context, msg *vaultsv2.
 	}
 
 	// Get user position
-	userPosition, err := k.GetV2UserPosition(ctx, msg.VaultType, signer)
+	userPosition, err := k.GetV2UserPosition(ctx, signer)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user position: %w", err)
 	}
@@ -260,7 +249,7 @@ func (k vaultV2MsgServer) SetYieldPreference(ctx context.Context, msg *vaultsv2.
 	userPosition.ReceiveYield = msg.ReceiveYield
 	userPosition.LastActivityTime = sdk.UnwrapSDKContext(ctx).BlockTime()
 
-	if err := k.SetV2UserPosition(ctx, msg.VaultType, signer, userPosition); err != nil {
+	if err := k.SetV2UserPosition(ctx, signer, userPosition); err != nil {
 		return nil, fmt.Errorf("failed to update yield preference: %w", err)
 	}
 
@@ -283,7 +272,7 @@ func (k vaultV2MsgServer) UpdateNAV(ctx context.Context, msg *vaultsv2.MsgUpdate
 	}
 
 	// Get current vault state
-	vaultState, err := k.GetV2VaultState(ctx, msg.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
@@ -312,7 +301,7 @@ func (k vaultV2MsgServer) UpdateNAV(ctx context.Context, msg *vaultsv2.MsgUpdate
 		}
 	}
 
-	if err := k.SetV2VaultState(ctx, msg.VaultType, vaultState); err != nil {
+	if err := k.SetV2VaultState(ctx, vaultState); err != nil {
 		return nil, fmt.Errorf("failed to update vault state: %w", err)
 	}
 
@@ -600,35 +589,6 @@ func (k vaultV2MsgServer) ProcessInFlightPosition(ctx context.Context, msg *vaul
 }
 
 // Helper functions
-
-// getOrCreateV2VaultState gets an existing vault state or creates a new one with defaults
-func (k *Keeper) getOrCreateV2VaultState(ctx context.Context, vaultType vaults.VaultType) (*vaultsv2.VaultState, error) {
-	state, err := k.GetV2VaultState(ctx, vaultType)
-	if err != nil {
-		if errors.Is(err, collections.ErrNotFound) {
-			// Create default vault state
-			blockTime := sdk.UnwrapSDKContext(ctx).BlockTime()
-			defaultState := &vaultsv2.VaultState{
-				VaultType:              vaultType,
-				TotalShares:            math.ZeroInt(),
-				TotalNav:               math.ZeroInt(),
-				SharePrice:             math.LegacyOneDec(),
-				TotalUsers:             0,
-				DepositsEnabled:        true,
-				WithdrawalsEnabled:     true,
-				LastNavUpdate:          blockTime,
-				TotalSharesPendingExit: math.ZeroInt(),
-				PendingExitRequests:    0,
-			}
-			if err := k.SetV2VaultState(ctx, vaultType, defaultState); err != nil {
-				return nil, err
-			}
-			return defaultState, nil
-		}
-		return nil, err
-	}
-	return state, nil
-}
 
 // calculateV2SharePrice calculates the current share price based on NAV and total shares
 func (k *Keeper) calculateV2SharePrice(vaultState *vaultsv2.VaultState) math.LegacyDec {

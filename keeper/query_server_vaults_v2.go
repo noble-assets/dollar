@@ -9,7 +9,6 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"dollar.noble.xyz/v2/types/vaults"
 	vaultsv2 "dollar.noble.xyz/v2/types/vaults/v2"
 )
 
@@ -27,19 +26,15 @@ var _ vaultsv2.QueryServer = vaultV2QueryServer{}
 
 // VaultInfo implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) VaultInfo(ctx context.Context, req *vaultsv2.QueryVaultInfoRequest) (*vaultsv2.QueryVaultInfoResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
 
 	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			// Return default state for non-existent vault
 			return &vaultsv2.QueryVaultInfoResponse{
 				Config: vaultsv2.VaultConfig{
-					VaultType: req.VaultType,
-					Enabled:   true,
+					Enabled: true,
 				},
 				TotalShares:     math.ZeroInt().String(),
 				TotalNav:        math.ZeroInt().String(),
@@ -52,8 +47,7 @@ func (k vaultV2QueryServer) VaultInfo(ctx context.Context, req *vaultsv2.QueryVa
 
 	// TODO: Get actual vault config
 	config := vaultsv2.VaultConfig{
-		VaultType: req.VaultType,
-		Enabled:   vaultState.DepositsEnabled,
+		Enabled: vaultState.DepositsEnabled,
 	}
 
 	return &vaultsv2.QueryVaultInfoResponse{
@@ -69,16 +63,10 @@ func (k vaultV2QueryServer) VaultInfo(ctx context.Context, req *vaultsv2.QueryVa
 func (k vaultV2QueryServer) AllVaults(ctx context.Context, req *vaultsv2.QueryAllVaultsRequest) (*vaultsv2.QueryAllVaultsResponse, error) {
 	var vaultList []vaultsv2.QueryVaultInfoResponse
 
-	// Query for STAKED vault
-	stakedResp, err := k.VaultInfo(ctx, &vaultsv2.QueryVaultInfoRequest{VaultType: vaults.STAKED})
+	// Query for the single vault
+	vaultResp, err := k.VaultInfo(ctx, &vaultsv2.QueryVaultInfoRequest{})
 	if err == nil {
-		vaultList = append(vaultList, *stakedResp)
-	}
-
-	// Query for FLEXIBLE vault
-	flexibleResp, err := k.VaultInfo(ctx, &vaultsv2.QueryVaultInfoRequest{VaultType: vaults.FLEXIBLE})
-	if err == nil {
-		vaultList = append(vaultList, *flexibleResp)
+		vaultList = append(vaultList, *vaultResp)
 	}
 
 	return &vaultsv2.QueryAllVaultsResponse{
@@ -95,12 +83,8 @@ func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaultsv2.Quer
 		return nil, fmt.Errorf("invalid user address: %w", err)
 	}
 
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// Get user position
-	position, err := k.GetV2UserPosition(ctx, req.VaultType, userAddr)
+	position, err := k.GetV2UserPosition(ctx, userAddr)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			// Return empty position for user with no position
@@ -122,7 +106,7 @@ func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaultsv2.Quer
 	}
 
 	// Calculate current value and unrealized gain
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
@@ -142,29 +126,14 @@ func (k vaultV2QueryServer) UserPosition(ctx context.Context, req *vaultsv2.Quer
 func (k vaultV2QueryServer) UserPositions(ctx context.Context, req *vaultsv2.QueryUserPositionsRequest) (*vaultsv2.QueryUserPositionsResponse, error) {
 	var positions []vaultsv2.UserPositionWithVault
 
-	// Check STAKED vault
-	stakedPos, err := k.UserPosition(ctx, &vaultsv2.QueryUserPositionRequest{
-		Address:   req.Address,
-		VaultType: vaults.STAKED,
+	// Check the single vault
+	userPos, err := k.UserPosition(ctx, &vaultsv2.QueryUserPositionRequest{
+		Address: req.Address,
 	})
-	if err == nil && !stakedPos.Position.Shares.IsZero() {
+	if err == nil && !userPos.Position.Shares.IsZero() {
 		positions = append(positions, vaultsv2.UserPositionWithVault{
-			VaultType:    vaults.STAKED,
-			Position:     *stakedPos.Position,
-			CurrentValue: stakedPos.CurrentValue,
-		})
-	}
-
-	// Check FLEXIBLE vault
-	flexiblePos, err := k.UserPosition(ctx, &vaultsv2.QueryUserPositionRequest{
-		Address:   req.Address,
-		VaultType: vaults.FLEXIBLE,
-	})
-	if err == nil && !flexiblePos.Position.Shares.IsZero() {
-		positions = append(positions, vaultsv2.UserPositionWithVault{
-			VaultType:    vaults.FLEXIBLE,
-			Position:     *flexiblePos.Position,
-			CurrentValue: flexiblePos.CurrentValue,
+			Position:     *userPos.Position,
+			CurrentValue: userPos.CurrentValue,
 		})
 	}
 
@@ -176,12 +145,8 @@ func (k vaultV2QueryServer) UserPositions(ctx context.Context, req *vaultsv2.Que
 
 // SharePrice implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) SharePrice(ctx context.Context, req *vaultsv2.QuerySharePriceRequest) (*vaultsv2.QuerySharePriceResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			return &vaultsv2.QuerySharePriceResponse{
@@ -204,12 +169,9 @@ func (k vaultV2QueryServer) SharePrice(ctx context.Context, req *vaultsv2.QueryS
 
 // NAVInfo implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) NAVInfo(ctx context.Context, req *vaultsv2.QueryNAVInfoRequest) (*vaultsv2.QueryNAVInfoResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
 
 	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
@@ -229,10 +191,6 @@ func (k vaultV2QueryServer) NAVInfo(ctx context.Context, req *vaultsv2.QueryNAVI
 
 // DepositPreview implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) DepositPreview(ctx context.Context, req *vaultsv2.QueryDepositPreviewRequest) (*vaultsv2.QueryDepositPreviewResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// Parse amount
 	amount, ok := math.NewIntFromString(req.Amount)
 	if !ok || amount.IsZero() || amount.IsNegative() {
@@ -240,7 +198,7 @@ func (k vaultV2QueryServer) DepositPreview(ctx context.Context, req *vaultsv2.Qu
 	}
 
 	// Get vault state
-	vaultState, err := k.getOrCreateV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.getOrCreateV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
@@ -260,9 +218,6 @@ func (k vaultV2QueryServer) DepositPreview(ctx context.Context, req *vaultsv2.Qu
 
 // WithdrawalPreview implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) WithdrawalPreview(ctx context.Context, req *vaultsv2.QueryWithdrawalPreviewRequest) (*vaultsv2.QueryWithdrawalPreviewResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
 
 	// Parse shares
 	shares, ok := math.NewIntFromString(req.Shares)
@@ -271,7 +226,7 @@ func (k vaultV2QueryServer) WithdrawalPreview(ctx context.Context, req *vaultsv2
 	}
 
 	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get vault state: %w", err)
 	}
@@ -309,10 +264,6 @@ func (k vaultV2QueryServer) UserExitRequests(ctx context.Context, req *vaultsv2.
 
 // FeeInfo implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) FeeInfo(ctx context.Context, req *vaultsv2.QueryFeeInfoRequest) (*vaultsv2.QueryFeeInfoResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// TODO: Get actual fee config
 	feeConfig := vaultsv2.FeeConfig{
 		DepositFeeRate:    0,
@@ -326,17 +277,12 @@ func (k vaultV2QueryServer) FeeInfo(ctx context.Context, req *vaultsv2.QueryFeeI
 
 // Stats implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) Stats(ctx context.Context, req *vaultsv2.QueryStatsRequest) (*vaultsv2.QueryStatsResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
-
 	// Get vault state
-	vaultState, err := k.GetV2VaultState(ctx, req.VaultType)
+	vaultState, err := k.GetV2VaultState(ctx)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			// Return zero stats for non-existent vault
 			stats := vaultsv2.VaultStatsEntry{
-				VaultType:             req.VaultType,
 				TotalDepositors:       0,
 				TotalDeposited:        math.ZeroInt(),
 				TotalWithdrawn:        math.ZeroInt(),
@@ -352,7 +298,6 @@ func (k vaultV2QueryServer) Stats(ctx context.Context, req *vaultsv2.QueryStatsR
 
 	// TODO: Calculate actual stats from historical data
 	stats := vaultsv2.VaultStatsEntry{
-		VaultType:             req.VaultType,
 		TotalDepositors:       vaultState.TotalUsers,
 		TotalDeposited:        vaultState.TotalNav,   // Simplified
 		TotalWithdrawn:        math.ZeroInt(),        // TODO: Track withdrawals
@@ -371,16 +316,10 @@ func (k vaultV2QueryServer) Stats(ctx context.Context, req *vaultsv2.QueryStatsR
 func (k vaultV2QueryServer) AllStats(ctx context.Context, req *vaultsv2.QueryAllStatsRequest) (*vaultsv2.QueryAllStatsResponse, error) {
 	var allStats []vaultsv2.VaultStatsEntry
 
-	// Get stats for STAKED vault
-	stakedResp, err := k.Stats(ctx, &vaultsv2.QueryStatsRequest{VaultType: vaults.STAKED})
+	// Get stats for the single vault
+	vaultResp, err := k.Stats(ctx, &vaultsv2.QueryStatsRequest{})
 	if err == nil {
-		allStats = append(allStats, stakedResp.Stats)
-	}
-
-	// Get stats for FLEXIBLE vault
-	flexibleResp, err := k.Stats(ctx, &vaultsv2.QueryStatsRequest{VaultType: vaults.FLEXIBLE})
-	if err == nil {
-		allStats = append(allStats, flexibleResp.Stats)
+		allStats = append(allStats, vaultResp.Stats)
 	}
 
 	return &vaultsv2.QueryAllStatsResponse{
@@ -571,9 +510,6 @@ func (k vaultV2QueryServer) InFlightPositions(ctx context.Context, req *vaultsv2
 
 // CrossChainSnapshot implements vaultsv2.QueryServer
 func (k vaultV2QueryServer) CrossChainSnapshot(ctx context.Context, req *vaultsv2.QueryCrossChainSnapshotRequest) (*vaultsv2.QueryCrossChainSnapshotResponse, error) {
-	if req.VaultType == vaults.UNSPECIFIED {
-		return nil, fmt.Errorf("vault type must be specified")
-	}
 
 	// Determine timestamp to query
 	timestamp := req.Timestamp
@@ -582,8 +518,7 @@ func (k vaultV2QueryServer) CrossChainSnapshot(ctx context.Context, req *vaultsv
 	}
 
 	// Get snapshot
-	snapshotKey := collections.Join(int32(req.VaultType), timestamp)
-	snapshot, err := k.V2Collections.CrossChainSnapshots.Get(sdk.UnwrapSDKContext(ctx), snapshotKey)
+	snapshot, err := k.V2Collections.CrossChainSnapshots.Get(sdk.UnwrapSDKContext(ctx), timestamp)
 	if err != nil {
 		if errors.Is(err, collections.ErrNotFound) {
 			// Return empty snapshot

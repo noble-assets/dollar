@@ -79,11 +79,8 @@ message MsgDeposit {
   // User making the deposit
   string depositor = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type to deposit into
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Amount to deposit
-  string amount = 3 [
+  string amount = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -91,10 +88,10 @@ message MsgDeposit {
   ];
 
   // Whether user wants to receive yield
-  bool receive_yield = 4;
+  bool receive_yield = 3;
 
   // Minimum shares to receive (slippage protection)
-  string min_shares = 5 [
+  string min_shares = 4 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -148,11 +145,8 @@ message MsgWithdraw {
   // User making the withdrawal
   string withdrawer = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type to withdraw from
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Shares to redeem
-  string shares = 3 [
+  string shares = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -160,7 +154,7 @@ message MsgWithdraw {
   ];
 
   // Minimum amount to receive (slippage protection)
-  string min_amount = 4 [
+  string min_amount = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -214,11 +208,8 @@ message MsgRequestExit {
   // User requesting exit
   string requester = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type to exit from
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Shares to exit
-  string shares = 3 [
+  string shares = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -265,11 +256,8 @@ message MsgCancelExit {
   // User cancelling the exit request
   string requester = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Exit request ID to cancel
-  string exit_request_id = 3;
+  string exit_request_id = 2;
 }
 
 // MsgCancelExitResponse returns the results of cancelling an exit request
@@ -297,11 +285,8 @@ message MsgSetYieldPreference {
   // User setting the preference
   string user = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Whether to receive yield
-  bool receive_yield = 3;
+  bool receive_yield = 2;
 }
 
 // MsgSetYieldPreferenceResponse confirms yield preference update
@@ -313,7 +298,7 @@ message MsgSetYieldPreferenceResponse {
   bool new_preference = 2;
 }
 
-// MsgProcessExitQueue allows processing of exit requests (admin only)
+// MsgProcessExitQueue allows authority to process exit queue for a vault
 message MsgProcessExitQueue {
   option (cosmos.msg.v1.signer) = "authority";
   option (amino.name) = "dollar/vaults/v2/ProcessExitQueue";
@@ -324,11 +309,8 @@ message MsgProcessExitQueue {
   // Authority processing the queue
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type to process
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Maximum number of requests to process
-  int32 max_requests = 3;
+  int32 max_requests = 2;
 }
 
 // MsgProcessExitQueueResponse returns processing results
@@ -367,11 +349,8 @@ message MsgUpdateNAV {
   // Authority updating NAV
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type to update
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // New NAV value
-  string new_nav = 3 [
+  string new_nav = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -379,7 +358,7 @@ message MsgUpdateNAV {
   ];
 
   // Reason for NAV update
-  string reason = 4;
+  string reason = 3;
 }
 
 // MsgUpdateNAVResponse returns NAV update results
@@ -423,14 +402,11 @@ message MsgUpdateVaultConfig {
   // Authority updating the config
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  // Vault type to update
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // New vault configuration
-  VaultConfig config = 3 [(gogoproto.nullable) = false];
+  VaultConfig config = 2 [(gogoproto.nullable) = false];
 
   // Reason for config update
-  string reason = 4;
+  string reason = 3;
 }
 
 // MsgUpdateVaultConfigResponse confirms config update
@@ -563,11 +539,8 @@ message MsgRemoteDeposit {
   // Route ID for the deposit
   string route_id = 2;
 
-  // Vault type to deposit into
-  noble.dollar.vaults.v1.VaultType vault_type = 3;
-
   // Amount to deposit
-  string amount = 4 [
+  string amount = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -575,10 +548,10 @@ message MsgRemoteDeposit {
   ];
 
   // Remote address to receive the position
-  string remote_address = 5;
+  string remote_address = 4;
 
   // Minimum shares to receive (slippage protection)
-  string min_shares = 6 [
+  string min_shares = 5 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -586,10 +559,10 @@ message MsgRemoteDeposit {
   ];
 
   // Gas limit for remote execution (Hyperlane only)
-  uint64 gas_limit = 7;
+  uint64 gas_limit = 6;
 
   // Gas price for remote execution (Hyperlane only)
-  string gas_price = 8 [
+  string gas_price = 7 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -645,11 +618,8 @@ message MsgRemoteWithdraw {
   // Route ID for the withdrawal
   string route_id = 2;
 
-  // Vault type to withdraw from
-  noble.dollar.vaults.v1.VaultType vault_type = 3;
-
   // Shares to withdraw from remote position
-  string shares = 4 [
+  string shares = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -657,7 +627,7 @@ message MsgRemoteWithdraw {
   ];
 
   // Minimum amount to receive (slippage protection)
-  string min_amount = 5 [
+  string min_amount = 4 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -665,10 +635,10 @@ message MsgRemoteWithdraw {
   ];
 
   // Gas limit for remote execution (Hyperlane only)
-  uint64 gas_limit = 6;
+  uint64 gas_limit = 5;
 
   // Gas price for remote execution (Hyperlane only)
-  string gas_price = 7 [
+  string gas_price = 6 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,

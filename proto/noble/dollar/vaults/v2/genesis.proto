@@ -81,21 +81,18 @@ message Params {
 
 // VaultConfig stores configuration for a specific vault type
 message VaultConfig {
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 1;
-
   // Whether this vault type is enabled for new deposits
-  bool enabled = 2;
+  bool enabled = 1;
 
   // Minimum staking period (for staked vaults)
-  int64 min_staking_period = 3;
+  int64 min_staking_period = 2;
 
   // Custom fee rates (overrides default if set)
-  int32 deposit_fee_rate = 4;
-  int32 withdrawal_fee_rate = 5;
+  int32 deposit_fee_rate = 3;
+  int32 withdrawal_fee_rate = 4;
 
   // Maximum total deposits allowed
-  string max_total_deposits = 6 [
+  string max_total_deposits = 5 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -103,7 +100,7 @@ message VaultConfig {
   ];
 
   // Target yield rate (informational)
-  string target_yield_rate = 7 [
+  string target_yield_rate = 6 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false,
@@ -116,29 +113,20 @@ message UserPositionEntry {
   // User address
   bytes address = 1;
 
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // User position details
-  UserPosition position = 3 [(gogoproto.nullable) = false];
+  UserPosition position = 2 [(gogoproto.nullable) = false];
 }
 
 // NAVEntry stores NAV information for a vault type
 message NAVEntry {
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 1;
-
   // NAV information
-  NAVInfo nav_info = 2 [(gogoproto.nullable) = false];
+  NAVInfo nav_info = 1 [(gogoproto.nullable) = false];
 }
 
 // FeeConfigEntry stores fee configuration for a vault type
 message FeeConfigEntry {
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 1;
-
   // Fee configuration
-  FeeConfig fee_config = 2 [(gogoproto.nullable) = false];
+  FeeConfig fee_config = 1 [(gogoproto.nullable) = false];
 }
 
 // ExitRequestEntry stores an exit request in the queue
@@ -146,20 +134,14 @@ message ExitRequestEntry {
   // User address
   bytes address = 1;
 
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 2;
-
   // Exit request details
-  ExitRequest exit_request = 3 [(gogoproto.nullable) = false];
+  ExitRequest exit_request = 2 [(gogoproto.nullable) = false];
 }
 
 // SharesTotalEntry tracks total shares for a vault type
 message SharesTotalEntry {
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 1;
-
   // Total shares issued
-  string total_shares = 2 [
+  string total_shares = 1 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -167,7 +149,7 @@ message SharesTotalEntry {
   ];
 
   // Total NAV (Net Asset Value)
-  string total_nav = 3 [
+  string total_nav = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -177,14 +159,11 @@ message SharesTotalEntry {
 
 // VaultStatsEntry tracks statistics for a vault type
 message VaultStatsEntry {
-  // Vault type
-  noble.dollar.vaults.v1.VaultType vault_type = 1;
-
   // Total number of depositors
-  uint64 total_depositors = 2;
+  uint64 total_depositors = 1;
 
   // Total value deposited (cumulative)
-  string total_deposited = 3 [
+  string total_deposited = 2 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -192,7 +171,7 @@ message VaultStatsEntry {
   ];
 
   // Total value withdrawn (cumulative)
-  string total_withdrawn = 4 [
+  string total_withdrawn = 3 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -200,7 +179,7 @@ message VaultStatsEntry {
   ];
 
   // Total fees collected
-  string total_fees_collected = 5 [
+  string total_fees_collected = 4 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -208,7 +187,7 @@ message VaultStatsEntry {
   ];
 
   // Total yield distributed
-  string total_yield_distributed = 6 [
+  string total_yield_distributed = 5 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -216,10 +195,10 @@ message VaultStatsEntry {
   ];
 
   // Number of active positions
-  uint64 active_positions = 7;
+  uint64 active_positions = 6;
 
   // Average position size
-  string average_position_size = 8 [
+  string average_position_size = 7 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false,

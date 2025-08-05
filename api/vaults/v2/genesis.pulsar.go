@@ -3,7 +3,7 @@ package vaultsv2
 
 import (
 	_ "cosmossdk.io/api/amino"
-	v1 "dollar.noble.xyz/v2/api/vaults/v1"
+	_ "dollar.noble.xyz/v2/api/vaults/v1"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
@@ -2261,7 +2261,6 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 
 var (
 	md_VaultConfig                     protoreflect.MessageDescriptor
-	fd_VaultConfig_vault_type          protoreflect.FieldDescriptor
 	fd_VaultConfig_enabled             protoreflect.FieldDescriptor
 	fd_VaultConfig_min_staking_period  protoreflect.FieldDescriptor
 	fd_VaultConfig_deposit_fee_rate    protoreflect.FieldDescriptor
@@ -2273,7 +2272,6 @@ var (
 func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_VaultConfig = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("VaultConfig")
-	fd_VaultConfig_vault_type = md_VaultConfig.Fields().ByName("vault_type")
 	fd_VaultConfig_enabled = md_VaultConfig.Fields().ByName("enabled")
 	fd_VaultConfig_min_staking_period = md_VaultConfig.Fields().ByName("min_staking_period")
 	fd_VaultConfig_deposit_fee_rate = md_VaultConfig.Fields().ByName("deposit_fee_rate")
@@ -2347,12 +2345,6 @@ func (x *fastReflection_VaultConfig) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_VaultConfig) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_VaultConfig_vault_type, value) {
-			return
-		}
-	}
 	if x.Enabled != false {
 		value := protoreflect.ValueOfBool(x.Enabled)
 		if !f(fd_VaultConfig_enabled, value) {
@@ -2404,8 +2396,6 @@ func (x *fastReflection_VaultConfig) Range(f func(protoreflect.FieldDescriptor, 
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_VaultConfig) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultConfig.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.VaultConfig.enabled":
 		return x.Enabled != false
 	case "noble.dollar.vaults.v2.VaultConfig.min_staking_period":
@@ -2434,8 +2424,6 @@ func (x *fastReflection_VaultConfig) Has(fd protoreflect.FieldDescriptor) bool {
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultConfig) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultConfig.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.VaultConfig.enabled":
 		x.Enabled = false
 	case "noble.dollar.vaults.v2.VaultConfig.min_staking_period":
@@ -2464,9 +2452,6 @@ func (x *fastReflection_VaultConfig) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_VaultConfig) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v2.VaultConfig.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.VaultConfig.enabled":
 		value := x.Enabled
 		return protoreflect.ValueOfBool(value)
@@ -2505,8 +2490,6 @@ func (x *fastReflection_VaultConfig) Get(descriptor protoreflect.FieldDescriptor
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultConfig) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultConfig.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.VaultConfig.enabled":
 		x.Enabled = value.Bool()
 	case "noble.dollar.vaults.v2.VaultConfig.min_staking_period":
@@ -2539,8 +2522,6 @@ func (x *fastReflection_VaultConfig) Set(fd protoreflect.FieldDescriptor, value 
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultConfig) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultConfig.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.VaultConfig is not mutable"))
 	case "noble.dollar.vaults.v2.VaultConfig.enabled":
 		panic(fmt.Errorf("field enabled of message noble.dollar.vaults.v2.VaultConfig is not mutable"))
 	case "noble.dollar.vaults.v2.VaultConfig.min_staking_period":
@@ -2566,8 +2547,6 @@ func (x *fastReflection_VaultConfig) Mutable(fd protoreflect.FieldDescriptor) pr
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_VaultConfig) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultConfig.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.VaultConfig.enabled":
 		return protoreflect.ValueOfBool(false)
 	case "noble.dollar.vaults.v2.VaultConfig.min_staking_period":
@@ -2649,9 +2628,6 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		if x.Enabled {
 			n += 2
 		}
@@ -2706,29 +2682,29 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], x.TargetYieldRate)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TargetYieldRate)))
 			i--
-			dAtA[i] = 0x3a
+			dAtA[i] = 0x32
 		}
 		if len(x.MaxTotalDeposits) > 0 {
 			i -= len(x.MaxTotalDeposits)
 			copy(dAtA[i:], x.MaxTotalDeposits)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.MaxTotalDeposits)))
 			i--
-			dAtA[i] = 0x32
+			dAtA[i] = 0x2a
 		}
 		if x.WithdrawalFeeRate != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.WithdrawalFeeRate))
 			i--
-			dAtA[i] = 0x28
+			dAtA[i] = 0x20
 		}
 		if x.DepositFeeRate != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.DepositFeeRate))
 			i--
-			dAtA[i] = 0x20
+			dAtA[i] = 0x18
 		}
 		if x.MinStakingPeriod != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.MinStakingPeriod))
 			i--
-			dAtA[i] = 0x18
+			dAtA[i] = 0x10
 		}
 		if x.Enabled {
 			i--
@@ -2737,11 +2713,6 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 			} else {
 				dAtA[i] = 0
 			}
-			i--
-			dAtA[i] = 0x10
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
 			i--
 			dAtA[i] = 0x8
 		}
@@ -2796,25 +2767,6 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 			switch fieldNum {
 			case 1:
 				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 2:
-				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Enabled", wireType)
 				}
 				var v int
@@ -2833,7 +2785,7 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 					}
 				}
 				x.Enabled = bool(v != 0)
-			case 3:
+			case 2:
 				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MinStakingPeriod", wireType)
 				}
@@ -2852,7 +2804,7 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 						break
 					}
 				}
-			case 4:
+			case 3:
 				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field DepositFeeRate", wireType)
 				}
@@ -2871,7 +2823,7 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 						break
 					}
 				}
-			case 5:
+			case 4:
 				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field WithdrawalFeeRate", wireType)
 				}
@@ -2890,7 +2842,7 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 						break
 					}
 				}
-			case 6:
+			case 5:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MaxTotalDeposits", wireType)
 				}
@@ -2922,7 +2874,7 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 				}
 				x.MaxTotalDeposits = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
-			case 7:
+			case 6:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TargetYieldRate", wireType)
 				}
@@ -2990,17 +2942,15 @@ func (x *fastReflection_VaultConfig) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_UserPositionEntry            protoreflect.MessageDescriptor
-	fd_UserPositionEntry_address    protoreflect.FieldDescriptor
-	fd_UserPositionEntry_vault_type protoreflect.FieldDescriptor
-	fd_UserPositionEntry_position   protoreflect.FieldDescriptor
+	md_UserPositionEntry          protoreflect.MessageDescriptor
+	fd_UserPositionEntry_address  protoreflect.FieldDescriptor
+	fd_UserPositionEntry_position protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_UserPositionEntry = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("UserPositionEntry")
 	fd_UserPositionEntry_address = md_UserPositionEntry.Fields().ByName("address")
-	fd_UserPositionEntry_vault_type = md_UserPositionEntry.Fields().ByName("vault_type")
 	fd_UserPositionEntry_position = md_UserPositionEntry.Fields().ByName("position")
 }
 
@@ -3075,12 +3025,6 @@ func (x *fastReflection_UserPositionEntry) Range(f func(protoreflect.FieldDescri
 			return
 		}
 	}
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_UserPositionEntry_vault_type, value) {
-			return
-		}
-	}
 	if x.Position != nil {
 		value := protoreflect.ValueOfMessage(x.Position.ProtoReflect())
 		if !f(fd_UserPositionEntry_position, value) {
@@ -3104,8 +3048,6 @@ func (x *fastReflection_UserPositionEntry) Has(fd protoreflect.FieldDescriptor) 
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.UserPositionEntry.address":
 		return len(x.Address) != 0
-	case "noble.dollar.vaults.v2.UserPositionEntry.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.UserPositionEntry.position":
 		return x.Position != nil
 	default:
@@ -3126,8 +3068,6 @@ func (x *fastReflection_UserPositionEntry) Clear(fd protoreflect.FieldDescriptor
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.UserPositionEntry.address":
 		x.Address = nil
-	case "noble.dollar.vaults.v2.UserPositionEntry.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.UserPositionEntry.position":
 		x.Position = nil
 	default:
@@ -3149,9 +3089,6 @@ func (x *fastReflection_UserPositionEntry) Get(descriptor protoreflect.FieldDesc
 	case "noble.dollar.vaults.v2.UserPositionEntry.address":
 		value := x.Address
 		return protoreflect.ValueOfBytes(value)
-	case "noble.dollar.vaults.v2.UserPositionEntry.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.UserPositionEntry.position":
 		value := x.Position
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
@@ -3177,8 +3114,6 @@ func (x *fastReflection_UserPositionEntry) Set(fd protoreflect.FieldDescriptor, 
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.UserPositionEntry.address":
 		x.Address = value.Bytes()
-	case "noble.dollar.vaults.v2.UserPositionEntry.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.UserPositionEntry.position":
 		x.Position = value.Message().Interface().(*UserPosition)
 	default:
@@ -3208,8 +3143,6 @@ func (x *fastReflection_UserPositionEntry) Mutable(fd protoreflect.FieldDescript
 		return protoreflect.ValueOfMessage(x.Position.ProtoReflect())
 	case "noble.dollar.vaults.v2.UserPositionEntry.address":
 		panic(fmt.Errorf("field address of message noble.dollar.vaults.v2.UserPositionEntry is not mutable"))
-	case "noble.dollar.vaults.v2.UserPositionEntry.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.UserPositionEntry is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v2.UserPositionEntry"))
@@ -3225,8 +3158,6 @@ func (x *fastReflection_UserPositionEntry) NewField(fd protoreflect.FieldDescrip
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.UserPositionEntry.address":
 		return protoreflect.ValueOfBytes(nil)
-	case "noble.dollar.vaults.v2.UserPositionEntry.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.UserPositionEntry.position":
 		m := new(UserPosition)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
@@ -3303,9 +3234,6 @@ func (x *fastReflection_UserPositionEntry) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		if x.Position != nil {
 			l = options.Size(x.Position)
 			n += 1 + l + runtime.Sov(uint64(l))
@@ -3351,12 +3279,7 @@ func (x *fastReflection_UserPositionEntry) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], encoded)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
-			dAtA[i] = 0x1a
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
-			i--
-			dAtA[i] = 0x10
+			dAtA[i] = 0x12
 		}
 		if len(x.Address) > 0 {
 			i -= len(x.Address)
@@ -3449,25 +3372,6 @@ func (x *fastReflection_UserPositionEntry) ProtoMethods() *protoiface.Methods {
 				}
 				iNdEx = postIndex
 			case 2:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 3:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Position", wireType)
 				}
@@ -3539,15 +3443,13 @@ func (x *fastReflection_UserPositionEntry) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_NAVEntry            protoreflect.MessageDescriptor
-	fd_NAVEntry_vault_type protoreflect.FieldDescriptor
-	fd_NAVEntry_nav_info   protoreflect.FieldDescriptor
+	md_NAVEntry          protoreflect.MessageDescriptor
+	fd_NAVEntry_nav_info protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_NAVEntry = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("NAVEntry")
-	fd_NAVEntry_vault_type = md_NAVEntry.Fields().ByName("vault_type")
 	fd_NAVEntry_nav_info = md_NAVEntry.Fields().ByName("nav_info")
 }
 
@@ -3616,12 +3518,6 @@ func (x *fastReflection_NAVEntry) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_NAVEntry) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_NAVEntry_vault_type, value) {
-			return
-		}
-	}
 	if x.NavInfo != nil {
 		value := protoreflect.ValueOfMessage(x.NavInfo.ProtoReflect())
 		if !f(fd_NAVEntry_nav_info, value) {
@@ -3643,8 +3539,6 @@ func (x *fastReflection_NAVEntry) Range(f func(protoreflect.FieldDescriptor, pro
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_NAVEntry) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.NAVEntry.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.NAVEntry.nav_info":
 		return x.NavInfo != nil
 	default:
@@ -3663,8 +3557,6 @@ func (x *fastReflection_NAVEntry) Has(fd protoreflect.FieldDescriptor) bool {
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_NAVEntry) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.NAVEntry.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.NAVEntry.nav_info":
 		x.NavInfo = nil
 	default:
@@ -3683,9 +3575,6 @@ func (x *fastReflection_NAVEntry) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_NAVEntry) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v2.NAVEntry.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.NAVEntry.nav_info":
 		value := x.NavInfo
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
@@ -3709,8 +3598,6 @@ func (x *fastReflection_NAVEntry) Get(descriptor protoreflect.FieldDescriptor) p
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_NAVEntry) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.NAVEntry.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.NAVEntry.nav_info":
 		x.NavInfo = value.Message().Interface().(*NAVInfo)
 	default:
@@ -3738,8 +3625,6 @@ func (x *fastReflection_NAVEntry) Mutable(fd protoreflect.FieldDescriptor) proto
 			x.NavInfo = new(NAVInfo)
 		}
 		return protoreflect.ValueOfMessage(x.NavInfo.ProtoReflect())
-	case "noble.dollar.vaults.v2.NAVEntry.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.NAVEntry is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v2.NAVEntry"))
@@ -3753,8 +3638,6 @@ func (x *fastReflection_NAVEntry) Mutable(fd protoreflect.FieldDescriptor) proto
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_NAVEntry) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.NAVEntry.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.NAVEntry.nav_info":
 		m := new(NAVInfo)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
@@ -3827,9 +3710,6 @@ func (x *fastReflection_NAVEntry) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		if x.NavInfo != nil {
 			l = options.Size(x.NavInfo)
 			n += 1 + l + runtime.Sov(uint64(l))
@@ -3875,12 +3755,7 @@ func (x *fastReflection_NAVEntry) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], encoded)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
-			dAtA[i] = 0x12
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
-			i--
-			dAtA[i] = 0x8
+			dAtA[i] = 0xa
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -3932,25 +3807,6 @@ func (x *fastReflection_NAVEntry) ProtoMethods() *protoiface.Methods {
 			}
 			switch fieldNum {
 			case 1:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 2:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field NavInfo", wireType)
 				}
@@ -4023,14 +3879,12 @@ func (x *fastReflection_NAVEntry) ProtoMethods() *protoiface.Methods {
 
 var (
 	md_FeeConfigEntry            protoreflect.MessageDescriptor
-	fd_FeeConfigEntry_vault_type protoreflect.FieldDescriptor
 	fd_FeeConfigEntry_fee_config protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_FeeConfigEntry = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("FeeConfigEntry")
-	fd_FeeConfigEntry_vault_type = md_FeeConfigEntry.Fields().ByName("vault_type")
 	fd_FeeConfigEntry_fee_config = md_FeeConfigEntry.Fields().ByName("fee_config")
 }
 
@@ -4099,12 +3953,6 @@ func (x *fastReflection_FeeConfigEntry) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_FeeConfigEntry) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_FeeConfigEntry_vault_type, value) {
-			return
-		}
-	}
 	if x.FeeConfig != nil {
 		value := protoreflect.ValueOfMessage(x.FeeConfig.ProtoReflect())
 		if !f(fd_FeeConfigEntry_fee_config, value) {
@@ -4126,8 +3974,6 @@ func (x *fastReflection_FeeConfigEntry) Range(f func(protoreflect.FieldDescripto
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_FeeConfigEntry) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.FeeConfigEntry.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.FeeConfigEntry.fee_config":
 		return x.FeeConfig != nil
 	default:
@@ -4146,8 +3992,6 @@ func (x *fastReflection_FeeConfigEntry) Has(fd protoreflect.FieldDescriptor) boo
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_FeeConfigEntry) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.FeeConfigEntry.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.FeeConfigEntry.fee_config":
 		x.FeeConfig = nil
 	default:
@@ -4166,9 +4010,6 @@ func (x *fastReflection_FeeConfigEntry) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_FeeConfigEntry) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v2.FeeConfigEntry.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.FeeConfigEntry.fee_config":
 		value := x.FeeConfig
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
@@ -4192,8 +4033,6 @@ func (x *fastReflection_FeeConfigEntry) Get(descriptor protoreflect.FieldDescrip
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_FeeConfigEntry) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.FeeConfigEntry.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.FeeConfigEntry.fee_config":
 		x.FeeConfig = value.Message().Interface().(*FeeConfig)
 	default:
@@ -4221,8 +4060,6 @@ func (x *fastReflection_FeeConfigEntry) Mutable(fd protoreflect.FieldDescriptor)
 			x.FeeConfig = new(FeeConfig)
 		}
 		return protoreflect.ValueOfMessage(x.FeeConfig.ProtoReflect())
-	case "noble.dollar.vaults.v2.FeeConfigEntry.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.FeeConfigEntry is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v2.FeeConfigEntry"))
@@ -4236,8 +4073,6 @@ func (x *fastReflection_FeeConfigEntry) Mutable(fd protoreflect.FieldDescriptor)
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_FeeConfigEntry) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.FeeConfigEntry.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.FeeConfigEntry.fee_config":
 		m := new(FeeConfig)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
@@ -4310,9 +4145,6 @@ func (x *fastReflection_FeeConfigEntry) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		if x.FeeConfig != nil {
 			l = options.Size(x.FeeConfig)
 			n += 1 + l + runtime.Sov(uint64(l))
@@ -4358,12 +4190,7 @@ func (x *fastReflection_FeeConfigEntry) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], encoded)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
-			dAtA[i] = 0x12
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
-			i--
-			dAtA[i] = 0x8
+			dAtA[i] = 0xa
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -4415,25 +4242,6 @@ func (x *fastReflection_FeeConfigEntry) ProtoMethods() *protoiface.Methods {
 			}
 			switch fieldNum {
 			case 1:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 2:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FeeConfig", wireType)
 				}
@@ -4507,7 +4315,6 @@ func (x *fastReflection_FeeConfigEntry) ProtoMethods() *protoiface.Methods {
 var (
 	md_ExitRequestEntry              protoreflect.MessageDescriptor
 	fd_ExitRequestEntry_address      protoreflect.FieldDescriptor
-	fd_ExitRequestEntry_vault_type   protoreflect.FieldDescriptor
 	fd_ExitRequestEntry_exit_request protoreflect.FieldDescriptor
 )
 
@@ -4515,7 +4322,6 @@ func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_ExitRequestEntry = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("ExitRequestEntry")
 	fd_ExitRequestEntry_address = md_ExitRequestEntry.Fields().ByName("address")
-	fd_ExitRequestEntry_vault_type = md_ExitRequestEntry.Fields().ByName("vault_type")
 	fd_ExitRequestEntry_exit_request = md_ExitRequestEntry.Fields().ByName("exit_request")
 }
 
@@ -4590,12 +4396,6 @@ func (x *fastReflection_ExitRequestEntry) Range(f func(protoreflect.FieldDescrip
 			return
 		}
 	}
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_ExitRequestEntry_vault_type, value) {
-			return
-		}
-	}
 	if x.ExitRequest != nil {
 		value := protoreflect.ValueOfMessage(x.ExitRequest.ProtoReflect())
 		if !f(fd_ExitRequestEntry_exit_request, value) {
@@ -4619,8 +4419,6 @@ func (x *fastReflection_ExitRequestEntry) Has(fd protoreflect.FieldDescriptor) b
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.ExitRequestEntry.address":
 		return len(x.Address) != 0
-	case "noble.dollar.vaults.v2.ExitRequestEntry.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.ExitRequestEntry.exit_request":
 		return x.ExitRequest != nil
 	default:
@@ -4641,8 +4439,6 @@ func (x *fastReflection_ExitRequestEntry) Clear(fd protoreflect.FieldDescriptor)
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.ExitRequestEntry.address":
 		x.Address = nil
-	case "noble.dollar.vaults.v2.ExitRequestEntry.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.ExitRequestEntry.exit_request":
 		x.ExitRequest = nil
 	default:
@@ -4664,9 +4460,6 @@ func (x *fastReflection_ExitRequestEntry) Get(descriptor protoreflect.FieldDescr
 	case "noble.dollar.vaults.v2.ExitRequestEntry.address":
 		value := x.Address
 		return protoreflect.ValueOfBytes(value)
-	case "noble.dollar.vaults.v2.ExitRequestEntry.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.ExitRequestEntry.exit_request":
 		value := x.ExitRequest
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
@@ -4692,8 +4485,6 @@ func (x *fastReflection_ExitRequestEntry) Set(fd protoreflect.FieldDescriptor, v
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.ExitRequestEntry.address":
 		x.Address = value.Bytes()
-	case "noble.dollar.vaults.v2.ExitRequestEntry.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.ExitRequestEntry.exit_request":
 		x.ExitRequest = value.Message().Interface().(*ExitRequest)
 	default:
@@ -4723,8 +4514,6 @@ func (x *fastReflection_ExitRequestEntry) Mutable(fd protoreflect.FieldDescripto
 		return protoreflect.ValueOfMessage(x.ExitRequest.ProtoReflect())
 	case "noble.dollar.vaults.v2.ExitRequestEntry.address":
 		panic(fmt.Errorf("field address of message noble.dollar.vaults.v2.ExitRequestEntry is not mutable"))
-	case "noble.dollar.vaults.v2.ExitRequestEntry.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.ExitRequestEntry is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v2.ExitRequestEntry"))
@@ -4740,8 +4529,6 @@ func (x *fastReflection_ExitRequestEntry) NewField(fd protoreflect.FieldDescript
 	switch fd.FullName() {
 	case "noble.dollar.vaults.v2.ExitRequestEntry.address":
 		return protoreflect.ValueOfBytes(nil)
-	case "noble.dollar.vaults.v2.ExitRequestEntry.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.ExitRequestEntry.exit_request":
 		m := new(ExitRequest)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
@@ -4818,9 +4605,6 @@ func (x *fastReflection_ExitRequestEntry) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		if x.ExitRequest != nil {
 			l = options.Size(x.ExitRequest)
 			n += 1 + l + runtime.Sov(uint64(l))
@@ -4866,12 +4650,7 @@ func (x *fastReflection_ExitRequestEntry) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], encoded)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
-			dAtA[i] = 0x1a
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
-			i--
-			dAtA[i] = 0x10
+			dAtA[i] = 0x12
 		}
 		if len(x.Address) > 0 {
 			i -= len(x.Address)
@@ -4964,25 +4743,6 @@ func (x *fastReflection_ExitRequestEntry) ProtoMethods() *protoiface.Methods {
 				}
 				iNdEx = postIndex
 			case 2:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 3:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ExitRequest", wireType)
 				}
@@ -5055,7 +4815,6 @@ func (x *fastReflection_ExitRequestEntry) ProtoMethods() *protoiface.Methods {
 
 var (
 	md_SharesTotalEntry              protoreflect.MessageDescriptor
-	fd_SharesTotalEntry_vault_type   protoreflect.FieldDescriptor
 	fd_SharesTotalEntry_total_shares protoreflect.FieldDescriptor
 	fd_SharesTotalEntry_total_nav    protoreflect.FieldDescriptor
 )
@@ -5063,7 +4822,6 @@ var (
 func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_SharesTotalEntry = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("SharesTotalEntry")
-	fd_SharesTotalEntry_vault_type = md_SharesTotalEntry.Fields().ByName("vault_type")
 	fd_SharesTotalEntry_total_shares = md_SharesTotalEntry.Fields().ByName("total_shares")
 	fd_SharesTotalEntry_total_nav = md_SharesTotalEntry.Fields().ByName("total_nav")
 }
@@ -5133,12 +4891,6 @@ func (x *fastReflection_SharesTotalEntry) Interface() protoreflect.ProtoMessage 
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_SharesTotalEntry) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_SharesTotalEntry_vault_type, value) {
-			return
-		}
-	}
 	if x.TotalShares != "" {
 		value := protoreflect.ValueOfString(x.TotalShares)
 		if !f(fd_SharesTotalEntry_total_shares, value) {
@@ -5166,8 +4918,6 @@ func (x *fastReflection_SharesTotalEntry) Range(f func(protoreflect.FieldDescrip
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_SharesTotalEntry) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.SharesTotalEntry.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_shares":
 		return x.TotalShares != ""
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_nav":
@@ -5188,8 +4938,6 @@ func (x *fastReflection_SharesTotalEntry) Has(fd protoreflect.FieldDescriptor) b
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_SharesTotalEntry) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.SharesTotalEntry.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_shares":
 		x.TotalShares = ""
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_nav":
@@ -5210,9 +4958,6 @@ func (x *fastReflection_SharesTotalEntry) Clear(fd protoreflect.FieldDescriptor)
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_SharesTotalEntry) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v2.SharesTotalEntry.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_shares":
 		value := x.TotalShares
 		return protoreflect.ValueOfString(value)
@@ -5239,8 +4984,6 @@ func (x *fastReflection_SharesTotalEntry) Get(descriptor protoreflect.FieldDescr
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_SharesTotalEntry) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.SharesTotalEntry.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_shares":
 		x.TotalShares = value.Interface().(string)
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_nav":
@@ -5265,8 +5008,6 @@ func (x *fastReflection_SharesTotalEntry) Set(fd protoreflect.FieldDescriptor, v
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_SharesTotalEntry) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.SharesTotalEntry.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.SharesTotalEntry is not mutable"))
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_shares":
 		panic(fmt.Errorf("field total_shares of message noble.dollar.vaults.v2.SharesTotalEntry is not mutable"))
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_nav":
@@ -5284,8 +5025,6 @@ func (x *fastReflection_SharesTotalEntry) Mutable(fd protoreflect.FieldDescripto
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_SharesTotalEntry) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.SharesTotalEntry.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_shares":
 		return protoreflect.ValueOfString("")
 	case "noble.dollar.vaults.v2.SharesTotalEntry.total_nav":
@@ -5359,9 +5098,6 @@ func (x *fastReflection_SharesTotalEntry) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		l = len(x.TotalShares)
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
@@ -5404,19 +5140,14 @@ func (x *fastReflection_SharesTotalEntry) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], x.TotalNav)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TotalNav)))
 			i--
-			dAtA[i] = 0x1a
+			dAtA[i] = 0x12
 		}
 		if len(x.TotalShares) > 0 {
 			i -= len(x.TotalShares)
 			copy(dAtA[i:], x.TotalShares)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TotalShares)))
 			i--
-			dAtA[i] = 0x12
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
-			i--
-			dAtA[i] = 0x8
+			dAtA[i] = 0xa
 		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
@@ -5468,25 +5199,6 @@ func (x *fastReflection_SharesTotalEntry) ProtoMethods() *protoiface.Methods {
 			}
 			switch fieldNum {
 			case 1:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 2:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalShares", wireType)
 				}
@@ -5518,7 +5230,7 @@ func (x *fastReflection_SharesTotalEntry) ProtoMethods() *protoiface.Methods {
 				}
 				x.TotalShares = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
-			case 3:
+			case 2:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalNav", wireType)
 				}
@@ -5587,7 +5299,6 @@ func (x *fastReflection_SharesTotalEntry) ProtoMethods() *protoiface.Methods {
 
 var (
 	md_VaultStatsEntry                         protoreflect.MessageDescriptor
-	fd_VaultStatsEntry_vault_type              protoreflect.FieldDescriptor
 	fd_VaultStatsEntry_total_depositors        protoreflect.FieldDescriptor
 	fd_VaultStatsEntry_total_deposited         protoreflect.FieldDescriptor
 	fd_VaultStatsEntry_total_withdrawn         protoreflect.FieldDescriptor
@@ -5600,7 +5311,6 @@ var (
 func init() {
 	file_noble_dollar_vaults_v2_genesis_proto_init()
 	md_VaultStatsEntry = File_noble_dollar_vaults_v2_genesis_proto.Messages().ByName("VaultStatsEntry")
-	fd_VaultStatsEntry_vault_type = md_VaultStatsEntry.Fields().ByName("vault_type")
 	fd_VaultStatsEntry_total_depositors = md_VaultStatsEntry.Fields().ByName("total_depositors")
 	fd_VaultStatsEntry_total_deposited = md_VaultStatsEntry.Fields().ByName("total_deposited")
 	fd_VaultStatsEntry_total_withdrawn = md_VaultStatsEntry.Fields().ByName("total_withdrawn")
@@ -5675,12 +5385,6 @@ func (x *fastReflection_VaultStatsEntry) Interface() protoreflect.ProtoMessage {
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
 func (x *fastReflection_VaultStatsEntry) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.VaultType != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.VaultType))
-		if !f(fd_VaultStatsEntry_vault_type, value) {
-			return
-		}
-	}
 	if x.TotalDepositors != uint64(0) {
 		value := protoreflect.ValueOfUint64(x.TotalDepositors)
 		if !f(fd_VaultStatsEntry_total_depositors, value) {
@@ -5738,8 +5442,6 @@ func (x *fastReflection_VaultStatsEntry) Range(f func(protoreflect.FieldDescript
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_VaultStatsEntry) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultStatsEntry.vault_type":
-		return x.VaultType != 0
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_depositors":
 		return x.TotalDepositors != uint64(0)
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_deposited":
@@ -5770,8 +5472,6 @@ func (x *fastReflection_VaultStatsEntry) Has(fd protoreflect.FieldDescriptor) bo
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultStatsEntry) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultStatsEntry.vault_type":
-		x.VaultType = 0
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_depositors":
 		x.TotalDepositors = uint64(0)
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_deposited":
@@ -5802,9 +5502,6 @@ func (x *fastReflection_VaultStatsEntry) Clear(fd protoreflect.FieldDescriptor) 
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_VaultStatsEntry) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "noble.dollar.vaults.v2.VaultStatsEntry.vault_type":
-		value := x.VaultType
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_depositors":
 		value := x.TotalDepositors
 		return protoreflect.ValueOfUint64(value)
@@ -5846,8 +5543,6 @@ func (x *fastReflection_VaultStatsEntry) Get(descriptor protoreflect.FieldDescri
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultStatsEntry) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultStatsEntry.vault_type":
-		x.VaultType = (v1.VaultType)(value.Enum())
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_depositors":
 		x.TotalDepositors = value.Uint()
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_deposited":
@@ -5882,8 +5577,6 @@ func (x *fastReflection_VaultStatsEntry) Set(fd protoreflect.FieldDescriptor, va
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultStatsEntry) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultStatsEntry.vault_type":
-		panic(fmt.Errorf("field vault_type of message noble.dollar.vaults.v2.VaultStatsEntry is not mutable"))
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_depositors":
 		panic(fmt.Errorf("field total_depositors of message noble.dollar.vaults.v2.VaultStatsEntry is not mutable"))
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_deposited":
@@ -5911,8 +5604,6 @@ func (x *fastReflection_VaultStatsEntry) Mutable(fd protoreflect.FieldDescriptor
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_VaultStatsEntry) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "noble.dollar.vaults.v2.VaultStatsEntry.vault_type":
-		return protoreflect.ValueOfEnum(0)
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_depositors":
 		return protoreflect.ValueOfUint64(uint64(0))
 	case "noble.dollar.vaults.v2.VaultStatsEntry.total_deposited":
@@ -5996,9 +5687,6 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		if x.VaultType != 0 {
-			n += 1 + runtime.Sov(uint64(x.VaultType))
-		}
 		if x.TotalDepositors != 0 {
 			n += 1 + runtime.Sov(uint64(x.TotalDepositors))
 		}
@@ -6059,48 +5747,43 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 			copy(dAtA[i:], x.AveragePositionSize)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.AveragePositionSize)))
 			i--
-			dAtA[i] = 0x42
+			dAtA[i] = 0x3a
 		}
 		if x.ActivePositions != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.ActivePositions))
 			i--
-			dAtA[i] = 0x38
+			dAtA[i] = 0x30
 		}
 		if len(x.TotalYieldDistributed) > 0 {
 			i -= len(x.TotalYieldDistributed)
 			copy(dAtA[i:], x.TotalYieldDistributed)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TotalYieldDistributed)))
 			i--
-			dAtA[i] = 0x32
+			dAtA[i] = 0x2a
 		}
 		if len(x.TotalFeesCollected) > 0 {
 			i -= len(x.TotalFeesCollected)
 			copy(dAtA[i:], x.TotalFeesCollected)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TotalFeesCollected)))
 			i--
-			dAtA[i] = 0x2a
+			dAtA[i] = 0x22
 		}
 		if len(x.TotalWithdrawn) > 0 {
 			i -= len(x.TotalWithdrawn)
 			copy(dAtA[i:], x.TotalWithdrawn)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TotalWithdrawn)))
 			i--
-			dAtA[i] = 0x22
+			dAtA[i] = 0x1a
 		}
 		if len(x.TotalDeposited) > 0 {
 			i -= len(x.TotalDeposited)
 			copy(dAtA[i:], x.TotalDeposited)
 			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.TotalDeposited)))
 			i--
-			dAtA[i] = 0x1a
+			dAtA[i] = 0x12
 		}
 		if x.TotalDepositors != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.TotalDepositors))
-			i--
-			dAtA[i] = 0x10
-		}
-		if x.VaultType != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultType))
 			i--
 			dAtA[i] = 0x8
 		}
@@ -6155,25 +5838,6 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 			switch fieldNum {
 			case 1:
 				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
-				}
-				x.VaultType = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.VaultType |= v1.VaultType(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 2:
-				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalDepositors", wireType)
 				}
 				x.TotalDepositors = 0
@@ -6191,7 +5855,7 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 						break
 					}
 				}
-			case 3:
+			case 2:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalDeposited", wireType)
 				}
@@ -6223,7 +5887,7 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 				}
 				x.TotalDeposited = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
-			case 4:
+			case 3:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalWithdrawn", wireType)
 				}
@@ -6255,7 +5919,7 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 				}
 				x.TotalWithdrawn = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
-			case 5:
+			case 4:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalFeesCollected", wireType)
 				}
@@ -6287,7 +5951,7 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 				}
 				x.TotalFeesCollected = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
-			case 6:
+			case 5:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field TotalYieldDistributed", wireType)
 				}
@@ -6319,7 +5983,7 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 				}
 				x.TotalYieldDistributed = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
-			case 7:
+			case 6:
 				if wireType != 0 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ActivePositions", wireType)
 				}
@@ -6338,7 +6002,7 @@ func (x *fastReflection_VaultStatsEntry) ProtoMethods() *protoiface.Methods {
 						break
 					}
 				}
-			case 8:
+			case 7:
 				if wireType != 2 {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AveragePositionSize", wireType)
 				}
@@ -6633,19 +6297,17 @@ type VaultConfig struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Whether this vault type is enabled for new deposits
-	Enabled bool `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	Enabled bool `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
 	// Minimum staking period (for staked vaults)
-	MinStakingPeriod int64 `protobuf:"varint,3,opt,name=min_staking_period,json=minStakingPeriod,proto3" json:"min_staking_period,omitempty"`
+	MinStakingPeriod int64 `protobuf:"varint,2,opt,name=min_staking_period,json=minStakingPeriod,proto3" json:"min_staking_period,omitempty"`
 	// Custom fee rates (overrides default if set)
-	DepositFeeRate    int32 `protobuf:"varint,4,opt,name=deposit_fee_rate,json=depositFeeRate,proto3" json:"deposit_fee_rate,omitempty"`
-	WithdrawalFeeRate int32 `protobuf:"varint,5,opt,name=withdrawal_fee_rate,json=withdrawalFeeRate,proto3" json:"withdrawal_fee_rate,omitempty"`
+	DepositFeeRate    int32 `protobuf:"varint,3,opt,name=deposit_fee_rate,json=depositFeeRate,proto3" json:"deposit_fee_rate,omitempty"`
+	WithdrawalFeeRate int32 `protobuf:"varint,4,opt,name=withdrawal_fee_rate,json=withdrawalFeeRate,proto3" json:"withdrawal_fee_rate,omitempty"`
 	// Maximum total deposits allowed
-	MaxTotalDeposits string `protobuf:"bytes,6,opt,name=max_total_deposits,json=maxTotalDeposits,proto3" json:"max_total_deposits,omitempty"`
+	MaxTotalDeposits string `protobuf:"bytes,5,opt,name=max_total_deposits,json=maxTotalDeposits,proto3" json:"max_total_deposits,omitempty"`
 	// Target yield rate (informational)
-	TargetYieldRate string `protobuf:"bytes,7,opt,name=target_yield_rate,json=targetYieldRate,proto3" json:"target_yield_rate,omitempty"`
+	TargetYieldRate string `protobuf:"bytes,6,opt,name=target_yield_rate,json=targetYieldRate,proto3" json:"target_yield_rate,omitempty"`
 }
 
 func (x *VaultConfig) Reset() {
@@ -6666,13 +6328,6 @@ func (*VaultConfig) ProtoMessage() {}
 // Deprecated: Use VaultConfig.ProtoReflect.Descriptor instead.
 func (*VaultConfig) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v2_genesis_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *VaultConfig) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
 }
 
 func (x *VaultConfig) GetEnabled() bool {
@@ -6725,10 +6380,8 @@ type UserPositionEntry struct {
 
 	// User address
 	Address []byte `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// User position details
-	Position *UserPosition `protobuf:"bytes,3,opt,name=position,proto3" json:"position,omitempty"`
+	Position *UserPosition `protobuf:"bytes,2,opt,name=position,proto3" json:"position,omitempty"`
 }
 
 func (x *UserPositionEntry) Reset() {
@@ -6758,13 +6411,6 @@ func (x *UserPositionEntry) GetAddress() []byte {
 	return nil
 }
 
-func (x *UserPositionEntry) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
-}
-
 func (x *UserPositionEntry) GetPosition() *UserPosition {
 	if x != nil {
 		return x.Position
@@ -6778,10 +6424,8 @@ type NAVEntry struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// NAV information
-	NavInfo *NAVInfo `protobuf:"bytes,2,opt,name=nav_info,json=navInfo,proto3" json:"nav_info,omitempty"`
+	NavInfo *NAVInfo `protobuf:"bytes,1,opt,name=nav_info,json=navInfo,proto3" json:"nav_info,omitempty"`
 }
 
 func (x *NAVEntry) Reset() {
@@ -6804,13 +6448,6 @@ func (*NAVEntry) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v2_genesis_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *NAVEntry) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
-}
-
 func (x *NAVEntry) GetNavInfo() *NAVInfo {
 	if x != nil {
 		return x.NavInfo
@@ -6824,10 +6461,8 @@ type FeeConfigEntry struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Fee configuration
-	FeeConfig *FeeConfig `protobuf:"bytes,2,opt,name=fee_config,json=feeConfig,proto3" json:"fee_config,omitempty"`
+	FeeConfig *FeeConfig `protobuf:"bytes,1,opt,name=fee_config,json=feeConfig,proto3" json:"fee_config,omitempty"`
 }
 
 func (x *FeeConfigEntry) Reset() {
@@ -6850,13 +6485,6 @@ func (*FeeConfigEntry) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v2_genesis_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *FeeConfigEntry) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
-}
-
 func (x *FeeConfigEntry) GetFeeConfig() *FeeConfig {
 	if x != nil {
 		return x.FeeConfig
@@ -6872,10 +6500,8 @@ type ExitRequestEntry struct {
 
 	// User address
 	Address []byte `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,2,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Exit request details
-	ExitRequest *ExitRequest `protobuf:"bytes,3,opt,name=exit_request,json=exitRequest,proto3" json:"exit_request,omitempty"`
+	ExitRequest *ExitRequest `protobuf:"bytes,2,opt,name=exit_request,json=exitRequest,proto3" json:"exit_request,omitempty"`
 }
 
 func (x *ExitRequestEntry) Reset() {
@@ -6905,13 +6531,6 @@ func (x *ExitRequestEntry) GetAddress() []byte {
 	return nil
 }
 
-func (x *ExitRequestEntry) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
-}
-
 func (x *ExitRequestEntry) GetExitRequest() *ExitRequest {
 	if x != nil {
 		return x.ExitRequest
@@ -6925,12 +6544,10 @@ type SharesTotalEntry struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Total shares issued
-	TotalShares string `protobuf:"bytes,2,opt,name=total_shares,json=totalShares,proto3" json:"total_shares,omitempty"`
+	TotalShares string `protobuf:"bytes,1,opt,name=total_shares,json=totalShares,proto3" json:"total_shares,omitempty"`
 	// Total NAV (Net Asset Value)
-	TotalNav string `protobuf:"bytes,3,opt,name=total_nav,json=totalNav,proto3" json:"total_nav,omitempty"`
+	TotalNav string `protobuf:"bytes,2,opt,name=total_nav,json=totalNav,proto3" json:"total_nav,omitempty"`
 }
 
 func (x *SharesTotalEntry) Reset() {
@@ -6953,13 +6570,6 @@ func (*SharesTotalEntry) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v2_genesis_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *SharesTotalEntry) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
-}
-
 func (x *SharesTotalEntry) GetTotalShares() string {
 	if x != nil {
 		return x.TotalShares
@@ -6980,22 +6590,20 @@ type VaultStatsEntry struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Vault type
-	VaultType v1.VaultType `protobuf:"varint,1,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
 	// Total number of depositors
-	TotalDepositors uint64 `protobuf:"varint,2,opt,name=total_depositors,json=totalDepositors,proto3" json:"total_depositors,omitempty"`
+	TotalDepositors uint64 `protobuf:"varint,1,opt,name=total_depositors,json=totalDepositors,proto3" json:"total_depositors,omitempty"`
 	// Total value deposited (cumulative)
-	TotalDeposited string `protobuf:"bytes,3,opt,name=total_deposited,json=totalDeposited,proto3" json:"total_deposited,omitempty"`
+	TotalDeposited string `protobuf:"bytes,2,opt,name=total_deposited,json=totalDeposited,proto3" json:"total_deposited,omitempty"`
 	// Total value withdrawn (cumulative)
-	TotalWithdrawn string `protobuf:"bytes,4,opt,name=total_withdrawn,json=totalWithdrawn,proto3" json:"total_withdrawn,omitempty"`
+	TotalWithdrawn string `protobuf:"bytes,3,opt,name=total_withdrawn,json=totalWithdrawn,proto3" json:"total_withdrawn,omitempty"`
 	// Total fees collected
-	TotalFeesCollected string `protobuf:"bytes,5,opt,name=total_fees_collected,json=totalFeesCollected,proto3" json:"total_fees_collected,omitempty"`
+	TotalFeesCollected string `protobuf:"bytes,4,opt,name=total_fees_collected,json=totalFeesCollected,proto3" json:"total_fees_collected,omitempty"`
 	// Total yield distributed
-	TotalYieldDistributed string `protobuf:"bytes,6,opt,name=total_yield_distributed,json=totalYieldDistributed,proto3" json:"total_yield_distributed,omitempty"`
+	TotalYieldDistributed string `protobuf:"bytes,5,opt,name=total_yield_distributed,json=totalYieldDistributed,proto3" json:"total_yield_distributed,omitempty"`
 	// Number of active positions
-	ActivePositions uint64 `protobuf:"varint,7,opt,name=active_positions,json=activePositions,proto3" json:"active_positions,omitempty"`
+	ActivePositions uint64 `protobuf:"varint,6,opt,name=active_positions,json=activePositions,proto3" json:"active_positions,omitempty"`
 	// Average position size
-	AveragePositionSize string `protobuf:"bytes,8,opt,name=average_position_size,json=averagePositionSize,proto3" json:"average_position_size,omitempty"`
+	AveragePositionSize string `protobuf:"bytes,7,opt,name=average_position_size,json=averagePositionSize,proto3" json:"average_position_size,omitempty"`
 }
 
 func (x *VaultStatsEntry) Reset() {
@@ -7016,13 +6624,6 @@ func (*VaultStatsEntry) ProtoMessage() {}
 // Deprecated: Use VaultStatsEntry.ProtoReflect.Descriptor instead.
 func (*VaultStatsEntry) Descriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v2_genesis_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *VaultStatsEntry) GetVaultType() v1.VaultType {
-	if x != nil {
-		return x.VaultType
-	}
-	return v1.VaultType(0)
 }
 
 func (x *VaultStatsEntry) GetTotalDepositors() uint64 {
@@ -7170,149 +6771,120 @@ var file_noble_dollar_vaults_v2_genesis_proto_rawDesc = []byte{
 	0x69, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x50, 0x65, 0x72, 0x42, 0x6c, 0x6f,
 	0x63, 0x6b, 0x12, 0x25, 0x0a, 0x0e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5f, 0x65, 0x6e, 0x61,
 	0x62, 0x6c, 0x65, 0x64, 0x18, 0x09, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0d, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x22, 0xb5, 0x03, 0x0a, 0x0b, 0x56, 0x61,
-	0x75, 0x6c, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x40, 0x0a, 0x0a, 0x76, 0x61, 0x75,
-	0x6c, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e,
-	0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75,
-	0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65,
-	0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x65,
-	0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x65, 0x6e,
-	0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x2c, 0x0a, 0x12, 0x6d, 0x69, 0x6e, 0x5f, 0x73, 0x74, 0x61,
-	0x6b, 0x69, 0x6e, 0x67, 0x5f, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x03, 0x52, 0x10, 0x6d, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x6b, 0x69, 0x6e, 0x67, 0x50, 0x65, 0x72,
-	0x69, 0x6f, 0x64, 0x12, 0x28, 0x0a, 0x10, 0x64, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x5f, 0x66,
-	0x65, 0x65, 0x5f, 0x72, 0x61, 0x74, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x64,
-	0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x46, 0x65, 0x65, 0x52, 0x61, 0x74, 0x65, 0x12, 0x2e, 0x0a,
-	0x13, 0x77, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x61, 0x6c, 0x5f, 0x66, 0x65, 0x65, 0x5f,
-	0x72, 0x61, 0x74, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52, 0x11, 0x77, 0x69, 0x74, 0x68,
-	0x64, 0x72, 0x61, 0x77, 0x61, 0x6c, 0x46, 0x65, 0x65, 0x52, 0x61, 0x74, 0x65, 0x12, 0x5e, 0x0a,
-	0x12, 0x6d, 0x61, 0x78, 0x5f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x64, 0x65, 0x70, 0x6f, 0x73,
-	0x69, 0x74, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda,
-	0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f,
-	0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d,
-	0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x10, 0x6d, 0x61, 0x78,
-	0x54, 0x6f, 0x74, 0x61, 0x6c, 0x44, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x73, 0x12, 0x62, 0x0a,
-	0x11, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x61,
-	0x74, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde,
-	0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d,
-	0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d,
-	0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01,
-	0x52, 0x0f, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x61, 0x74,
-	0x65, 0x22, 0xb7, 0x01, 0x0a, 0x11, 0x55, 0x73, 0x65, 0x72, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69,
-	0x6f, 0x6e, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65,
-	0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73,
-	0x73, 0x12, 0x40, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54,
-	0x79, 0x70, 0x65, 0x12, 0x46, 0x0a, 0x08, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x55,
-	0x73, 0x65, 0x72, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x04, 0xc8, 0xde, 0x1f,
-	0x00, 0x52, 0x08, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x8e, 0x01, 0x0a, 0x08,
-	0x4e, 0x41, 0x56, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x40, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52,
-	0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x40, 0x0a, 0x08, 0x6e, 0x61,
-	0x76, 0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x4e, 0x41, 0x56, 0x49, 0x6e, 0x66, 0x6f, 0x42, 0x04, 0xc8,
-	0xde, 0x1f, 0x00, 0x52, 0x07, 0x6e, 0x61, 0x76, 0x49, 0x6e, 0x66, 0x6f, 0x22, 0x9a, 0x01, 0x0a,
-	0x0e, 0x46, 0x65, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12,
-	0x40, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
-	0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x61, 0x75,
-	0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70,
-	0x65, 0x12, 0x46, 0x0a, 0x0a, 0x66, 0x65, 0x65, 0x5f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x46,
-	0x65, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x09,
-	0x66, 0x65, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x22, 0xbc, 0x01, 0x0a, 0x10, 0x45, 0x78,
-	0x69, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x18,
-	0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
-	0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x40, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52,
-	0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x4c, 0x0a, 0x0c, 0x65, 0x78,
-	0x69, 0x74, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
-	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x45, 0x78, 0x69, 0x74, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x0b, 0x65, 0x78, 0x69,
-	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0xf8, 0x01, 0x0a, 0x10, 0x53, 0x68, 0x61,
-	0x72, 0x65, 0x73, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x40, 0x0a,
-	0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0e, 0x32, 0x21, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
-	0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74,
-	0x54, 0x79, 0x70, 0x65, 0x52, 0x09, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x74, 0x73, 0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x22, 0xf3, 0x02, 0x0a, 0x0b, 0x56, 0x61,
+	0x75, 0x6c, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x18, 0x0a, 0x07, 0x65, 0x6e, 0x61,
+	0x62, 0x6c, 0x65, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x65, 0x6e, 0x61, 0x62,
+	0x6c, 0x65, 0x64, 0x12, 0x2c, 0x0a, 0x12, 0x6d, 0x69, 0x6e, 0x5f, 0x73, 0x74, 0x61, 0x6b, 0x69,
+	0x6e, 0x67, 0x5f, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x10, 0x6d, 0x69, 0x6e, 0x53, 0x74, 0x61, 0x6b, 0x69, 0x6e, 0x67, 0x50, 0x65, 0x72, 0x69, 0x6f,
+	0x64, 0x12, 0x28, 0x0a, 0x10, 0x64, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x5f, 0x66, 0x65, 0x65,
+	0x5f, 0x72, 0x61, 0x74, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0e, 0x64, 0x65, 0x70,
+	0x6f, 0x73, 0x69, 0x74, 0x46, 0x65, 0x65, 0x52, 0x61, 0x74, 0x65, 0x12, 0x2e, 0x0a, 0x13, 0x77,
+	0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x61, 0x6c, 0x5f, 0x66, 0x65, 0x65, 0x5f, 0x72, 0x61,
+	0x74, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x11, 0x77, 0x69, 0x74, 0x68, 0x64, 0x72,
+	0x61, 0x77, 0x61, 0x6c, 0x46, 0x65, 0x65, 0x52, 0x61, 0x74, 0x65, 0x12, 0x5e, 0x0a, 0x12, 0x6d,
+	0x61, 0x78, 0x5f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x64, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74,
+	0x73, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f,
+	0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61,
+	0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
+	0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x10, 0x6d, 0x61, 0x78, 0x54, 0x6f,
+	0x74, 0x61, 0x6c, 0x44, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x73, 0x12, 0x62, 0x0a, 0x11, 0x74,
+	0x61, 0x72, 0x67, 0x65, 0x74, 0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x72, 0x61, 0x74, 0x65,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74,
+	0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63,
+	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0f,
+	0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x52, 0x61, 0x74, 0x65, 0x22,
+	0x75, 0x0a, 0x11, 0x55, 0x73, 0x65, 0x72, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x45,
+	0x6e, 0x74, 0x72, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x46,
+	0x0a, 0x08, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x24, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e,
+	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x50, 0x6f,
+	0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x08, 0x70, 0x6f,
+	0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x4c, 0x0a, 0x08, 0x4e, 0x41, 0x56, 0x45, 0x6e, 0x74,
+	0x72, 0x79, 0x12, 0x40, 0x0a, 0x08, 0x6e, 0x61, 0x76, 0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x4e, 0x41,
+	0x56, 0x49, 0x6e, 0x66, 0x6f, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x07, 0x6e, 0x61, 0x76,
+	0x49, 0x6e, 0x66, 0x6f, 0x22, 0x58, 0x0a, 0x0e, 0x46, 0x65, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x46, 0x0a, 0x0a, 0x66, 0x65, 0x65, 0x5f, 0x63, 0x6f,
+	0x6e, 0x66, 0x69, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x6e, 0x6f, 0x62,
+	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73,
+	0x2e, 0x76, 0x32, 0x2e, 0x46, 0x65, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x42, 0x04, 0xc8,
+	0xde, 0x1f, 0x00, 0x52, 0x09, 0x66, 0x65, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x22, 0x7a,
+	0x0a, 0x10, 0x45, 0x78, 0x69, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x45, 0x6e, 0x74,
+	0x72, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x4c, 0x0a, 0x0c,
+	0x65, 0x78, 0x69, 0x74, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x23, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61,
+	0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x2e, 0x45, 0x78, 0x69, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x0b, 0x65,
+	0x78, 0x69, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0xb6, 0x01, 0x0a, 0x10, 0x53,
+	0x68, 0x61, 0x72, 0x65, 0x73, 0x54, 0x6f, 0x74, 0x61, 0x6c, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12,
 	0x53, 0x0a, 0x0c, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x73, 0x68, 0x61, 0x72, 0x65, 0x73, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63,
 	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68,
 	0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49,
 	0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0b, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x53, 0x68,
 	0x61, 0x72, 0x65, 0x73, 0x12, 0x4d, 0x0a, 0x09, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x6e, 0x61,
-	0x76, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f,
+	0x76, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f,
 	0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61,
 	0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
 	0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x08, 0x74, 0x6f, 0x74, 0x61, 0x6c,
-	0x4e, 0x61, 0x76, 0x22, 0x99, 0x05, 0x0a, 0x0f, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74, 0x61,
-	0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x40, 0x0a, 0x0a, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e, 0x6e, 0x6f,
-	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x73, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x09,
-	0x76, 0x61, 0x75, 0x6c, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x29, 0x0a, 0x10, 0x74, 0x6f, 0x74,
-	0x61, 0x6c, 0x5f, 0x64, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x73, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x04, 0x52, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x44, 0x65, 0x70, 0x6f, 0x73, 0x69,
-	0x74, 0x6f, 0x72, 0x73, 0x12, 0x59, 0x0a, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x64, 0x65,
-	0x70, 0x6f, 0x73, 0x69, 0x74, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8,
+	0x4e, 0x61, 0x76, 0x22, 0xd7, 0x04, 0x0a, 0x0f, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74, 0x61,
+	0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x29, 0x0a, 0x10, 0x74, 0x6f, 0x74, 0x61, 0x6c,
+	0x5f, 0x64, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x04, 0x52, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x44, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f,
+	0x72, 0x73, 0x12, 0x59, 0x0a, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x64, 0x65, 0x70, 0x6f,
+	0x73, 0x69, 0x74, 0x65, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f,
+	0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69,
+	0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f,
+	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x74,
+	0x6f, 0x74, 0x61, 0x6c, 0x44, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x65, 0x64, 0x12, 0x59, 0x0a,
+	0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x77, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x6e,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74,
+	0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
+	0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x57,
+	0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x6e, 0x12, 0x62, 0x0a, 0x14, 0x74, 0x6f, 0x74, 0x61,
+	0x6c, 0x5f, 0x66, 0x65, 0x65, 0x73, 0x5f, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74,
+	0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
+	0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x46,
+	0x65, 0x65, 0x73, 0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64, 0x12, 0x68, 0x0a, 0x17,
+	0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x64, 0x69, 0x73, 0x74,
+	0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8,
 	0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b,
 	0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a,
 	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52,
-	0x0e, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x44, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x65, 0x64, 0x12,
-	0x59, 0x0a, 0x0f, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x77, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61,
-	0x77, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde,
-	0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d,
-	0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
-	0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x74, 0x6f, 0x74, 0x61,
-	0x6c, 0x57, 0x69, 0x74, 0x68, 0x64, 0x72, 0x61, 0x77, 0x6e, 0x12, 0x62, 0x0a, 0x14, 0x74, 0x6f,
-	0x74, 0x61, 0x6c, 0x5f, 0x66, 0x65, 0x65, 0x73, 0x5f, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74,
-	0x65, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde,
-	0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d,
-	0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
-	0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x74, 0x6f, 0x74, 0x61,
-	0x6c, 0x46, 0x65, 0x65, 0x73, 0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64, 0x12, 0x68,
-	0x0a, 0x17, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x79, 0x69, 0x65, 0x6c, 0x64, 0x5f, 0x64, 0x69,
-	0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73,
-	0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4,
-	0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a,
-	0x01, 0x52, 0x15, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x44, 0x69, 0x73,
-	0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x64, 0x12, 0x29, 0x0a, 0x10, 0x61, 0x63, 0x74, 0x69,
-	0x76, 0x65, 0x5f, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x07, 0x20, 0x01,
-	0x28, 0x04, 0x52, 0x0f, 0x61, 0x63, 0x74, 0x69, 0x76, 0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69,
-	0x6f, 0x6e, 0x73, 0x12, 0x6a, 0x0a, 0x15, 0x61, 0x76, 0x65, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x70,
-	0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x08, 0x20, 0x01,
-	0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d,
-	0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65,
-	0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
-	0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x13, 0x61, 0x76, 0x65, 0x72,
-	0x61, 0x67, 0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x69, 0x7a, 0x65, 0x42,
-	0xde, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x42, 0x0c,
-	0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x37,
-	0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a,
-	0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x32, 0x3b, 0x76,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x76, 0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16,
-	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75,
-	0x6c, 0x74, 0x73, 0x2e, 0x56, 0x32, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x32, 0xe2,
-	0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x32, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61,
-	0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f,
-	0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x32,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x15, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x59, 0x69, 0x65, 0x6c, 0x64, 0x44, 0x69, 0x73, 0x74, 0x72,
+	0x69, 0x62, 0x75, 0x74, 0x65, 0x64, 0x12, 0x29, 0x0a, 0x10, 0x61, 0x63, 0x74, 0x69, 0x76, 0x65,
+	0x5f, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x04,
+	0x52, 0x0f, 0x61, 0x63, 0x74, 0x69, 0x76, 0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x12, 0x6a, 0x0a, 0x15, 0x61, 0x76, 0x65, 0x72, 0x61, 0x67, 0x65, 0x5f, 0x70, 0x6f, 0x73,
+	0x69, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
+	0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
+	0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61,
+	0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e,
+	0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x13, 0x61, 0x76, 0x65, 0x72, 0x61, 0x67,
+	0x65, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x69, 0x7a, 0x65, 0x42, 0xde, 0x01,
+	0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x32, 0x42, 0x0c, 0x47, 0x65,
+	0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x37, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76,
+	0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x32, 0x3b, 0x76, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0x76, 0x32, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16, 0x4e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74,
+	0x73, 0x2e, 0x56, 0x32, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x32, 0xe2, 0x02, 0x22,
+	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0x5c, 0x56, 0x32, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
+	0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x32, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -7338,11 +6910,10 @@ var file_noble_dollar_vaults_v2_genesis_proto_goTypes = []interface{}{
 	(*ExitRequestEntry)(nil),  // 6: noble.dollar.vaults.v2.ExitRequestEntry
 	(*SharesTotalEntry)(nil),  // 7: noble.dollar.vaults.v2.SharesTotalEntry
 	(*VaultStatsEntry)(nil),   // 8: noble.dollar.vaults.v2.VaultStatsEntry
-	(v1.VaultType)(0),         // 9: noble.dollar.vaults.v1.VaultType
-	(*UserPosition)(nil),      // 10: noble.dollar.vaults.v2.UserPosition
-	(*NAVInfo)(nil),           // 11: noble.dollar.vaults.v2.NAVInfo
-	(*FeeConfig)(nil),         // 12: noble.dollar.vaults.v2.FeeConfig
-	(*ExitRequest)(nil),       // 13: noble.dollar.vaults.v2.ExitRequest
+	(*UserPosition)(nil),      // 9: noble.dollar.vaults.v2.UserPosition
+	(*NAVInfo)(nil),           // 10: noble.dollar.vaults.v2.NAVInfo
+	(*FeeConfig)(nil),         // 11: noble.dollar.vaults.v2.FeeConfig
+	(*ExitRequest)(nil),       // 12: noble.dollar.vaults.v2.ExitRequest
 }
 var file_noble_dollar_vaults_v2_genesis_proto_depIdxs = []int32{
 	1,  // 0: noble.dollar.vaults.v2.GenesisState.params:type_name -> noble.dollar.vaults.v2.Params
@@ -7353,22 +6924,15 @@ var file_noble_dollar_vaults_v2_genesis_proto_depIdxs = []int32{
 	6,  // 5: noble.dollar.vaults.v2.GenesisState.exit_queue:type_name -> noble.dollar.vaults.v2.ExitRequestEntry
 	7,  // 6: noble.dollar.vaults.v2.GenesisState.shares_totals:type_name -> noble.dollar.vaults.v2.SharesTotalEntry
 	8,  // 7: noble.dollar.vaults.v2.GenesisState.vault_stats:type_name -> noble.dollar.vaults.v2.VaultStatsEntry
-	9,  // 8: noble.dollar.vaults.v2.VaultConfig.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	9,  // 9: noble.dollar.vaults.v2.UserPositionEntry.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	10, // 10: noble.dollar.vaults.v2.UserPositionEntry.position:type_name -> noble.dollar.vaults.v2.UserPosition
-	9,  // 11: noble.dollar.vaults.v2.NAVEntry.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	11, // 12: noble.dollar.vaults.v2.NAVEntry.nav_info:type_name -> noble.dollar.vaults.v2.NAVInfo
-	9,  // 13: noble.dollar.vaults.v2.FeeConfigEntry.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	12, // 14: noble.dollar.vaults.v2.FeeConfigEntry.fee_config:type_name -> noble.dollar.vaults.v2.FeeConfig
-	9,  // 15: noble.dollar.vaults.v2.ExitRequestEntry.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	13, // 16: noble.dollar.vaults.v2.ExitRequestEntry.exit_request:type_name -> noble.dollar.vaults.v2.ExitRequest
-	9,  // 17: noble.dollar.vaults.v2.SharesTotalEntry.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	9,  // 18: noble.dollar.vaults.v2.VaultStatsEntry.vault_type:type_name -> noble.dollar.vaults.v1.VaultType
-	19, // [19:19] is the sub-list for method output_type
-	19, // [19:19] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	9,  // 8: noble.dollar.vaults.v2.UserPositionEntry.position:type_name -> noble.dollar.vaults.v2.UserPosition
+	10, // 9: noble.dollar.vaults.v2.NAVEntry.nav_info:type_name -> noble.dollar.vaults.v2.NAVInfo
+	11, // 10: noble.dollar.vaults.v2.FeeConfigEntry.fee_config:type_name -> noble.dollar.vaults.v2.FeeConfig
+	12, // 11: noble.dollar.vaults.v2.ExitRequestEntry.exit_request:type_name -> noble.dollar.vaults.v2.ExitRequest
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_noble_dollar_vaults_v2_genesis_proto_init() }

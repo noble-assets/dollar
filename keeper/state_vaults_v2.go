@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"errors"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/math"
@@ -344,8 +345,8 @@ var (
 // Helper methods for V2 vault operations
 
 // GetV2UserPosition retrieves a user's position in a V2 vault
-func (k *Keeper) GetV2UserPosition(ctx context.Context, vaultType vaults.VaultType, userAddr sdk.AccAddress) (*vaultsv2.UserPosition, error) {
-	key := V2VaultUserKey(vaultType, userAddr)
+func (k *Keeper) GetV2UserPosition(ctx context.Context, userAddr sdk.AccAddress) (*vaultsv2.UserPosition, error) {
+	key := V2VaultUserKey(userAddr)
 	position, err := k.V2Collections.UserPositions.Get(ctx, key)
 	if err != nil {
 		return nil, err
@@ -354,14 +355,15 @@ func (k *Keeper) GetV2UserPosition(ctx context.Context, vaultType vaults.VaultTy
 }
 
 // SetV2UserPosition stores a user's position in a V2 vault
-func (k *Keeper) SetV2UserPosition(ctx context.Context, vaultType vaults.VaultType, userAddr sdk.AccAddress, position *vaultsv2.UserPosition) error {
-	key := V2VaultUserKey(vaultType, userAddr)
+func (k *Keeper) SetV2UserPosition(ctx context.Context, userAddr sdk.AccAddress, position *vaultsv2.UserPosition) error {
+	key := V2VaultUserKey(userAddr)
 	return k.V2Collections.UserPositions.Set(ctx, key, *position)
 }
 
 // GetV2VaultState retrieves the state of a V2 vault
-func (k *Keeper) GetV2VaultState(ctx context.Context, vaultType vaults.VaultType) (*vaultsv2.VaultState, error) {
-	state, err := k.V2Collections.VaultStates.Get(ctx, int32(vaultType))
+func (k *Keeper) GetV2VaultState(ctx context.Context) (*vaultsv2.VaultState, error) {
+	// Use Item.Get() for single vault state
+	state, err := k.V2Collections.VaultStates.Get(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -369,6 +371,31 @@ func (k *Keeper) GetV2VaultState(ctx context.Context, vaultType vaults.VaultType
 }
 
 // SetV2VaultState stores the state of a V2 vault
-func (k *Keeper) SetV2VaultState(ctx context.Context, vaultType vaults.VaultType, state *vaultsv2.VaultState) error {
-	return k.V2Collections.VaultStates.Set(ctx, int32(vaultType), *state)
+func (k *Keeper) SetV2VaultState(ctx context.Context, state *vaultsv2.VaultState) error {
+	// Use Item.Set() for single vault state
+	return k.V2Collections.VaultStates.Set(ctx, *state)
+}
+
+// getOrCreateV2VaultState retrieves or creates a default V2 vault state
+func (k *Keeper) getOrCreateV2VaultState(ctx context.Context) (*vaultsv2.VaultState, error) {
+	state, err := k.GetV2VaultState(ctx)
+	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			// Create default vault state
+			defaultState := &vaultsv2.VaultState{
+				TotalShares:            math.ZeroInt(),
+				TotalNav:               math.ZeroInt(),
+				SharePrice:             math.LegacyOneDec(),
+				TotalUsers:             0,
+				DepositsEnabled:        true,
+				WithdrawalsEnabled:     true,
+				LastNavUpdate:          sdk.UnwrapSDKContext(ctx).BlockTime(),
+				TotalSharesPendingExit: math.ZeroInt(),
+				PendingExitRequests:    0,
+			}
+			return defaultState, nil
+		}
+		return nil, err
+	}
+	return state, nil
 }
