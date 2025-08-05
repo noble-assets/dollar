@@ -19,15 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_Deposit_FullMethodName            = "/noble.dollar.vaults.v2.Msg/Deposit"
-	Msg_Withdraw_FullMethodName           = "/noble.dollar.vaults.v2.Msg/Withdraw"
-	Msg_RequestExit_FullMethodName        = "/noble.dollar.vaults.v2.Msg/RequestExit"
-	Msg_CancelExit_FullMethodName         = "/noble.dollar.vaults.v2.Msg/CancelExit"
-	Msg_SetYieldPreference_FullMethodName = "/noble.dollar.vaults.v2.Msg/SetYieldPreference"
-	Msg_ProcessExitQueue_FullMethodName   = "/noble.dollar.vaults.v2.Msg/ProcessExitQueue"
-	Msg_UpdateNAV_FullMethodName          = "/noble.dollar.vaults.v2.Msg/UpdateNAV"
-	Msg_UpdateVaultConfig_FullMethodName  = "/noble.dollar.vaults.v2.Msg/UpdateVaultConfig"
-	Msg_UpdateParams_FullMethodName       = "/noble.dollar.vaults.v2.Msg/UpdateParams"
+	Msg_Deposit_FullMethodName                 = "/noble.dollar.vaults.v2.Msg/Deposit"
+	Msg_Withdraw_FullMethodName                = "/noble.dollar.vaults.v2.Msg/Withdraw"
+	Msg_RequestExit_FullMethodName             = "/noble.dollar.vaults.v2.Msg/RequestExit"
+	Msg_CancelExit_FullMethodName              = "/noble.dollar.vaults.v2.Msg/CancelExit"
+	Msg_SetYieldPreference_FullMethodName      = "/noble.dollar.vaults.v2.Msg/SetYieldPreference"
+	Msg_ProcessExitQueue_FullMethodName        = "/noble.dollar.vaults.v2.Msg/ProcessExitQueue"
+	Msg_UpdateNAV_FullMethodName               = "/noble.dollar.vaults.v2.Msg/UpdateNAV"
+	Msg_UpdateVaultConfig_FullMethodName       = "/noble.dollar.vaults.v2.Msg/UpdateVaultConfig"
+	Msg_UpdateParams_FullMethodName            = "/noble.dollar.vaults.v2.Msg/UpdateParams"
+	Msg_CreateCrossChainRoute_FullMethodName   = "/noble.dollar.vaults.v2.Msg/CreateCrossChainRoute"
+	Msg_UpdateCrossChainRoute_FullMethodName   = "/noble.dollar.vaults.v2.Msg/UpdateCrossChainRoute"
+	Msg_DisableCrossChainRoute_FullMethodName  = "/noble.dollar.vaults.v2.Msg/DisableCrossChainRoute"
+	Msg_RemoteDeposit_FullMethodName           = "/noble.dollar.vaults.v2.Msg/RemoteDeposit"
+	Msg_RemoteWithdraw_FullMethodName          = "/noble.dollar.vaults.v2.Msg/RemoteWithdraw"
+	Msg_UpdateRemotePosition_FullMethodName    = "/noble.dollar.vaults.v2.Msg/UpdateRemotePosition"
+	Msg_ProcessInFlightPosition_FullMethodName = "/noble.dollar.vaults.v2.Msg/ProcessInFlightPosition"
 )
 
 // MsgClient is the client API for Msg service.
@@ -54,6 +61,20 @@ type MsgClient interface {
 	UpdateVaultConfig(ctx context.Context, in *MsgUpdateVaultConfig, opts ...grpc.CallOption) (*MsgUpdateVaultConfigResponse, error)
 	// Update module parameters (authority only)
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	// Create a new cross-chain route (authority only)
+	CreateCrossChainRoute(ctx context.Context, in *MsgCreateCrossChainRoute, opts ...grpc.CallOption) (*MsgCreateCrossChainRouteResponse, error)
+	// Update an existing cross-chain route (authority only)
+	UpdateCrossChainRoute(ctx context.Context, in *MsgUpdateCrossChainRoute, opts ...grpc.CallOption) (*MsgUpdateCrossChainRouteResponse, error)
+	// Disable a cross-chain route (authority only)
+	DisableCrossChainRoute(ctx context.Context, in *MsgDisableCrossChainRoute, opts ...grpc.CallOption) (*MsgDisableCrossChainRouteResponse, error)
+	// Initiate remote deposit to another chain
+	RemoteDeposit(ctx context.Context, in *MsgRemoteDeposit, opts ...grpc.CallOption) (*MsgRemoteDepositResponse, error)
+	// Initiate remote withdrawal from another chain
+	RemoteWithdraw(ctx context.Context, in *MsgRemoteWithdraw, opts ...grpc.CallOption) (*MsgRemoteWithdrawResponse, error)
+	// Update remote position status (relayer only)
+	UpdateRemotePosition(ctx context.Context, in *MsgUpdateRemotePosition, opts ...grpc.CallOption) (*MsgUpdateRemotePositionResponse, error)
+	// Process in-flight position (system operation)
+	ProcessInFlightPosition(ctx context.Context, in *MsgProcessInFlightPosition, opts ...grpc.CallOption) (*MsgProcessInFlightPositionResponse, error)
 }
 
 type msgClient struct {
@@ -154,6 +175,76 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) CreateCrossChainRoute(ctx context.Context, in *MsgCreateCrossChainRoute, opts ...grpc.CallOption) (*MsgCreateCrossChainRouteResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgCreateCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, Msg_CreateCrossChainRoute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateCrossChainRoute(ctx context.Context, in *MsgUpdateCrossChainRoute, opts ...grpc.CallOption) (*MsgUpdateCrossChainRouteResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgUpdateCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, Msg_UpdateCrossChainRoute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DisableCrossChainRoute(ctx context.Context, in *MsgDisableCrossChainRoute, opts ...grpc.CallOption) (*MsgDisableCrossChainRouteResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgDisableCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, Msg_DisableCrossChainRoute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoteDeposit(ctx context.Context, in *MsgRemoteDeposit, opts ...grpc.CallOption) (*MsgRemoteDepositResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgRemoteDepositResponse)
+	err := c.cc.Invoke(ctx, Msg_RemoteDeposit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoteWithdraw(ctx context.Context, in *MsgRemoteWithdraw, opts ...grpc.CallOption) (*MsgRemoteWithdrawResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgRemoteWithdrawResponse)
+	err := c.cc.Invoke(ctx, Msg_RemoteWithdraw_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateRemotePosition(ctx context.Context, in *MsgUpdateRemotePosition, opts ...grpc.CallOption) (*MsgUpdateRemotePositionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgUpdateRemotePositionResponse)
+	err := c.cc.Invoke(ctx, Msg_UpdateRemotePosition_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) ProcessInFlightPosition(ctx context.Context, in *MsgProcessInFlightPosition, opts ...grpc.CallOption) (*MsgProcessInFlightPositionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgProcessInFlightPositionResponse)
+	err := c.cc.Invoke(ctx, Msg_ProcessInFlightPosition_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
@@ -178,6 +269,20 @@ type MsgServer interface {
 	UpdateVaultConfig(context.Context, *MsgUpdateVaultConfig) (*MsgUpdateVaultConfigResponse, error)
 	// Update module parameters (authority only)
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	// Create a new cross-chain route (authority only)
+	CreateCrossChainRoute(context.Context, *MsgCreateCrossChainRoute) (*MsgCreateCrossChainRouteResponse, error)
+	// Update an existing cross-chain route (authority only)
+	UpdateCrossChainRoute(context.Context, *MsgUpdateCrossChainRoute) (*MsgUpdateCrossChainRouteResponse, error)
+	// Disable a cross-chain route (authority only)
+	DisableCrossChainRoute(context.Context, *MsgDisableCrossChainRoute) (*MsgDisableCrossChainRouteResponse, error)
+	// Initiate remote deposit to another chain
+	RemoteDeposit(context.Context, *MsgRemoteDeposit) (*MsgRemoteDepositResponse, error)
+	// Initiate remote withdrawal from another chain
+	RemoteWithdraw(context.Context, *MsgRemoteWithdraw) (*MsgRemoteWithdrawResponse, error)
+	// Update remote position status (relayer only)
+	UpdateRemotePosition(context.Context, *MsgUpdateRemotePosition) (*MsgUpdateRemotePositionResponse, error)
+	// Process in-flight position (system operation)
+	ProcessInFlightPosition(context.Context, *MsgProcessInFlightPosition) (*MsgProcessInFlightPositionResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -214,6 +319,27 @@ func (UnimplementedMsgServer) UpdateVaultConfig(context.Context, *MsgUpdateVault
 }
 func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (UnimplementedMsgServer) CreateCrossChainRoute(context.Context, *MsgCreateCrossChainRoute) (*MsgCreateCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCrossChainRoute not implemented")
+}
+func (UnimplementedMsgServer) UpdateCrossChainRoute(context.Context, *MsgUpdateCrossChainRoute) (*MsgUpdateCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCrossChainRoute not implemented")
+}
+func (UnimplementedMsgServer) DisableCrossChainRoute(context.Context, *MsgDisableCrossChainRoute) (*MsgDisableCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DisableCrossChainRoute not implemented")
+}
+func (UnimplementedMsgServer) RemoteDeposit(context.Context, *MsgRemoteDeposit) (*MsgRemoteDepositResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoteDeposit not implemented")
+}
+func (UnimplementedMsgServer) RemoteWithdraw(context.Context, *MsgRemoteWithdraw) (*MsgRemoteWithdrawResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoteWithdraw not implemented")
+}
+func (UnimplementedMsgServer) UpdateRemotePosition(context.Context, *MsgUpdateRemotePosition) (*MsgUpdateRemotePositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRemotePosition not implemented")
+}
+func (UnimplementedMsgServer) ProcessInFlightPosition(context.Context, *MsgProcessInFlightPosition) (*MsgProcessInFlightPositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProcessInFlightPosition not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -398,6 +524,132 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_CreateCrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateCrossChainRoute)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateCrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_CreateCrossChainRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateCrossChainRoute(ctx, req.(*MsgCreateCrossChainRoute))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateCrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateCrossChainRoute)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateCrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_UpdateCrossChainRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateCrossChainRoute(ctx, req.(*MsgUpdateCrossChainRoute))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DisableCrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDisableCrossChainRoute)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DisableCrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_DisableCrossChainRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DisableCrossChainRoute(ctx, req.(*MsgDisableCrossChainRoute))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoteDeposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoteDeposit)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoteDeposit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_RemoteDeposit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoteDeposit(ctx, req.(*MsgRemoteDeposit))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoteWithdraw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoteWithdraw)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoteWithdraw(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_RemoteWithdraw_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoteWithdraw(ctx, req.(*MsgRemoteWithdraw))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateRemotePosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateRemotePosition)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateRemotePosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_UpdateRemotePosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateRemotePosition(ctx, req.(*MsgUpdateRemotePosition))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_ProcessInFlightPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgProcessInFlightPosition)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ProcessInFlightPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_ProcessInFlightPosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ProcessInFlightPosition(ctx, req.(*MsgProcessInFlightPosition))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -440,6 +692,34 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "CreateCrossChainRoute",
+			Handler:    _Msg_CreateCrossChainRoute_Handler,
+		},
+		{
+			MethodName: "UpdateCrossChainRoute",
+			Handler:    _Msg_UpdateCrossChainRoute_Handler,
+		},
+		{
+			MethodName: "DisableCrossChainRoute",
+			Handler:    _Msg_DisableCrossChainRoute_Handler,
+		},
+		{
+			MethodName: "RemoteDeposit",
+			Handler:    _Msg_RemoteDeposit_Handler,
+		},
+		{
+			MethodName: "RemoteWithdraw",
+			Handler:    _Msg_RemoteWithdraw_Handler,
+		},
+		{
+			MethodName: "UpdateRemotePosition",
+			Handler:    _Msg_UpdateRemotePosition_Handler,
+		},
+		{
+			MethodName: "ProcessInFlightPosition",
+			Handler:    _Msg_ProcessInFlightPosition_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

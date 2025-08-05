@@ -408,3 +408,252 @@ func (k vaultV2QueryServer) Params(ctx context.Context, req *vaultsv2.QueryParam
 		Params: params,
 	}, nil
 }
+
+// Cross-chain query handlers
+
+// CrossChainRoutes implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) CrossChainRoutes(ctx context.Context, req *vaultsv2.QueryCrossChainRoutesRequest) (*vaultsv2.QueryCrossChainRoutesResponse, error) {
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Get all routes
+	routes, err := crossChainKeeper.GetAllRoutes(sdk.UnwrapSDKContext(ctx))
+	if err != nil {
+		return nil, fmt.Errorf("failed to get cross-chain routes: %w", err)
+	}
+
+	// Convert to response format
+	responseRoutes := make([]vaultsv2.CrossChainRoute, len(routes))
+	for i, route := range routes {
+		responseRoutes[i] = *route
+	}
+
+	return &vaultsv2.QueryCrossChainRoutesResponse{
+		Routes: responseRoutes,
+		// TODO: Implement pagination
+	}, nil
+}
+
+// CrossChainRoute implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) CrossChainRoute(ctx context.Context, req *vaultsv2.QueryCrossChainRouteRequest) (*vaultsv2.QueryCrossChainRouteResponse, error) {
+	if req.RouteId == "" {
+		return nil, fmt.Errorf("route ID must be specified")
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Get route
+	route, err := crossChainKeeper.GetRoute(sdk.UnwrapSDKContext(ctx), req.RouteId)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get cross-chain route: %w", err)
+	}
+
+	return &vaultsv2.QueryCrossChainRouteResponse{
+		Route: *route,
+	}, nil
+}
+
+// RemotePosition implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) RemotePosition(ctx context.Context, req *vaultsv2.QueryRemotePositionRequest) (*vaultsv2.QueryRemotePositionResponse, error) {
+	if req.RouteId == "" {
+		return nil, fmt.Errorf("route ID must be specified")
+	}
+
+	// Validate address
+	userAddr, err := k.address.StringToBytes(req.Address)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user address: %w", err)
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Get remote position
+	position, err := crossChainKeeper.GetRemotePosition(sdk.UnwrapSDKContext(ctx), req.RouteId, userAddr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get remote position: %w", err)
+	}
+
+	return &vaultsv2.QueryRemotePositionResponse{
+		Position: *position,
+	}, nil
+}
+
+// RemotePositions implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) RemotePositions(ctx context.Context, req *vaultsv2.QueryRemotePositionsRequest) (*vaultsv2.QueryRemotePositionsResponse, error) {
+	// Validate address
+	userAddr, err := k.address.StringToBytes(req.Address)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user address: %w", err)
+	}
+
+	var positions []vaultsv2.RemotePositionWithRoute
+
+	// Walk through all remote positions and filter by user
+	err = k.V2Collections.RemotePositions.Walk(sdk.UnwrapSDKContext(ctx), nil, func(key collections.Pair[string, []byte], value vaultsv2.RemotePosition) (bool, error) {
+		// Check if this position belongs to the user
+		if string(key.K2()) == string(userAddr) {
+			positions = append(positions, vaultsv2.RemotePositionWithRoute{
+				RouteId:  key.K1(),
+				Position: value,
+			})
+		}
+		return false, nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to get remote positions: %w", err)
+	}
+
+	return &vaultsv2.QueryRemotePositionsResponse{
+		Positions: positions,
+		// TODO: Implement pagination
+	}, nil
+}
+
+// InFlightPosition implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) InFlightPosition(ctx context.Context, req *vaultsv2.QueryInFlightPositionRequest) (*vaultsv2.QueryInFlightPositionResponse, error) {
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Get in-flight position
+	position, err := crossChainKeeper.GetInFlightPosition(sdk.UnwrapSDKContext(ctx), req.Nonce)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get in-flight position: %w", err)
+	}
+
+	return &vaultsv2.QueryInFlightPositionResponse{
+		Position: *position,
+	}, nil
+}
+
+// InFlightPositions implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) InFlightPositions(ctx context.Context, req *vaultsv2.QueryInFlightPositionsRequest) (*vaultsv2.QueryInFlightPositionsResponse, error) {
+	// Validate address
+	userAddr, err := k.address.StringToBytes(req.Address)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user address: %w", err)
+	}
+
+	var positions []vaultsv2.InFlightPosition
+
+	// Walk through all in-flight positions and filter by user
+	err = k.V2Collections.InFlightPositions.Walk(sdk.UnwrapSDKContext(ctx), nil, func(key uint64, value vaultsv2.InFlightPosition) (bool, error) {
+		// Check if this position belongs to the user
+		if string(value.UserAddress) == string(userAddr) {
+			positions = append(positions, value)
+		}
+		return false, nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to get in-flight positions: %w", err)
+	}
+
+	return &vaultsv2.QueryInFlightPositionsResponse{
+		Positions: positions,
+		// TODO: Implement pagination
+	}, nil
+}
+
+// CrossChainSnapshot implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) CrossChainSnapshot(ctx context.Context, req *vaultsv2.QueryCrossChainSnapshotRequest) (*vaultsv2.QueryCrossChainSnapshotResponse, error) {
+	if req.VaultType == vaults.UNSPECIFIED {
+		return nil, fmt.Errorf("vault type must be specified")
+	}
+
+	// Determine timestamp to query
+	timestamp := req.Timestamp
+	if timestamp == 0 {
+		timestamp = sdk.UnwrapSDKContext(ctx).BlockTime().Unix()
+	}
+
+	// Get snapshot
+	snapshotKey := collections.Join(int32(req.VaultType), timestamp)
+	snapshot, err := k.V2Collections.CrossChainSnapshots.Get(sdk.UnwrapSDKContext(ctx), snapshotKey)
+	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			// Return empty snapshot
+			snapshot = vaultsv2.CrossChainPositionSnapshot{
+				TotalRemoteValue:       math.ZeroInt(),
+				TotalConservativeValue: math.ZeroInt(),
+				ActivePositions:        0,
+				DriftExceededPositions: 0,
+				Timestamp:              sdk.UnwrapSDKContext(ctx).BlockTime(),
+				TotalRemoteShares:      math.ZeroInt(),
+			}
+		} else {
+			return nil, fmt.Errorf("failed to get cross-chain snapshot: %w", err)
+		}
+	}
+
+	return &vaultsv2.QueryCrossChainSnapshotResponse{
+		Snapshot: snapshot,
+	}, nil
+}
+
+// DriftAlerts implements vaultsv2.QueryServer
+func (k vaultV2QueryServer) DriftAlerts(ctx context.Context, req *vaultsv2.QueryDriftAlertsRequest) (*vaultsv2.QueryDriftAlertsResponse, error) {
+	var alerts []vaultsv2.DriftAlertWithDetails
+
+	// Walk through all drift alerts and filter as requested
+	err := k.V2Collections.DriftAlerts.Walk(sdk.UnwrapSDKContext(ctx), nil, func(key collections.Pair[string, []byte], value vaultsv2.DriftAlert) (bool, error) {
+		// Apply filters
+		if req.RouteId != "" && key.K1() != req.RouteId {
+			return false, nil
+		}
+
+		if req.Address != "" {
+			userAddr, err := k.address.StringToBytes(req.Address)
+			if err == nil && string(key.K2()) != string(userAddr) {
+				return false, nil
+			}
+		}
+
+		// Get route and position details
+		crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+		if crossChainKeeper == nil {
+			return true, fmt.Errorf("cross-chain keeper not initialized")
+		}
+
+		route, err := crossChainKeeper.GetRoute(sdk.UnwrapSDKContext(ctx), key.K1())
+		if err != nil {
+			return false, nil // Skip if route not found
+		}
+
+		position, err := crossChainKeeper.GetRemotePosition(sdk.UnwrapSDKContext(ctx), key.K1(), key.K2())
+		if err != nil {
+			return false, nil // Skip if position not found
+		}
+
+		alerts = append(alerts, vaultsv2.DriftAlertWithDetails{
+			Alert:    value,
+			Route:    *route,
+			Position: *position,
+		})
+
+		return false, nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to get drift alerts: %w", err)
+	}
+
+	return &vaultsv2.QueryDriftAlertsResponse{
+		Alerts: alerts,
+		// TODO: Implement pagination
+	}, nil
+}

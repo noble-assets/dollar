@@ -905,6 +905,785 @@ func (m *MsgUpdateParamsResponse) GetNewParams() string {
 	return ""
 }
 
+// MsgCreateCrossChainRoute creates a new cross-chain route
+type MsgCreateCrossChainRoute struct {
+	// Authority creating the route
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// Route configuration
+	Route CrossChainRoute `protobuf:"bytes,2,opt,name=route,proto3" json:"route"`
+}
+
+func (m *MsgCreateCrossChainRoute) Reset()         { *m = MsgCreateCrossChainRoute{} }
+func (m *MsgCreateCrossChainRoute) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateCrossChainRoute) ProtoMessage()    {}
+func (*MsgCreateCrossChainRoute) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{18}
+}
+func (m *MsgCreateCrossChainRoute) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateCrossChainRoute) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateCrossChainRoute.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateCrossChainRoute) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateCrossChainRoute.Merge(m, src)
+}
+func (m *MsgCreateCrossChainRoute) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateCrossChainRoute) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateCrossChainRoute.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateCrossChainRoute proto.InternalMessageInfo
+
+// MsgCreateCrossChainRouteResponse confirms route creation
+type MsgCreateCrossChainRouteResponse struct {
+	// Created route ID
+	RouteId string `protobuf:"bytes,1,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Route configuration
+	RouteConfig string `protobuf:"bytes,2,opt,name=route_config,json=routeConfig,proto3" json:"route_config,omitempty"`
+}
+
+func (m *MsgCreateCrossChainRouteResponse) Reset()         { *m = MsgCreateCrossChainRouteResponse{} }
+func (m *MsgCreateCrossChainRouteResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateCrossChainRouteResponse) ProtoMessage()    {}
+func (*MsgCreateCrossChainRouteResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{19}
+}
+func (m *MsgCreateCrossChainRouteResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateCrossChainRouteResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateCrossChainRouteResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateCrossChainRouteResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateCrossChainRouteResponse.Merge(m, src)
+}
+func (m *MsgCreateCrossChainRouteResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateCrossChainRouteResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateCrossChainRouteResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateCrossChainRouteResponse proto.InternalMessageInfo
+
+func (m *MsgCreateCrossChainRouteResponse) GetRouteId() string {
+	if m != nil {
+		return m.RouteId
+	}
+	return ""
+}
+
+func (m *MsgCreateCrossChainRouteResponse) GetRouteConfig() string {
+	if m != nil {
+		return m.RouteConfig
+	}
+	return ""
+}
+
+// MsgUpdateCrossChainRoute updates an existing cross-chain route
+type MsgUpdateCrossChainRoute struct {
+	// Authority updating the route
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// Route ID to update
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Updated route configuration
+	Route CrossChainRoute `protobuf:"bytes,3,opt,name=route,proto3" json:"route"`
+}
+
+func (m *MsgUpdateCrossChainRoute) Reset()         { *m = MsgUpdateCrossChainRoute{} }
+func (m *MsgUpdateCrossChainRoute) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateCrossChainRoute) ProtoMessage()    {}
+func (*MsgUpdateCrossChainRoute) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{20}
+}
+func (m *MsgUpdateCrossChainRoute) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateCrossChainRoute) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateCrossChainRoute.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateCrossChainRoute) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateCrossChainRoute.Merge(m, src)
+}
+func (m *MsgUpdateCrossChainRoute) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateCrossChainRoute) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateCrossChainRoute.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateCrossChainRoute proto.InternalMessageInfo
+
+// MsgUpdateCrossChainRouteResponse confirms route update
+type MsgUpdateCrossChainRouteResponse struct {
+	// Updated route ID
+	RouteId string `protobuf:"bytes,1,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Previous configuration
+	PreviousConfig string `protobuf:"bytes,2,opt,name=previous_config,json=previousConfig,proto3" json:"previous_config,omitempty"`
+	// New configuration
+	NewConfig string `protobuf:"bytes,3,opt,name=new_config,json=newConfig,proto3" json:"new_config,omitempty"`
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) Reset()         { *m = MsgUpdateCrossChainRouteResponse{} }
+func (m *MsgUpdateCrossChainRouteResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateCrossChainRouteResponse) ProtoMessage()    {}
+func (*MsgUpdateCrossChainRouteResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{21}
+}
+func (m *MsgUpdateCrossChainRouteResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateCrossChainRouteResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateCrossChainRouteResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateCrossChainRouteResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateCrossChainRouteResponse.Merge(m, src)
+}
+func (m *MsgUpdateCrossChainRouteResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateCrossChainRouteResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateCrossChainRouteResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateCrossChainRouteResponse proto.InternalMessageInfo
+
+func (m *MsgUpdateCrossChainRouteResponse) GetRouteId() string {
+	if m != nil {
+		return m.RouteId
+	}
+	return ""
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) GetPreviousConfig() string {
+	if m != nil {
+		return m.PreviousConfig
+	}
+	return ""
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) GetNewConfig() string {
+	if m != nil {
+		return m.NewConfig
+	}
+	return ""
+}
+
+// MsgDisableCrossChainRoute disables a cross-chain route
+type MsgDisableCrossChainRoute struct {
+	// Authority disabling the route
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// Route ID to disable
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Reason for disabling
+	Reason string `protobuf:"bytes,3,opt,name=reason,proto3" json:"reason,omitempty"`
+}
+
+func (m *MsgDisableCrossChainRoute) Reset()         { *m = MsgDisableCrossChainRoute{} }
+func (m *MsgDisableCrossChainRoute) String() string { return proto.CompactTextString(m) }
+func (*MsgDisableCrossChainRoute) ProtoMessage()    {}
+func (*MsgDisableCrossChainRoute) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{22}
+}
+func (m *MsgDisableCrossChainRoute) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDisableCrossChainRoute) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDisableCrossChainRoute.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDisableCrossChainRoute) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDisableCrossChainRoute.Merge(m, src)
+}
+func (m *MsgDisableCrossChainRoute) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDisableCrossChainRoute) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDisableCrossChainRoute.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDisableCrossChainRoute proto.InternalMessageInfo
+
+// MsgDisableCrossChainRouteResponse confirms route disabling
+type MsgDisableCrossChainRouteResponse struct {
+	// Disabled route ID
+	RouteId string `protobuf:"bytes,1,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Number of affected positions
+	AffectedPositions int64 `protobuf:"varint,2,opt,name=affected_positions,json=affectedPositions,proto3" json:"affected_positions,omitempty"`
+}
+
+func (m *MsgDisableCrossChainRouteResponse) Reset()         { *m = MsgDisableCrossChainRouteResponse{} }
+func (m *MsgDisableCrossChainRouteResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDisableCrossChainRouteResponse) ProtoMessage()    {}
+func (*MsgDisableCrossChainRouteResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{23}
+}
+func (m *MsgDisableCrossChainRouteResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDisableCrossChainRouteResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDisableCrossChainRouteResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDisableCrossChainRouteResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDisableCrossChainRouteResponse.Merge(m, src)
+}
+func (m *MsgDisableCrossChainRouteResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDisableCrossChainRouteResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDisableCrossChainRouteResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDisableCrossChainRouteResponse proto.InternalMessageInfo
+
+func (m *MsgDisableCrossChainRouteResponse) GetRouteId() string {
+	if m != nil {
+		return m.RouteId
+	}
+	return ""
+}
+
+func (m *MsgDisableCrossChainRouteResponse) GetAffectedPositions() int64 {
+	if m != nil {
+		return m.AffectedPositions
+	}
+	return 0
+}
+
+// MsgRemoteDeposit initiates a deposit to a remote chain
+type MsgRemoteDeposit struct {
+	// User making the remote deposit
+	Depositor string `protobuf:"bytes,1,opt,name=depositor,proto3" json:"depositor,omitempty"`
+	// Route ID for the deposit
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Vault type to deposit into
+	VaultType vaults.VaultType `protobuf:"varint,3,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
+	// Amount to deposit
+	Amount cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=amount,proto3,customtype=cosmossdk.io/math.Int" json:"amount"`
+	// Remote address to receive the position
+	RemoteAddress string `protobuf:"bytes,5,opt,name=remote_address,json=remoteAddress,proto3" json:"remote_address,omitempty"`
+	// Minimum shares to receive (slippage protection)
+	MinShares cosmossdk_io_math.Int `protobuf:"bytes,6,opt,name=min_shares,json=minShares,proto3,customtype=cosmossdk.io/math.Int" json:"min_shares"`
+	// Gas limit for remote execution (Hyperlane only)
+	GasLimit uint64 `protobuf:"varint,7,opt,name=gas_limit,json=gasLimit,proto3" json:"gas_limit,omitempty"`
+	// Gas price for remote execution (Hyperlane only)
+	GasPrice cosmossdk_io_math.Int `protobuf:"bytes,8,opt,name=gas_price,json=gasPrice,proto3,customtype=cosmossdk.io/math.Int" json:"gas_price"`
+}
+
+func (m *MsgRemoteDeposit) Reset()         { *m = MsgRemoteDeposit{} }
+func (m *MsgRemoteDeposit) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoteDeposit) ProtoMessage()    {}
+func (*MsgRemoteDeposit) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{24}
+}
+func (m *MsgRemoteDeposit) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoteDeposit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoteDeposit.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoteDeposit) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoteDeposit.Merge(m, src)
+}
+func (m *MsgRemoteDeposit) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoteDeposit) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoteDeposit.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoteDeposit proto.InternalMessageInfo
+
+// MsgRemoteDepositResponse returns the results of a remote deposit
+type MsgRemoteDepositResponse struct {
+	// Operation nonce for tracking
+	Nonce uint64 `protobuf:"varint,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	// Route ID used
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Local shares allocated
+	SharesAllocated cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=shares_allocated,json=sharesAllocated,proto3,customtype=cosmossdk.io/math.Int" json:"shares_allocated"`
+	// Amount sent to remote chain
+	AmountSent cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=amount_sent,json=amountSent,proto3,customtype=cosmossdk.io/math.Int" json:"amount_sent"`
+	// Expected completion time
+	ExpectedCompletion time.Time `protobuf:"bytes,5,opt,name=expected_completion,json=expectedCompletion,proto3,stdtime" json:"expected_completion"`
+	// Provider-specific tracking information
+	ProviderTracking *ProviderTrackingInfo `protobuf:"bytes,6,opt,name=provider_tracking,json=providerTracking,proto3" json:"provider_tracking,omitempty"`
+}
+
+func (m *MsgRemoteDepositResponse) Reset()         { *m = MsgRemoteDepositResponse{} }
+func (m *MsgRemoteDepositResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoteDepositResponse) ProtoMessage()    {}
+func (*MsgRemoteDepositResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{25}
+}
+func (m *MsgRemoteDepositResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoteDepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoteDepositResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoteDepositResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoteDepositResponse.Merge(m, src)
+}
+func (m *MsgRemoteDepositResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoteDepositResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoteDepositResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoteDepositResponse proto.InternalMessageInfo
+
+func (m *MsgRemoteDepositResponse) GetNonce() uint64 {
+	if m != nil {
+		return m.Nonce
+	}
+	return 0
+}
+
+func (m *MsgRemoteDepositResponse) GetRouteId() string {
+	if m != nil {
+		return m.RouteId
+	}
+	return ""
+}
+
+func (m *MsgRemoteDepositResponse) GetExpectedCompletion() time.Time {
+	if m != nil {
+		return m.ExpectedCompletion
+	}
+	return time.Time{}
+}
+
+func (m *MsgRemoteDepositResponse) GetProviderTracking() *ProviderTrackingInfo {
+	if m != nil {
+		return m.ProviderTracking
+	}
+	return nil
+}
+
+// MsgRemoteWithdraw initiates a withdrawal from a remote chain
+type MsgRemoteWithdraw struct {
+	// User making the remote withdrawal
+	Withdrawer string `protobuf:"bytes,1,opt,name=withdrawer,proto3" json:"withdrawer,omitempty"`
+	// Route ID for the withdrawal
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Vault type to withdraw from
+	VaultType vaults.VaultType `protobuf:"varint,3,opt,name=vault_type,json=vaultType,proto3,enum=noble.dollar.vaults.v1.VaultType" json:"vault_type,omitempty"`
+	// Shares to withdraw from remote position
+	Shares cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=shares,proto3,customtype=cosmossdk.io/math.Int" json:"shares"`
+	// Minimum amount to receive (slippage protection)
+	MinAmount cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=min_amount,json=minAmount,proto3,customtype=cosmossdk.io/math.Int" json:"min_amount"`
+	// Gas limit for remote execution (Hyperlane only)
+	GasLimit uint64 `protobuf:"varint,6,opt,name=gas_limit,json=gasLimit,proto3" json:"gas_limit,omitempty"`
+	// Gas price for remote execution (Hyperlane only)
+	GasPrice cosmossdk_io_math.Int `protobuf:"bytes,7,opt,name=gas_price,json=gasPrice,proto3,customtype=cosmossdk.io/math.Int" json:"gas_price"`
+}
+
+func (m *MsgRemoteWithdraw) Reset()         { *m = MsgRemoteWithdraw{} }
+func (m *MsgRemoteWithdraw) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoteWithdraw) ProtoMessage()    {}
+func (*MsgRemoteWithdraw) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{26}
+}
+func (m *MsgRemoteWithdraw) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoteWithdraw) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoteWithdraw.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoteWithdraw) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoteWithdraw.Merge(m, src)
+}
+func (m *MsgRemoteWithdraw) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoteWithdraw) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoteWithdraw.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoteWithdraw proto.InternalMessageInfo
+
+// MsgRemoteWithdrawResponse returns the results of a remote withdrawal
+type MsgRemoteWithdrawResponse struct {
+	// Operation nonce for tracking
+	Nonce uint64 `protobuf:"varint,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	// Route ID used
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// Shares being withdrawn
+	SharesWithdrawn cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=shares_withdrawn,json=sharesWithdrawn,proto3,customtype=cosmossdk.io/math.Int" json:"shares_withdrawn"`
+	// Expected amount to receive
+	ExpectedAmount cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=expected_amount,json=expectedAmount,proto3,customtype=cosmossdk.io/math.Int" json:"expected_amount"`
+	// Expected completion time
+	ExpectedCompletion time.Time `protobuf:"bytes,5,opt,name=expected_completion,json=expectedCompletion,proto3,stdtime" json:"expected_completion"`
+	// Provider-specific tracking information
+	ProviderTracking *ProviderTrackingInfo `protobuf:"bytes,6,opt,name=provider_tracking,json=providerTracking,proto3" json:"provider_tracking,omitempty"`
+}
+
+func (m *MsgRemoteWithdrawResponse) Reset()         { *m = MsgRemoteWithdrawResponse{} }
+func (m *MsgRemoteWithdrawResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoteWithdrawResponse) ProtoMessage()    {}
+func (*MsgRemoteWithdrawResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{27}
+}
+func (m *MsgRemoteWithdrawResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoteWithdrawResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoteWithdrawResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoteWithdrawResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoteWithdrawResponse.Merge(m, src)
+}
+func (m *MsgRemoteWithdrawResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoteWithdrawResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoteWithdrawResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoteWithdrawResponse proto.InternalMessageInfo
+
+func (m *MsgRemoteWithdrawResponse) GetNonce() uint64 {
+	if m != nil {
+		return m.Nonce
+	}
+	return 0
+}
+
+func (m *MsgRemoteWithdrawResponse) GetRouteId() string {
+	if m != nil {
+		return m.RouteId
+	}
+	return ""
+}
+
+func (m *MsgRemoteWithdrawResponse) GetExpectedCompletion() time.Time {
+	if m != nil {
+		return m.ExpectedCompletion
+	}
+	return time.Time{}
+}
+
+func (m *MsgRemoteWithdrawResponse) GetProviderTracking() *ProviderTrackingInfo {
+	if m != nil {
+		return m.ProviderTracking
+	}
+	return nil
+}
+
+// MsgUpdateRemotePosition updates a remote position status
+type MsgUpdateRemotePosition struct {
+	// Relayer updating the position
+	Relayer string `protobuf:"bytes,1,opt,name=relayer,proto3" json:"relayer,omitempty"`
+	// Route ID
+	RouteId string `protobuf:"bytes,2,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// User address
+	UserAddress []byte `protobuf:"bytes,3,opt,name=user_address,json=userAddress,proto3" json:"user_address,omitempty"`
+	// Updated remote value
+	RemoteValue cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=remote_value,json=remoteValue,proto3,customtype=cosmossdk.io/math.Int" json:"remote_value"`
+	// Number of confirmations
+	Confirmations uint64 `protobuf:"varint,5,opt,name=confirmations,proto3" json:"confirmations,omitempty"`
+	// Provider-specific tracking information
+	ProviderTracking *ProviderTrackingInfo `protobuf:"bytes,6,opt,name=provider_tracking,json=providerTracking,proto3" json:"provider_tracking,omitempty"`
+	// Position status
+	Status RemotePositionStatus `protobuf:"varint,7,opt,name=status,proto3,enum=noble.dollar.vaults.v2.RemotePositionStatus" json:"status,omitempty"`
+}
+
+func (m *MsgUpdateRemotePosition) Reset()         { *m = MsgUpdateRemotePosition{} }
+func (m *MsgUpdateRemotePosition) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateRemotePosition) ProtoMessage()    {}
+func (*MsgUpdateRemotePosition) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{28}
+}
+func (m *MsgUpdateRemotePosition) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateRemotePosition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateRemotePosition.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateRemotePosition) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateRemotePosition.Merge(m, src)
+}
+func (m *MsgUpdateRemotePosition) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateRemotePosition) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateRemotePosition.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateRemotePosition proto.InternalMessageInfo
+
+// MsgUpdateRemotePositionResponse confirms position update
+type MsgUpdateRemotePositionResponse struct {
+	// Route ID
+	RouteId string `protobuf:"bytes,1,opt,name=route_id,json=routeId,proto3" json:"route_id,omitempty"`
+	// User address
+	UserAddress []byte `protobuf:"bytes,2,opt,name=user_address,json=userAddress,proto3" json:"user_address,omitempty"`
+	// Previous value
+	PreviousValue cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=previous_value,json=previousValue,proto3,customtype=cosmossdk.io/math.Int" json:"previous_value"`
+	// New value
+	NewValue cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=new_value,json=newValue,proto3,customtype=cosmossdk.io/math.Int" json:"new_value"`
+	// Conservative value (with haircut)
+	ConservativeValue cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=conservative_value,json=conservativeValue,proto3,customtype=cosmossdk.io/math.Int" json:"conservative_value"`
+}
+
+func (m *MsgUpdateRemotePositionResponse) Reset()         { *m = MsgUpdateRemotePositionResponse{} }
+func (m *MsgUpdateRemotePositionResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateRemotePositionResponse) ProtoMessage()    {}
+func (*MsgUpdateRemotePositionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{29}
+}
+func (m *MsgUpdateRemotePositionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateRemotePositionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateRemotePositionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateRemotePositionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateRemotePositionResponse.Merge(m, src)
+}
+func (m *MsgUpdateRemotePositionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateRemotePositionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateRemotePositionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateRemotePositionResponse proto.InternalMessageInfo
+
+func (m *MsgUpdateRemotePositionResponse) GetRouteId() string {
+	if m != nil {
+		return m.RouteId
+	}
+	return ""
+}
+
+func (m *MsgUpdateRemotePositionResponse) GetUserAddress() []byte {
+	if m != nil {
+		return m.UserAddress
+	}
+	return nil
+}
+
+// MsgProcessInFlightPosition processes an in-flight position
+type MsgProcessInFlightPosition struct {
+	// Authority processing the position
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// Operation nonce
+	Nonce uint64 `protobuf:"varint,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	// Operation result
+	ResultStatus InFlightStatus `protobuf:"varint,3,opt,name=result_status,json=resultStatus,proto3,enum=noble.dollar.vaults.v2.InFlightStatus" json:"result_status,omitempty"`
+	// Result amount (for successful operations)
+	ResultAmount cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=result_amount,json=resultAmount,proto3,customtype=cosmossdk.io/math.Int" json:"result_amount"`
+	// Error message (for failed operations)
+	ErrorMessage string `protobuf:"bytes,5,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
+	// Provider-specific tracking information
+	ProviderTracking *ProviderTrackingInfo `protobuf:"bytes,6,opt,name=provider_tracking,json=providerTracking,proto3" json:"provider_tracking,omitempty"`
+}
+
+func (m *MsgProcessInFlightPosition) Reset()         { *m = MsgProcessInFlightPosition{} }
+func (m *MsgProcessInFlightPosition) String() string { return proto.CompactTextString(m) }
+func (*MsgProcessInFlightPosition) ProtoMessage()    {}
+func (*MsgProcessInFlightPosition) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{30}
+}
+func (m *MsgProcessInFlightPosition) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgProcessInFlightPosition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgProcessInFlightPosition.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgProcessInFlightPosition) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgProcessInFlightPosition.Merge(m, src)
+}
+func (m *MsgProcessInFlightPosition) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgProcessInFlightPosition) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgProcessInFlightPosition.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgProcessInFlightPosition proto.InternalMessageInfo
+
+// MsgProcessInFlightPositionResponse confirms processing
+type MsgProcessInFlightPositionResponse struct {
+	// Operation nonce
+	Nonce uint64 `protobuf:"varint,1,opt,name=nonce,proto3" json:"nonce,omitempty"`
+	// Final status
+	FinalStatus InFlightStatus `protobuf:"varint,2,opt,name=final_status,json=finalStatus,proto3,enum=noble.dollar.vaults.v2.InFlightStatus" json:"final_status,omitempty"`
+	// Amount processed
+	AmountProcessed cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=amount_processed,json=amountProcessed,proto3,customtype=cosmossdk.io/math.Int" json:"amount_processed"`
+	// Shares affected
+	SharesAffected cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=shares_affected,json=sharesAffected,proto3,customtype=cosmossdk.io/math.Int" json:"shares_affected"`
+}
+
+func (m *MsgProcessInFlightPositionResponse) Reset()         { *m = MsgProcessInFlightPositionResponse{} }
+func (m *MsgProcessInFlightPositionResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgProcessInFlightPositionResponse) ProtoMessage()    {}
+func (*MsgProcessInFlightPositionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c482f72d5d8ce397, []int{31}
+}
+func (m *MsgProcessInFlightPositionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgProcessInFlightPositionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgProcessInFlightPositionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgProcessInFlightPositionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgProcessInFlightPositionResponse.Merge(m, src)
+}
+func (m *MsgProcessInFlightPositionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgProcessInFlightPositionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgProcessInFlightPositionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgProcessInFlightPositionResponse proto.InternalMessageInfo
+
+func (m *MsgProcessInFlightPositionResponse) GetNonce() uint64 {
+	if m != nil {
+		return m.Nonce
+	}
+	return 0
+}
+
+func (m *MsgProcessInFlightPositionResponse) GetFinalStatus() InFlightStatus {
+	if m != nil {
+		return m.FinalStatus
+	}
+	return INFLIGHT_PENDING
+}
+
 func init() {
 	proto.RegisterType((*MsgDeposit)(nil), "noble.dollar.vaults.v2.MsgDeposit")
 	proto.RegisterType((*MsgDepositResponse)(nil), "noble.dollar.vaults.v2.MsgDepositResponse")
@@ -924,111 +1703,183 @@ func init() {
 	proto.RegisterType((*MsgUpdateVaultConfigResponse)(nil), "noble.dollar.vaults.v2.MsgUpdateVaultConfigResponse")
 	proto.RegisterType((*MsgUpdateParams)(nil), "noble.dollar.vaults.v2.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "noble.dollar.vaults.v2.MsgUpdateParamsResponse")
+	proto.RegisterType((*MsgCreateCrossChainRoute)(nil), "noble.dollar.vaults.v2.MsgCreateCrossChainRoute")
+	proto.RegisterType((*MsgCreateCrossChainRouteResponse)(nil), "noble.dollar.vaults.v2.MsgCreateCrossChainRouteResponse")
+	proto.RegisterType((*MsgUpdateCrossChainRoute)(nil), "noble.dollar.vaults.v2.MsgUpdateCrossChainRoute")
+	proto.RegisterType((*MsgUpdateCrossChainRouteResponse)(nil), "noble.dollar.vaults.v2.MsgUpdateCrossChainRouteResponse")
+	proto.RegisterType((*MsgDisableCrossChainRoute)(nil), "noble.dollar.vaults.v2.MsgDisableCrossChainRoute")
+	proto.RegisterType((*MsgDisableCrossChainRouteResponse)(nil), "noble.dollar.vaults.v2.MsgDisableCrossChainRouteResponse")
+	proto.RegisterType((*MsgRemoteDeposit)(nil), "noble.dollar.vaults.v2.MsgRemoteDeposit")
+	proto.RegisterType((*MsgRemoteDepositResponse)(nil), "noble.dollar.vaults.v2.MsgRemoteDepositResponse")
+	proto.RegisterType((*MsgRemoteWithdraw)(nil), "noble.dollar.vaults.v2.MsgRemoteWithdraw")
+	proto.RegisterType((*MsgRemoteWithdrawResponse)(nil), "noble.dollar.vaults.v2.MsgRemoteWithdrawResponse")
+	proto.RegisterType((*MsgUpdateRemotePosition)(nil), "noble.dollar.vaults.v2.MsgUpdateRemotePosition")
+	proto.RegisterType((*MsgUpdateRemotePositionResponse)(nil), "noble.dollar.vaults.v2.MsgUpdateRemotePositionResponse")
+	proto.RegisterType((*MsgProcessInFlightPosition)(nil), "noble.dollar.vaults.v2.MsgProcessInFlightPosition")
+	proto.RegisterType((*MsgProcessInFlightPositionResponse)(nil), "noble.dollar.vaults.v2.MsgProcessInFlightPositionResponse")
 }
 
 func init() { proto.RegisterFile("noble/dollar/vaults/v2/tx.proto", fileDescriptor_c482f72d5d8ce397) }
 
 var fileDescriptor_c482f72d5d8ce397 = []byte{
-	// 1572 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x58, 0xcb, 0x6f, 0xd4, 0xd6,
-	0x17, 0xce, 0x4c, 0x1e, 0x64, 0x4e, 0x5e, 0x60, 0x42, 0x18, 0x0c, 0x49, 0xc0, 0xe1, 0xa5, 0xfc,
-	0xc8, 0xcc, 0x8f, 0x50, 0x28, 0x8c, 0x40, 0x6a, 0x42, 0x90, 0x1a, 0xa9, 0x43, 0x53, 0x07, 0x82,
-	0x68, 0xab, 0x5a, 0x8e, 0x7d, 0xe3, 0xb8, 0x8c, 0x1f, 0xf5, 0xf5, 0xbc, 0x58, 0x55, 0x5d, 0x55,
-	0x95, 0x2a, 0xf1, 0x27, 0xa0, 0xae, 0xaa, 0x4a, 0x95, 0x58, 0xd0, 0x3f, 0xa0, 0x9b, 0x8a, 0x4d,
-	0x55, 0xc4, 0xaa, 0x6a, 0x25, 0x5a, 0xc1, 0x22, 0xed, 0xae, 0x8b, 0x76, 0xd5, 0x4d, 0x75, 0x1f,
-	0x7e, 0x4c, 0x3c, 0x93, 0x4c, 0x26, 0x91, 0x68, 0x37, 0x60, 0xfb, 0x7e, 0xf7, 0x3b, 0xe7, 0x7e,
-	0xe7, 0xbb, 0xf7, 0x9e, 0x09, 0x4c, 0xda, 0xce, 0x6a, 0x09, 0xe5, 0x75, 0xa7, 0x54, 0x52, 0xbd,
-	0x7c, 0x45, 0x2d, 0x97, 0x7c, 0x9c, 0xaf, 0xcc, 0xe6, 0xfd, 0x5a, 0xce, 0xf5, 0x1c, 0xdf, 0x11,
-	0xc6, 0x28, 0x20, 0xc7, 0x00, 0x39, 0x06, 0xc8, 0x55, 0x66, 0xc5, 0x03, 0xaa, 0x65, 0xda, 0x4e,
-	0x9e, 0xfe, 0xcb, 0xa0, 0xe2, 0x61, 0xcd, 0xc1, 0x96, 0x83, 0xf3, 0x16, 0x36, 0xf2, 0x95, 0xf3,
-	0xe4, 0x3f, 0x3e, 0x70, 0x84, 0x0d, 0x28, 0xf4, 0x2d, 0xcf, 0x5e, 0xf8, 0xd0, 0xa8, 0xe1, 0x18,
-	0x0e, 0xfb, 0x4e, 0x9e, 0xf8, 0xd7, 0x49, 0xc3, 0x71, 0x8c, 0x12, 0xca, 0xd3, 0xb7, 0xd5, 0xf2,
-	0x5a, 0xde, 0x37, 0x2d, 0x84, 0x7d, 0xd5, 0x72, 0x39, 0x60, 0xaa, 0x69, 0xda, 0xe7, 0xf9, 0x13,
-	0x07, 0x9d, 0x6c, 0xb1, 0x36, 0x03, 0xd9, 0x08, 0x9b, 0x1c, 0x25, 0xfd, 0x9d, 0x06, 0x28, 0x62,
-	0x63, 0x01, 0xb9, 0x0e, 0x36, 0x7d, 0xe1, 0x12, 0x64, 0x74, 0xf6, 0xe8, 0x78, 0xd9, 0xd4, 0xf1,
-	0xd4, 0xd9, 0xcc, 0x7c, 0xf6, 0xd9, 0xe3, 0x99, 0x51, 0x9e, 0xf5, 0x9c, 0xae, 0x7b, 0x08, 0xe3,
-	0x65, 0xdf, 0x33, 0x6d, 0x43, 0x8e, 0xa0, 0xc2, 0x1b, 0x00, 0x34, 0x82, 0xe2, 0xd7, 0x5d, 0x94,
-	0x4d, 0x1f, 0x4f, 0x9d, 0x1d, 0x9e, 0x3d, 0x91, 0x6b, 0x2a, 0xde, 0xf9, 0xdc, 0x0a, 0x79, 0xba,
-	0x55, 0x77, 0x91, 0x9c, 0xa9, 0x04, 0x8f, 0xc2, 0x9b, 0xd0, 0xa7, 0x5a, 0x4e, 0xd9, 0xf6, 0xb3,
-	0xdd, 0x34, 0xec, 0xff, 0x9f, 0x3c, 0x9f, 0xec, 0xfa, 0xe9, 0xf9, 0xe4, 0x21, 0x16, 0x1a, 0xeb,
-	0xf7, 0x72, 0xa6, 0x93, 0xb7, 0x54, 0x7f, 0x3d, 0xb7, 0x68, 0xfb, 0xcf, 0x1e, 0xcf, 0x00, 0xcf,
-	0x69, 0xd1, 0xf6, 0xbf, 0xdc, 0x78, 0x34, 0x9d, 0x92, 0xf9, 0x7c, 0x61, 0x0a, 0x86, 0x3c, 0xa4,
-	0x21, 0xb3, 0x82, 0x94, 0xba, 0x89, 0x4a, 0x7a, 0xb6, 0xe7, 0x78, 0xea, 0x6c, 0xbf, 0x3c, 0xc8,
-	0x3f, 0xde, 0x25, 0xdf, 0x84, 0xb7, 0x01, 0x2c, 0xd3, 0x56, 0xf0, 0xba, 0xea, 0x21, 0x9c, 0xed,
-	0xed, 0x30, 0x64, 0xc6, 0x32, 0xed, 0x65, 0x4a, 0x51, 0xb8, 0xf0, 0xe9, 0xc3, 0xc9, 0xae, 0xdf,
-	0x1e, 0x4e, 0x76, 0x7d, 0xb2, 0xf1, 0x68, 0x3a, 0x52, 0xe6, 0xb3, 0x8d, 0x47, 0xd3, 0xd9, 0x44,
-	0x0d, 0xb8, 0xdc, 0xd2, 0x9f, 0x69, 0x10, 0x22, 0xf5, 0x65, 0x84, 0x5d, 0xc7, 0xc6, 0x48, 0xb8,
-	0x0b, 0x23, 0x2c, 0x31, 0x85, 0xe7, 0xac, 0xf3, 0x5a, 0xec, 0x3c, 0xc3, 0x61, 0x46, 0x24, 0x73,
-	0x1e, 0xe1, 0x3d, 0xd8, 0xcf, 0x64, 0x52, 0x78, 0x8a, 0x48, 0xa7, 0xe5, 0xea, 0x84, 0x7b, 0x84,
-	0x31, 0x2d, 0x04, 0x44, 0x42, 0x11, 0x32, 0x6b, 0x08, 0x61, 0xc5, 0x55, 0x4d, 0xbd, 0xe3, 0x32,
-	0xf6, 0x13, 0x8a, 0x25, 0xd5, 0xd4, 0x85, 0x3b, 0x30, 0x40, 0xb3, 0x57, 0x5c, 0xcf, 0xd4, 0x10,
-	0x2d, 0x63, 0x66, 0xfe, 0x12, 0x27, 0x3c, 0x9a, 0x24, 0x7c, 0x0b, 0x19, 0xaa, 0x56, 0x5f, 0x40,
-	0x5a, 0x8c, 0x76, 0x01, 0x69, 0x8c, 0x16, 0x28, 0xd5, 0x12, 0x61, 0x92, 0x7e, 0x4e, 0xc3, 0x40,
-	0x11, 0x1b, 0x77, 0x4c, 0x7f, 0x5d, 0xf7, 0xd4, 0xaa, 0x70, 0x19, 0xa0, 0xca, 0x9f, 0xd1, 0xf6,
-	0xb6, 0x8f, 0x61, 0xf7, 0xc6, 0xf7, 0xdc, 0x84, 0x1d, 0xfb, 0x9e, 0xcd, 0x0f, 0x2c, 0xcd, 0x77,
-	0x51, 0xcf, 0x2e, 0x2c, 0x3d, 0x47, 0x29, 0x0a, 0x17, 0xe3, 0x96, 0x8e, 0xad, 0x9a, 0x78, 0xfa,
-	0x48, 0xc2, 0xd3, 0x81, 0x9a, 0xd2, 0x5f, 0x69, 0x38, 0x18, 0x53, 0x37, 0x74, 0x75, 0x64, 0xbd,
-	0x80, 0xca, 0xee, 0xd8, 0xd6, 0xdc, 0x7a, 0x41, 0x0c, 0xbb, 0x61, 0xcb, 0xe8, 0x08, 0x59, 0xbb,
-	0xb0, 0x75, 0xb8, 0x65, 0x18, 0xcf, 0x7f, 0xc6, 0xd5, 0x9f, 0xa7, 0x61, 0xb8, 0x88, 0x0d, 0x19,
-	0x7d, 0x54, 0x46, 0xd8, 0xbf, 0x51, 0x63, 0xc7, 0xb9, 0xc7, 0x5e, 0xdb, 0xf0, 0x75, 0x04, 0xfd,
-	0x37, 0xd9, 0xba, 0xf0, 0x7a, 0xc3, 0xc1, 0x1a, 0xe6, 0x48, 0x4c, 0x78, 0x2c, 0x61, 0xc2, 0xd8,
-	0xe2, 0xa5, 0xef, 0xd3, 0x30, 0xd6, 0xa8, 0x47, 0x68, 0xc5, 0xd3, 0x30, 0x82, 0x6a, 0xa6, 0xaf,
-	0x70, 0x36, 0xc5, 0xe4, 0x07, 0xac, 0x3c, 0x84, 0x28, 0x8c, 0x7e, 0x5d, 0xd4, 0x85, 0x15, 0xe0,
-	0x66, 0x50, 0x7c, 0x47, 0x21, 0x43, 0x1d, 0x9b, 0x6a, 0x90, 0xf1, 0xdc, 0x72, 0x68, 0x5d, 0x56,
-	0x60, 0x14, 0xd5, 0x5c, 0xa4, 0xf9, 0x48, 0x57, 0xca, 0x76, 0xc9, 0xd1, 0xee, 0x29, 0xe4, 0x8e,
-	0xa7, 0x5a, 0x0d, 0xcc, 0x8a, 0x39, 0xd6, 0x00, 0xe4, 0x82, 0x06, 0x20, 0x77, 0x2b, 0x68, 0x00,
-	0xe6, 0xfb, 0x49, 0xe4, 0x07, 0xbf, 0x4c, 0xa6, 0x64, 0x21, 0x60, 0xb8, 0x4d, 0x09, 0x08, 0x84,
-	0x6c, 0x31, 0x84, 0x7d, 0xd3, 0x52, 0x09, 0xf1, 0x2e, 0x0f, 0x82, 0x91, 0x90, 0x89, 0x1d, 0x07,
-	0xd2, 0xef, 0x29, 0x18, 0x2a, 0x62, 0xe3, 0xba, 0x6a, 0x6b, 0xa8, 0xf4, 0x8a, 0xed, 0xd5, 0xa4,
-	0x80, 0xdd, 0x4d, 0x0a, 0x58, 0xb8, 0xd4, 0xda, 0x3c, 0x47, 0x13, 0xe6, 0x89, 0x56, 0x26, 0x7d,
-	0x9d, 0x82, 0x43, 0x0d, 0x6b, 0x6d, 0x7a, 0x37, 0xfb, 0x65, 0xcf, 0xde, 0x8b, 0xbb, 0x99, 0xf1,
-	0x08, 0x57, 0xe0, 0x88, 0x46, 0x03, 0x96, 0x90, 0xae, 0x6c, 0x5e, 0x1e, 0x35, 0x9e, 0x3c, 0x16,
-	0x02, 0x6e, 0xc4, 0xd7, 0x29, 0x6d, 0xb0, 0x7c, 0x97, 0x91, 0x4f, 0xdb, 0x9b, 0x25, 0x0f, 0xad,
-	0x21, 0x0f, 0xd9, 0x1a, 0x12, 0xce, 0x41, 0x4f, 0x19, 0xb7, 0x51, 0x1e, 0x8a, 0xda, 0x83, 0xca,
-	0x24, 0xba, 0xaf, 0xee, 0x64, 0xf7, 0x55, 0xb8, 0x12, 0x2f, 0x0b, 0x8d, 0x4c, 0x2a, 0x32, 0x95,
-	0xa8, 0x48, 0x72, 0x3d, 0x52, 0x15, 0xc6, 0x9b, 0x2e, 0x34, 0x2c, 0x50, 0x1e, 0x0e, 0xba, 0x1e,
-	0xaa, 0x98, 0x4e, 0x99, 0xb4, 0xdc, 0xc1, 0x30, 0x5d, 0x7f, 0xbf, 0x2c, 0x04, 0x43, 0x31, 0x85,
-	0x4e, 0xc1, 0xb0, 0x8d, 0xaa, 0x71, 0x6c, 0x9a, 0x62, 0x87, 0x6c, 0x54, 0x8d, 0x05, 0xfe, 0x23,
-	0x45, 0xaf, 0xb5, 0x25, 0xcf, 0xd1, 0x10, 0xc6, 0x44, 0xfe, 0x77, 0xca, 0xa8, 0x8c, 0xc8, 0x26,
-	0x50, 0xcb, 0xfe, 0xba, 0xe3, 0x99, 0x7e, 0x7d, 0xfb, 0x4d, 0x10, 0x42, 0xf7, 0x40, 0xea, 0x13,
-	0x30, 0x68, 0xa9, 0xb5, 0xc0, 0x24, 0xec, 0xa4, 0xed, 0x95, 0x07, 0x2c, 0xb5, 0xc6, 0x8d, 0x81,
-	0x0b, 0x57, 0x1b, 0xfc, 0x1f, 0x06, 0x27, 0x6a, 0x9f, 0x48, 0xa8, 0xbd, 0x79, 0x69, 0xd2, 0x0f,
-	0x69, 0x38, 0xda, 0x64, 0xc9, 0xa1, 0xd4, 0x33, 0x20, 0x04, 0xc1, 0xc9, 0xaf, 0x1b, 0x02, 0xe2,
-	0xdb, 0xa1, 0x57, 0x3e, 0x10, 0x8c, 0x2c, 0x05, 0x03, 0xc2, 0x1a, 0x8c, 0xf9, 0x8e, 0xaf, 0x96,
-	0x78, 0xd7, 0x1d, 0x9b, 0xd2, 0xe9, 0xa9, 0x3a, 0x4a, 0xf9, 0x58, 0x07, 0x1e, 0xc5, 0xf9, 0x10,
-	0xb2, 0x2c, 0x4e, 0xd0, 0xe9, 0x9a, 0xd8, 0xf7, 0xcc, 0xd5, 0x32, 0xe9, 0x75, 0x3b, 0xbd, 0x8d,
-	0x58, 0xe6, 0xec, 0x24, 0x5c, 0x88, 0xf8, 0x98, 0x04, 0x96, 0x6a, 0xda, 0xa6, 0x6d, 0x44, 0x95,
-	0xe8, 0x09, 0x24, 0xe0, 0x23, 0x41, 0x3d, 0xa4, 0x2f, 0xd2, 0x30, 0x58, 0xc4, 0xc6, 0x6d, 0x57,
-	0x57, 0x7d, 0x74, 0x73, 0x6e, 0xe5, 0x15, 0xba, 0x67, 0x11, 0xf6, 0x11, 0xdb, 0xdb, 0x6a, 0xa5,
-	0xf3, 0x2b, 0xda, 0x46, 0xd5, 0x9b, 0x6a, 0x45, 0x18, 0x83, 0x3e, 0x0f, 0xa9, 0xd8, 0xb1, 0xd9,
-	0x65, 0x23, 0xf3, 0xb7, 0xc6, 0x06, 0xb2, 0xd1, 0x7d, 0x62, 0xc2, 0x7d, 0xa1, 0x26, 0xd2, 0x37,
-	0x69, 0x18, 0x8d, 0x8b, 0x14, 0xfa, 0x6d, 0x19, 0x06, 0xc3, 0xad, 0x4d, 0xf2, 0xee, 0xf4, 0xe0,
-	0x1d, 0x08, 0x58, 0x48, 0xf2, 0x31, 0x1d, 0xd2, 0xbb, 0xd4, 0x61, 0x1c, 0x40, 0x5b, 0x57, 0x6d,
-	0x03, 0x29, 0xab, 0x6e, 0xb0, 0x1d, 0x33, 0xec, 0xcb, 0xbc, 0x8b, 0x85, 0x0f, 0x60, 0x84, 0x44,
-	0xda, 0xbb, 0xee, 0x8f, 0x9c, 0x50, 0xcb, 0x51, 0x03, 0xf8, 0x55, 0x5c, 0x37, 0x5a, 0xf3, 0xeb,
-	0x8e, 0xbd, 0x66, 0x1a, 0xaf, 0xd0, 0x64, 0x73, 0xd0, 0xa7, 0xd1, 0x1c, 0x78, 0x6b, 0x33, 0xd5,
-	0x7c, 0xf6, 0x6c, 0x2e, 0x96, 0xee, 0x7c, 0x0f, 0x91, 0x43, 0xe6, 0x13, 0x5b, 0x9a, 0xeb, 0x5a,
-	0x6b, 0x73, 0x49, 0x2d, 0xcc, 0x15, 0x0b, 0x22, 0xad, 0xc1, 0xb1, 0x66, 0x5a, 0x85, 0x5e, 0x3b,
-	0x03, 0x23, 0xa1, 0xd7, 0xf8, 0x12, 0x58, 0x8b, 0x38, 0x1c, 0x7c, 0xe6, 0xe2, 0x8e, 0x03, 0x90,
-	0xaa, 0x72, 0x0c, 0xbb, 0xa6, 0x33, 0x36, 0xaa, 0xf2, 0x38, 0xdf, 0xa6, 0x60, 0x24, 0x0c, 0xb4,
-	0xa4, 0x7a, 0xaa, 0x85, 0x3b, 0xae, 0xc7, 0x55, 0xe8, 0x73, 0x29, 0x03, 0x0d, 0x33, 0x30, 0x3b,
-	0xd1, 0x4a, 0x4d, 0x16, 0x27, 0x10, 0x92, 0xcd, 0x29, 0x5c, 0x6e, 0x2d, 0xd8, 0x78, 0x0b, 0xc1,
-	0x18, 0x8f, 0xa4, 0xc2, 0xe1, 0x4d, 0x4b, 0x68, 0x2a, 0x13, 0xcf, 0x6d, 0x93, 0x4c, 0x7c, 0xcd,
-	0x5c, 0xa6, 0x58, 0xfe, 0x4c, 0x26, 0x36, 0x3c, 0xfb, 0xdd, 0x3e, 0xe8, 0x2e, 0x62, 0x43, 0xb8,
-	0x0b, 0xfb, 0x82, 0xbf, 0x45, 0x49, 0xad, 0x56, 0x17, 0xfd, 0xc5, 0x44, 0x9c, 0xde, 0x1e, 0x13,
-	0xa6, 0xfa, 0x3e, 0xf4, 0x87, 0xbf, 0xf8, 0xa7, 0xb6, 0x98, 0x17, 0x80, 0xc4, 0xff, 0xb5, 0x01,
-	0x0a, 0xd9, 0x11, 0x0c, 0xc4, 0x7f, 0x79, 0x9d, 0xde, 0x62, 0x6e, 0x0c, 0x27, 0xe6, 0xda, 0xc3,
-	0x85, 0x61, 0x56, 0x01, 0x62, 0x0d, 0xf8, 0xa9, 0x2d, 0x66, 0x47, 0x30, 0x71, 0xa6, 0x2d, 0x58,
-	0x18, 0xe3, 0x3e, 0x08, 0x4d, 0x1a, 0xc9, 0xad, 0x48, 0x92, 0x70, 0xf1, 0xe2, 0x8e, 0xe0, 0x61,
-	0x6c, 0x1f, 0xf6, 0x27, 0x3a, 0xac, 0xad, 0xea, 0xb0, 0x19, 0x2c, 0x5e, 0xd8, 0x01, 0x38, 0x8c,
-	0xaa, 0x40, 0x26, 0xba, 0x92, 0x4f, 0x6e, 0xc1, 0x10, 0xa2, 0xc4, 0x73, 0xed, 0xa0, 0xc2, 0x00,
-	0x55, 0x38, 0x90, 0x3c, 0x96, 0xb7, 0xa7, 0x88, 0xa1, 0xc5, 0xd7, 0x76, 0x82, 0x0e, 0x03, 0xaf,
-	0xc3, 0x60, 0xc3, 0xd1, 0x73, 0x66, 0x5b, 0x16, 0x06, 0x14, 0xf3, 0x6d, 0x02, 0x83, 0x48, 0x62,
-	0xef, 0xc7, 0xe4, 0x4e, 0x9a, 0xbf, 0xf6, 0xe4, 0xc5, 0x44, 0xea, 0xe9, 0x8b, 0x89, 0xd4, 0xaf,
-	0x2f, 0x26, 0x52, 0x0f, 0x5e, 0x4e, 0x74, 0x3d, 0x7d, 0x39, 0xd1, 0xf5, 0xe3, 0xcb, 0x89, 0xae,
-	0x77, 0x79, 0x7b, 0xcf, 0x79, 0x6b, 0xf5, 0xfb, 0xf4, 0x2f, 0xed, 0x75, 0x17, 0xe1, 0xe8, 0xdc,
-	0x59, 0xed, 0xa3, 0xbf, 0x79, 0x2f, 0xfc, 0x13, 0x00, 0x00, 0xff, 0xff, 0xfe, 0xb1, 0x4b, 0x23,
-	0x9a, 0x17, 0x00, 0x00,
+	// 2512 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x5a, 0xdd, 0x6f, 0x1c, 0x57,
+	0x15, 0xf7, 0xee, 0xfa, 0xf3, 0xec, 0xda, 0x8e, 0x27, 0x8e, 0xe3, 0x6c, 0x1a, 0x3b, 0x99, 0x7c,
+	0x99, 0x90, 0xec, 0x26, 0x0e, 0x4d, 0x13, 0xd3, 0x22, 0xfc, 0x51, 0x84, 0x45, 0xb7, 0xb8, 0xe3,
+	0x7c, 0x28, 0x14, 0x31, 0x5c, 0xef, 0x5e, 0x8f, 0x87, 0xec, 0xcc, 0x2c, 0x73, 0x67, 0xd7, 0x76,
+	0x9f, 0x2a, 0x10, 0x08, 0x90, 0x90, 0xf2, 0x27, 0x54, 0x3c, 0x21, 0xa4, 0x4a, 0x79, 0x28, 0xbc,
+	0xf1, 0xc0, 0x13, 0x15, 0x12, 0xa2, 0x2a, 0x2f, 0xa8, 0x48, 0x05, 0x25, 0x0f, 0x29, 0x2f, 0x88,
+	0x07, 0xfa, 0xc4, 0x0b, 0xba, 0x1f, 0x73, 0x67, 0x66, 0x77, 0x66, 0xbd, 0x1f, 0x4e, 0xd3, 0xbe,
+	0x24, 0x3b, 0x77, 0xce, 0x3d, 0xe7, 0xdc, 0xdf, 0xf9, 0x9d, 0x7b, 0xcf, 0x3d, 0x63, 0x98, 0xb7,
+	0x9d, 0xad, 0x2a, 0x2e, 0x56, 0x9c, 0x6a, 0x15, 0xb9, 0xc5, 0x06, 0xaa, 0x57, 0x3d, 0x52, 0x6c,
+	0x2c, 0x16, 0xbd, 0xbd, 0x42, 0xcd, 0x75, 0x3c, 0x47, 0x99, 0x61, 0x02, 0x05, 0x2e, 0x50, 0xe0,
+	0x02, 0x85, 0xc6, 0x62, 0x7e, 0x0a, 0x59, 0xa6, 0xed, 0x14, 0xd9, 0xbf, 0x5c, 0x34, 0x7f, 0xbc,
+	0xec, 0x10, 0xcb, 0x21, 0x45, 0x8b, 0x18, 0xc5, 0xc6, 0x35, 0xfa, 0x9f, 0x78, 0x71, 0x82, 0xbf,
+	0xd0, 0xd9, 0x53, 0x91, 0x3f, 0x88, 0x57, 0xd3, 0x86, 0x63, 0x38, 0x7c, 0x9c, 0xfe, 0x12, 0xa3,
+	0xf3, 0x86, 0xe3, 0x18, 0x55, 0x5c, 0x64, 0x4f, 0x5b, 0xf5, 0xed, 0xa2, 0x67, 0x5a, 0x98, 0x78,
+	0xc8, 0xaa, 0x09, 0x81, 0xb3, 0xb1, 0x6e, 0x5f, 0x13, 0xbf, 0x84, 0xd0, 0xb9, 0x84, 0xb5, 0x19,
+	0xd8, 0xc6, 0xc4, 0xf4, 0xa5, 0x16, 0x12, 0xa4, 0xca, 0xae, 0x43, 0x88, 0x5e, 0xde, 0x41, 0xa6,
+	0xcd, 0x25, 0xd5, 0xff, 0xa5, 0x01, 0x4a, 0xc4, 0x58, 0xc3, 0x35, 0x87, 0x98, 0x9e, 0x72, 0x03,
+	0xc6, 0x2a, 0xfc, 0xa7, 0xe3, 0xce, 0xa6, 0x4e, 0xa7, 0x16, 0xc6, 0x56, 0x66, 0x3f, 0x7c, 0xef,
+	0xca, 0xb4, 0x58, 0xdf, 0x72, 0xa5, 0xe2, 0x62, 0x42, 0x36, 0x3d, 0xd7, 0xb4, 0x0d, 0x2d, 0x10,
+	0x55, 0xbe, 0x0e, 0xc0, 0xac, 0xe8, 0xde, 0x7e, 0x0d, 0xcf, 0xa6, 0x4f, 0xa7, 0x16, 0x26, 0x16,
+	0xcf, 0x14, 0x62, 0x61, 0xbe, 0x56, 0xb8, 0x4b, 0x7f, 0xdd, 0xde, 0xaf, 0x61, 0x6d, 0xac, 0xe1,
+	0xff, 0x54, 0xbe, 0x09, 0xc3, 0xc8, 0x72, 0xea, 0xb6, 0x37, 0x9b, 0x61, 0x66, 0xaf, 0xbe, 0xff,
+	0xf1, 0xfc, 0xc0, 0x47, 0x1f, 0xcf, 0x1f, 0xe3, 0xa6, 0x49, 0xe5, 0x41, 0xc1, 0x74, 0x8a, 0x16,
+	0xf2, 0x76, 0x0a, 0xeb, 0xb6, 0xf7, 0xe1, 0x7b, 0x57, 0x40, 0xf8, 0xb4, 0x6e, 0x7b, 0xbf, 0x7e,
+	0xfa, 0xe8, 0x52, 0x4a, 0x13, 0xf3, 0x95, 0xb3, 0x30, 0xee, 0xe2, 0x32, 0x36, 0x1b, 0x58, 0xdf,
+	0x37, 0x71, 0xb5, 0x32, 0x3b, 0x78, 0x3a, 0xb5, 0x30, 0xaa, 0xe5, 0xc4, 0xe0, 0x7d, 0x3a, 0xa6,
+	0x7c, 0x1b, 0xc0, 0x32, 0x6d, 0x9d, 0xec, 0x20, 0x17, 0x93, 0xd9, 0xa1, 0x1e, 0x4d, 0x8e, 0x59,
+	0xa6, 0xbd, 0xc9, 0x54, 0x2c, 0x5d, 0xff, 0xd9, 0x3b, 0xf3, 0x03, 0x9f, 0xbc, 0x33, 0x3f, 0xf0,
+	0xa3, 0xa7, 0x8f, 0x2e, 0x05, 0xc8, 0xfc, 0xe2, 0xe9, 0xa3, 0x4b, 0xb3, 0x2d, 0x71, 0x10, 0x70,
+	0xab, 0xff, 0x4d, 0x83, 0x12, 0xa0, 0xaf, 0x61, 0x52, 0x73, 0x6c, 0x82, 0x95, 0xfb, 0x30, 0xc9,
+	0x1d, 0xd3, 0x85, 0xcf, 0x15, 0x11, 0x8b, 0xee, 0x3d, 0x9c, 0xe0, 0x8a, 0x34, 0xa1, 0x47, 0x79,
+	0x13, 0x8e, 0x70, 0x98, 0x74, 0xe1, 0x22, 0xae, 0xb0, 0x70, 0xf5, 0xa2, 0x7b, 0x92, 0x6b, 0x5a,
+	0xf3, 0x15, 0x29, 0x25, 0x18, 0xdb, 0xc6, 0x98, 0xe8, 0x35, 0x64, 0x56, 0x7a, 0x0e, 0xe3, 0x28,
+	0x55, 0xb1, 0x81, 0xcc, 0x8a, 0x72, 0x0f, 0xb2, 0xcc, 0x7b, 0xbd, 0xe6, 0x9a, 0x65, 0xcc, 0xc2,
+	0x38, 0xb6, 0x72, 0x43, 0x28, 0x3c, 0xd9, 0xaa, 0xf0, 0x35, 0x6c, 0xa0, 0xf2, 0xfe, 0x1a, 0x2e,
+	0x87, 0xd4, 0xae, 0xe1, 0x32, 0x57, 0x0b, 0x4c, 0xd5, 0x06, 0xd5, 0xa4, 0xfe, 0x3d, 0x0d, 0xd9,
+	0x12, 0x31, 0xee, 0x99, 0xde, 0x4e, 0xc5, 0x45, 0xbb, 0xca, 0x4d, 0x80, 0x5d, 0xf1, 0x1b, 0x1f,
+	0x4c, 0xfb, 0x90, 0xec, 0xe1, 0xf0, 0x5e, 0x90, 0xb0, 0x67, 0xde, 0xf3, 0xf9, 0x3e, 0xa5, 0x45,
+	0x16, 0x0d, 0xf6, 0x41, 0xe9, 0x65, 0xa6, 0x62, 0xe9, 0xc5, 0x30, 0xa5, 0x43, 0xab, 0xa6, 0x9c,
+	0x3e, 0xd1, 0xc2, 0x69, 0x1f, 0x4d, 0xf5, 0xd3, 0x34, 0x1c, 0x0d, 0xa1, 0x2b, 0x59, 0x1d, 0x50,
+	0xcf, 0x57, 0x65, 0xf7, 0x4c, 0x6b, 0x41, 0x3d, 0xdf, 0x86, 0x1d, 0x49, 0x99, 0x0a, 0xc6, 0x56,
+	0x1f, 0xb4, 0x96, 0x29, 0xc3, 0xf5, 0x7c, 0x61, 0x58, 0xfd, 0xcb, 0x34, 0x4c, 0x94, 0x88, 0xa1,
+	0xe1, 0x1f, 0xd6, 0x31, 0xf1, 0x5e, 0xdd, 0xe3, 0xdb, 0xb9, 0xcb, 0x1f, 0x3b, 0xe0, 0x75, 0x20,
+	0xfa, 0x79, 0xa2, 0xf5, 0xd2, 0x4b, 0x91, 0x8d, 0x55, 0xfa, 0x48, 0x49, 0xf8, 0x42, 0x0b, 0x09,
+	0x43, 0x8b, 0x57, 0xff, 0x9c, 0x86, 0x99, 0x28, 0x1e, 0x92, 0x8a, 0x17, 0x60, 0x12, 0xef, 0x99,
+	0x9e, 0x2e, 0xb4, 0xe9, 0xa6, 0xd8, 0x60, 0xb5, 0x71, 0xcc, 0xc4, 0xd8, 0xe8, 0x7a, 0x45, 0xb9,
+	0x0b, 0x82, 0x0c, 0xba, 0xe7, 0xe8, 0xf4, 0x55, 0xcf, 0xa4, 0xca, 0x71, 0x3d, 0xb7, 0x1d, 0x16,
+	0x97, 0xbb, 0x30, 0x8d, 0xf7, 0x6a, 0xb8, 0xec, 0xe1, 0x8a, 0x5e, 0xb7, 0xab, 0x4e, 0xf9, 0x81,
+	0x4e, 0xab, 0x01, 0x86, 0x55, 0x76, 0x31, 0x5f, 0xe0, 0xa5, 0x42, 0xc1, 0x2f, 0x15, 0x0a, 0xb7,
+	0xfd, 0x52, 0x61, 0x65, 0x94, 0x5a, 0x7e, 0xf8, 0x8f, 0xf9, 0x94, 0xa6, 0xf8, 0x1a, 0xee, 0x30,
+	0x05, 0x54, 0x84, 0xa6, 0x18, 0x26, 0x9e, 0x69, 0x21, 0xaa, 0xb8, 0xcf, 0x8d, 0x60, 0x52, 0x6a,
+	0xe2, 0xdb, 0x81, 0xfa, 0xaf, 0x14, 0x8c, 0x97, 0x88, 0xb1, 0x8a, 0xec, 0x32, 0xae, 0x3e, 0x67,
+	0x7a, 0xc5, 0x04, 0x30, 0x13, 0x13, 0xc0, 0xa5, 0x1b, 0xc9, 0xe4, 0x39, 0xd9, 0x42, 0x9e, 0x60,
+	0x65, 0xea, 0xbb, 0x29, 0x38, 0x16, 0x59, 0x6b, 0xec, 0xd9, 0xec, 0xd5, 0x5d, 0xfb, 0x30, 0xce,
+	0x66, 0xae, 0x47, 0xb9, 0x05, 0x27, 0xca, 0xcc, 0x60, 0x15, 0x57, 0xf4, 0xe6, 0xe5, 0x31, 0xe2,
+	0x69, 0x33, 0x52, 0xe0, 0xd5, 0xf0, 0x3a, 0xd5, 0xa7, 0xdc, 0xdf, 0x4d, 0xec, 0xb1, 0xf2, 0x66,
+	0xc3, 0xc5, 0xdb, 0xd8, 0xc5, 0x76, 0x19, 0x2b, 0x97, 0x61, 0xb0, 0x4e, 0x3a, 0x08, 0x0f, 0x93,
+	0x3a, 0x84, 0xc8, 0xb4, 0x54, 0x5f, 0x99, 0xd6, 0xea, 0x6b, 0xe9, 0x56, 0x38, 0x2c, 0xcc, 0x32,
+	0x8d, 0xc8, 0xd9, 0x96, 0x88, 0xb4, 0xae, 0x47, 0xdd, 0x85, 0x53, 0xb1, 0x0b, 0x95, 0x01, 0x2a,
+	0xc2, 0xd1, 0x9a, 0x8b, 0x1b, 0xa6, 0x53, 0xa7, 0xc5, 0xb9, 0xff, 0x9a, 0xad, 0x7f, 0x54, 0x53,
+	0xfc, 0x57, 0x21, 0x84, 0xce, 0xc3, 0x84, 0x8d, 0x77, 0xc3, 0xb2, 0x69, 0x26, 0x3b, 0x6e, 0xe3,
+	0xdd, 0x90, 0xe1, 0xff, 0xa4, 0xd8, 0xb1, 0xb6, 0xe1, 0x3a, 0x65, 0x4c, 0x08, 0x85, 0xff, 0x8d,
+	0x3a, 0xae, 0x63, 0x9a, 0x04, 0xa8, 0xee, 0xed, 0x38, 0xae, 0xe9, 0xed, 0x1f, 0x9c, 0x04, 0x52,
+	0xf4, 0x10, 0xa0, 0x3e, 0x03, 0x39, 0x0b, 0xed, 0xf9, 0x24, 0xe1, 0x3b, 0xed, 0x90, 0x96, 0xb5,
+	0xd0, 0x9e, 0x20, 0x06, 0x59, 0x7a, 0x39, 0xc2, 0x7f, 0x69, 0x9c, 0xa2, 0x7d, 0xa6, 0x05, 0xed,
+	0xe6, 0xa5, 0xa9, 0x7f, 0x49, 0xc3, 0xc9, 0x98, 0x25, 0x4b, 0xa8, 0xaf, 0x80, 0xe2, 0x1b, 0xa7,
+	0xf7, 0x20, 0x2a, 0x24, 0xd2, 0x61, 0x48, 0x9b, 0xf2, 0xdf, 0x6c, 0xf8, 0x2f, 0x94, 0x6d, 0x98,
+	0xf1, 0x1c, 0x0f, 0x55, 0x45, 0xd5, 0x1d, 0x9a, 0xd2, 0xeb, 0xae, 0x3a, 0xcd, 0xf4, 0xf1, 0x0a,
+	0x3c, 0xb0, 0xf3, 0x03, 0x98, 0xe5, 0x76, 0xfc, 0x4a, 0xd7, 0x24, 0x9e, 0x6b, 0x6e, 0xd5, 0x69,
+	0xad, 0xdb, 0xeb, 0x69, 0xc4, 0x3d, 0xe7, 0x3b, 0xe1, 0x5a, 0xa0, 0x8f, 0x43, 0x60, 0x21, 0xd3,
+	0x36, 0x6d, 0x23, 0x88, 0xc4, 0xa0, 0x0f, 0x81, 0x78, 0xe3, 0xc7, 0x43, 0xfd, 0x55, 0x1a, 0x72,
+	0x25, 0x62, 0xdc, 0xa9, 0x55, 0x90, 0x87, 0x5f, 0x5f, 0xbe, 0xfb, 0x1c, 0xd9, 0xb3, 0x0e, 0x23,
+	0x94, 0xf6, 0x36, 0x6a, 0xf4, 0x7e, 0x44, 0xdb, 0x78, 0xf7, 0x75, 0xd4, 0x50, 0x66, 0x60, 0xd8,
+	0xc5, 0x88, 0x38, 0x36, 0x3f, 0x6c, 0x34, 0xf1, 0x14, 0x2d, 0x20, 0xa3, 0xec, 0xcb, 0xb7, 0xb0,
+	0x4f, 0x62, 0xa2, 0xfe, 0x36, 0x0d, 0xd3, 0x61, 0x90, 0x24, 0xdf, 0x36, 0x21, 0x27, 0x53, 0x9b,
+	0xfa, 0xdd, 0xeb, 0xc6, 0x9b, 0xf5, 0xb5, 0x50, 0xe7, 0x43, 0x38, 0xa4, 0xfb, 0xc4, 0xe1, 0x14,
+	0x40, 0x79, 0x07, 0xd9, 0x06, 0xd6, 0xb7, 0x6a, 0x7e, 0x3a, 0x8e, 0xf1, 0x91, 0x95, 0x1a, 0x51,
+	0xbe, 0x07, 0x93, 0xd4, 0xd2, 0xe1, 0x55, 0x7f, 0x74, 0x87, 0xda, 0x0c, 0x0a, 0xc0, 0xdf, 0x84,
+	0x71, 0x63, 0x31, 0x5f, 0x75, 0xec, 0x6d, 0xd3, 0x78, 0x8e, 0x24, 0x5b, 0x86, 0xe1, 0x32, 0xf3,
+	0x41, 0x94, 0x36, 0x67, 0xe3, 0x67, 0x2f, 0x16, 0x42, 0xee, 0xae, 0x0c, 0x52, 0x38, 0x34, 0x31,
+	0x31, 0x91, 0x5c, 0xaf, 0x24, 0x93, 0x4b, 0x4d, 0x20, 0x57, 0xc8, 0x88, 0xba, 0x0d, 0x2f, 0xc4,
+	0x61, 0x25, 0xb9, 0x76, 0x11, 0x26, 0x25, 0xd7, 0xc4, 0x12, 0x78, 0x89, 0x38, 0xe1, 0x0f, 0x0b,
+	0x70, 0x4f, 0x01, 0xd0, 0xa8, 0x0a, 0x19, 0x7e, 0x4c, 0x8f, 0xd9, 0x78, 0x57, 0xd8, 0xf9, 0x43,
+	0x0a, 0x26, 0xa5, 0xa1, 0x0d, 0xe4, 0x22, 0x8b, 0xf4, 0x1c, 0x8f, 0x97, 0x61, 0xb8, 0xc6, 0x34,
+	0x30, 0x33, 0xd9, 0xc5, 0xb9, 0x24, 0x34, 0xb9, 0x1d, 0x1f, 0x48, 0x3e, 0x67, 0xe9, 0x66, 0x32,
+	0x60, 0xa7, 0x12, 0x00, 0xe3, 0x7a, 0x54, 0x04, 0xc7, 0x9b, 0x96, 0x10, 0x0b, 0x93, 0xf0, 0xad,
+	0x09, 0x26, 0xb1, 0x66, 0x01, 0x53, 0xc8, 0x7f, 0x0e, 0x93, 0x30, 0xf1, 0x51, 0x0a, 0x66, 0x69,
+	0xc1, 0xe5, 0x62, 0xe4, 0xe1, 0x55, 0xd7, 0x21, 0x64, 0x75, 0x07, 0x99, 0xb6, 0xe6, 0xd4, 0xbd,
+	0xde, 0x8f, 0xd8, 0x55, 0x18, 0x72, 0xa9, 0x02, 0x01, 0xd7, 0xc5, 0x24, 0xb8, 0x9a, 0xec, 0x09,
+	0xdc, 0xf8, 0xdc, 0xa5, 0xe5, 0x64, 0xd8, 0x2e, 0xb4, 0x96, 0x90, 0x71, 0xfe, 0xab, 0xdf, 0x87,
+	0xd3, 0x49, 0x6b, 0x93, 0x40, 0x9e, 0x80, 0x51, 0x66, 0x2f, 0xb8, 0x8b, 0x8c, 0xb0, 0xe7, 0xf5,
+	0x0a, 0x3d, 0xe7, 0xf9, 0xab, 0x08, 0xc7, 0xb2, 0x6c, 0x4c, 0xb0, 0xec, 0x53, 0x0e, 0x1f, 0x0f,
+	0xd1, 0x61, 0xc1, 0x17, 0x76, 0x29, 0x1d, 0x75, 0x49, 0x22, 0x9b, 0xf9, 0xac, 0x90, 0x8d, 0x5d,
+	0x9a, 0xfa, 0x93, 0x14, 0x83, 0x36, 0xf6, 0x65, 0x27, 0xd0, 0xc6, 0x64, 0x79, 0xba, 0x83, 0x2c,
+	0xcf, 0x34, 0x67, 0xf9, 0x9f, 0x52, 0x70, 0xa2, 0x44, 0x8c, 0x35, 0x93, 0xa0, 0xad, 0xea, 0x67,
+	0x11, 0x80, 0x60, 0x57, 0xcc, 0x44, 0x76, 0xc5, 0x95, 0x64, 0x4c, 0x2f, 0xb6, 0xb6, 0x21, 0x63,
+	0xdd, 0x55, 0x2d, 0x38, 0x93, 0xb8, 0x96, 0x4e, 0x40, 0xbd, 0x02, 0x0a, 0xda, 0xde, 0xe6, 0xb7,
+	0x5b, 0xd6, 0x1a, 0x34, 0x1d, 0x9b, 0xa7, 0x7c, 0x46, 0x9b, 0xf2, 0xdf, 0x6c, 0xf8, 0x2f, 0xd4,
+	0x87, 0x83, 0x70, 0x84, 0xdd, 0xd3, 0x2d, 0xc7, 0xc3, 0xfd, 0x36, 0xa2, 0xdb, 0x40, 0x16, 0x3d,
+	0xcd, 0x32, 0x7d, 0xf5, 0xa8, 0x07, 0xfb, 0xec, 0x51, 0x9f, 0x87, 0x09, 0x97, 0xad, 0x57, 0x47,
+	0x7c, 0x25, 0xbc, 0x05, 0xad, 0x8d, 0xf3, 0x51, 0xb1, 0xbc, 0xa6, 0x2e, 0xf5, 0x70, 0xdf, 0x5d,
+	0x6a, 0xe5, 0x24, 0x8c, 0x19, 0x88, 0xe8, 0x55, 0xd3, 0x32, 0xbd, 0xd9, 0x91, 0xd3, 0xa9, 0x85,
+	0x41, 0x6d, 0xd4, 0x40, 0xe4, 0x35, 0xfa, 0xac, 0x94, 0xf8, 0x4b, 0x5e, 0x99, 0x8c, 0xf6, 0xda,
+	0xe8, 0x32, 0x10, 0x61, 0xe5, 0x48, 0xf4, 0x92, 0x17, 0xed, 0x88, 0xcf, 0xc5, 0x34, 0x6e, 0x42,
+	0xd1, 0x57, 0xdf, 0xcd, 0xb0, 0xed, 0x2c, 0x32, 0x28, 0x99, 0x37, 0x0d, 0x43, 0xb6, 0xe3, 0x5f,
+	0xe9, 0x06, 0x35, 0xfe, 0xd0, 0x2e, 0xf0, 0x6f, 0xc2, 0x11, 0x71, 0xe3, 0x40, 0xd5, 0xaa, 0x53,
+	0x46, 0xfd, 0xdc, 0x03, 0xc4, 0xe5, 0x7f, 0xd9, 0x57, 0xa4, 0xbc, 0x01, 0x59, 0x71, 0xcd, 0x20,
+	0xb8, 0x0f, 0x62, 0x00, 0x57, 0xb2, 0x89, 0x6d, 0x4f, 0xb9, 0x03, 0x47, 0x65, 0x77, 0xa8, 0xec,
+	0x58, 0xb5, 0x2a, 0xa6, 0x89, 0xc2, 0x18, 0xd2, 0x75, 0x73, 0x68, 0x55, 0xce, 0x57, 0xee, 0xc3,
+	0x54, 0xcd, 0x75, 0x1a, 0x66, 0x05, 0xbb, 0xba, 0xe7, 0xa2, 0xf2, 0x03, 0xd3, 0x36, 0x18, 0xa7,
+	0xb2, 0x8b, 0x97, 0x13, 0x0b, 0x09, 0x31, 0xe1, 0xb6, 0x90, 0x5f, 0xb7, 0xb7, 0x1d, 0xed, 0x48,
+	0xad, 0x69, 0x54, 0xfd, 0x77, 0x06, 0xa6, 0x64, 0xbc, 0x0e, 0xa1, 0xad, 0xfe, 0xac, 0xb3, 0x58,
+	0x24, 0xd4, 0xe0, 0xa1, 0x76, 0xdc, 0x87, 0xfa, 0xee, 0xb8, 0x47, 0xd3, 0x73, 0xb8, 0x5d, 0x7a,
+	0x8e, 0xf4, 0x9d, 0x9e, 0x5f, 0x6d, 0xd3, 0xdd, 0x9f, 0x4f, 0xc8, 0x4f, 0xd9, 0xe3, 0xff, 0x5d,
+	0x86, 0x9d, 0x77, 0xd1, 0xd1, 0xc3, 0xc8, 0xd0, 0xe0, 0xd3, 0x40, 0x9f, 0x19, 0x1a, 0xf9, 0x34,
+	0x20, 0xd3, 0xa9, 0xcf, 0xed, 0x7b, 0xc2, 0x57, 0x24, 0xe2, 0xf5, 0xc5, 0xcb, 0xd4, 0xa7, 0x99,
+	0x50, 0x2d, 0xcf, 0xc3, 0xe7, 0x9f, 0xc4, 0xca, 0x22, 0x8c, 0xb8, 0xb8, 0x8a, 0xf6, 0x3b, 0x48,
+	0x56, 0x5f, 0xb0, 0x5d, 0x50, 0xcf, 0x40, 0xae, 0x4e, 0xb0, 0x2b, 0x4f, 0x38, 0x1a, 0xd0, 0x9c,
+	0x96, 0xa5, 0x63, 0xfe, 0xf9, 0xb6, 0x09, 0x39, 0x71, 0x0c, 0x36, 0x50, 0xb5, 0x8e, 0x7b, 0x8e,
+	0x4b, 0x96, 0x6b, 0xb9, 0x4b, 0x95, 0x28, 0xe7, 0x60, 0x9c, 0x95, 0x69, 0xae, 0x85, 0x78, 0xe5,
+	0x31, 0xc4, 0x58, 0x18, 0x1d, 0x7c, 0x86, 0x18, 0x2b, 0x6b, 0x30, 0x4c, 0x3c, 0xe4, 0xd5, 0x09,
+	0xcb, 0xd2, 0x89, 0x64, 0x7d, 0x51, 0xfc, 0x37, 0xd9, 0x1c, 0x4d, 0xcc, 0x5d, 0xfa, 0x5a, 0x38,
+	0x3f, 0x7d, 0xbc, 0x69, 0x72, 0x9e, 0x4f, 0xa8, 0x8d, 0xa3, 0xda, 0xd4, 0x4f, 0xd2, 0x30, 0x9f,
+	0x10, 0xe9, 0x0e, 0x2f, 0x1d, 0x91, 0xe8, 0xa5, 0x5b, 0xa3, 0x77, 0x0f, 0x64, 0x95, 0x2c, 0xe2,
+	0xd7, 0x6b, 0xce, 0x8e, 0xfb, 0x7a, 0x78, 0x04, 0x4b, 0x40, 0x4b, 0xeb, 0x3e, 0x39, 0x31, 0x6a,
+	0xe3, 0x5d, 0xae, 0x4e, 0x07, 0xa5, 0x4c, 0x97, 0xeb, 0x36, 0x90, 0x67, 0x36, 0x7c, 0xae, 0xf5,
+	0xba, 0x5d, 0x4f, 0x85, 0x75, 0x31, 0x03, 0xea, 0x5f, 0x33, 0x90, 0x0f, 0xfa, 0xa4, 0xeb, 0xf6,
+	0x37, 0xaa, 0xa6, 0xb1, 0xe3, 0xc9, 0xbc, 0xea, 0xb5, 0xfc, 0x97, 0xdb, 0x68, 0x3a, 0xbc, 0x8d,
+	0x7e, 0x0b, 0xc6, 0x5d, 0x4c, 0xe8, 0x09, 0x28, 0x48, 0xc6, 0xcf, 0xc0, 0x0b, 0x49, 0x24, 0xf3,
+	0xdd, 0x11, 0xf4, 0xca, 0xf1, 0xc9, 0xfc, 0x49, 0xb9, 0x23, 0x95, 0xf5, 0xb9, 0x33, 0x0a, 0xb5,
+	0xcb, 0xf2, 0x4f, 0x30, 0xb0, 0xeb, 0x3a, 0xae, 0x6e, 0x61, 0x42, 0x90, 0x21, 0xc0, 0xd6, 0x72,
+	0x6c, 0xb0, 0xc4, 0xc7, 0x9e, 0x61, 0x06, 0x2e, 0xad, 0x26, 0xdf, 0x82, 0x16, 0x92, 0xda, 0xde,
+	0xcd, 0x61, 0x53, 0x7f, 0x9f, 0x06, 0x35, 0x39, 0xaa, 0x07, 0x1c, 0x76, 0xeb, 0x90, 0xdb, 0x36,
+	0x6d, 0x54, 0xf5, 0x83, 0x94, 0xee, 0x2a, 0x48, 0x59, 0x36, 0x57, 0xc4, 0x28, 0xf8, 0x6e, 0x1e,
+	0x34, 0xcc, 0x33, 0xfd, 0x7d, 0x37, 0x0f, 0x7a, 0xe5, 0xc1, 0xe7, 0x2c, 0xff, 0x62, 0xd6, 0xfb,
+	0xe1, 0x28, 0x4a, 0x63, 0xa1, 0x67, 0xf1, 0x8f, 0x13, 0x90, 0x29, 0x11, 0x43, 0xb9, 0x0f, 0x23,
+	0xfe, 0xad, 0x4e, 0x4d, 0x5a, 0x7f, 0xf0, 0x47, 0x30, 0xf9, 0x4b, 0x07, 0xcb, 0x48, 0xec, 0xbf,
+	0x0b, 0xa3, 0xb2, 0xda, 0x3c, 0xdb, 0x66, 0x9e, 0x2f, 0x94, 0xff, 0x72, 0x07, 0x42, 0x52, 0x3b,
+	0x86, 0x6c, 0xf8, 0x63, 0xfa, 0x85, 0x36, 0x73, 0x43, 0x72, 0xf9, 0x42, 0x67, 0x72, 0xd2, 0xcc,
+	0x16, 0x40, 0xe8, 0x9b, 0xea, 0xf9, 0x36, 0xb3, 0x03, 0xb1, 0xfc, 0x95, 0x8e, 0xc4, 0xa4, 0x8d,
+	0xb7, 0x40, 0x89, 0xf9, 0x36, 0xd8, 0x4e, 0x49, 0xab, 0x78, 0xfe, 0xc5, 0xae, 0xc4, 0xa5, 0x6d,
+	0x0f, 0x8e, 0xb4, 0x7c, 0x34, 0x6b, 0x17, 0x87, 0x66, 0xe1, 0xfc, 0xf5, 0x2e, 0x84, 0xa5, 0x55,
+	0x1d, 0xc6, 0x82, 0xaf, 0x2c, 0xe7, 0xda, 0x68, 0x90, 0x52, 0xf9, 0xcb, 0x9d, 0x48, 0x49, 0x03,
+	0xbb, 0x30, 0xd5, 0xda, 0x69, 0x3f, 0x58, 0x45, 0x48, 0x3a, 0xff, 0x95, 0x6e, 0xa4, 0xa5, 0xe1,
+	0x1d, 0xc8, 0x45, 0xba, 0xc9, 0x17, 0x0f, 0xd4, 0xc2, 0x05, 0xf3, 0xc5, 0x0e, 0x05, 0xa5, 0xa5,
+	0x1f, 0xa7, 0xe0, 0x58, 0x7c, 0x47, 0xf6, 0x6a, 0x3b, 0xfa, 0xc5, 0xcd, 0xc8, 0xdf, 0xec, 0x76,
+	0x46, 0xc4, 0x8b, 0xf8, 0xc6, 0xe6, 0xd5, 0x03, 0x17, 0xd4, 0x8d, 0x17, 0xed, 0x9b, 0x88, 0x3f,
+	0x4d, 0xc1, 0x4c, 0x42, 0x7b, 0xef, 0x5a, 0xbb, 0x1d, 0x2b, 0x76, 0x4a, 0xfe, 0x56, 0xd7, 0x53,
+	0xa4, 0x23, 0x0f, 0x60, 0x3c, 0xda, 0x2a, 0x5b, 0x68, 0xbb, 0xdf, 0x84, 0x24, 0xf3, 0x57, 0x3b,
+	0x95, 0x94, 0xc6, 0x6c, 0x98, 0x68, 0xba, 0xd4, 0x7f, 0xe9, 0x40, 0x1d, 0x72, 0xb3, 0xbd, 0xd6,
+	0xb1, 0xa8, 0xb4, 0xf7, 0x76, 0x0a, 0xa6, 0x63, 0xef, 0x26, 0x07, 0x73, 0x37, 0x3a, 0x21, 0xff,
+	0x52, 0x97, 0x13, 0xa4, 0x0b, 0x3f, 0x4f, 0xc1, 0xf1, 0xa4, 0x4a, 0x6e, 0xf1, 0xe0, 0x9d, 0xa8,
+	0x79, 0x4e, 0x7e, 0xa9, 0xfb, 0x39, 0xbe, 0x2f, 0xf9, 0xa1, 0xb7, 0xe9, 0xc9, 0xba, 0xf2, 0xca,
+	0xfb, 0x8f, 0xe7, 0x52, 0x1f, 0x3c, 0x9e, 0x4b, 0xfd, 0xf3, 0xf1, 0x5c, 0xea, 0xe1, 0x93, 0xb9,
+	0x81, 0x0f, 0x9e, 0xcc, 0x0d, 0xfc, 0xed, 0xc9, 0xdc, 0xc0, 0x77, 0xc4, 0x9f, 0x4c, 0x08, 0x13,
+	0x7b, 0xfb, 0x6f, 0xb1, 0xbf, 0x73, 0xde, 0xaf, 0x61, 0x12, 0x14, 0x38, 0x5b, 0xc3, 0xec, 0x02,
+	0x7a, 0xfd, 0xff, 0x01, 0x00, 0x00, 0xff, 0xff, 0x8e, 0xde, 0xb6, 0x56, 0x18, 0x2d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1061,6 +1912,20 @@ type MsgClient interface {
 	UpdateVaultConfig(ctx context.Context, in *MsgUpdateVaultConfig, opts ...grpc.CallOption) (*MsgUpdateVaultConfigResponse, error)
 	// Update module parameters (authority only)
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	// Create a new cross-chain route (authority only)
+	CreateCrossChainRoute(ctx context.Context, in *MsgCreateCrossChainRoute, opts ...grpc.CallOption) (*MsgCreateCrossChainRouteResponse, error)
+	// Update an existing cross-chain route (authority only)
+	UpdateCrossChainRoute(ctx context.Context, in *MsgUpdateCrossChainRoute, opts ...grpc.CallOption) (*MsgUpdateCrossChainRouteResponse, error)
+	// Disable a cross-chain route (authority only)
+	DisableCrossChainRoute(ctx context.Context, in *MsgDisableCrossChainRoute, opts ...grpc.CallOption) (*MsgDisableCrossChainRouteResponse, error)
+	// Initiate remote deposit to another chain
+	RemoteDeposit(ctx context.Context, in *MsgRemoteDeposit, opts ...grpc.CallOption) (*MsgRemoteDepositResponse, error)
+	// Initiate remote withdrawal from another chain
+	RemoteWithdraw(ctx context.Context, in *MsgRemoteWithdraw, opts ...grpc.CallOption) (*MsgRemoteWithdrawResponse, error)
+	// Update remote position status (relayer only)
+	UpdateRemotePosition(ctx context.Context, in *MsgUpdateRemotePosition, opts ...grpc.CallOption) (*MsgUpdateRemotePositionResponse, error)
+	// Process in-flight position (system operation)
+	ProcessInFlightPosition(ctx context.Context, in *MsgProcessInFlightPosition, opts ...grpc.CallOption) (*MsgProcessInFlightPositionResponse, error)
 }
 
 type msgClient struct {
@@ -1152,6 +2017,69 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) CreateCrossChainRoute(ctx context.Context, in *MsgCreateCrossChainRoute, opts ...grpc.CallOption) (*MsgCreateCrossChainRouteResponse, error) {
+	out := new(MsgCreateCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/CreateCrossChainRoute", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateCrossChainRoute(ctx context.Context, in *MsgUpdateCrossChainRoute, opts ...grpc.CallOption) (*MsgUpdateCrossChainRouteResponse, error) {
+	out := new(MsgUpdateCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/UpdateCrossChainRoute", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) DisableCrossChainRoute(ctx context.Context, in *MsgDisableCrossChainRoute, opts ...grpc.CallOption) (*MsgDisableCrossChainRouteResponse, error) {
+	out := new(MsgDisableCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/DisableCrossChainRoute", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoteDeposit(ctx context.Context, in *MsgRemoteDeposit, opts ...grpc.CallOption) (*MsgRemoteDepositResponse, error) {
+	out := new(MsgRemoteDepositResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/RemoteDeposit", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoteWithdraw(ctx context.Context, in *MsgRemoteWithdraw, opts ...grpc.CallOption) (*MsgRemoteWithdrawResponse, error) {
+	out := new(MsgRemoteWithdrawResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/RemoteWithdraw", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateRemotePosition(ctx context.Context, in *MsgUpdateRemotePosition, opts ...grpc.CallOption) (*MsgUpdateRemotePositionResponse, error) {
+	out := new(MsgUpdateRemotePositionResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/UpdateRemotePosition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) ProcessInFlightPosition(ctx context.Context, in *MsgProcessInFlightPosition, opts ...grpc.CallOption) (*MsgProcessInFlightPositionResponse, error) {
+	out := new(MsgProcessInFlightPositionResponse)
+	err := c.cc.Invoke(ctx, "/noble.dollar.vaults.v2.Msg/ProcessInFlightPosition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// Deposit into a V2 vault
@@ -1172,6 +2100,20 @@ type MsgServer interface {
 	UpdateVaultConfig(context.Context, *MsgUpdateVaultConfig) (*MsgUpdateVaultConfigResponse, error)
 	// Update module parameters (authority only)
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	// Create a new cross-chain route (authority only)
+	CreateCrossChainRoute(context.Context, *MsgCreateCrossChainRoute) (*MsgCreateCrossChainRouteResponse, error)
+	// Update an existing cross-chain route (authority only)
+	UpdateCrossChainRoute(context.Context, *MsgUpdateCrossChainRoute) (*MsgUpdateCrossChainRouteResponse, error)
+	// Disable a cross-chain route (authority only)
+	DisableCrossChainRoute(context.Context, *MsgDisableCrossChainRoute) (*MsgDisableCrossChainRouteResponse, error)
+	// Initiate remote deposit to another chain
+	RemoteDeposit(context.Context, *MsgRemoteDeposit) (*MsgRemoteDepositResponse, error)
+	// Initiate remote withdrawal from another chain
+	RemoteWithdraw(context.Context, *MsgRemoteWithdraw) (*MsgRemoteWithdrawResponse, error)
+	// Update remote position status (relayer only)
+	UpdateRemotePosition(context.Context, *MsgUpdateRemotePosition) (*MsgUpdateRemotePositionResponse, error)
+	// Process in-flight position (system operation)
+	ProcessInFlightPosition(context.Context, *MsgProcessInFlightPosition) (*MsgProcessInFlightPositionResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -1204,6 +2146,27 @@ func (*UnimplementedMsgServer) UpdateVaultConfig(ctx context.Context, req *MsgUp
 }
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (*UnimplementedMsgServer) CreateCrossChainRoute(ctx context.Context, req *MsgCreateCrossChainRoute) (*MsgCreateCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCrossChainRoute not implemented")
+}
+func (*UnimplementedMsgServer) UpdateCrossChainRoute(ctx context.Context, req *MsgUpdateCrossChainRoute) (*MsgUpdateCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCrossChainRoute not implemented")
+}
+func (*UnimplementedMsgServer) DisableCrossChainRoute(ctx context.Context, req *MsgDisableCrossChainRoute) (*MsgDisableCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DisableCrossChainRoute not implemented")
+}
+func (*UnimplementedMsgServer) RemoteDeposit(ctx context.Context, req *MsgRemoteDeposit) (*MsgRemoteDepositResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoteDeposit not implemented")
+}
+func (*UnimplementedMsgServer) RemoteWithdraw(ctx context.Context, req *MsgRemoteWithdraw) (*MsgRemoteWithdrawResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoteWithdraw not implemented")
+}
+func (*UnimplementedMsgServer) UpdateRemotePosition(ctx context.Context, req *MsgUpdateRemotePosition) (*MsgUpdateRemotePositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRemotePosition not implemented")
+}
+func (*UnimplementedMsgServer) ProcessInFlightPosition(ctx context.Context, req *MsgProcessInFlightPosition) (*MsgProcessInFlightPositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProcessInFlightPosition not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -1372,6 +2335,132 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_CreateCrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateCrossChainRoute)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreateCrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/CreateCrossChainRoute",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreateCrossChainRoute(ctx, req.(*MsgCreateCrossChainRoute))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateCrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateCrossChainRoute)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateCrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/UpdateCrossChainRoute",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateCrossChainRoute(ctx, req.(*MsgUpdateCrossChainRoute))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DisableCrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDisableCrossChainRoute)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DisableCrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/DisableCrossChainRoute",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DisableCrossChainRoute(ctx, req.(*MsgDisableCrossChainRoute))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoteDeposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoteDeposit)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoteDeposit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/RemoteDeposit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoteDeposit(ctx, req.(*MsgRemoteDeposit))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoteWithdraw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoteWithdraw)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoteWithdraw(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/RemoteWithdraw",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoteWithdraw(ctx, req.(*MsgRemoteWithdraw))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateRemotePosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateRemotePosition)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateRemotePosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/UpdateRemotePosition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateRemotePosition(ctx, req.(*MsgUpdateRemotePosition))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_ProcessInFlightPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgProcessInFlightPosition)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).ProcessInFlightPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/noble.dollar.vaults.v2.Msg/ProcessInFlightPosition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).ProcessInFlightPosition(ctx, req.(*MsgProcessInFlightPosition))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var Msg_serviceDesc = _Msg_serviceDesc
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "noble.dollar.vaults.v2.Msg",
@@ -1412,6 +2501,34 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "CreateCrossChainRoute",
+			Handler:    _Msg_CreateCrossChainRoute_Handler,
+		},
+		{
+			MethodName: "UpdateCrossChainRoute",
+			Handler:    _Msg_UpdateCrossChainRoute_Handler,
+		},
+		{
+			MethodName: "DisableCrossChainRoute",
+			Handler:    _Msg_DisableCrossChainRoute_Handler,
+		},
+		{
+			MethodName: "RemoteDeposit",
+			Handler:    _Msg_RemoteDeposit_Handler,
+		},
+		{
+			MethodName: "RemoteWithdraw",
+			Handler:    _Msg_RemoteWithdraw_Handler,
+		},
+		{
+			MethodName: "UpdateRemotePosition",
+			Handler:    _Msg_UpdateRemotePosition_Handler,
+		},
+		{
+			MethodName: "ProcessInFlightPosition",
+			Handler:    _Msg_ProcessInFlightPosition_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2306,6 +3423,829 @@ func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgCreateCrossChainRoute) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateCrossChainRoute) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateCrossChainRoute) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Route.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateCrossChainRouteResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateCrossChainRouteResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateCrossChainRouteResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.RouteConfig) > 0 {
+		i -= len(m.RouteConfig)
+		copy(dAtA[i:], m.RouteConfig)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteConfig)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateCrossChainRoute) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateCrossChainRoute) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateCrossChainRoute) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Route.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NewConfig) > 0 {
+		i -= len(m.NewConfig)
+		copy(dAtA[i:], m.NewConfig)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NewConfig)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.PreviousConfig) > 0 {
+		i -= len(m.PreviousConfig)
+		copy(dAtA[i:], m.PreviousConfig)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.PreviousConfig)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDisableCrossChainRoute) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDisableCrossChainRoute) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDisableCrossChainRoute) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Reason) > 0 {
+		i -= len(m.Reason)
+		copy(dAtA[i:], m.Reason)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Reason)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDisableCrossChainRouteResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDisableCrossChainRouteResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDisableCrossChainRouteResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.AffectedPositions != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.AffectedPositions))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoteDeposit) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoteDeposit) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoteDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.GasPrice.Size()
+		i -= size
+		if _, err := m.GasPrice.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x42
+	if m.GasLimit != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.GasLimit))
+		i--
+		dAtA[i] = 0x38
+	}
+	{
+		size := m.MinShares.Size()
+		i -= size
+		if _, err := m.MinShares.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
+	if len(m.RemoteAddress) > 0 {
+		i -= len(m.RemoteAddress)
+		copy(dAtA[i:], m.RemoteAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RemoteAddress)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	{
+		size := m.Amount.Size()
+		i -= size
+		if _, err := m.Amount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	if m.VaultType != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.VaultType))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Depositor) > 0 {
+		i -= len(m.Depositor)
+		copy(dAtA[i:], m.Depositor)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Depositor)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoteDepositResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoteDepositResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoteDepositResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ProviderTracking != nil {
+		{
+			size, err := m.ProviderTracking.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	n7, err7 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.ExpectedCompletion, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.ExpectedCompletion):])
+	if err7 != nil {
+		return 0, err7
+	}
+	i -= n7
+	i = encodeVarintTx(dAtA, i, uint64(n7))
+	i--
+	dAtA[i] = 0x2a
+	{
+		size := m.AmountSent.Size()
+		i -= size
+		if _, err := m.AmountSent.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size := m.SharesAllocated.Size()
+		i -= size
+		if _, err := m.SharesAllocated.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Nonce != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Nonce))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoteWithdraw) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoteWithdraw) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoteWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.GasPrice.Size()
+		i -= size
+		if _, err := m.GasPrice.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x3a
+	if m.GasLimit != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.GasLimit))
+		i--
+		dAtA[i] = 0x30
+	}
+	{
+		size := m.MinAmount.Size()
+		i -= size
+		if _, err := m.MinAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	{
+		size := m.Shares.Size()
+		i -= size
+		if _, err := m.Shares.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	if m.VaultType != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.VaultType))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Withdrawer) > 0 {
+		i -= len(m.Withdrawer)
+		copy(dAtA[i:], m.Withdrawer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Withdrawer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoteWithdrawResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoteWithdrawResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoteWithdrawResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ProviderTracking != nil {
+		{
+			size, err := m.ProviderTracking.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	n9, err9 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.ExpectedCompletion, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.ExpectedCompletion):])
+	if err9 != nil {
+		return 0, err9
+	}
+	i -= n9
+	i = encodeVarintTx(dAtA, i, uint64(n9))
+	i--
+	dAtA[i] = 0x2a
+	{
+		size := m.ExpectedAmount.Size()
+		i -= size
+		if _, err := m.ExpectedAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size := m.SharesWithdrawn.Size()
+		i -= size
+		if _, err := m.SharesWithdrawn.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Nonce != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Nonce))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateRemotePosition) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateRemotePosition) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateRemotePosition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Status != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x38
+	}
+	if m.ProviderTracking != nil {
+		{
+			size, err := m.ProviderTracking.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.Confirmations != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Confirmations))
+		i--
+		dAtA[i] = 0x28
+	}
+	{
+		size := m.RemoteValue.Size()
+		i -= size
+		if _, err := m.RemoteValue.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	if len(m.UserAddress) > 0 {
+		i -= len(m.UserAddress)
+		copy(dAtA[i:], m.UserAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.UserAddress)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Relayer) > 0 {
+		i -= len(m.Relayer)
+		copy(dAtA[i:], m.Relayer)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Relayer)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateRemotePositionResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateRemotePositionResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateRemotePositionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.ConservativeValue.Size()
+		i -= size
+		if _, err := m.ConservativeValue.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	{
+		size := m.NewValue.Size()
+		i -= size
+		if _, err := m.NewValue.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size := m.PreviousValue.Size()
+		i -= size
+		if _, err := m.PreviousValue.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.UserAddress) > 0 {
+		i -= len(m.UserAddress)
+		copy(dAtA[i:], m.UserAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.UserAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.RouteId) > 0 {
+		i -= len(m.RouteId)
+		copy(dAtA[i:], m.RouteId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RouteId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgProcessInFlightPosition) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgProcessInFlightPosition) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgProcessInFlightPosition) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ProviderTracking != nil {
+		{
+			size, err := m.ProviderTracking.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.ErrorMessage) > 0 {
+		i -= len(m.ErrorMessage)
+		copy(dAtA[i:], m.ErrorMessage)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ErrorMessage)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	{
+		size := m.ResultAmount.Size()
+		i -= size
+		if _, err := m.ResultAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	if m.ResultStatus != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ResultStatus))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.Nonce != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Nonce))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgProcessInFlightPositionResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgProcessInFlightPositionResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgProcessInFlightPositionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.SharesAffected.Size()
+		i -= size
+		if _, err := m.SharesAffected.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	{
+		size := m.AmountProcessed.Size()
+		i -= size
+		if _, err := m.AmountProcessed.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if m.FinalStatus != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.FinalStatus))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.Nonce != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.Nonce))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -2646,6 +4586,333 @@ func (m *MsgUpdateParamsResponse) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
+	return n
+}
+
+func (m *MsgCreateCrossChainRoute) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Route.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgCreateCrossChainRouteResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RouteConfig)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgUpdateCrossChainRoute) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Route.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgUpdateCrossChainRouteResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.PreviousConfig)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.NewConfig)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDisableCrossChainRoute) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Reason)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDisableCrossChainRouteResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.AffectedPositions != 0 {
+		n += 1 + sovTx(uint64(m.AffectedPositions))
+	}
+	return n
+}
+
+func (m *MsgRemoteDeposit) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Depositor)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.VaultType != 0 {
+		n += 1 + sovTx(uint64(m.VaultType))
+	}
+	l = m.Amount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = len(m.RemoteAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.MinShares.Size()
+	n += 1 + l + sovTx(uint64(l))
+	if m.GasLimit != 0 {
+		n += 1 + sovTx(uint64(m.GasLimit))
+	}
+	l = m.GasPrice.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgRemoteDepositResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Nonce != 0 {
+		n += 1 + sovTx(uint64(m.Nonce))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.SharesAllocated.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.AmountSent.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = github_com_cosmos_gogoproto_types.SizeOfStdTime(m.ExpectedCompletion)
+	n += 1 + l + sovTx(uint64(l))
+	if m.ProviderTracking != nil {
+		l = m.ProviderTracking.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRemoteWithdraw) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Withdrawer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.VaultType != 0 {
+		n += 1 + sovTx(uint64(m.VaultType))
+	}
+	l = m.Shares.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.MinAmount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	if m.GasLimit != 0 {
+		n += 1 + sovTx(uint64(m.GasLimit))
+	}
+	l = m.GasPrice.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgRemoteWithdrawResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Nonce != 0 {
+		n += 1 + sovTx(uint64(m.Nonce))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.SharesWithdrawn.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.ExpectedAmount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = github_com_cosmos_gogoproto_types.SizeOfStdTime(m.ExpectedCompletion)
+	n += 1 + l + sovTx(uint64(l))
+	if m.ProviderTracking != nil {
+		l = m.ProviderTracking.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgUpdateRemotePosition) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Relayer)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.UserAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.RemoteValue.Size()
+	n += 1 + l + sovTx(uint64(l))
+	if m.Confirmations != 0 {
+		n += 1 + sovTx(uint64(m.Confirmations))
+	}
+	if m.ProviderTracking != nil {
+		l = m.ProviderTracking.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovTx(uint64(m.Status))
+	}
+	return n
+}
+
+func (m *MsgUpdateRemotePositionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.RouteId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.UserAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.PreviousValue.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.NewValue.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.ConservativeValue.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgProcessInFlightPosition) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Nonce != 0 {
+		n += 1 + sovTx(uint64(m.Nonce))
+	}
+	if m.ResultStatus != 0 {
+		n += 1 + sovTx(uint64(m.ResultStatus))
+	}
+	l = m.ResultAmount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = len(m.ErrorMessage)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.ProviderTracking != nil {
+		l = m.ProviderTracking.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgProcessInFlightPositionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Nonce != 0 {
+		n += 1 + sovTx(uint64(m.Nonce))
+	}
+	if m.FinalStatus != 0 {
+		n += 1 + sovTx(uint64(m.FinalStatus))
+	}
+	l = m.AmountProcessed.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.SharesAffected.Size()
+	n += 1 + l + sovTx(uint64(l))
 	return n
 }
 
@@ -5264,6 +7531,2643 @@ func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.NewParams = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateCrossChainRoute) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateCrossChainRoute: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateCrossChainRoute: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Route", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Route.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateCrossChainRouteResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateCrossChainRouteResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateCrossChainRouteResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteConfig", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteConfig = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateCrossChainRoute) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateCrossChainRoute: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateCrossChainRoute: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Route", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Route.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateCrossChainRouteResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateCrossChainRouteResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateCrossChainRouteResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousConfig", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PreviousConfig = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewConfig", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NewConfig = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDisableCrossChainRoute) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDisableCrossChainRoute: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDisableCrossChainRoute: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Reason", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Reason = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDisableCrossChainRouteResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDisableCrossChainRouteResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDisableCrossChainRouteResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AffectedPositions", wireType)
+			}
+			m.AffectedPositions = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.AffectedPositions |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoteDeposit) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoteDeposit: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoteDeposit: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Depositor", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Depositor = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
+			}
+			m.VaultType = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.VaultType |= vaults.VaultType(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RemoteAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RemoteAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinShares", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MinShares.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GasLimit", wireType)
+			}
+			m.GasLimit = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.GasLimit |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GasPrice", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.GasPrice.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoteDepositResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoteDepositResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoteDepositResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
+			}
+			m.Nonce = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Nonce |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SharesAllocated", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SharesAllocated.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AmountSent", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.AmountSent.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExpectedCompletion", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_cosmos_gogoproto_types.StdTimeUnmarshal(&m.ExpectedCompletion, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderTracking", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ProviderTracking == nil {
+				m.ProviderTracking = &ProviderTrackingInfo{}
+			}
+			if err := m.ProviderTracking.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoteWithdraw) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoteWithdraw: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoteWithdraw: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Withdrawer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Withdrawer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VaultType", wireType)
+			}
+			m.VaultType = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.VaultType |= vaults.VaultType(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Shares", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Shares.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MinAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GasLimit", wireType)
+			}
+			m.GasLimit = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.GasLimit |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GasPrice", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.GasPrice.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoteWithdrawResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoteWithdrawResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoteWithdrawResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
+			}
+			m.Nonce = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Nonce |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SharesWithdrawn", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SharesWithdrawn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExpectedAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ExpectedAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExpectedCompletion", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_cosmos_gogoproto_types.StdTimeUnmarshal(&m.ExpectedCompletion, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderTracking", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ProviderTracking == nil {
+				m.ProviderTracking = &ProviderTrackingInfo{}
+			}
+			if err := m.ProviderTracking.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateRemotePosition) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateRemotePosition: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateRemotePosition: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Relayer", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Relayer = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserAddress = append(m.UserAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.UserAddress == nil {
+				m.UserAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RemoteValue", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.RemoteValue.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Confirmations", wireType)
+			}
+			m.Confirmations = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Confirmations |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderTracking", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ProviderTracking == nil {
+				m.ProviderTracking = &ProviderTrackingInfo{}
+			}
+			if err := m.ProviderTracking.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= RemotePositionStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateRemotePositionResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateRemotePositionResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateRemotePositionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RouteId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.RouteId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserAddress = append(m.UserAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.UserAddress == nil {
+				m.UserAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PreviousValue", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.PreviousValue.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewValue", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.NewValue.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConservativeValue", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ConservativeValue.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgProcessInFlightPosition) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgProcessInFlightPosition: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgProcessInFlightPosition: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
+			}
+			m.Nonce = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Nonce |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ResultStatus", wireType)
+			}
+			m.ResultStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ResultStatus |= InFlightStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ResultAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ResultAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ErrorMessage", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ErrorMessage = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderTracking", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.ProviderTracking == nil {
+				m.ProviderTracking = &ProviderTrackingInfo{}
+			}
+			if err := m.ProviderTracking.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgProcessInFlightPositionResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgProcessInFlightPositionResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgProcessInFlightPositionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Nonce", wireType)
+			}
+			m.Nonce = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Nonce |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FinalStatus", wireType)
+			}
+			m.FinalStatus = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.FinalStatus |= InFlightStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AmountProcessed", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.AmountProcessed.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SharesAffected", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SharesAffected.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

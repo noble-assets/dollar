@@ -334,6 +334,271 @@ func (k vaultV2MsgServer) UpdateParams(ctx context.Context, msg *vaultsv2.MsgUpd
 	return nil, fmt.Errorf("parameter updates not implemented yet")
 }
 
+// Cross-chain message handlers
+
+// CreateCrossChainRoute implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) CreateCrossChainRoute(ctx context.Context, msg *vaultsv2.MsgCreateCrossChainRoute) (*vaultsv2.MsgCreateCrossChainRouteResponse, error) {
+	// Validate authority
+	if msg.Authority != k.authority {
+		return nil, fmt.Errorf("invalid authority: expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Create route
+	if err := crossChainKeeper.CreateRoute(sdk.UnwrapSDKContext(ctx), &msg.Route); err != nil {
+		return nil, fmt.Errorf("failed to create cross-chain route: %w", err)
+	}
+
+	return &vaultsv2.MsgCreateCrossChainRouteResponse{
+		RouteId:     msg.Route.RouteId,
+		RouteConfig: fmt.Sprintf("Created route from %s to %s via %s", msg.Route.SourceChain, msg.Route.DestinationChain, msg.Route.Provider.String()),
+	}, nil
+}
+
+// UpdateCrossChainRoute implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) UpdateCrossChainRoute(ctx context.Context, msg *vaultsv2.MsgUpdateCrossChainRoute) (*vaultsv2.MsgUpdateCrossChainRouteResponse, error) {
+	// Validate authority
+	if msg.Authority != k.authority {
+		return nil, fmt.Errorf("invalid authority: expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Update route
+	if err := crossChainKeeper.UpdateRoute(sdk.UnwrapSDKContext(ctx), msg.RouteId, &msg.Route); err != nil {
+		return nil, fmt.Errorf("failed to update cross-chain route: %w", err)
+	}
+
+	return &vaultsv2.MsgUpdateCrossChainRouteResponse{
+		RouteId:        msg.RouteId,
+		PreviousConfig: "Previous configuration", // TODO: Get actual previous config
+		NewConfig:      "New configuration",      // TODO: Get actual new config
+	}, nil
+}
+
+// DisableCrossChainRoute implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) DisableCrossChainRoute(ctx context.Context, msg *vaultsv2.MsgDisableCrossChainRoute) (*vaultsv2.MsgDisableCrossChainRouteResponse, error) {
+	// Validate authority
+	if msg.Authority != k.authority {
+		return nil, fmt.Errorf("invalid authority: expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Disable route
+	if err := crossChainKeeper.DisableRoute(sdk.UnwrapSDKContext(ctx), msg.RouteId); err != nil {
+		return nil, fmt.Errorf("failed to disable cross-chain route: %w", err)
+	}
+
+	// TODO: Count affected positions
+	affectedPositions := int64(0)
+
+	return &vaultsv2.MsgDisableCrossChainRouteResponse{
+		RouteId:           msg.RouteId,
+		AffectedPositions: affectedPositions,
+	}, nil
+}
+
+// RemoteDeposit implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) RemoteDeposit(ctx context.Context, msg *vaultsv2.MsgRemoteDeposit) (*vaultsv2.MsgRemoteDepositResponse, error) {
+	// Validate signer
+	signer, err := k.address.StringToBytes(msg.Depositor)
+	if err != nil {
+		return nil, fmt.Errorf("invalid depositor address: %w", err)
+	}
+
+	// Validate deposit amount
+	if msg.Amount.IsZero() || msg.Amount.IsNegative() {
+		return nil, fmt.Errorf("deposit amount must be positive")
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Initiate remote deposit
+	nonce, err := crossChainKeeper.InitiateRemoteDeposit(
+		sdk.UnwrapSDKContext(ctx),
+		signer,
+		msg.RouteId,
+		msg.Amount,
+		msg.RemoteAddress,
+		msg.GasLimit,
+		msg.GasPrice,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initiate remote deposit: %w", err)
+	}
+
+	// Get the created in-flight position for response
+	inFlightPos, err := crossChainKeeper.GetInFlightPosition(sdk.UnwrapSDKContext(ctx), nonce)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get in-flight position: %w", err)
+	}
+
+	return &vaultsv2.MsgRemoteDepositResponse{
+		Nonce:              nonce,
+		RouteId:            msg.RouteId,
+		SharesAllocated:    msg.Amount, // TODO: Calculate actual shares
+		AmountSent:         msg.Amount,
+		ExpectedCompletion: inFlightPos.ExpectedCompletion,
+		ProviderTracking:   inFlightPos.ProviderTracking,
+	}, nil
+}
+
+// RemoteWithdraw implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) RemoteWithdraw(ctx context.Context, msg *vaultsv2.MsgRemoteWithdraw) (*vaultsv2.MsgRemoteWithdrawResponse, error) {
+	// Validate signer
+	signer, err := k.address.StringToBytes(msg.Withdrawer)
+	if err != nil {
+		return nil, fmt.Errorf("invalid withdrawer address: %w", err)
+	}
+
+	// Validate withdrawal shares
+	if msg.Shares.IsZero() || msg.Shares.IsNegative() {
+		return nil, fmt.Errorf("withdrawal shares must be positive")
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Initiate remote withdrawal
+	nonce, err := crossChainKeeper.InitiateRemoteWithdraw(
+		sdk.UnwrapSDKContext(ctx),
+		signer,
+		msg.RouteId,
+		msg.Shares,
+		msg.GasLimit,
+		msg.GasPrice,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to initiate remote withdrawal: %w", err)
+	}
+
+	// Get the created in-flight position for response
+	inFlightPos, err := crossChainKeeper.GetInFlightPosition(sdk.UnwrapSDKContext(ctx), nonce)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get in-flight position: %w", err)
+	}
+
+	return &vaultsv2.MsgRemoteWithdrawResponse{
+		Nonce:              nonce,
+		RouteId:            msg.RouteId,
+		SharesWithdrawn:    msg.Shares,
+		ExpectedAmount:     inFlightPos.Amount,
+		ExpectedCompletion: inFlightPos.ExpectedCompletion,
+		ProviderTracking:   inFlightPos.ProviderTracking,
+	}, nil
+}
+
+// UpdateRemotePosition implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) UpdateRemotePosition(ctx context.Context, msg *vaultsv2.MsgUpdateRemotePosition) (*vaultsv2.MsgUpdateRemotePositionResponse, error) {
+	// Validate relayer (for now, allow any address - in production this should be restricted)
+	_, err := k.address.StringToBytes(msg.Relayer)
+	if err != nil {
+		return nil, fmt.Errorf("invalid relayer address: %w", err)
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Get previous position for comparison
+	previousPosition, err := crossChainKeeper.GetRemotePosition(sdk.UnwrapSDKContext(ctx), msg.RouteId, msg.UserAddress)
+	var previousValue math.Int
+	if err != nil {
+		previousValue = math.ZeroInt()
+	} else {
+		previousValue = previousPosition.RemoteValue
+	}
+
+	// Update remote position
+	if err := crossChainKeeper.UpdateRemotePosition(
+		sdk.UnwrapSDKContext(ctx),
+		msg.RouteId,
+		msg.UserAddress,
+		msg.RemoteValue,
+		msg.Confirmations,
+		msg.ProviderTracking,
+		msg.Status,
+	); err != nil {
+		return nil, fmt.Errorf("failed to update remote position: %w", err)
+	}
+
+	// Get updated position for conservative value
+	updatedPosition, err := crossChainKeeper.GetRemotePosition(sdk.UnwrapSDKContext(ctx), msg.RouteId, msg.UserAddress)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get updated position: %w", err)
+	}
+
+	return &vaultsv2.MsgUpdateRemotePositionResponse{
+		RouteId:           msg.RouteId,
+		UserAddress:       msg.UserAddress,
+		PreviousValue:     previousValue,
+		NewValue:          msg.RemoteValue,
+		ConservativeValue: updatedPosition.ConservativeValue,
+	}, nil
+}
+
+// ProcessInFlightPosition implements vaultsv2.MsgServer
+func (k vaultV2MsgServer) ProcessInFlightPosition(ctx context.Context, msg *vaultsv2.MsgProcessInFlightPosition) (*vaultsv2.MsgProcessInFlightPositionResponse, error) {
+	// Validate authority
+	if msg.Authority != k.authority {
+		return nil, fmt.Errorf("invalid authority: expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	// Get cross-chain keeper
+	crossChainKeeper := k.V2Collections.GetCrossChainKeeper()
+	if crossChainKeeper == nil {
+		return nil, fmt.Errorf("cross-chain keeper not initialized")
+	}
+
+	// Get in-flight position before processing
+	inFlightPos, err := crossChainKeeper.GetInFlightPosition(sdk.UnwrapSDKContext(ctx), msg.Nonce)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get in-flight position: %w", err)
+	}
+
+	// Process the in-flight position
+	if err := crossChainKeeper.ProcessInFlightPosition(
+		sdk.UnwrapSDKContext(ctx),
+		msg.Nonce,
+		msg.ResultStatus,
+		msg.ResultAmount,
+		msg.ErrorMessage,
+		msg.ProviderTracking,
+	); err != nil {
+		return nil, fmt.Errorf("failed to process in-flight position: %w", err)
+	}
+
+	return &vaultsv2.MsgProcessInFlightPositionResponse{
+		Nonce:           msg.Nonce,
+		FinalStatus:     msg.ResultStatus,
+		AmountProcessed: msg.ResultAmount,
+		SharesAffected:  inFlightPos.Shares,
+	}, nil
+}
+
 // Helper functions
 
 // getOrCreateV2VaultState gets an existing vault state or creates a new one with defaults

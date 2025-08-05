@@ -6,6 +6,7 @@ import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
+import "noble/dollar/v2/dollar.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
 
@@ -17,19 +18,64 @@ message CrossChainRoute {
   string source_chain = 2;
   // Destination chain identifier
   string destination_chain = 3;
-  // IBC channel for communication
-  string ibc_channel = 4;
+  // Provider type (IBC or HYPERLANE)
+  noble.dollar.v2.Provider provider = 4;
+  // Provider-specific configuration
+  CrossChainProviderConfig provider_config = 5;
   // Whether this route is active
-  bool active = 5;
+  bool active = 6;
   // Maximum position value allowed for this route
-  string max_position_value = 6 [
+  string max_position_value = 7 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
   // Risk parameters for this route
-  CrossChainRiskParams risk_params = 7;
+  CrossChainRiskParams risk_params = 8;
+}
+
+// CrossChainProviderConfig defines provider-specific configuration
+message CrossChainProviderConfig {
+  oneof config {
+    // IBC-specific configuration
+    IBCConfig ibc_config = 1;
+    // Hyperlane-specific configuration
+    HyperlaneConfig hyperlane_config = 2;
+  }
+}
+
+// IBCConfig defines IBC-specific configuration
+message IBCConfig {
+  // IBC channel for communication
+  string channel_id = 1;
+  // IBC port (default: "transfer")
+  string port_id = 2;
+  // Connection timeout in seconds
+  uint64 timeout_timestamp = 3;
+  // Packet timeout height
+  uint64 timeout_height = 4;
+}
+
+// HyperlaneConfig defines Hyperlane-specific configuration
+message HyperlaneConfig {
+  // Hyperlane domain identifier
+  uint32 domain_id = 1;
+  // Mailbox contract address on remote chain
+  string mailbox_address = 2;
+  // Interchain gas paymaster address
+  string gas_paymaster_address = 3;
+  // Hook contract address (optional)
+  string hook_address = 4;
+  // Gas limit for remote execution
+  uint64 gas_limit = 5;
+  // Gas price for remote execution
+  string gas_price = 6 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
 }
 
 // CrossChainRiskParams defines risk management parameters for cross-chain operations
@@ -84,6 +130,70 @@ message RemotePosition {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
+  // Provider type for this position
+  noble.dollar.v2.Provider provider = 10;
+  // Provider-specific tracking information
+  ProviderTrackingInfo provider_tracking = 11;
+  // Number of confirmations received
+  uint64 confirmations = 12;
+  // Required confirmations for finality
+  uint64 required_confirmations = 13;
+}
+
+// ProviderTrackingInfo contains provider-specific tracking data
+message ProviderTrackingInfo {
+  oneof tracking_info {
+    // IBC-specific tracking information
+    IBCTrackingInfo ibc_tracking = 1;
+    // Hyperlane-specific tracking information
+    HyperlaneTrackingInfo hyperlane_tracking = 2;
+  }
+}
+
+// IBCTrackingInfo contains IBC-specific tracking data
+message IBCTrackingInfo {
+  // IBC packet sequence number
+  uint64 sequence = 1;
+  // Source channel ID
+  string source_channel = 2;
+  // Source port ID
+  string source_port = 3;
+  // Destination channel ID
+  string destination_channel = 4;
+  // Destination port ID
+  string destination_port = 5;
+  // Packet timeout timestamp
+  uint64 timeout_timestamp = 6;
+  // Packet timeout height
+  uint64 timeout_height = 7;
+  // Acknowledgment received
+  bool ack_received = 8;
+  // Acknowledgment data
+  bytes ack_data = 9;
+}
+
+// HyperlaneTrackingInfo contains Hyperlane-specific tracking data
+message HyperlaneTrackingInfo {
+  // Hyperlane message ID
+  bytes message_id = 1;
+  // Origin domain
+  uint32 origin_domain = 2;
+  // Destination domain
+  uint32 destination_domain = 3;
+  // Message nonce
+  uint64 nonce = 4;
+  // Transaction hash on origin chain
+  string origin_tx_hash = 5;
+  // Transaction hash on destination chain
+  string destination_tx_hash = 6;
+  // Block number on origin chain
+  uint64 origin_block_number = 7;
+  // Block number on destination chain
+  uint64 destination_block_number = 8;
+  // Whether message has been processed
+  bool processed = 9;
+  // Gas used for execution
+  uint64 gas_used = 10;
 }
 
 // RemotePositionStatus represents the status of a remote position
@@ -144,6 +254,14 @@ message InFlightPosition {
   InFlightStatus status = 10;
   // Error message if operation failed
   string error_message = 11;
+  // Provider type for this operation
+  noble.dollar.v2.Provider provider = 12;
+  // Provider-specific tracking information
+  ProviderTrackingInfo provider_tracking = 13;
+  // Number of confirmations received
+  uint64 confirmations = 14;
+  // Required confirmations for completion
+  uint64 required_confirmations = 15;
 }
 
 // InFlightOperationType defines the type of cross-chain operation

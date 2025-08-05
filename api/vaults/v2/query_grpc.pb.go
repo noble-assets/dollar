@@ -19,20 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Query_VaultInfo_FullMethodName         = "/noble.dollar.vaults.v2.Query/VaultInfo"
-	Query_AllVaults_FullMethodName         = "/noble.dollar.vaults.v2.Query/AllVaults"
-	Query_UserPosition_FullMethodName      = "/noble.dollar.vaults.v2.Query/UserPosition"
-	Query_UserPositions_FullMethodName     = "/noble.dollar.vaults.v2.Query/UserPositions"
-	Query_SharePrice_FullMethodName        = "/noble.dollar.vaults.v2.Query/SharePrice"
-	Query_NAVInfo_FullMethodName           = "/noble.dollar.vaults.v2.Query/NAVInfo"
-	Query_DepositPreview_FullMethodName    = "/noble.dollar.vaults.v2.Query/DepositPreview"
-	Query_WithdrawalPreview_FullMethodName = "/noble.dollar.vaults.v2.Query/WithdrawalPreview"
-	Query_ExitQueue_FullMethodName         = "/noble.dollar.vaults.v2.Query/ExitQueue"
-	Query_UserExitRequests_FullMethodName  = "/noble.dollar.vaults.v2.Query/UserExitRequests"
-	Query_FeeInfo_FullMethodName           = "/noble.dollar.vaults.v2.Query/FeeInfo"
-	Query_Stats_FullMethodName             = "/noble.dollar.vaults.v2.Query/Stats"
-	Query_AllStats_FullMethodName          = "/noble.dollar.vaults.v2.Query/AllStats"
-	Query_Params_FullMethodName            = "/noble.dollar.vaults.v2.Query/Params"
+	Query_VaultInfo_FullMethodName          = "/noble.dollar.vaults.v2.Query/VaultInfo"
+	Query_AllVaults_FullMethodName          = "/noble.dollar.vaults.v2.Query/AllVaults"
+	Query_UserPosition_FullMethodName       = "/noble.dollar.vaults.v2.Query/UserPosition"
+	Query_UserPositions_FullMethodName      = "/noble.dollar.vaults.v2.Query/UserPositions"
+	Query_SharePrice_FullMethodName         = "/noble.dollar.vaults.v2.Query/SharePrice"
+	Query_NAVInfo_FullMethodName            = "/noble.dollar.vaults.v2.Query/NAVInfo"
+	Query_CrossChainRoutes_FullMethodName   = "/noble.dollar.vaults.v2.Query/CrossChainRoutes"
+	Query_CrossChainRoute_FullMethodName    = "/noble.dollar.vaults.v2.Query/CrossChainRoute"
+	Query_RemotePosition_FullMethodName     = "/noble.dollar.vaults.v2.Query/RemotePosition"
+	Query_RemotePositions_FullMethodName    = "/noble.dollar.vaults.v2.Query/RemotePositions"
+	Query_InFlightPosition_FullMethodName   = "/noble.dollar.vaults.v2.Query/InFlightPosition"
+	Query_InFlightPositions_FullMethodName  = "/noble.dollar.vaults.v2.Query/InFlightPositions"
+	Query_CrossChainSnapshot_FullMethodName = "/noble.dollar.vaults.v2.Query/CrossChainSnapshot"
+	Query_DriftAlerts_FullMethodName        = "/noble.dollar.vaults.v2.Query/DriftAlerts"
+	Query_DepositPreview_FullMethodName     = "/noble.dollar.vaults.v2.Query/DepositPreview"
+	Query_WithdrawalPreview_FullMethodName  = "/noble.dollar.vaults.v2.Query/WithdrawalPreview"
+	Query_ExitQueue_FullMethodName          = "/noble.dollar.vaults.v2.Query/ExitQueue"
+	Query_UserExitRequests_FullMethodName   = "/noble.dollar.vaults.v2.Query/UserExitRequests"
+	Query_FeeInfo_FullMethodName            = "/noble.dollar.vaults.v2.Query/FeeInfo"
+	Query_Stats_FullMethodName              = "/noble.dollar.vaults.v2.Query/Stats"
+	Query_AllStats_FullMethodName           = "/noble.dollar.vaults.v2.Query/AllStats"
+	Query_Params_FullMethodName             = "/noble.dollar.vaults.v2.Query/Params"
 )
 
 // QueryClient is the client API for Query service.
@@ -53,6 +61,22 @@ type QueryClient interface {
 	SharePrice(ctx context.Context, in *QuerySharePriceRequest, opts ...grpc.CallOption) (*QuerySharePriceResponse, error)
 	// NAVInfo returns NAV information for a vault type
 	NAVInfo(ctx context.Context, in *QueryNAVInfoRequest, opts ...grpc.CallOption) (*QueryNAVInfoResponse, error)
+	// CrossChainRoutes returns all available cross-chain routes
+	CrossChainRoutes(ctx context.Context, in *QueryCrossChainRoutesRequest, opts ...grpc.CallOption) (*QueryCrossChainRoutesResponse, error)
+	// CrossChainRoute returns information for a specific route
+	CrossChainRoute(ctx context.Context, in *QueryCrossChainRouteRequest, opts ...grpc.CallOption) (*QueryCrossChainRouteResponse, error)
+	// RemotePosition returns a user's remote position on a specific route
+	RemotePosition(ctx context.Context, in *QueryRemotePositionRequest, opts ...grpc.CallOption) (*QueryRemotePositionResponse, error)
+	// RemotePositions returns all remote positions for a user
+	RemotePositions(ctx context.Context, in *QueryRemotePositionsRequest, opts ...grpc.CallOption) (*QueryRemotePositionsResponse, error)
+	// InFlightPosition returns information about an in-flight operation
+	InFlightPosition(ctx context.Context, in *QueryInFlightPositionRequest, opts ...grpc.CallOption) (*QueryInFlightPositionResponse, error)
+	// InFlightPositions returns all in-flight operations for a user
+	InFlightPositions(ctx context.Context, in *QueryInFlightPositionsRequest, opts ...grpc.CallOption) (*QueryInFlightPositionsResponse, error)
+	// CrossChainSnapshot returns cross-chain position snapshot for a vault
+	CrossChainSnapshot(ctx context.Context, in *QueryCrossChainSnapshotRequest, opts ...grpc.CallOption) (*QueryCrossChainSnapshotResponse, error)
+	// DriftAlerts returns drift alerts for a user or route
+	DriftAlerts(ctx context.Context, in *QueryDriftAlertsRequest, opts ...grpc.CallOption) (*QueryDriftAlertsResponse, error)
 	// DepositPreview shows what a user would receive for a deposit
 	DepositPreview(ctx context.Context, in *QueryDepositPreviewRequest, opts ...grpc.CallOption) (*QueryDepositPreviewResponse, error)
 	// WithdrawalPreview shows what a user would receive for a withdrawal
@@ -133,6 +157,86 @@ func (c *queryClient) NAVInfo(ctx context.Context, in *QueryNAVInfoRequest, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(QueryNAVInfoResponse)
 	err := c.cc.Invoke(ctx, Query_NAVInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CrossChainRoutes(ctx context.Context, in *QueryCrossChainRoutesRequest, opts ...grpc.CallOption) (*QueryCrossChainRoutesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryCrossChainRoutesResponse)
+	err := c.cc.Invoke(ctx, Query_CrossChainRoutes_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CrossChainRoute(ctx context.Context, in *QueryCrossChainRouteRequest, opts ...grpc.CallOption) (*QueryCrossChainRouteResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryCrossChainRouteResponse)
+	err := c.cc.Invoke(ctx, Query_CrossChainRoute_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) RemotePosition(ctx context.Context, in *QueryRemotePositionRequest, opts ...grpc.CallOption) (*QueryRemotePositionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryRemotePositionResponse)
+	err := c.cc.Invoke(ctx, Query_RemotePosition_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) RemotePositions(ctx context.Context, in *QueryRemotePositionsRequest, opts ...grpc.CallOption) (*QueryRemotePositionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryRemotePositionsResponse)
+	err := c.cc.Invoke(ctx, Query_RemotePositions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) InFlightPosition(ctx context.Context, in *QueryInFlightPositionRequest, opts ...grpc.CallOption) (*QueryInFlightPositionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryInFlightPositionResponse)
+	err := c.cc.Invoke(ctx, Query_InFlightPosition_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) InFlightPositions(ctx context.Context, in *QueryInFlightPositionsRequest, opts ...grpc.CallOption) (*QueryInFlightPositionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryInFlightPositionsResponse)
+	err := c.cc.Invoke(ctx, Query_InFlightPositions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CrossChainSnapshot(ctx context.Context, in *QueryCrossChainSnapshotRequest, opts ...grpc.CallOption) (*QueryCrossChainSnapshotResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryCrossChainSnapshotResponse)
+	err := c.cc.Invoke(ctx, Query_CrossChainSnapshot_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) DriftAlerts(ctx context.Context, in *QueryDriftAlertsRequest, opts ...grpc.CallOption) (*QueryDriftAlertsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(QueryDriftAlertsResponse)
+	err := c.cc.Invoke(ctx, Query_DriftAlerts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -237,6 +341,22 @@ type QueryServer interface {
 	SharePrice(context.Context, *QuerySharePriceRequest) (*QuerySharePriceResponse, error)
 	// NAVInfo returns NAV information for a vault type
 	NAVInfo(context.Context, *QueryNAVInfoRequest) (*QueryNAVInfoResponse, error)
+	// CrossChainRoutes returns all available cross-chain routes
+	CrossChainRoutes(context.Context, *QueryCrossChainRoutesRequest) (*QueryCrossChainRoutesResponse, error)
+	// CrossChainRoute returns information for a specific route
+	CrossChainRoute(context.Context, *QueryCrossChainRouteRequest) (*QueryCrossChainRouteResponse, error)
+	// RemotePosition returns a user's remote position on a specific route
+	RemotePosition(context.Context, *QueryRemotePositionRequest) (*QueryRemotePositionResponse, error)
+	// RemotePositions returns all remote positions for a user
+	RemotePositions(context.Context, *QueryRemotePositionsRequest) (*QueryRemotePositionsResponse, error)
+	// InFlightPosition returns information about an in-flight operation
+	InFlightPosition(context.Context, *QueryInFlightPositionRequest) (*QueryInFlightPositionResponse, error)
+	// InFlightPositions returns all in-flight operations for a user
+	InFlightPositions(context.Context, *QueryInFlightPositionsRequest) (*QueryInFlightPositionsResponse, error)
+	// CrossChainSnapshot returns cross-chain position snapshot for a vault
+	CrossChainSnapshot(context.Context, *QueryCrossChainSnapshotRequest) (*QueryCrossChainSnapshotResponse, error)
+	// DriftAlerts returns drift alerts for a user or route
+	DriftAlerts(context.Context, *QueryDriftAlertsRequest) (*QueryDriftAlertsResponse, error)
 	// DepositPreview shows what a user would receive for a deposit
 	DepositPreview(context.Context, *QueryDepositPreviewRequest) (*QueryDepositPreviewResponse, error)
 	// WithdrawalPreview shows what a user would receive for a withdrawal
@@ -280,6 +400,30 @@ func (UnimplementedQueryServer) SharePrice(context.Context, *QuerySharePriceRequ
 }
 func (UnimplementedQueryServer) NAVInfo(context.Context, *QueryNAVInfoRequest) (*QueryNAVInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NAVInfo not implemented")
+}
+func (UnimplementedQueryServer) CrossChainRoutes(context.Context, *QueryCrossChainRoutesRequest) (*QueryCrossChainRoutesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CrossChainRoutes not implemented")
+}
+func (UnimplementedQueryServer) CrossChainRoute(context.Context, *QueryCrossChainRouteRequest) (*QueryCrossChainRouteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CrossChainRoute not implemented")
+}
+func (UnimplementedQueryServer) RemotePosition(context.Context, *QueryRemotePositionRequest) (*QueryRemotePositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemotePosition not implemented")
+}
+func (UnimplementedQueryServer) RemotePositions(context.Context, *QueryRemotePositionsRequest) (*QueryRemotePositionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemotePositions not implemented")
+}
+func (UnimplementedQueryServer) InFlightPosition(context.Context, *QueryInFlightPositionRequest) (*QueryInFlightPositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InFlightPosition not implemented")
+}
+func (UnimplementedQueryServer) InFlightPositions(context.Context, *QueryInFlightPositionsRequest) (*QueryInFlightPositionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InFlightPositions not implemented")
+}
+func (UnimplementedQueryServer) CrossChainSnapshot(context.Context, *QueryCrossChainSnapshotRequest) (*QueryCrossChainSnapshotResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CrossChainSnapshot not implemented")
+}
+func (UnimplementedQueryServer) DriftAlerts(context.Context, *QueryDriftAlertsRequest) (*QueryDriftAlertsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DriftAlerts not implemented")
 }
 func (UnimplementedQueryServer) DepositPreview(context.Context, *QueryDepositPreviewRequest) (*QueryDepositPreviewResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DepositPreview not implemented")
@@ -430,6 +574,150 @@ func _Query_NAVInfo_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).NAVInfo(ctx, req.(*QueryNAVInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CrossChainRoutes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCrossChainRoutesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CrossChainRoutes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_CrossChainRoutes_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CrossChainRoutes(ctx, req.(*QueryCrossChainRoutesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CrossChainRoute_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCrossChainRouteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CrossChainRoute(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_CrossChainRoute_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CrossChainRoute(ctx, req.(*QueryCrossChainRouteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_RemotePosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRemotePositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).RemotePosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_RemotePosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).RemotePosition(ctx, req.(*QueryRemotePositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_RemotePositions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRemotePositionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).RemotePositions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_RemotePositions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).RemotePositions(ctx, req.(*QueryRemotePositionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_InFlightPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryInFlightPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).InFlightPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_InFlightPosition_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).InFlightPosition(ctx, req.(*QueryInFlightPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_InFlightPositions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryInFlightPositionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).InFlightPositions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_InFlightPositions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).InFlightPositions(ctx, req.(*QueryInFlightPositionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CrossChainSnapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryCrossChainSnapshotRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CrossChainSnapshot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_CrossChainSnapshot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CrossChainSnapshot(ctx, req.(*QueryCrossChainSnapshotRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_DriftAlerts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryDriftAlertsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).DriftAlerts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Query_DriftAlerts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).DriftAlerts(ctx, req.(*QueryDriftAlertsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -608,6 +896,38 @@ var Query_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NAVInfo",
 			Handler:    _Query_NAVInfo_Handler,
+		},
+		{
+			MethodName: "CrossChainRoutes",
+			Handler:    _Query_CrossChainRoutes_Handler,
+		},
+		{
+			MethodName: "CrossChainRoute",
+			Handler:    _Query_CrossChainRoute_Handler,
+		},
+		{
+			MethodName: "RemotePosition",
+			Handler:    _Query_RemotePosition_Handler,
+		},
+		{
+			MethodName: "RemotePositions",
+			Handler:    _Query_RemotePositions_Handler,
+		},
+		{
+			MethodName: "InFlightPosition",
+			Handler:    _Query_InFlightPosition_Handler,
+		},
+		{
+			MethodName: "InFlightPositions",
+			Handler:    _Query_InFlightPositions_Handler,
+		},
+		{
+			MethodName: "CrossChainSnapshot",
+			Handler:    _Query_CrossChainSnapshot_Handler,
+		},
+		{
+			MethodName: "DriftAlerts",
+			Handler:    _Query_DriftAlerts_Handler,
 		},
 		{
 			MethodName: "DepositPreview",
