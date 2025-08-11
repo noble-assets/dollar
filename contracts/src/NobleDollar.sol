@@ -19,7 +19,7 @@ pragma solidity >=0.8.0;
 
 import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
-import {IndexingMath} from "../m0/IndexingMath.sol";
+import {IndexingMath} from "../utils/IndexingMath.sol";
 
 /*
 
