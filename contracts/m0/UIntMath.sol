@@ -45,4 +45,15 @@ library UIntMath {
     function bound128(uint256 n) internal pure returns (uint128) {
         return uint128(min256(n, uint256(type(uint128).max)));
     }
+
+    /**
+     * @notice Compares two uint256 values and returns the lesser one.
+     * @param  a Value to compare.
+     * @param  b Value to compare.
+     * @return The lesser value.
+     */
+    function min256(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a < b ? a : b;
+    }
+    
 }
