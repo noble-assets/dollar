@@ -20,7 +20,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 
 	_ "cosmossdk.io/x/upgrade"
-	_ "dollar.noble.xyz/v2"
+	_ "dollar.noble.xyz/v3"
 	_ "github.com/bcp-innovations/hyperlane-cosmos/x/core"
 	_ "github.com/bcp-innovations/hyperlane-cosmos/x/warp"
 	_ "github.com/cosmos/cosmos-sdk/x/auth"
@@ -49,7 +49,7 @@ import (
 	transferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	// Custom Modules
-	dollarkeeper "dollar.noble.xyz/v2/keeper"
+	dollarkeeper "dollar.noble.xyz/v3/keeper"
 	wormholekeeper "github.com/noble-assets/wormhole/keeper"
 )
 

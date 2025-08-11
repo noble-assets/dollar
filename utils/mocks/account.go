@@ -24,7 +24,7 @@ import (
 	"context"
 
 	"cosmossdk.io/core/address"
-	"dollar.noble.xyz/v2/types"
+	"dollar.noble.xyz/v3/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/codec"
 )

@@ -25,8 +25,8 @@ import (
 
 	"cosmossdk.io/collections"
 
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/portal"
 )
 
 var _ portal.QueryServer = &portalQueryServer{}

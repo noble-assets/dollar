@@ -28,8 +28,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/v2"
 )
 
 func GetQueryCmd() *cobra.Command {

@@ -44,16 +44,16 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
-	modulev1 "dollar.noble.xyz/v2/api/module/v1"
-	portalv1 "dollar.noble.xyz/v2/api/portal/v1"
-	dollarv1 "dollar.noble.xyz/v2/api/v1"
-	vaultsv1 "dollar.noble.xyz/v2/api/vaults/v1"
-	"dollar.noble.xyz/v2/client/cli"
-	"dollar.noble.xyz/v2/keeper"
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/portal"
-	"dollar.noble.xyz/v2/types/v2"
-	"dollar.noble.xyz/v2/types/vaults"
+	modulev1 "dollar.noble.xyz/v3/api/module/v1"
+	portalv1 "dollar.noble.xyz/v3/api/portal/v1"
+	dollarv1 "dollar.noble.xyz/v3/api/v1"
+	vaultsv1 "dollar.noble.xyz/v3/api/vaults/v1"
+	"dollar.noble.xyz/v3/client/cli"
+	"dollar.noble.xyz/v3/keeper"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/portal"
+	"dollar.noble.xyz/v3/types/v2"
+	"dollar.noble.xyz/v3/types/vaults"
 )
 
 // ConsensusVersion defines the current Noble Dollar module consensus version.

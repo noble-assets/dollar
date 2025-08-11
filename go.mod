@@ -1,4 +1,4 @@
-module dollar.noble.xyz/v2
+module dollar.noble.xyz/v3
 
 go 1.24
 

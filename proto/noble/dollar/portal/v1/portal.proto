@@ -4,7 +4,7 @@ package noble.dollar.portal.v1;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "dollar.noble.xyz/v2/types/portal";
+option go_package = "dollar.noble.xyz/v3/types/portal";
 
 // Peer is the type that stores information about a peer.
 message Peer {

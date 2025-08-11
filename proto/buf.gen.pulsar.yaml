@@ -3,7 +3,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: dollar.noble.xyz/v2/api
+    default: dollar.noble.xyz/v3/api
     except:
       - buf.build/cosmos/cosmos-proto
       - buf.build/cosmos/gogo-proto

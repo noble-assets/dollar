@@ -27,8 +27,8 @@ import (
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/vaults"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/vaults"
 )
 
 var _ vaults.QueryServer = &vaultsQueryServer{}

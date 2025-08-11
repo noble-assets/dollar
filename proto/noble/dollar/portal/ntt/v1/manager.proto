@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package noble.dollar.portal.ntt.v1;
 
-option go_package = "dollar.noble.xyz/v2/types/portal/ntt";
+option go_package = "dollar.noble.xyz/v3/types/portal/ntt";
 
 // ManagerMessage is the type that stores information about a manager message.
 //

@@ -27,7 +27,7 @@ import (
 	"cosmossdk.io/collections/indexes"
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/v2/types/vaults"
+	"dollar.noble.xyz/v3/types/vaults"
 )
 
 type VaultsPositionsIndexes struct {
