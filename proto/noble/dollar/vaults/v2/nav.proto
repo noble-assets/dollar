@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v2;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
+
+// NAVBand defines the pricing bands for deposits and withdrawals
+message NAVBand {
+  // Lower bound of the band (basis points above/below NAV)
+  int32 lower_bound = 1;
+  // Upper bound of the band (basis points above/below NAV)
+  int32 upper_bound = 2;
+  // Fee rate applied within this band (basis points)
+  int32 fee_rate = 3;
+}
+
+// NAVConfig defines the configuration for NAV-based pricing
+message NAVConfig {
+  // Base NAV bands for deposits
+  repeated NAVBand deposit_bands = 1;
+  // Base NAV bands for withdrawals
+  repeated NAVBand withdrawal_bands = 2;
+  // Minimum NAV update interval (seconds)
+  int64 min_nav_update_interval = 3;
+  // Maximum allowed NAV deviation before emergency controls (basis points)
+  int32 max_nav_deviation = 4;
+  // Emergency circuit breaker threshold (basis points)
+  int32 circuit_breaker_threshold = 5;
+}
+
+// NAVInfo represents current NAV information for a vault
+message NAVInfo {
+  // Current NAV value
+  string current_nav = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Previous NAV value
+  string previous_nav = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Last update timestamp
+  google.protobuf.Timestamp last_update = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // NAV change since last update (basis points)
+  int32 change_bps = 4;
+
+  // Whether circuit breaker is active
+  bool circuit_breaker_active = 5;
+}
+
+// NAVUpdate represents a NAV update event
+message NAVUpdate {
+  // Previous NAV point
+  string previous_nav = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // New NAV point
+  string new_nav = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Update timestamp
+  google.protobuf.Timestamp timestamp = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+
+  // Block height
+  int64 block_height = 4;
+
+  // Update reason
+  string reason = 5;
+}
+
+// PricingInfo provides pricing information for deposits/withdrawals
+message PricingInfo {
+  // Current share price (NAV per share)
+  string share_price = 1 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Applied NAV band
+  NAVBand applied_band = 2;
+
+  // Effective fee rate
+  int32 effective_fee_rate = 3;
+
+  // Expected shares for deposit or token amount for withdrawal
+  string expected_amount = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// LossEvent represents a loss in vault value
+message LossEvent {
+  // Amount of loss
+  string loss_amount = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Previous NAV before loss
+  string previous_nav = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // New NAV after loss
+  string new_nav = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Loss reason/source
+  string reason = 4;
+
+  // Recovery plan if applicable
+  string recovery_plan = 5;
+
+  // Timestamp of loss
+  google.protobuf.Timestamp timestamp = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}

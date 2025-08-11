@@ -1,0 +1,277 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v2;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
+
+// FeeType defines the different types of fees that can be collected
+enum FeeType {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  // Management fee charged periodically
+  FEE_TYPE_MANAGEMENT = 0;
+  // Performance fee on positive returns
+  FEE_TYPE_PERFORMANCE = 1;
+  // Deposit fee charged on entry
+  FEE_TYPE_DEPOSIT = 2;
+  // Withdrawal fee charged on exit
+  FEE_TYPE_WITHDRAWAL = 3;
+  // Cross-chain operation fee
+  FEE_TYPE_CROSS_CHAIN = 4;
+  // Emergency operation fee
+  FEE_TYPE_EMERGENCY = 5;
+}
+
+// FeeConfig defines the configuration for various fees
+message FeeConfig {
+  // Management fee rate (annual basis points)
+  int32 management_fee_rate = 1;
+  // Performance fee rate (basis points)
+  int32 performance_fee_rate = 2;
+  // Deposit fee rate (basis points)
+  int32 deposit_fee_rate = 3;
+  // Withdrawal fee rate (basis points)
+  int32 withdrawal_fee_rate = 4;
+  // Cross-chain operation fee rate (basis points)
+  int32 cross_chain_fee_rate = 5;
+  // Emergency operation fee rate (basis points)
+  int32 emergency_fee_rate = 6;
+
+  // Fee collection method
+  FeeCollectionMethod collection_method = 7;
+  // Fee recipient address
+  string fee_recipient = 8 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // Whether fees are enabled
+  bool fees_enabled = 9;
+
+  // High water mark for performance fees
+  string high_water_mark = 10 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// FeeCollectionMethod defines how fees are collected
+enum FeeCollectionMethod {
+  option (gogoproto.goproto_enum_prefix) = false;
+
+  // Fees collected through share dilution
+  COLLECTION_SHARE_DILUTION = 0;
+  // Fees collected in tokens directly
+  COLLECTION_TOKEN_DIRECT = 1;
+  // Fees collected through NAV adjustment
+  COLLECTION_NAV_ADJUSTMENT = 2;
+}
+
+// ShareDilutionParams defines parameters for fee collection through share dilution
+message ShareDilutionParams {
+  // Target dilution rate (basis points per year)
+  int32 target_dilution_rate = 1;
+  // Minimum dilution amount per period
+  string min_dilution_amount = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Maximum dilution amount per period
+  string max_dilution_amount = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Dilution frequency (seconds)
+  int64 dilution_frequency = 4;
+  // Last dilution timestamp
+  google.protobuf.Timestamp last_dilution = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+}
+
+// FeeAccrual represents accrued fees for a specific period
+message FeeAccrual {
+  // Fee type
+  FeeType fee_type = 1;
+  // Accrued amount
+  string accrued_amount = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Shares to be diluted for this fee
+  string shares_to_dilute = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Accrual period start
+  google.protobuf.Timestamp period_start = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Accrual period end
+  google.protobuf.Timestamp period_end = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Whether this accrual has been collected
+  bool collected = 6;
+}
+
+// FeeCollection represents a completed fee collection event
+message FeeCollection {
+  // Collection timestamp
+  google.protobuf.Timestamp timestamp = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Total fee amount collected
+  string total_amount = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Shares diluted for collection
+  string shares_diluted = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Collection method used
+  FeeCollectionMethod method = 4;
+  // Breakdown by fee type
+  repeated FeeTypeBreakdown breakdown = 5;
+  // Block height when collected
+  int64 block_height = 6;
+}
+
+// FeeTypeBreakdown provides details for each fee type in a collection
+message FeeTypeBreakdown {
+  // Fee type
+  FeeType fee_type = 1;
+  // Amount for this fee type
+  string amount = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Shares diluted for this fee type
+  string shares_diluted = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Fee rate applied (basis points)
+  int32 rate_applied = 4;
+}
+
+// FeeStats provides statistics about fee collection
+message FeeStats {
+  // Total fees collected (all time)
+  string total_fees_collected = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Total shares diluted for fees
+  string total_shares_diluted = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Current annualized fee rate (basis points)
+  int32 current_annual_rate = 3;
+  // Last fee collection timestamp
+  google.protobuf.Timestamp last_collection = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Average daily fee collection
+  string avg_daily_collection = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Fee collection frequency (seconds)
+  int64 collection_frequency = 6;
+}
+
+// PerformanceFeeState tracks performance fee calculations
+message PerformanceFeeState {
+  // Current high water mark (share price)
+  string high_water_mark = 1 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Last performance fee calculation
+  google.protobuf.Timestamp last_calculation = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Current period start (for performance measurement)
+  google.protobuf.Timestamp period_start = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Accrued performance fees (not yet collected)
+  string accrued_performance_fees = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  // Whether performance fees are currently active
+  bool active = 5;
+}
+
+// FeeExemption represents an exemption from certain fees for specific addresses
+message FeeExemption {
+  // Exempt address
+  bytes address = 1;
+  // Exempted fee types
+  repeated FeeType exempted_types = 2;
+  // Exemption expiry (if applicable)
+  google.protobuf.Timestamp expiry = 3 [
+    (gogoproto.nullable) = true,
+    (gogoproto.stdtime) = true
+  ];
+  // Exemption reason
+  string reason = 4;
+  // Whether exemption is active
+  bool active = 5;
+}
+
+// FeeSchedule defines time-based fee rate changes
+message FeeSchedule {
+  // Effective date for the fee rates
+  google.protobuf.Timestamp effective_date = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.stdtime) = true
+  ];
+  // Fee configuration for this schedule
+  FeeConfig fee_config = 2;
+  // Whether this schedule is active
+  bool active = 3;
+  // Description of the schedule change
+  string description = 4;
+}

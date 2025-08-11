@@ -9,6 +9,22 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "dollar.noble.xyz/v2/types/vaults";
 
+// LEGACY VAULT SYSTEM (V1) - WITHDRAWAL ONLY
+//
+// This package defines the legacy vault system that uses direct balance tracking.
+// New deposits are NOT accepted in V1 vaults.
+// Users must withdraw from V1 and deposit into V2 for new share-based vaults.
+//
+// V1 Operations still supported:
+// - Withdrawals (full or partial)
+// - Rewards claiming
+// - Balance queries
+//
+// For new deposits, use the V2 vault system which provides:
+// - Share-based accounting
+// - Automatic yield compounding
+// - Improved capital efficiency
+
 // buf:lint:ignore ENUM_VALUE_PREFIX
 enum VaultType {
   option (gogoproto.goproto_enum_prefix) = false;
@@ -20,16 +36,19 @@ enum VaultType {
 }
 
 // buf:lint:ignore ENUM_VALUE_PREFIX
+// PausedType controls which operations are paused on legacy V1 vaults
+// Note: V1 vaults only support withdrawals, so LOCK pauses withdrawals
 enum PausedType {
   option (gogoproto.goproto_enum_prefix) = false;
 
   // buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
-  NONE = 0;
-  LOCK = 1;
-  UNLOCK = 2;
-  ALL = 3;
+  NONE = 0; // No operations paused
+  LOCK = 1; // Deposits paused (N/A for V1 - already disabled)
+  UNLOCK = 2; // Withdrawals paused
+  ALL = 3; // All operations paused
 }
 
+// Reward represents accumulated rewards in legacy V1 vault system
 message Reward {
   int64 index = 1;
   string total = 2 [
@@ -46,6 +65,8 @@ message Reward {
   ];
 }
 
+// Position represents a legacy V1 vault position (withdrawal-only)
+// Users should withdraw these positions and deposit into V2 vaults for new features
 message Position {
   string principal = 1 [
     (cosmos_proto.scalar) = "cosmos.Int",

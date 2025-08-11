@@ -1,0 +1,207 @@
+syntax = "proto3";
+
+package noble.dollar.vaults.v2;
+
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "noble/dollar/vaults/v1/vaults.proto";
+import "noble/dollar/vaults/v2/fees.proto";
+import "noble/dollar/vaults/v2/nav.proto";
+import "noble/dollar/vaults/v2/vaults.proto";
+
+option go_package = "dollar.noble.xyz/v2/types/vaults/v2";
+
+// GenesisState defines the V2 vaults module's genesis state
+message GenesisState {
+  // Module parameters
+  Params params = 1 [(gogoproto.nullable) = false];
+
+  // All V2 vault configurations
+  repeated VaultConfig vault_configs = 2 [(gogoproto.nullable) = false];
+
+  // All user positions in V2 vaults
+  repeated UserPositionEntry user_positions = 3 [(gogoproto.nullable) = false];
+
+  // Current NAV information for each vault type
+  repeated NAVEntry nav_entries = 4 [(gogoproto.nullable) = false];
+
+  // Fee configurations
+  repeated FeeConfigEntry fee_configs = 5 [(gogoproto.nullable) = false];
+
+  // Exit queue entries
+  repeated ExitRequestEntry exit_queue = 6 [(gogoproto.nullable) = false];
+
+  // Total shares issued per vault type
+  repeated SharesTotalEntry shares_totals = 7 [(gogoproto.nullable) = false];
+
+  // Vault statistics
+  repeated VaultStatsEntry vault_stats = 8 [(gogoproto.nullable) = false];
+}
+
+// Params defines the parameters for the V2 vaults module
+message Params {
+  // Authority address that can update parameters
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // Default fee rate for deposits (basis points)
+  int32 default_deposit_fee_rate = 2;
+
+  // Default fee rate for withdrawals (basis points)
+  int32 default_withdrawal_fee_rate = 3;
+
+  // Minimum deposit amount
+  string min_deposit_amount = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Minimum withdrawal amount
+  string min_withdrawal_amount = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Maximum NAV change percentage allowed per update (basis points)
+  int32 max_nav_change_bps = 6;
+
+  // Exit request timeout duration (in seconds)
+  int64 exit_request_timeout = 7;
+
+  // Maximum number of exit requests to process per block
+  int32 max_exit_requests_per_block = 8;
+
+  // Whether V2 vaults are enabled
+  bool vaults_enabled = 9;
+}
+
+// VaultConfig stores configuration for a specific vault type
+message VaultConfig {
+  // Whether this vault type is enabled for new deposits
+  bool enabled = 1;
+
+  // Minimum staking period (for staked vaults)
+  int64 min_staking_period = 2;
+
+  // Custom fee rates (overrides default if set)
+  int32 deposit_fee_rate = 3;
+  int32 withdrawal_fee_rate = 4;
+
+  // Maximum total deposits allowed
+  string max_total_deposits = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Target yield rate (informational)
+  string target_yield_rate = 6 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// UserPositionEntry stores a user's position in the V2 system
+message UserPositionEntry {
+  // User address
+  bytes address = 1;
+
+  // User position details
+  UserPosition position = 2 [(gogoproto.nullable) = false];
+}
+
+// NAVEntry stores NAV information for a vault type
+message NAVEntry {
+  // NAV information
+  NAVInfo nav_info = 1 [(gogoproto.nullable) = false];
+}
+
+// FeeConfigEntry stores fee configuration for a vault type
+message FeeConfigEntry {
+  // Fee configuration
+  FeeConfig fee_config = 1 [(gogoproto.nullable) = false];
+}
+
+// ExitRequestEntry stores an exit request in the queue
+message ExitRequestEntry {
+  // User address
+  bytes address = 1;
+
+  // Exit request details
+  ExitRequest exit_request = 2 [(gogoproto.nullable) = false];
+}
+
+// SharesTotalEntry tracks total shares for a vault type
+message SharesTotalEntry {
+  // Total shares issued
+  string total_shares = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total NAV (Net Asset Value)
+  string total_nav = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// VaultStatsEntry tracks statistics for a vault type
+message VaultStatsEntry {
+  // Total number of depositors
+  uint64 total_depositors = 1;
+
+  // Total value deposited (cumulative)
+  string total_deposited = 2 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total value withdrawn (cumulative)
+  string total_withdrawn = 3 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total fees collected
+  string total_fees_collected = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Total yield distributed
+  string total_yield_distributed = 5 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  // Number of active positions
+  uint64 active_positions = 6;
+
+  // Average position size
+  string average_position_size = 7 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}

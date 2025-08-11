@@ -3077,14 +3077,16 @@ func (VaultType) EnumDescriptor() ([]byte, []int) {
 }
 
 // buf:lint:ignore ENUM_VALUE_PREFIX
+// PausedType controls which operations are paused on legacy V1 vaults
+// Note: V1 vaults only support withdrawals, so LOCK pauses withdrawals
 type PausedType int32
 
 const (
 	// buf:lint:ignore ENUM_ZERO_VALUE_SUFFIX
-	PausedType_NONE   PausedType = 0
-	PausedType_LOCK   PausedType = 1
-	PausedType_UNLOCK PausedType = 2
-	PausedType_ALL    PausedType = 3
+	PausedType_NONE   PausedType = 0 // No operations paused
+	PausedType_LOCK   PausedType = 1 // Deposits paused (N/A for V1 - already disabled)
+	PausedType_UNLOCK PausedType = 2 // Withdrawals paused
+	PausedType_ALL    PausedType = 3 // All operations paused
 )
 
 // Enum value maps for PausedType.
@@ -3130,6 +3132,7 @@ func (PausedType) EnumDescriptor() ([]byte, []int) {
 	return file_noble_dollar_vaults_v1_vaults_proto_rawDescGZIP(), []int{1}
 }
 
+// Reward represents accumulated rewards in legacy V1 vault system
 type Reward struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3181,6 +3184,8 @@ func (x *Reward) GetRewards() string {
 	return ""
 }
 
+// Position represents a legacy V1 vault position (withdrawal-only)
+// Users should withdraw these positions and deposit into V2 vaults for new features
 type Position struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
