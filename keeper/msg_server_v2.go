@@ -31,8 +31,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/v2"
 )
 
 var _ v2.MsgServer = &msgServerV2{}

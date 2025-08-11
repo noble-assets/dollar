@@ -33,7 +33,7 @@ import (
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
 	"github.com/stretchr/testify/require"
 
-	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v3/types/v2"
 )
 
 var _ porttypes.ICS4Wrapper = (*MockICS4Wrapper)(nil)

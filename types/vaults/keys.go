@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"strings"
 
-	vaultsv1 "dollar.noble.xyz/v2/api/vaults/v1"
+	vaultsv1 "dollar.noble.xyz/v3/api/vaults/v1"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 )

@@ -28,7 +28,7 @@ import (
 
 	"cosmossdk.io/math"
 
-	"dollar.noble.xyz/v2/types/portal/ntt"
+	"dollar.noble.xyz/v3/types/portal/ntt"
 )
 
 type PayloadType int

@@ -26,8 +26,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/v2"
 )
 
 // Migrator is a struct for handling in-place store migrations.

@@ -21,9 +21,9 @@
 package types
 
 import (
-	"dollar.noble.xyz/v2/types/portal"
-	"dollar.noble.xyz/v2/types/v2"
-	"dollar.noble.xyz/v2/types/vaults"
+	"dollar.noble.xyz/v3/types/portal"
+	"dollar.noble.xyz/v3/types/v2"
+	"dollar.noble.xyz/v3/types/vaults"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

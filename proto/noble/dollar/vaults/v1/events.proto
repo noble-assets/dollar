@@ -6,7 +6,7 @@ import "amino/amino.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "dollar.noble.xyz/v2/types/vaults";
+option go_package = "dollar.noble.xyz/v3/types/vaults";
 
 // PositionLocked is an event emitted when a user locks $USDN into a Vault.
 message PositionLocked {

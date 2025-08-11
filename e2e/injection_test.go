@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"cosmossdk.io/math"
-	portaltypes "dollar.noble.xyz/v2/types/portal"
+	portaltypes "dollar.noble.xyz/v3/types/portal"
 	"github.com/strangelove-ventures/interchaintest/v8"
 	"github.com/strangelove-ventures/interchaintest/v8/chain/cosmos"
 	"github.com/stretchr/testify/require"

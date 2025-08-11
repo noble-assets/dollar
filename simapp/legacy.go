@@ -2,7 +2,7 @@ package simapp
 
 import (
 	storetypes "cosmossdk.io/store/types"
-	"dollar.noble.xyz/v2"
+	"dollar.noble.xyz/v3"
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"

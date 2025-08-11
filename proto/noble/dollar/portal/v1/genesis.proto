@@ -6,7 +6,7 @@ import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "noble/dollar/portal/v1/portal.proto";
 
-option go_package = "dollar.noble.xyz/v2/types/portal";
+option go_package = "dollar.noble.xyz/v3/types/portal";
 
 // GenesisState defines the genesis state of the Noble Dollar Portal submodule.
 message GenesisState {

@@ -27,7 +27,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	nttpkg "dollar.noble.xyz/v2/types/portal/ntt"
+	nttpkg "dollar.noble.xyz/v3/types/portal/ntt"
 )
 
 func TestNativeTokenTransferUtilities(t *testing.T) {

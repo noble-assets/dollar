@@ -42,9 +42,9 @@ import (
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 	"go.uber.org/zap/zaptest"
 
-	"dollar.noble.xyz/v2"
-	portaltypes "dollar.noble.xyz/v2/types/portal"
-	"dollar.noble.xyz/v2/utils"
+	"dollar.noble.xyz/v3"
+	portaltypes "dollar.noble.xyz/v3/types/portal"
+	"dollar.noble.xyz/v3/utils"
 )
 
 // Suite is a utility for spinning up a new E2E testing suite.

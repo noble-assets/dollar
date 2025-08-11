@@ -1,0 +1,1 @@
+- Update module path for v3 release line. ([#51](https://github.com/noble-assets/dollar/pull/51))

@@ -27,7 +27,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/address"
 	"github.com/stretchr/testify/require"
 
-	"dollar.noble.xyz/v2/types/portal/ntt"
+	"dollar.noble.xyz/v3/types/portal/ntt"
 )
 
 // MustEncodeRecipient is a utility that parses a universal address to a Noble

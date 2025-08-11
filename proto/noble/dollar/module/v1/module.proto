@@ -6,7 +6,7 @@ import "cosmos/app/v1alpha1/module.proto";
 
 // Module is the config object of the Noble Dollar module.
 message Module {
-  option (cosmos.app.v1alpha1.module) = {go_import: "dollar.noble.xyz/v2"};
+  option (cosmos.app.v1alpha1.module) = {go_import: "dollar.noble.xyz/v3"};
 
   // denom defines the smallest denomination of the Noble Dollar.
   // This is configurable in case we want different denominations on testnet and mainnet.

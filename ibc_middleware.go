@@ -31,7 +31,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 
-	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v3/types/v2"
 )
 
 var _ porttypes.IBCModule = &IBCModule{}

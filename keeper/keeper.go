@@ -40,11 +40,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"dollar.noble.xyz/v2/types"
-	"dollar.noble.xyz/v2/types/portal"
-	"dollar.noble.xyz/v2/types/portal/ntt"
-	"dollar.noble.xyz/v2/types/v2"
-	"dollar.noble.xyz/v2/types/vaults"
+	"dollar.noble.xyz/v3/types"
+	"dollar.noble.xyz/v3/types/portal"
+	"dollar.noble.xyz/v3/types/portal/ntt"
+	"dollar.noble.xyz/v3/types/v2"
+	"dollar.noble.xyz/v3/types/vaults"
 )
 
 type Keeper struct {

@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	cosmossdk.io/math v1.4.0
-	dollar.noble.xyz/v2 v2.0.0
+	dollar.noble.xyz/v3 v3.0.0
 	github.com/bcp-innovations/hyperlane-cosmos v1.0.0-rc0
 	github.com/cosmos/cosmos-sdk v0.50.13
 	github.com/cosmos/gogoproto v1.7.0
@@ -424,7 +424,7 @@ require (
 )
 
 replace (
-	dollar.noble.xyz/v2 => ../
+	dollar.noble.xyz/v3 => ../
 	github.com/ChainSafe/go-schnorrkel => github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d
 	github.com/ChainSafe/go-schnorrkel/1 => github.com/ChainSafe/go-schnorrkel v1.0.0
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1

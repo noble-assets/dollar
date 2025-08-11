@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"strings"
 
-	"dollar.noble.xyz/v2/types/v2"
+	"dollar.noble.xyz/v3/types/v2"
 )
 
 func parseProvider(input string) (v2.Provider, error) {

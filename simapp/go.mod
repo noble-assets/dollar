@@ -10,7 +10,7 @@ require (
 	cosmossdk.io/store v1.1.1
 	cosmossdk.io/tools/confix v0.1.2
 	cosmossdk.io/x/upgrade v0.1.4
-	dollar.noble.xyz/v2 v2.0.0
+	dollar.noble.xyz/v3 v3.0.0
 	github.com/bcp-innovations/hyperlane-cosmos v1.0.0-rc0
 	github.com/cometbft/cometbft v0.38.17
 	github.com/cosmos/cosmos-db v1.1.1
@@ -207,7 +207,7 @@ require (
 
 replace (
 	// use local dollar.noble.xyz
-	dollar.noble.xyz/v2 => ../
+	dollar.noble.xyz/v3 => ../
 
 	// use cosmos compatible syndtr/goleveldb
 	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7

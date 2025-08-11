@@ -4,7 +4,7 @@ package noble.dollar.v2;
 
 import "noble/dollar/v2/dollar.proto";
 
-option go_package = "dollar.noble.xyz/v2/types/v2";
+option go_package = "dollar.noble.xyz/v3/types/v2";
 
 // YieldRecipientSet is an event emitted when the yield recipient for an IBC channel is set.
 message YieldRecipientSet {

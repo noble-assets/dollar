@@ -7,7 +7,7 @@ import "noble/dollar/portal/v1/genesis.proto";
 import "noble/dollar/v1/dollar.proto";
 import "noble/dollar/vaults/v1/genesis.proto";
 
-option go_package = "dollar.noble.xyz/v2/types";
+option go_package = "dollar.noble.xyz/v3/types";
 
 // GenesisState defines the genesis state of the Noble Dollar module.
 message GenesisState {

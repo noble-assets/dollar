@@ -39,10 +39,10 @@ import (
 	"github.com/stretchr/testify/require"
 	vaautils "github.com/wormhole-foundation/wormhole/sdk/vaa"
 
-	portaltypes "dollar.noble.xyz/v2/types/portal"
-	"dollar.noble.xyz/v2/types/portal/ntt"
-	dollartypes "dollar.noble.xyz/v2/types/v2"
-	"dollar.noble.xyz/v2/utils"
+	portaltypes "dollar.noble.xyz/v3/types/portal"
+	"dollar.noble.xyz/v3/types/portal/ntt"
+	dollartypes "dollar.noble.xyz/v3/types/v2"
+	"dollar.noble.xyz/v3/utils"
 )
 
 // hyperlaneYieldRecipient is the empty address for testing purposes.

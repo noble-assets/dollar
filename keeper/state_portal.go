@@ -26,7 +26,7 @@ import (
 	"cosmossdk.io/collections"
 	"cosmossdk.io/errors"
 
-	"dollar.noble.xyz/v2/types/portal"
+	"dollar.noble.xyz/v3/types/portal"
 )
 
 // GetPortalPaused is a utility that returns the current paused state.
