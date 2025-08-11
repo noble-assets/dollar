@@ -32,6 +32,22 @@ library IndexingMath {
             return (uint256(principal) * index) / EXP_SCALED_ONE;
         }
     }
+        /**
+     * @notice Helper function to calculate `(x * EXP_SCALED_ONE) / y`, rounded up.
+     * @dev    Inspired by USM (https://github.com/usmfum/USM/blob/master/contracts/WadMath.sol)
+     */
+    function divide240By128Up(uint240 x, uint128 y) internal pure returns (uint112) {
+        if (y == 0) revert DivisionByZero();
+
+        unchecked {
+            // NOTE: While `uint256(x) * EXP_SCALED_ONE` can technically overflow, these divide/multiply functions are
+            //       only used for the purpose of principal/present amount calculations for continuous indexing, and
+            //       so for an `x` to be large enough to overflow this, it would have to be a possible result of
+            //       `multiply112By128Down` or `multiply112By128Up`, which would already satisfy
+            //       `uint256(x) * EXP_SCALED_ONE < type(uint240).max`.
+            return UIntMath.safe112(((uint256(x) * EXP_SCALED_ONE) + y - 1) / y);
+        }
+    }
 
     /**
      * @dev    Returns the principal amount given the present amount, using the current index.
@@ -53,6 +69,16 @@ library IndexingMath {
     }
 
     /**
+     * @dev    Returns the principal amount given the present amount, using the current index.
+     * @param  presentAmount The present amount.
+     * @param  index         An index.
+     * @return The principal amount rounded up.
+     */
+    function getPrincipalAmountRoundedUp(uint240 presentAmount, uint128 index) internal pure returns (uint112) {
+        return divide240By128Up(presentAmount, index);
+    }
+
+    /**
      * @dev    Returns the safely capped principal amount given the present amount, using the current index.
      * @param  presentAmount The present amount.
      * @param  index         An index.
@@ -64,7 +90,7 @@ library IndexingMath {
         pure
         returns (uint112)
     {
-        uint112 principalAmount = getPrincipalAmountRoundedUp(presentAmount, index);
+        uint112 principalAmount = getPrincipalAmountRoundedUp(UIntMath.safe240(presentAmount), index);
         return principalAmount > maxPrincipalAmount ? maxPrincipalAmount : principalAmount;
     }
 }

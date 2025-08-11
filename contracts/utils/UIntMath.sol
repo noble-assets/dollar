@@ -15,6 +15,9 @@ library UIntMath {
     /// @notice Emitted when a passed value is greater than the maximum value of uint128.
     error InvalidUInt128();
 
+    /// @notice Emitted when a passed value is greater than the maximum value of uint240.
+    error InvalidUInt240();
+
     /* ============ Internal View/Pure Functions ============ */
 
     /**
@@ -36,6 +39,17 @@ library UIntMath {
         if (n > type(uint128).max) revert InvalidUInt128();
         return uint128(n);
     }
+
+    /**
+     * @notice Casts a uint256 value to a uint240, ensuring that it is less than or equal to the maximum uint240 value.
+     * @param  n The value to cast.
+     * @return The value casted to uint240.
+     */
+    function safe240(uint256 n) internal pure returns (uint240) {
+        if (n > type(uint240).max) revert InvalidUInt240();
+        return uint240(n);
+    }
+
 
     /**
      * @notice Limits a uint256 value to the maximum uint128 value.
