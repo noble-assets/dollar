@@ -122,10 +122,10 @@ The withdrawal queue provides multiple security benefits:
 
 ### Cross-Chain Coordination
 
-Remote positions leverage Hyperlane for secure cross-chain operations:
+Remote positions leverage Hyperlane/IBC for secure cross-chain operations:
 
-- **Deployment**: Capital bridged via Hyperlane to target chain
-- **Updates**: Position values relayed through Hyperlane oracles
+- **Deployment**: Capital bridged via Hyperlane/IBC to target chain
+- **Updates**: Position values relayed through Hyperlane/IBC oracles
 - **Withdrawals**: Yields and principal bridged back to Noble
 - **Emergency Recovery**: Fallback mechanisms for bridge failures
 
