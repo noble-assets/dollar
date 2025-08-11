@@ -146,7 +146,7 @@ contract NobleDollar is HypERC20 {
             revert NoClaimableYield();
         }
 
-        _transfer(address(this), msg.sender, amount); // Consider update() instead?
+        _update(address(this), msg.sender, amount); 
 
         emit YieldClaimed(msg.sender, amount);
     }
