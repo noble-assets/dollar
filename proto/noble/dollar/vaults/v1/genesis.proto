@@ -33,4 +33,7 @@ message GenesisState {
 
   // season_one_ended indicates whether Vaults Season One has ended.
   bool season_one_ended = 7;
+
+  // season_two_yield_collector defines the yield collector during Vaults Season Two.
+  string season_two_yield_collector = 8;
 }

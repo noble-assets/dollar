@@ -66,7 +66,6 @@ var (
 	_ module.HasGenesis          = AppModule{}
 	_ module.HasGenesisBasics    = AppModuleBasic{}
 	_ module.HasServices         = AppModule{}
-	_ appmodule.HasBeginBlocker  = AppModule{}
 )
 
 //
@@ -168,10 +167,6 @@ func (m AppModule) RegisterServices(cfg module.Configurator) {
 	if err := cfg.RegisterMigration(types.ModuleName, 1, migrator.Migrate1to2); err != nil {
 		panic(fmt.Sprintf("failed to migrate Noble Dollar from version 1 to 2: %v", err))
 	}
-}
-
-func (m AppModule) BeginBlock(ctx context.Context) error {
-	return m.keeper.BeginBlocker(ctx)
 }
 
 //
@@ -410,27 +405,12 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		panic("authority for Noble Dollar module must be set")
 	}
 
-	if in.Config.VaultsSeasonOneEndTimestamp == 0 {
-		panic("vaults season one end timestamp must be set")
-	}
-
-	if in.Config.VaultsSeasonTwoYieldCollector == "" {
-		panic("vaults season two yield collector must be set")
-	}
-	// Get the address bytes of the Collector address.
-	vaultsSeasonTwoYieldCollectorAddress, err := in.AddressCodec.StringToBytes(in.Config.VaultsSeasonTwoYieldCollector)
-	if err != nil {
-		panic("vaults season two yield collector must be a valid address")
-	}
-
 	authority := authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
 	k := keeper.NewKeeper(
 		in.Config.Denom,
 		authority.String(),
 		in.Config.VaultsMinimumLock,
 		in.Config.VaultsMinimumUnlock,
-		in.Config.VaultsSeasonOneEndTimestamp,
-		vaultsSeasonTwoYieldCollectorAddress,
 		in.Cdc,
 		in.StoreService,
 		in.Logger,
