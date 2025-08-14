@@ -35,9 +35,10 @@ NAV per Share = Total NAV / Total Outstanding Shares
 ```
 
 Key features:
-- **Oracle Integration**: Remote position values are updated via trusted oracles
-- **Inflight Tracking**: Funds in transit remain counted in NAV at last known value
-- **Staleness Protection**: Maximum age limits prevent using outdated values
+- **Push-Based Oracle Integration**: Remote chains actively push position values to Noble via Hyperlane using fixed-length byte encoding
+- **Automatic NAV Updates**: Noble receives and processes byte-encoded price updates as they arrive from remote chains
+- **Inflight Tracking**: USDN marked as inflight per Hyperlane route ID during bridge transit
+- **Staleness Protection**: Maximum age limits prevent using outdated values when pushes stop arriving
 - **Multi-Source Verification**: Critical updates require multiple oracle confirmations
 - **Time-Weighted Averaging**: Reduces impact of temporary price spikes
 - **Bridge Completion**: Tracking of completed bridge transactions
@@ -103,8 +104,8 @@ Remote position values are protected through:
 
 - **Staleness Checks**: Reject updates older than configured threshold
 - **Deviation Limits**: Flag suspicious large value changes
-- **Proof Verification**: Cryptographic proofs for cross-chain values
-- **Emergency Pauses**: Ability to halt on oracle failures
+- **Message Verification**: Hyperlane message authentication for cross-chain values
+- **Fallback Values**: Use last known good values on oracle issues
 
 ### Withdrawal Security
 
@@ -122,10 +123,11 @@ The withdrawal queue provides multiple security benefits:
 
 1. **Creation**: Deploy USDN to approved ERC-4626 compatible vault on target chain
 2. **Share Tracking**: Receive and track vault shares representing the position
-3. **Monitoring**: Continuous NAV updates via oracles tracking share prices
-4. **Rebalancing**: Redeem shares from one vault and deposit to another
-5. **Harvesting**: Yields compound within remote vaults
-6. **Closure**: Redeem vault shares for USDN and withdraw to Noble
+3. **Price Reception**: Remote chains push share price updates to Noble via Hyperlane
+4. **Automatic NAV Updates**: Noble processes pushed price data to maintain current valuations
+5. **Rebalancing**: Redeem shares from one vault and deposit to another
+6. **Harvesting**: Yields compound within remote vaults
+7. **Closure**: Redeem vault shares for USDN and withdraw to Noble
 
 ### Cross-Chain Coordination
 
@@ -135,7 +137,8 @@ Remote positions leverage Hyperlane for secure cross-chain operations:
 - **Share Management**: Vault shares received and tracked for each remote position
 - **Inflight Tracking**: USDN marked as inflight per Hyperlane route ID during bridge transit
 - **Route Management**: Each Hyperlane route (e.g., Noble→Hyperliquid, Base→Noble) tracked separately
-- **Value Updates**: Share prices in remote vaults relayed through Hyperlane oracles
+- **Push-Based Price Updates**: Remote chains proactively push share prices to Noble via Hyperlane using fixed-length byte encoding for efficiency
+- **Automatic Value Updates**: Noble continuously receives and applies byte-encoded price data directly from the Hyperlane Mailbox
 - **Redemptions**: Vault shares redeemed for USDN and bridged back to Noble via specific return routes
 - **Completion Tracking**: Monitoring of bridge transaction completions per route
 - **Emergency Recovery**: Fallback mechanisms for bridge failures on specific routes
@@ -147,8 +150,8 @@ Each remote position is subject to:
 - **Concentration Limits**: No single position > X% of total vault
 - **Chain Limits**: Maximum exposure per blockchain
 - **Approved Vaults Only**: Only deploy to pre-approved vault addresses
-- **Share Price Monitoring**: Track vault share prices for NAV calculations
-- **Health Monitoring**: Automatic alerts for vault performance degradation
+- **Push-Based Price Monitoring**: Receive continuous share price updates pushed from remote chains
+- **Health Monitoring**: Automatic alerts when price pushes stop arriving or show degradation
 
 ## Inflight Funds Management
 
@@ -207,7 +210,7 @@ Special States:
 - **Total Value Caps**: Aggregate limits across all routes for the vault
 - **Route Diversification**: Use multiple Hyperlane routes to reduce concentration risk
 - **Insurance Reserve**: Coverage for potential failures on specific routes
-- **Proof Requirements**: Cryptographic verification of Hyperlane message completions
+- **Message Authentication**: Verification of Hyperlane message origin and integrity
 
 ## Operational Flows
 
