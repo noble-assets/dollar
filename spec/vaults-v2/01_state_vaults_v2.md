@@ -46,10 +46,10 @@ const RemotePositionPrefix = []byte("vaults/v2/remote_position/")
 ```go
 type RemotePosition struct {
     PositionID       uint64
-    Protocol         string  // e.g., "aave", "compound", "morpho"
-    ChainID          uint16  // Hyperlane Chain ID
-    AssetAddress     []byte  // Remote asset address (always represents USDN equivalent)
-    Principal        math.Int
+    VaultAddress     []byte  // Address of the ERC-4626 compatible vault (Boring Vault or other)
+    ChainID          uint32  // Hyperlane Domain ID (e.g., 998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer)
+    SharesHeld       math.Int // Number of vault shares held
+    Principal        math.Int // USDN amount initially deposited
     LastUpdatedNAV   math.LegacyDec
     LastUpdateTime   time.Time
     Status           PositionStatus // ACTIVE, WITHDRAWING, CLOSED
@@ -58,7 +58,7 @@ type RemotePosition struct {
 
 ## InflightFunds
 
-The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a transaction ID (`string`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions.
+The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a Hyperlane route identifier (`uint32`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions, tracked per Hyperlane route.
 
 ```go
 const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
@@ -68,33 +68,43 @@ const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
 
 ```go
 type InflightFund struct {
-    TransactionID    string
+    HyperlaneRouteID uint32       // Hyperlane route identifier
+    TransactionID    string       // Hyperlane message ID
     Type             InflightType // DEPOSIT_TO_POSITION, WITHDRAWAL_FROM_POSITION, REBALANCE_BETWEEN_POSITIONS, PENDING_DEPLOYMENT, PENDING_WITHDRAWAL_DISTRIBUTION
     Amount           math.Int     // Always in USDN
-    SourceLocation   Location // Noble vault or specific position
-    DestLocation     Location // Noble vault or specific position
+    SourceDomain     uint32       // Hyperlane source domain
+    DestDomain       uint32       // Hyperlane destination domain
+    SourcePosition   *uint64      // Optional: source position ID if from position
+    DestPosition     *uint64      // Optional: destination position ID if to position
     InitiatedAt      time.Time
     ExpectedAt       time.Time
     Status           InflightStatus // PENDING, CONFIRMED, COMPLETED, FAILED
-    BridgeUsed       string // "hyperlane", "ibc"
-    ValueAtInitiation math.Int // USDN value when initiated
+    ValueAtInitiation math.Int    // USDN value when initiated
 }
 ```
 
-## InflightTransactions
+## InflightRoutes
 
-The `InflightTransactions` field is a [`collections.Item`][item] that stores a list of all inflight transaction IDs (`[]string`) for the vault. This allows quick lookup of all inflight funds for NAV calculation.
+The `InflightRoutes` field is a [`collections.Item`][item] that stores a list of all active Hyperlane route IDs (`[]uint32`) with inflight funds. This allows quick lookup of all inflight funds for NAV calculation.
 
 ```go
-const InflightTransactionsKey = []byte("vaults/v2/inflight_transactions")
+const InflightRoutesKey = []byte("vaults/v2/inflight_routes")
 ```
 
 ## TotalInflightValue
 
-The `TotalInflightValue` field is a [`collections.Item`][item] that stores the total value of all inflight funds for the vault (`math.Int`). This is cached for efficient NAV calculations and always denominated in USDN.
+The `TotalInflightValue` field is a [`collections.Item`][item] that stores the total value of all inflight funds across all Hyperlane routes (`math.Int`). This is cached for efficient NAV calculations and always denominated in USDN.
 
 ```go
 const TotalInflightValueKey = []byte("vaults/v2/total_inflight_value")
+```
+
+## InflightValueByRoute
+
+The `InflightValueByRoute` field is a mapping ([`collections.Map`][map]) between Hyperlane route ID (`uint32`) and the total inflight value on that route (`math.Int`). This enables per-route exposure tracking.
+
+```go
+const InflightValueByRoutePrefix = []byte("vaults/v2/inflight_value_by_route/")
 ```
 
 ## PendingDeploymentFunds
@@ -218,7 +228,7 @@ type DepositVelocity struct {
 
 ## RemotePositionOracles
 
-The `RemotePositionOracles` field is a mapping ([`collections.Map`][map]) between a composite key of protocol and chain ID (`string`, `uint16`) and oracle configuration (`vaults.v2.OracleConfig`).
+The `RemotePositionOracles` field is a mapping ([`collections.Map`][map]) between a composite key of vault address and chain ID (`[]byte`, `uint32`) and oracle configuration (`vaults.v2.OracleConfig`). This is used to track the value of shares in remote ERC-4626 compatible vaults.
 
 ```go
 const RemotePositionOraclesPrefix = []byte("vaults/v2/remote_position_oracles/")
@@ -250,8 +260,8 @@ const VaultConfigurationKey = []byte("vaults/v2/vault_config")
 type VaultConfig struct {
     Name                  string
     MaxRemotePositions    uint32
-    AllowedProtocols      []string
-    AllowedChains         []uint16
+    AllowedChains         []uint32  // Hyperlane domain IDs
+    AllowedVaultAddresses map[uint32][][]byte // Chain ID -> List of approved vault addresses
     RebalanceThreshold    math.LegacyDec // Percentage deviation before rebalance
     WithdrawalDelayBlocks int64
     ManagementFee         math.LegacyDec // Annual fee as percentage

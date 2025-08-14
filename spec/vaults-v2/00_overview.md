@@ -8,7 +8,7 @@ The Noble Dollar Vault V2 system represents a significant evolution in decentral
 
 ### Single Vault, Multiple Remote Positions
 
-The V2 system features a single vault on the Noble chain that can maintain multiple remote positions simultaneously across different protocols and chains. This architecture provides:
+The V2 system features a single vault on the Noble chain that can maintain multiple remote positions simultaneously across different chains. These remote positions are ERC-4626 compatible vaults. This architecture provides:
 
 - **Diversification**: Risk is spread across multiple yield sources managed by the single vault
 - **Optimization**: The vault can dynamically allocate capital to the highest-performing strategies
@@ -17,8 +17,8 @@ The V2 system features a single vault on the Noble chain that can maintain multi
 
 The Noble vault can configure:
 - Maximum number of remote positions (e.g., 5-10)
-- Allowed protocols (e.g., Aave, Compound, Morpho)
-- Allowed chains (via IBC/Hyperlane Chain IDs)
+- Allowed protocols (e.g., Hyperliquid, Base lending protocols, Noble App Layer vaults)
+- Allowed chains (via Hyperlane Domain IDs: 998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer)
 - Rebalancing thresholds and strategies
 
 ### Net Asset Value (NAV) System
@@ -120,57 +120,62 @@ The withdrawal queue provides multiple security benefits:
 
 ### Position Lifecycle
 
-1. **Creation**: Deploy capital to approved protocol/chain
-2. **Monitoring**: Continuous NAV updates via oracles
-3. **Rebalancing**: Adjust allocations based on performance
-4. **Harvesting**: Collect yields back to vault
-5. **Closure**: Withdraw capital when needed
+1. **Creation**: Deploy USDN to approved ERC-4626 compatible vault on target chain
+2. **Share Tracking**: Receive and track vault shares representing the position
+3. **Monitoring**: Continuous NAV updates via oracles tracking share prices
+4. **Rebalancing**: Redeem shares from one vault and deposit to another
+5. **Harvesting**: Yields compound within remote vaults
+6. **Closure**: Redeem vault shares for USDN and withdraw to Noble
 
 ### Cross-Chain Coordination
 
 Remote positions leverage Hyperlane for secure cross-chain operations:
 
-- **Deployment**: Capital bridged via Hyperlane to target chain (always in USDN)
-- **Inflight Tracking**: USDN marked as inflight during bridge transit
-- **Updates**: Position values relayed through Hyperlane oracles
-- **Withdrawals**: Yields and principal bridged back to Noble as USDN
-- **Completion Tracking**: Monitoring of bridge transaction completions
-- **Emergency Recovery**: Fallback mechanisms for bridge failures
+- **Deployment**: USDN bridged via specific Hyperlane routes to deposit into ERC-4626 compatible vaults
+- **Share Management**: Vault shares received and tracked for each remote position
+- **Inflight Tracking**: USDN marked as inflight per Hyperlane route ID during bridge transit
+- **Route Management**: Each Hyperlane route (e.g., Noble→Hyperliquid, Base→Noble) tracked separately
+- **Value Updates**: Share prices in remote vaults relayed through Hyperlane oracles
+- **Redemptions**: Vault shares redeemed for USDN and bridged back to Noble via specific return routes
+- **Completion Tracking**: Monitoring of bridge transaction completions per route
+- **Emergency Recovery**: Fallback mechanisms for bridge failures on specific routes
 
 ### Risk Management
 
 Each remote position is subject to:
 
-- **Concentration Limits**: No single position > X% of vault
-- **Protocol Limits**: Maximum exposure per protocol
+- **Concentration Limits**: No single position > X% of total vault
 - **Chain Limits**: Maximum exposure per blockchain
-- **Correlation Analysis**: Avoid over-concentration in correlated strategies
-- **Health Monitoring**: Automatic alerts for position degradation
+- **Approved Vaults Only**: Only deploy to pre-approved vault addresses
+- **Share Price Monitoring**: Track vault share prices for NAV calculations
+- **Health Monitoring**: Automatic alerts for vault performance degradation
 
 ## Inflight Funds Management
 
 ### Overview
 
-Inflight funds represent capital that is temporarily in transit between the Noble vault and its remote positions, or between positions during rebalancing. This capital remains fully accounted for in the NAV to ensure accurate vault valuation at all times.
+Inflight funds represent capital that is temporarily in transit between the Noble vault and its remote positions, or between positions during rebalancing. Each inflight transaction is tracked by its specific Hyperlane route identifier, allowing precise monitoring of capital flows across different bridge paths. This capital remains fully accounted for in the NAV to ensure accurate vault valuation at all times.
 
 ### Inflight Fund Types
 
-1. **Deposit to Position**: USDN being deployed from the Noble vault to a remote protocol
-2. **Withdrawal from Position**: USDN returning from a remote protocol to the Noble vault
-3. **Rebalance Between Positions**: USDN moving between the vault's remote positions (via Noble)
-4. **Pending Deployment**: USDN from deposits awaiting allocation to positions
-5. **Pending Withdrawal Distribution**: USDN returned from positions awaiting distribution to withdrawal queue
-6. **Yield Collection**: Periodic harvest of accumulated yields in USDN
+1. **Deposit to Position**: USDN being deployed from the Noble vault to a remote ERC-4626 compatible vault
+2. **Withdrawal from Position**: USDN returning from redeemed vault shares to the Noble vault
+3. **Rebalance Between Positions**: USDN moving between remote vaults (via Noble after share redemption)
+4. **Pending Deployment**: USDN from deposits awaiting allocation to remote vaults
+5. **Pending Withdrawal Distribution**: USDN from redeemed shares awaiting distribution to withdrawal queue
+6. **Yield Collection**: Automatic compounding within remote vaults
 
 ### Tracking Mechanism
 
 Each inflight transaction maintains:
-- **Transaction ID**: Unique identifier for tracking
+- **Hyperlane Route ID**: Unique route identifier (e.g., 4000260998 for Noble→Hyperliquid)
+- **Transaction ID**: Hyperlane message ID for the specific transfer
+- **Source/Destination Domains**: Hyperlane domain IDs for the route endpoints (4000260 for Noble, 998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer)
 - **Expected Value**: USDN amount sent including estimated bridge fees
 - **Current Value**: Last known USDN value for NAV calculation
-- **Time Bounds**: Expected arrival time and maximum duration
-- **Bridge Details**: Hyperlane protocol and confirmation data
-- **Status Updates**: PENDING → CONFIRMED → COMPLETED lifecycle
+- **Time Bounds**: Expected arrival time and maximum duration per route
+- **Status Updates**: PENDING → CONFIRMED → COMPLETED lifecycle per route
+- **Route-Specific Limits**: Maximum exposure allowed per Hyperlane route
 
 ### NAV Impact
 
@@ -197,11 +202,12 @@ Special States:
 
 ### Risk Mitigation
 
-- **Maximum Duration Limits**: Funds cannot remain inflight indefinitely
-- **Value Caps**: Limits on total inflight exposure for the vault
-- **Bridge Diversification**: Use multiple bridges to reduce single point of failure
-- **Insurance Reserve**: Coverage for potential bridge failures
-- **Proof Requirements**: Cryptographic verification of bridge completions
+- **Maximum Duration Limits**: Funds cannot remain inflight indefinitely on any route
+- **Per-Route Value Caps**: Limits on inflight exposure for each Hyperlane route
+- **Total Value Caps**: Aggregate limits across all routes for the vault
+- **Route Diversification**: Use multiple Hyperlane routes to reduce concentration risk
+- **Insurance Reserve**: Coverage for potential failures on specific routes
+- **Proof Requirements**: Cryptographic verification of Hyperlane message completions
 
 ## Operational Flows
 
@@ -228,7 +234,9 @@ Deploy Capital via Bridge
     ↓
 Monitor Bridge Confirmation
     ↓
-Reconcile on Arrival
+Deposit into Remote Vault
+    ↓
+Receive and Track Vault Shares
 ```
 
 ### Withdrawal Flow with Queue
@@ -256,7 +264,9 @@ Burn Shares & Transfer $USDN
 ### Remote Position Capital Return Flow
 
 ```
-Initiate Position Withdrawal
+Initiate Vault Share Redemption
+    ↓
+Redeem Shares for USDN
     ↓
 Mark Expected USDN as Inflight
     ↓
@@ -278,21 +288,25 @@ Process Withdrawal Queue
 ```
 Initiate Rebalance Strategy
     ↓
-Withdraw USDN from Source Position
+Redeem Shares from Source Vault
     ↓
-Mark as WITHDRAWAL_FROM_POSITION Inflight
+Mark as WITHDRAWAL_FROM_POSITION Inflight (Route A)
+    ↓
+Track via Hyperlane Route ID (e.g., 998_4000260)
     ↓
 USDN Arrives at Noble
     ↓
 Mark as PENDING_DEPLOYMENT
     ↓
-Deploy to Target Position
+Deploy to Target Vault
     ↓
-Mark as DEPOSIT_TO_POSITION Inflight
+Mark as DEPOSIT_TO_POSITION Inflight (Route B)
     ↓
-Confirm Arrival at Target
+Track via Hyperlane Route ID (e.g., 4000260_8453)
     ↓
-Update Position Values
+Deposit into Target Vault & Receive Shares
+    ↓
+Update Share Balances & Clear Route Tracking
 ```
 
 ## Economic Model

@@ -42,27 +42,29 @@ Retrieves the current Net Asset Value and related metrics for the Noble vault.
 
 **Endpoint**: `/noble/dollar/vaults/v2/remote_positions`
 
-Retrieves all remote positions for the Noble vault.
+Retrieves all remote positions for the Noble vault, showing the vault shares held on each chain.
 
 ```json
 {
   "positions": [
     {
       "position_id": "1",
-      "protocol": "aave-v3",
-      "chain_id": 2,
-      "asset_address": "0x...",
+      "vault_address": "0x...",
+      "chain_id": 998,
+      "shares_held": "2950000",
+      "share_price": "1.068",
       "principal": "3000000",
       "current_value": "3150000",
-      "apy": "5.2",
+      "apy": "12.5",
       "status": "ACTIVE",
       "last_update": "2024-01-15T14:00:00Z"
     },
     {
       "position_id": "2",
-      "protocol": "compound-v3",
-      "chain_id": 1,
-      "asset_address": "0x...",
+      "vault_address": "0x...",
+      "chain_id": 8453,
+      "shares_held": "4900000",
+      "share_price": "1.092",
       "principal": "5000000",
       "current_value": "5350000",
       "apy": "7.1",
@@ -356,35 +358,41 @@ Retrieves all inflight funds for the Noble vault, including funds in transit bet
 {
   "inflight_funds": [
     {
-      "transaction_id": "hyperlane-tx-123",
+      "hyperlane_route_id": 4000260998,
+      "transaction_id": "hyperlane-msg-123",
       "type": "DEPOSIT_TO_POSITION",
       "amount": "100000",
       "current_value": "100000",
-      "source": "noble",
-      "destination": "ethereum-aave-v3",
+      "source_domain": 4000260,
+      "destination_domain": 998,
+      "destination_position_id": 1,
       "initiated_at": "2024-01-15T14:00:00Z",
       "expected_at": "2024-01-15T14:30:00Z",
       "status": "PENDING",
-      "bridge": "hyperlane",
       "time_remaining": "600"
     },
     {
-      "transaction_id": "hyperlane-tx-456",
+      "hyperlane_route_id": 84534000260,
+      "transaction_id": "hyperlane-msg-456",
       "type": "WITHDRAWAL_FROM_POSITION",
       "amount": "50000",
       "current_value": "50000",
-      "source": "arbitrum-compound-v3",
-      "destination": "noble",
+      "source_domain": 8453,
+      "destination_domain": 4000260,
+      "source_position_id": 2,
       "initiated_at": "2024-01-15T13:45:00Z",
       "expected_at": "2024-01-15T14:15:00Z",
       "status": "CONFIRMED",
-      "bridge": "hyperlane",
       "time_remaining": "0"
     }
   ],
   "total_inflight": "150000",
   "pending_deployment": "200000",
   "pending_withdrawal_distribution": "75000",
+  "by_route": {
+    "4000260998": "100000",
+    "84534000260": "50000"
+  },
   "by_type": {
     "deposits_to_position": "100000",
     "withdrawals_from_position": "50000",
@@ -402,10 +410,11 @@ Retrieves all inflight funds for the Noble vault, including funds in transit bet
 
 ### Response
 
-- `inflight_funds` — Array of all inflight fund transactions (all amounts in USDN).
-- `total_inflight` — Total value of all funds in transit (USDN).
+- `inflight_funds` — Array of all inflight fund transactions tracked by Hyperlane route (all amounts in USDN).
+- `total_inflight` — Total value of all funds in transit across all routes (USDN).
 - `pending_deployment` — USDN awaiting deployment to remote positions.
 - `pending_withdrawal_distribution` — USDN awaiting distribution to withdrawal queue.
+- `by_route` — Breakdown by Hyperlane route ID showing inflight value per route.
 - `by_type` — Breakdown by transaction type including pending states.
 - `by_status` — Breakdown by current status.
 
@@ -419,13 +428,15 @@ Retrieves inflight funds that have exceeded their expected arrival time and may 
 {
   "stale_funds": [
     {
-      "transaction_id": "hyperlane-tx-789",
+      "hyperlane_route_id": 40002604000261,
+      "transaction_id": "hyperlane-msg-789",
       "amount": "75000",
       "type": "DEPOSIT_TO_POSITION",
+      "source_domain": 4000260,
+      "destination_domain": 4000261,
       "initiated_at": "2024-01-14T10:00:00Z",
       "expected_at": "2024-01-14T10:30:00Z",
       "hours_overdue": "28.5",
-      "bridge": "hyperlane",
       "last_known_status": "PENDING",
       "recommended_action": "investigate"
     }
@@ -438,8 +449,8 @@ Retrieves inflight funds that have exceeded their expected arrival time and may 
 
 ### Response
 
-- `stale_funds` — Array of stale inflight fund entries (amounts in USDN).
-- `total_stale_value` — Total value of stale funds in USDN.
-- `total_stale_count` — Number of stale transactions.
-- `oldest_stale_hours` — Hours since oldest stale transaction.
+- `stale_funds` — Array of stale inflight fund entries by Hyperlane route (amounts in USDN).
+- `total_stale_value` — Total value of stale funds across all routes in USDN.
+- `total_stale_count` — Number of stale transactions across all routes.
+- `oldest_stale_hours` — Hours since oldest stale transaction on any route.
 

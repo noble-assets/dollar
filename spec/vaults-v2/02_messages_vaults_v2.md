@@ -232,7 +232,7 @@ This message updates the Net Asset Value of the Noble vault based on the perform
 
 `noble.dollar.vaults.v2.MsgCreateRemotePosition`
 
-This message deploys capital from the Noble vault to a remote yield-generating position on another chain or protocol. The vault can maintain multiple remote positions for diversification.
+This message deploys capital from the Noble vault to a remote yield-generating position by depositing into an ERC-4626 compatible vault on another chain. The vault can maintain multiple remote positions for diversification.
 
 ```json
 {
@@ -241,14 +241,10 @@ This message deploys capital from the Noble vault to a remote yield-generating p
       {
         "@type": "/noble.dollar.vaults.v2.MsgCreateRemotePosition",
         "signer": "noble1manager",
-        "protocol": "aave-v3",
-        "chain_id": 2,
+        "vault_address": "base64_encoded_vault_address",
+        "chain_id": 998,
         "amount": "1000000",
-        "asset_address": "base64_encoded_asset_address",
-        "parameters": {
-          "pool_address": "base64_encoded_pool_address",
-          "strategy": "stable_lending"
-        }
+        "min_shares_out": "950000"
       }
     ],
     "memo": "",
@@ -271,30 +267,31 @@ This message deploys capital from the Noble vault to a remote yield-generating p
 
 ### Arguments
 
-- `protocol` — The target protocol identifier.
-- `chain_id` — The Wormhole Chain ID of the destination.
-- `amount` — The amount of capital to deploy.
-- `asset_address` — The address of the asset on the remote chain.
-- `parameters` — Protocol-specific deployment parameters.
+- `vault_address` — The address of the target ERC-4626 compatible vault.
+- `chain_id` — The Hyperlane Domain ID of the destination (998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer).
+- `amount` — The amount of USDN capital to deploy.
+- `min_shares_out` — Minimum acceptable vault shares to receive (slippage protection).
 
 ### Requirements
 
 - Signer must be the vault manager or authorized operator.
 - The vault must have sufficient unallocated capital.
-- Protocol and chain must be in the vault's allowed list.
+- Target vault address must be in the approved list for the chain.
 - Number of positions must not exceed the vault's max remote positions limit.
 - Combined remote position exposure must maintain diversification requirements.
 
 ### State Changes
 
 - Capital is marked as inflight with DEPOSIT_TO_POSITION type.
-- Inflight fund entry created with expected arrival time (amount in USDN).
-- Capital is bridged to the destination chain via Hyperlane/IBC.
+- Inflight fund entry created with Hyperlane route ID and expected arrival time (amount in USDN).
+- Capital is bridged to the destination chain via specific Hyperlane route.
 - Vault's available liquidity is decreased.
-- NAV continues to include the inflight USDN value during transit.
-- Upon confirmation, inflight status transitions to CONFIRMED.
-- New remote position entry is created with ACTIVE status once funds arrive.
-- Inflight fund entry is marked COMPLETED and archived.
+- NAV continues to include the inflight USDN value during transit, tracked per route.
+- Upon Hyperlane confirmation, inflight status transitions to CONFIRMED.
+- USDN is deposited into the target ERC-4626 compatible vault.
+- Vault shares are received and tracked in the remote position.
+- New remote position entry is created with ACTIVE status once shares are confirmed.
+- Inflight fund entry for that Hyperlane route is marked COMPLETED and archived.
 
 ## CloseRemotePosition
 
@@ -346,13 +343,13 @@ This message initiates the withdrawal of capital from a remote position back to 
 
 - Withdrawal is initiated on the remote chain.
 - Position status updated to WITHDRAWING.
-- Inflight fund entry created with WITHDRAWAL_FROM_POSITION type (amount in USDN).
-- Expected return amount and arrival time are tracked.
-- NAV continues to include the inflight USDN value during transit.
+- Inflight fund entry created with WITHDRAWAL_FROM_POSITION type and Hyperlane route ID (amount in USDN).
+- Expected return amount and arrival time are tracked for the specific route.
+- NAV continues to include the inflight USDN value during transit, tracked per route.
 - Funds marked as PENDING_WITHDRAWAL_DISTRIBUTION upon arrival.
 - Withdrawal requests in queue may be marked for processing upon receipt.
-- Upon bridge confirmation via Hyperlane, inflight status transitions to CONFIRMED.
-- Once received, inflight entry is marked COMPLETED.
+- Upon confirmation via Hyperlane route, inflight status transitions to CONFIRMED.
+- Once received, inflight entry for that route is marked COMPLETED.
 
 ## ProcessWithdrawalQueue
 
@@ -420,9 +417,10 @@ This message handles inflight funds that have exceeded their maximum duration wi
       {
         "@type": "/noble.dollar.vaults.v2.MsgHandleStaleInflight",
         "signer": "noble1governance",
-        "transaction_id": "hyperlane-tx-456",
+        "hyperlane_route_id": 12345,
+        "transaction_id": "hyperlane-msg-456",
         "action": "write_off",
-        "justification": "Bridge timeout confirmed, funds unrecoverable"
+        "justification": "Hyperlane route timeout confirmed, funds unrecoverable"
       }
     ],
     "memo": "",
@@ -445,13 +443,14 @@ This message handles inflight funds that have exceeded their maximum duration wi
 
 ### Arguments
 
-- `transaction_id` — The identifier of the stale inflight transaction.
+- `hyperlane_route_id` — The Hyperlane route identifier with stale inflight funds.
+- `transaction_id` — The Hyperlane message ID of the stale transaction.
 - `action` — Action to take: "write_off", "extend", "manual_recovery".
 - `justification` — Explanation for the action taken.
 
 ### Requirements
 
-- Transaction must have exceeded maximum inflight duration.
+- Inflight funds on the specified Hyperlane route must have exceeded maximum duration.
 - Signer must be governance or emergency multisig.
 - Action must be appropriate for the situation.
 - Write-offs require governance approval for amounts above threshold.
@@ -528,12 +527,18 @@ This message rebalances capital across the Noble vault's multiple remote positio
 
 - Capital movements are initiated between positions (all in USDN).
 - For position-to-position rebalancing:
-  - Source position withdrawal creates WITHDRAWAL_FROM_POSITION inflight.
+  - Example: Hyperliquid vault to Base vault rebalancing
+  - Vault shares are redeemed from source vault for USDN.
+  - Source position withdrawal creates WITHDRAWAL_FROM_POSITION inflight on Hyperliquid→Noble route (e.g., route 998_4000260).
   - Upon arrival at Noble, funds marked as PENDING_DEPLOYMENT.
-  - Deployment to target position creates DEPOSIT_TO_POSITION inflight.
+  - Deployment to target vault creates DEPOSIT_TO_POSITION inflight on Noble→Base route (e.g., route 4000260_8453).
+  - Target vault shares are received and tracked.
 - For position-to-Noble rebalancing (for withdrawals):
-  - Creates WITHDRAWAL_FROM_POSITION inflight.
+  - Example: Base vault withdrawal for user redemptions
+  - Vault shares are redeemed from the vault for USDN.
+  - Creates WITHDRAWAL_FROM_POSITION inflight on Base→Noble route (e.g., route 8453_4000260).
   - Upon arrival, funds marked as PENDING_WITHDRAWAL_DISTRIBUTION.
+- Each Hyperlane route tracks its own inflight funds separately.
 - Temporary liquidity constraints may delay withdrawal processing.
-- Rebalancing transactions are tracked.
-- NAV remains constant during rebalancing (inflight USDN counted at initiation value).
+- Rebalancing transactions are tracked per Hyperlane route.
+- NAV remains constant during rebalancing (inflight USDN counted at initiation value per route).
