@@ -2,13 +2,12 @@
 
 ## NAV
 
-**Endpoint**: `/noble/dollar/vaults/v2/nav/{vault_id}`
+**Endpoint**: `/noble/dollar/vaults/v2/nav`
 
-Retrieves the current Net Asset Value and related metrics for a specific vault.
+Retrieves the current Net Asset Value and related metrics for the Noble vault.
 
 ```json
 {
-  "vault_id": "vault-001",
   "nav": "10500000",
   "nav_per_share": "1.050000000000000000",
   "last_update": "2024-01-15T14:30:00Z",
@@ -27,14 +26,9 @@ Retrieves the current Net Asset Value and related metrics for a specific vault.
 }
 ```
 
-### Arguments
-
-- `vault_id` — The unique identifier of the vault.
-
 ### Response
 
-- `vault_id` — The vault identifier.
-- `nav` — Total Net Asset Value of the vault in $USDN.
+- `nav` — Total Net Asset Value of the Noble vault in $USDN.
 - `nav_per_share` — Current value per share.
 - `last_update` — Timestamp of the last NAV update.
 - `total_shares` — Total outstanding shares.
@@ -46,9 +40,9 @@ Retrieves the current Net Asset Value and related metrics for a specific vault.
 
 ## RemotePositions
 
-**Endpoint**: `/noble/dollar/vaults/v2/remote_positions/{vault_id}`
+**Endpoint**: `/noble/dollar/vaults/v2/remote_positions`
 
-Retrieves all remote positions for a specific vault.
+Retrieves all remote positions for the Noble vault.
 
 ```json
 {
@@ -81,10 +75,6 @@ Retrieves all remote positions for a specific vault.
 }
 ```
 
-### Arguments
-
-- `vault_id` — The unique identifier of the vault.
-
 ### Response
 
 - `positions` — Array of remote position details.
@@ -93,9 +83,9 @@ Retrieves all remote positions for a specific vault.
 
 ## WithdrawalQueue
 
-**Endpoint**: `/noble/dollar/vaults/v2/withdrawal_queue/{vault_id}`
+**Endpoint**: `/noble/dollar/vaults/v2/withdrawal_queue`
 
-Retrieves the current state of the withdrawal queue for a vault.
+Retrieves the current state of the withdrawal queue for the Noble vault.
 
 ```json
 {
@@ -128,10 +118,6 @@ Retrieves the current state of the withdrawal queue for a vault.
 }
 ```
 
-### Arguments
-
-- `vault_id` — The unique identifier of the vault.
-
 ### Response
 
 - `pending_requests` — Array of pending withdrawal requests in queue order.
@@ -144,14 +130,13 @@ Retrieves the current state of the withdrawal queue for a vault.
 
 **Endpoint**: `/noble/dollar/vaults/v2/user_withdrawals/{user}`
 
-Retrieves all withdrawal requests for a specific user across all vaults.
+Retrieves all withdrawal requests for a specific user.
 
 ```json
 {
   "withdrawals": [
     {
       "request_id": "42",
-      "vault_id": "vault-001",
       "shares": "1000",
       "requested_amount": "1050000",
       "fulfilled_amount": "1050000",
@@ -161,7 +146,6 @@ Retrieves all withdrawal requests for a specific user across all vaults.
     },
     {
       "request_id": "38",
-      "vault_id": "vault-002",
       "shares": "500",
       "requested_amount": "500000",
       "fulfilled_amount": "500000",
@@ -191,30 +175,15 @@ Retrieves all withdrawal requests for a specific user across all vaults.
 
 **Endpoint**: `/noble/dollar/vaults/v2/user_shares/{user}`
 
-Retrieves share balances and values for a user across all vaults.
+Retrieves share balance and value for a user in the Noble vault.
 
 ```json
 {
-  "positions": [
-    {
-      "vault_id": "vault-001",
-      "shares": "10000",
-      "share_value": "10500000",
-      "nav_per_share": "1.050000000000000000",
-      "unrealized_gain": "500000",
-      "locked_shares": "1000"
-    },
-    {
-      "vault_id": "vault-002",
-      "shares": "5000",
-      "share_value": "5000000",
-      "nav_per_share": "1.000000000000000000",
-      "unrealized_gain": "0",
-      "locked_shares": "0"
-    }
-  ],
-  "total_value": "15500000",
-  "total_unrealized_gain": "500000"
+  "shares": "10000",
+  "share_value": "10500000",
+  "nav_per_share": "1.050000000000000000",
+  "unrealized_gain": "500000",
+  "locked_shares": "1000"
 }
 ```
 
@@ -224,19 +193,20 @@ Retrieves share balances and values for a user across all vaults.
 
 ### Response
 
-- `positions` — Array of user's positions in different vaults.
-- `total_value` — Combined value of all positions.
-- `total_unrealized_gain` — Total unrealized gains across all vaults.
+- `shares` — User's share balance in the vault.
+- `share_value` — Current value of user's shares.
+- `nav_per_share` — Current NAV per share.
+- `unrealized_gain` — User's unrealized gain.
+- `locked_shares` — Shares locked for pending withdrawals.
 
 ## VaultStats
 
-**Endpoint**: `/noble/dollar/vaults/v2/stats/{vault_id}`
+**Endpoint**: `/noble/dollar/vaults/v2/stats`
 
-Retrieves comprehensive statistics for a vault.
+Retrieves comprehensive statistics for the Noble vault.
 
 ```json
 {
-  "vault_id": "vault-001",
   "total_deposits": "100000000",
   "total_withdrawals": "20000000",
   "total_shares": "76190476",
@@ -258,13 +228,8 @@ Retrieves comprehensive statistics for a vault.
 }
 ```
 
-### Arguments
-
-- `vault_id` — The unique identifier of the vault.
-
 ### Response
 
-- `vault_id` — The vault identifier.
 - `total_deposits` — Historical total deposits.
 - `total_withdrawals` — Historical total withdrawals.
 - `total_shares` — Current outstanding shares.
@@ -321,7 +286,6 @@ Simulates a deposit to show expected shares and checks.
 
 ```json
 {
-  "vault_id": "vault-001",
   "amount": "1000000",
   "user": "noble1user",
   "expected_shares": "952380",
@@ -339,7 +303,6 @@ Simulates a deposit to show expected shares and checks.
 
 ### Query Parameters
 
-- `vault_id` — The vault to simulate deposit for.
 - `amount` — The amount to simulate depositing.
 - `user` — The user address for limit checks.
 
@@ -358,7 +321,6 @@ Simulates a withdrawal to show expected proceeds and queue time.
 
 ```json
 {
-  "vault_id": "vault-001",
   "shares": "1000",
   "user": "noble1user",
   "expected_amount": "1050000",
@@ -372,7 +334,6 @@ Simulates a withdrawal to show expected proceeds and queue time.
 
 ### Query Parameters
 
-- `vault_id` — The vault to simulate withdrawal from.
 - `shares` — The number of shares to simulate redeeming.
 - `user` — The user address.
 
@@ -387,9 +348,9 @@ Simulates a withdrawal to show expected proceeds and queue time.
 
 ## InflightFunds
 
-**Endpoint**: `/noble/dollar/vaults/v2/inflight_funds/{vault_id}`
+**Endpoint**: `/noble/dollar/vaults/v2/inflight_funds`
 
-Retrieves all inflight funds for a specific vault, including funds in transit between Noble and remote positions.
+Retrieves all inflight funds for the Noble vault, including funds in transit between the vault and remote positions.
 
 ```json
 {
@@ -439,10 +400,6 @@ Retrieves all inflight funds for a specific vault, including funds in transit be
 }
 ```
 
-### Arguments
-
-- `vault_id` — The unique identifier of the vault.
-
 ### Response
 
 - `inflight_funds` — Array of all inflight fund transactions (all amounts in USDN).
@@ -462,7 +419,6 @@ Retrieves inflight funds that have exceeded their expected arrival time and may 
 {
   "stale_funds": [
     {
-      "vault_id": "vault-001",
       "transaction_id": "hyperlane-tx-789",
       "amount": "75000",
       "type": "DEPOSIT_TO_POSITION",

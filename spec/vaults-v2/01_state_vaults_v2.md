@@ -2,12 +2,12 @@
 
 ## NAV (Net Asset Value)
 
-The `NAV` field is a [`collections.Item`][item] that stores the current Net Asset Value of the vault, representing the total value of all assets including remote positions and inflight funds (`math.LegacyDec`).
+The `NAV` field is a [`collections.Item`][item] that stores the current Net Asset Value of the single Noble vault, representing the total value of all assets including its remote positions and inflight funds (`math.LegacyDec`).
 
 The NAV calculation includes:
-- Local assets (held in vault)
-- Remote position values (deployed capital)
-- Inflight funds (in transit between chains/protocols)
+- Local assets (held in the Noble vault)
+- Remote position values (capital deployed from the vault)
+- Inflight funds (in transit between the vault and remote positions)
 - Minus pending liabilities (withdrawals to be paid)
 
 ```go
@@ -35,7 +35,7 @@ const LastNAVUpdateKey = []byte("vaults/v2/last_nav_update")
 
 ## RemotePositions
 
-The `RemotePositions` field is a mapping ([`collections.Map`][map]) between a composite key of vault ID and position ID (`string`, `uint64`) and a `vaults.v2.RemotePosition` value. A single vault can maintain multiple remote positions across different protocols and chains.
+The `RemotePositions` field is a mapping ([`collections.Map`][map]) between position ID (`uint64`) and a `vaults.v2.RemotePosition` value. The single Noble vault maintains multiple remote positions across different protocols and chains.
 
 ```go
 const RemotePositionPrefix = []byte("vaults/v2/remote_position/")
@@ -46,7 +46,6 @@ const RemotePositionPrefix = []byte("vaults/v2/remote_position/")
 ```go
 type RemotePosition struct {
     PositionID       uint64
-    VaultID          string
     Protocol         string  // e.g., "aave", "compound", "morpho"
     ChainID          uint16  // Hyperlane Chain ID
     AssetAddress     []byte  // Remote asset address (always represents USDN equivalent)
@@ -59,7 +58,7 @@ type RemotePosition struct {
 
 ## InflightFunds
 
-The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a transaction ID (`string`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between Noble and remote positions or between positions.
+The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a transaction ID (`string`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions.
 
 ```go
 const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
@@ -70,11 +69,10 @@ const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
 ```go
 type InflightFund struct {
     TransactionID    string
-    VaultID          string
     Type             InflightType // DEPOSIT_TO_POSITION, WITHDRAWAL_FROM_POSITION, REBALANCE_BETWEEN_POSITIONS, PENDING_DEPLOYMENT, PENDING_WITHDRAWAL_DISTRIBUTION
     Amount           math.Int     // Always in USDN
-    SourceLocation   Location // Noble or specific position
-    DestLocation     Location // Noble or specific position
+    SourceLocation   Location // Noble vault or specific position
+    DestLocation     Location // Noble vault or specific position
     InitiatedAt      time.Time
     ExpectedAt       time.Time
     Status           InflightStatus // PENDING, CONFIRMED, COMPLETED, FAILED
@@ -83,36 +81,36 @@ type InflightFund struct {
 }
 ```
 
-## InflightFundsByVault
+## InflightTransactions
 
-The `InflightFundsByVault` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and a list of inflight transaction IDs (`[]string`). This allows quick lookup of all inflight funds for NAV calculation.
+The `InflightTransactions` field is a [`collections.Item`][item] that stores a list of all inflight transaction IDs (`[]string`) for the vault. This allows quick lookup of all inflight funds for NAV calculation.
 
 ```go
-const InflightFundsByVaultPrefix = []byte("vaults/v2/inflight_by_vault/")
+const InflightTransactionsKey = []byte("vaults/v2/inflight_transactions")
 ```
 
 ## TotalInflightValue
 
-The `TotalInflightValue` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the total value of all inflight funds for that vault (`math.Int`). This is cached for efficient NAV calculations and always denominated in USDN.
+The `TotalInflightValue` field is a [`collections.Item`][item] that stores the total value of all inflight funds for the vault (`math.Int`). This is cached for efficient NAV calculations and always denominated in USDN.
 
 ```go
-const TotalInflightValuePrefix = []byte("vaults/v2/total_inflight_value/")
+const TotalInflightValueKey = []byte("vaults/v2/total_inflight_value")
 ```
 
 ## PendingDeploymentFunds
 
-The `PendingDeploymentFunds` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the amount of USDN received from deposits but not yet deployed to remote positions (`math.Int`).
+The `PendingDeploymentFunds` field is a [`collections.Item`][item] that stores the amount of USDN received from deposits but not yet deployed to remote positions (`math.Int`).
 
 ```go
-const PendingDeploymentFundsPrefix = []byte("vaults/v2/pending_deployment/")
+const PendingDeploymentFundsKey = []byte("vaults/v2/pending_deployment")
 ```
 
 ## PendingWithdrawalDistribution
 
-The `PendingWithdrawalDistribution` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the amount of USDN returned from remote positions but not yet distributed to withdrawal claimants (`math.Int`).
+The `PendingWithdrawalDistribution` field is a [`collections.Item`][item] that stores the amount of USDN returned from remote positions but not yet distributed to withdrawal claimants (`math.Int`).
 
 ```go
-const PendingWithdrawalDistributionPrefix = []byte("vaults/v2/pending_withdrawal_dist/")
+const PendingWithdrawalDistributionKey = []byte("vaults/v2/pending_withdrawal_dist")
 ```
 
 ## WithdrawalQueue
@@ -129,7 +127,6 @@ const WithdrawalQueuePrefix = []byte("vaults/v2/withdrawal_queue/")
 type WithdrawalRequest struct {
     RequestID        uint64
     User             []byte
-    VaultID          string
     SharesAmount     math.Int
     RequestedAmount  math.Int  // Amount in $USDN requested
     NAVAtRequest     math.LegacyDec
@@ -149,34 +146,34 @@ const WithdrawalQueueSequenceKey = []byte("vaults/v2/withdrawal_queue_seq")
 
 ## PendingWithdrawals
 
-The `PendingWithdrawals` field is a [`collections.Item`][item] that stores the total amount of pending withdrawals across all vaults (`math.Int`).
+The `PendingWithdrawals` field is a [`collections.Item`][item] that stores the total amount of pending withdrawals for the vault (`math.Int`).
 
 ```go
 const PendingWithdrawalsKey = []byte("vaults/v2/pending_withdrawals")
 ```
 
-## VaultShares
+## UserShares
 
-The `VaultShares` field is a mapping ([`collections.Map`][map]) between a composite key of user address and vault ID (`[]byte`, `string`) and their share balance (`math.Int`).
+The `UserShares` field is a mapping ([`collections.Map`][map]) between user address (`[]byte`) and their share balance in the vault (`math.Int`).
 
 ```go
-const VaultSharesPrefix = []byte("vaults/v2/vault_shares/")
+const UserSharesPrefix = []byte("vaults/v2/user_shares/")
 ```
 
 ## TotalShares
 
-The `TotalShares` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the total outstanding shares for that vault (`math.Int`).
+The `TotalShares` field is a [`collections.Item`][item] that stores the total outstanding shares for the vault (`math.Int`).
 
 ```go
-const TotalSharesPrefix = []byte("vaults/v2/total_shares/")
+const TotalSharesKey = []byte("vaults/v2/total_shares")
 ```
 
 ## DepositLimits
 
-The `DepositLimits` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and a `vaults.v2.DepositLimit` value.
+The `DepositLimits` field is a [`collections.Item`][item] that stores the deposit limits for the vault (`vaults.v2.DepositLimit`).
 
 ```go
-const DepositLimitsPrefix = []byte("vaults/v2/deposit_limits/")
+const DepositLimitsKey = []byte("vaults/v2/deposit_limits")
 ```
 
 ### DepositLimit Structure
@@ -241,17 +238,16 @@ type OracleConfig struct {
 
 ## VaultConfiguration
 
-The `VaultConfiguration` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and a `vaults.v2.VaultConfig` value.
+The `VaultConfiguration` field is a [`collections.Item`][item] that stores the configuration for the Noble vault (`vaults.v2.VaultConfig`).
 
 ```go
-const VaultConfigurationPrefix = []byte("vaults/v2/vault_config/")
+const VaultConfigurationKey = []byte("vaults/v2/vault_config")
 ```
 
 ### VaultConfig Structure
 
 ```go
 type VaultConfig struct {
-    VaultID               string
     Name                  string
     MaxRemotePositions    uint32
     AllowedProtocols      []string

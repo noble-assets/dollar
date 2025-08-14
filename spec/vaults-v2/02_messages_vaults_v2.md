@@ -4,7 +4,7 @@
 
 `noble.dollar.vaults.v2.MsgDeposit`
 
-This message allows Noble Dollar users to deposit $USDN into a vault and receive shares representing their proportional ownership. The system implements multiple safeguards against malicious deposit behavior including velocity checks, cooldown periods, and per-block limits.
+This message allows Noble Dollar users to deposit $USDN into the Noble vault and receive shares representing their proportional ownership. The system implements multiple safeguards against malicious deposit behavior including velocity checks, cooldown periods, and per-block limits.
 
 ```json
 {
@@ -13,7 +13,6 @@ This message allows Noble Dollar users to deposit $USDN into a vault and receive
       {
         "@type": "/noble.dollar.vaults.v2.MsgDeposit",
         "signer": "noble1user",
-        "vault_id": "vault-001",
         "amount": "1000000"
       }
     ],
@@ -37,12 +36,11 @@ This message allows Noble Dollar users to deposit $USDN into a vault and receive
 
 ### Arguments
 
-- `vault_id` — The unique identifier of the vault to deposit into.
-- `amount` — The amount of $USDN to deposit.
+- `amount` — The amount of $USDN to deposit into the Noble vault.
 
 ### Requirements
 
-- The `amount` must meet the minimum deposit requirement for the vault.
+- The `amount` must meet the minimum deposit requirement.
 - User must not exceed per-user deposit limits.
 - Total deposits in the current block must not exceed per-block limits.
 - User must have passed any required cooldown period since last deposit.
@@ -50,8 +48,8 @@ This message allows Noble Dollar users to deposit $USDN into a vault and receive
 - User's deposit velocity must not trigger suspicious activity flags.
 
 - User's $USDN balance is decreased by the deposit amount.
-- Funds are marked as PENDING_DEPLOYMENT until allocated to positions.
-- Vault shares are minted to the user based on current NAV.
+- Funds are marked as PENDING_DEPLOYMENT until allocated to remote positions.
+- Shares are minted to the user based on current NAV.
 - User's deposit history and velocity metrics are updated.
 - Total vault shares are increased.
 - NAV includes pending deployment funds as local assets.
@@ -76,7 +74,6 @@ This message initiates a withdrawal request that enters a queue for processing. 
       {
         "@type": "/noble.dollar.vaults.v2.MsgRequestWithdrawal",
         "signer": "noble1user",
-        "vault_id": "vault-001",
         "shares": "1000"
       }
     ],
@@ -100,12 +97,11 @@ This message initiates a withdrawal request that enters a queue for processing. 
 
 ### Arguments
 
-- `vault_id` — The unique identifier of the vault to withdraw from.
-- `shares` — The number of shares to redeem.
+- `shares` — The number of shares to redeem from the Noble vault.
 
 ### Requirements
 
-- User must have sufficient share balance in the specified vault.
+- User must have sufficient share balance in the vault.
 - Vault must not be in emergency withdrawal-only mode.
 - Shares are immediately locked and cannot be transferred.
 
@@ -171,7 +167,7 @@ This message allows users to claim fulfilled withdrawal requests from the queue.
 
 `noble.dollar.vaults.v2.MsgUpdateNAV`
 
-This message updates the Net Asset Value of a vault based on the performance of its remote positions. This is typically called by authorized keepers or through automated processes.
+This message updates the Net Asset Value of the Noble vault based on the performance of its remote positions. This is typically called by authorized keepers or through automated processes.
 
 ```json
 {
@@ -180,7 +176,6 @@ This message updates the Net Asset Value of a vault based on the performance of 
       {
         "@type": "/noble.dollar.vaults.v2.MsgUpdateNAV",
         "signer": "noble1keeper",
-        "vault_id": "vault-001",
         "position_updates": [
           {
             "position_id": "1",
@@ -215,15 +210,14 @@ This message updates the Net Asset Value of a vault based on the performance of 
 
 ### Arguments
 
-- `vault_id` — The unique identifier of the vault to update.
-- `position_updates` — Array of remote position value updates with proofs.
+- `position_updates` — Array of remote position value updates with proofs for the vault's positions.
 
 ### Requirements
 
 - Signer must be an authorized keeper or the system itself.
 - Proofs must be valid according to configured oracle requirements.
 - Updates must not be stale based on max staleness configuration.
-- All active positions for the vault should be included or have recent updates.
+- All active remote positions should be included or have recent updates.
 
 ### State Changes
 
@@ -238,7 +232,7 @@ This message updates the Net Asset Value of a vault based on the performance of 
 
 `noble.dollar.vaults.v2.MsgCreateRemotePosition`
 
-This message deploys capital from a vault to a remote yield-generating position on another chain or protocol. Vaults can maintain multiple remote positions for diversification.
+This message deploys capital from the Noble vault to a remote yield-generating position on another chain or protocol. The vault can maintain multiple remote positions for diversification.
 
 ```json
 {
@@ -247,7 +241,6 @@ This message deploys capital from a vault to a remote yield-generating position 
       {
         "@type": "/noble.dollar.vaults.v2.MsgCreateRemotePosition",
         "signer": "noble1manager",
-        "vault_id": "vault-001",
         "protocol": "aave-v3",
         "chain_id": 2,
         "amount": "1000000",
@@ -278,7 +271,6 @@ This message deploys capital from a vault to a remote yield-generating position 
 
 ### Arguments
 
-- `vault_id` — The vault providing the capital.
 - `protocol` — The target protocol identifier.
 - `chain_id` — The Wormhole Chain ID of the destination.
 - `amount` — The amount of capital to deploy.
@@ -288,9 +280,9 @@ This message deploys capital from a vault to a remote yield-generating position 
 ### Requirements
 
 - Signer must be the vault manager or authorized operator.
-- Vault must have sufficient unallocated capital.
+- The vault must have sufficient unallocated capital.
 - Protocol and chain must be in the vault's allowed list.
-- Number of positions must not exceed vault's max remote positions limit.
+- Number of positions must not exceed the vault's max remote positions limit.
 - Combined remote position exposure must maintain diversification requirements.
 
 ### State Changes
@@ -317,7 +309,6 @@ This message initiates the withdrawal of capital from a remote position back to 
       {
         "@type": "/noble.dollar.vaults.v2.MsgCloseRemotePosition",
         "signer": "noble1manager",
-        "vault_id": "vault-001",
         "position_id": "1",
         "partial_amount": "500000"
       }
@@ -342,8 +333,7 @@ This message initiates the withdrawal of capital from a remote position back to 
 
 ### Arguments
 
-- `vault_id` — The vault that owns the position.
-- `position_id` — The unique identifier of the position to close.
+- `position_id` — The unique identifier of the remote position to close.
 - `partial_amount` — Optional amount for partial withdrawal (omit for full closure).
 
 ### Requirements
@@ -377,7 +367,6 @@ This message processes pending withdrawal requests in the queue when liquidity b
       {
         "@type": "/noble.dollar.vaults.v2.MsgProcessWithdrawalQueue",
         "signer": "noble1keeper",
-        "vault_id": "vault-001",
         "max_requests": 100
       }
     ],
@@ -401,12 +390,11 @@ This message processes pending withdrawal requests in the queue when liquidity b
 
 ### Arguments
 
-- `vault_id` — The vault whose queue to process.
-- `max_requests` — Maximum number of requests to process in this transaction.
+- `max_requests` — Maximum number of withdrawal requests to process in this transaction.
 
 ### Requirements
 
-- Vault must have available liquidity.
+- The vault must have available liquidity.
 - Requests are processed in FIFO order.
 - Each request uses the NAV at time of request for fair value.
 
@@ -432,7 +420,6 @@ This message handles inflight funds that have exceeded their maximum duration wi
       {
         "@type": "/noble.dollar.vaults.v2.MsgHandleStaleInflight",
         "signer": "noble1governance",
-        "vault_id": "vault-001",
         "transaction_id": "hyperlane-tx-456",
         "action": "write_off",
         "justification": "Bridge timeout confirmed, funds unrecoverable"
@@ -458,8 +445,7 @@ This message handles inflight funds that have exceeded their maximum duration wi
 
 ### Arguments
 
-- `vault_id` — The vault with stale inflight funds.
-- `transaction_id` — The identifier of the stale transaction.
+- `transaction_id` — The identifier of the stale inflight transaction.
 - `action` — Action to take: "write_off", "extend", "manual_recovery".
 - `justification` — Explanation for the action taken.
 
@@ -483,7 +469,7 @@ This message handles inflight funds that have exceeded their maximum duration wi
 
 `noble.dollar.vaults.v2.MsgRebalance`
 
-This message rebalances capital across a vault's multiple remote positions based on target allocations.
+This message rebalances capital across the Noble vault's multiple remote positions based on target allocations.
 
 ```json
 {
@@ -492,7 +478,6 @@ This message rebalances capital across a vault's multiple remote positions based
       {
         "@type": "/noble.dollar.vaults.v2.MsgRebalance",
         "signer": "noble1manager",
-        "vault_id": "vault-001",
         "target_allocations": [
           {
             "position_id": "1",
@@ -530,8 +515,7 @@ This message rebalances capital across a vault's multiple remote positions based
 
 ### Arguments
 
-- `vault_id` — The vault to rebalance.
-- `target_allocations` — Desired allocation percentages across positions.
+- `target_allocations` — Desired allocation percentages across the vault's remote positions.
 
 ### Requirements
 

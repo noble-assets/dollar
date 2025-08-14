@@ -2,20 +2,20 @@
 
 ## Introduction
 
-The Noble Dollar Vaults V2 system represents a significant evolution in decentralized yield optimization, introducing sophisticated mechanisms for managing multi-chain yield strategies while maintaining security and fair value distribution. This system enables $USDN holders to participate in diversified yield opportunities across multiple protocols and chains through a professionally managed vault structure.
+The Noble Dollar Vault V2 system represents a significant evolution in decentralized yield optimization, introducing sophisticated mechanisms for managing multi-chain yield strategies while maintaining security and fair value distribution. This system features a single vault on the Noble chain that enables $USDN holders to participate in diversified yield opportunities by managing multiple remote positions across different protocols and chains through a professionally managed structure.
 
 ## Core Architecture
 
-### Multi-Position Vaults
+### Single Vault, Multiple Remote Positions
 
-Unlike traditional single-strategy vaults, V2 vaults can maintain multiple remote positions simultaneously across different protocols and chains. This architecture provides:
+The V2 system features a single vault on the Noble chain that can maintain multiple remote positions simultaneously across different protocols and chains. This architecture provides:
 
-- **Diversification**: Risk is spread across multiple yield sources
-- **Optimization**: Capital can be dynamically allocated to the highest-performing strategies
+- **Diversification**: Risk is spread across multiple yield sources managed by the single vault
+- **Optimization**: The vault can dynamically allocate capital to the highest-performing strategies
 - **Resilience**: Issues with one protocol don't compromise the entire vault
-- **Flexibility**: New opportunities can be added without vault migration
+- **Flexibility**: New opportunities can be added without system migration
 
-Each vault can configure:
+The Noble vault can configure:
 - Maximum number of remote positions (e.g., 5-10)
 - Allowed protocols (e.g., Aave, Compound, Morpho)
 - Allowed chains (via IBC/Hyperlane Chain IDs)
@@ -23,7 +23,7 @@ Each vault can configure:
 
 ### Net Asset Value (NAV) System
 
-The NAV system provides accurate, real-time valuation of vault assets including all remote positions and inflight funds:
+The NAV system provides accurate, real-time valuation of the Noble vault's assets including all its remote positions and inflight funds:
 
 ```
 Total NAV = Local Assets 
@@ -151,13 +151,13 @@ Each remote position is subject to:
 
 ### Overview
 
-Inflight funds represent capital that is temporarily in transit between Noble and remote positions, or between positions during rebalancing. This capital remains fully accounted for in the NAV to ensure accurate vault valuation at all times.
+Inflight funds represent capital that is temporarily in transit between the Noble vault and its remote positions, or between positions during rebalancing. This capital remains fully accounted for in the NAV to ensure accurate vault valuation at all times.
 
 ### Inflight Fund Types
 
-1. **Deposit to Position**: USDN being deployed from vault to remote protocol
-2. **Withdrawal from Position**: USDN returning from remote protocol to vault
-3. **Rebalance Between Positions**: USDN moving between remote positions (via Noble)
+1. **Deposit to Position**: USDN being deployed from the Noble vault to a remote protocol
+2. **Withdrawal from Position**: USDN returning from a remote protocol to the Noble vault
+3. **Rebalance Between Positions**: USDN moving between the vault's remote positions (via Noble)
 4. **Pending Deployment**: USDN from deposits awaiting allocation to positions
 5. **Pending Withdrawal Distribution**: USDN returned from positions awaiting distribution to withdrawal queue
 6. **Yield Collection**: Periodic harvest of accumulated yields in USDN
@@ -198,7 +198,7 @@ Special States:
 ### Risk Mitigation
 
 - **Maximum Duration Limits**: Funds cannot remain inflight indefinitely
-- **Value Caps**: Limits on total inflight exposure per vault
+- **Value Caps**: Limits on total inflight exposure for the vault
 - **Bridge Diversification**: Use multiple bridges to reduce single point of failure
 - **Insurance Reserve**: Coverage for potential bridge failures
 - **Proof Requirements**: Cryptographic verification of bridge completions
@@ -329,7 +329,7 @@ Update Position Values
 
 ### Better User Experience
 
-- **Single Token**: Users hold vault shares, complexity abstracted
+- **Single Token**: Users hold shares in the single Noble vault, complexity abstracted
 - **Automatic Optimization**: No manual strategy switching
 - **Transparent NAV**: Clear value per share
 - **Predictable Withdrawals**: Queue provides certainty
@@ -354,6 +354,6 @@ Update Position Values
 
 ## Conclusion
 
-The Noble Dollar Vaults V2 system represents a sophisticated approach to decentralized yield optimization, balancing the need for high returns with robust security mechanisms. Through innovations like the withdrawal queue, multi-position architecture, and comprehensive anti-manipulation controls, the system provides users with professional-grade yield strategies while maintaining the security and fairness expected in DeFi.
+The Noble Dollar Vault V2 system represents a sophisticated approach to decentralized yield optimization, balancing the need for high returns with robust security mechanisms. Through innovations like the withdrawal queue, the single vault's ability to manage multiple remote positions, and comprehensive anti-manipulation controls, the system provides users with professional-grade yield strategies while maintaining the security and fairness expected in DeFi.
 
 The architecture's flexibility allows for future enhancements and new strategy additions without requiring user migration, ensuring the system can evolve with the rapidly changing DeFi landscape while protecting user value.
