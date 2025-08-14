@@ -2,10 +2,27 @@
 
 ## NAV (Net Asset Value)
 
-The `NAV` field is a [`collections.Item`][item] that stores the current Net Asset Value of the vault, representing the total value of all assets including remote positions (`math.LegacyDec`).
+The `NAV` field is a [`collections.Item`][item] that stores the current Net Asset Value of the vault, representing the total value of all assets including remote positions and inflight funds (`math.LegacyDec`).
+
+The NAV calculation includes:
+- Local assets (held in vault)
+- Remote position values (deployed capital)
+- Inflight funds (in transit between chains/protocols)
+- Minus pending liabilities (withdrawals to be paid)
 
 ```go
 const NAVKey = []byte("vaults/v2/nav")
+```
+
+### NAV Calculation Formula
+
+```
+Total NAV = Local Assets 
+          + Σ(Remote Position Values) 
+          + Σ(Inflight Funds Values)
+          - Pending Withdrawal Liabilities
+
+NAV per Share = Total NAV / Total Outstanding Shares
 ```
 
 ## LastNAVUpdate
@@ -31,13 +48,71 @@ type RemotePosition struct {
     PositionID       uint64
     VaultID          string
     Protocol         string  // e.g., "aave", "compound", "morpho"
-    ChainID          uint16  // Hyperlane/IBC Chain ID
-    AssetAddress     []byte  // Remote asset address
+    ChainID          uint16  // Hyperlane Chain ID
+    AssetAddress     []byte  // Remote asset address (always represents USDN equivalent)
     Principal        math.Int
     LastUpdatedNAV   math.LegacyDec
     LastUpdateTime   time.Time
     Status           PositionStatus // ACTIVE, WITHDRAWING, CLOSED
 }
+```
+
+## InflightFunds
+
+The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a transaction ID (`string`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between Noble and remote positions or between positions.
+
+```go
+const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
+```
+
+### InflightFund Structure
+
+```go
+type InflightFund struct {
+    TransactionID    string
+    VaultID          string
+    Type             InflightType // DEPOSIT_TO_POSITION, WITHDRAWAL_FROM_POSITION, REBALANCE_BETWEEN_POSITIONS, PENDING_DEPLOYMENT, PENDING_WITHDRAWAL_DISTRIBUTION
+    Amount           math.Int     // Always in USDN
+    SourceLocation   Location // Noble or specific position
+    DestLocation     Location // Noble or specific position
+    InitiatedAt      time.Time
+    ExpectedAt       time.Time
+    Status           InflightStatus // PENDING, CONFIRMED, COMPLETED, FAILED
+    BridgeUsed       string // "hyperlane", "ibc"
+    ValueAtInitiation math.Int // USDN value when initiated
+}
+```
+
+## InflightFundsByVault
+
+The `InflightFundsByVault` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and a list of inflight transaction IDs (`[]string`). This allows quick lookup of all inflight funds for NAV calculation.
+
+```go
+const InflightFundsByVaultPrefix = []byte("vaults/v2/inflight_by_vault/")
+```
+
+## TotalInflightValue
+
+The `TotalInflightValue` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the total value of all inflight funds for that vault (`math.Int`). This is cached for efficient NAV calculations and always denominated in USDN.
+
+```go
+const TotalInflightValuePrefix = []byte("vaults/v2/total_inflight_value/")
+```
+
+## PendingDeploymentFunds
+
+The `PendingDeploymentFunds` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the amount of USDN received from deposits but not yet deployed to remote positions (`math.Int`).
+
+```go
+const PendingDeploymentFundsPrefix = []byte("vaults/v2/pending_deployment/")
+```
+
+## PendingWithdrawalDistribution
+
+The `PendingWithdrawalDistribution` field is a mapping ([`collections.Map`][map]) between vault ID (`string`) and the amount of USDN returned from remote positions but not yet distributed to withdrawal claimants (`math.Int`).
+
+```go
+const PendingWithdrawalDistributionPrefix = []byte("vaults/v2/pending_withdrawal_dist/")
 ```
 
 ## WithdrawalQueue
@@ -156,7 +231,7 @@ const RemotePositionOraclesPrefix = []byte("vaults/v2/remote_position_oracles/")
 
 ```go
 type OracleConfig struct {
-    OracleType       string  // "wormhole", "chainlink", "internal"
+    OracleType       string  // "hyperlane", "chainlink", "internal"
     UpdateFrequency  int64   // blocks between required updates
     MaxStaleness     int64   // maximum blocks before data considered stale
     MinConfirmations uint32  // minimum confirmations required
@@ -186,6 +261,8 @@ type VaultConfig struct {
     ManagementFee         math.LegacyDec // Annual fee as percentage
     PerformanceFee        math.LegacyDec // Fee on profits
     EmergencyMode         bool
+    MaxInflightDuration   int64          // Max blocks funds can be inflight
+    InflightValueCap      math.Int       // Maximum value allowed inflight
 }
 ```
 

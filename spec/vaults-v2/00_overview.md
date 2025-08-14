@@ -23,18 +23,24 @@ Each vault can configure:
 
 ### Net Asset Value (NAV) System
 
-The NAV system provides accurate, real-time valuation of vault assets including all remote positions:
+The NAV system provides accurate, real-time valuation of vault assets including all remote positions and inflight funds:
 
 ```
-Total NAV = Local Assets + Σ(Remote Position Values) - Pending Liabilities
+Total NAV = Local Assets 
+          + Σ(Remote Position Values) 
+          + Σ(Inflight Funds Values)
+          - Pending Liabilities
+          
 NAV per Share = Total NAV / Total Outstanding Shares
 ```
 
 Key features:
 - **Oracle Integration**: Remote position values are updated via trusted oracles
+- **Inflight Tracking**: Funds in transit remain counted in NAV at last known value
 - **Staleness Protection**: Maximum age limits prevent using outdated values
 - **Multi-Source Verification**: Critical updates require multiple oracle confirmations
 - **Time-Weighted Averaging**: Reduces impact of temporary price spikes
+- **Bridge Completion**: Tracking of completed bridge transactions
 
 ### Withdrawal Queue Mechanism
 
@@ -122,11 +128,13 @@ The withdrawal queue provides multiple security benefits:
 
 ### Cross-Chain Coordination
 
-Remote positions leverage Hyperlane/IBC for secure cross-chain operations:
+Remote positions leverage Hyperlane for secure cross-chain operations:
 
-- **Deployment**: Capital bridged via Hyperlane/IBC to target chain
-- **Updates**: Position values relayed through Hyperlane/IBC oracles
-- **Withdrawals**: Yields and principal bridged back to Noble
+- **Deployment**: Capital bridged via Hyperlane to target chain (always in USDN)
+- **Inflight Tracking**: USDN marked as inflight during bridge transit
+- **Updates**: Position values relayed through Hyperlane oracles
+- **Withdrawals**: Yields and principal bridged back to Noble as USDN
+- **Completion Tracking**: Monitoring of bridge transaction completions
 - **Emergency Recovery**: Fallback mechanisms for bridge failures
 
 ### Risk Management
@@ -138,6 +146,62 @@ Each remote position is subject to:
 - **Chain Limits**: Maximum exposure per blockchain
 - **Correlation Analysis**: Avoid over-concentration in correlated strategies
 - **Health Monitoring**: Automatic alerts for position degradation
+
+## Inflight Funds Management
+
+### Overview
+
+Inflight funds represent capital that is temporarily in transit between Noble and remote positions, or between positions during rebalancing. This capital remains fully accounted for in the NAV to ensure accurate vault valuation at all times.
+
+### Inflight Fund Types
+
+1. **Deposit to Position**: USDN being deployed from vault to remote protocol
+2. **Withdrawal from Position**: USDN returning from remote protocol to vault
+3. **Rebalance Between Positions**: USDN moving between remote positions (via Noble)
+4. **Pending Deployment**: USDN from deposits awaiting allocation to positions
+5. **Pending Withdrawal Distribution**: USDN returned from positions awaiting distribution to withdrawal queue
+6. **Yield Collection**: Periodic harvest of accumulated yields in USDN
+
+### Tracking Mechanism
+
+Each inflight transaction maintains:
+- **Transaction ID**: Unique identifier for tracking
+- **Expected Value**: USDN amount sent including estimated bridge fees
+- **Current Value**: Last known USDN value for NAV calculation
+- **Time Bounds**: Expected arrival time and maximum duration
+- **Bridge Details**: Hyperlane protocol and confirmation data
+- **Status Updates**: PENDING → CONFIRMED → COMPLETED lifecycle
+
+### NAV Impact
+
+Inflight funds are included in NAV calculations to prevent artificial value fluctuations:
+
+```
+During Transit:
+- USDN leaves source → Marked as inflight
+- NAV unchanged (USDN still counted)
+- Hyperlane confirms → Status: CONFIRMED
+- USDN arrives → Status: COMPLETED
+
+Special States:
+- New deposits → PENDING_DEPLOYMENT until allocated
+- Returned funds → PENDING_WITHDRAWAL_DISTRIBUTION until claimed
+- Rebalancing → WITHDRAWAL then PENDING_DEPLOYMENT then DEPOSIT
+```
+
+### Transaction Completion
+
+1. **Status Tracking**: Bridge transactions monitored for completion
+2. **Timeout Management**: Stale transactions flagged for investigation
+3. **Manual Intervention**: Failed transactions require governance action
+
+### Risk Mitigation
+
+- **Maximum Duration Limits**: Funds cannot remain inflight indefinitely
+- **Value Caps**: Limits on total inflight exposure per vault
+- **Bridge Diversification**: Use multiple bridges to reduce single point of failure
+- **Insurance Reserve**: Coverage for potential bridge failures
+- **Proof Requirements**: Cryptographic verification of bridge completions
 
 ## Operational Flows
 
@@ -158,7 +222,13 @@ Mint Shares to User
     ↓
 Update Velocity Metrics
     ↓
-Deploy Capital to Positions
+Mark Funds as Inflight
+    ↓
+Deploy Capital via Bridge
+    ↓
+Monitor Bridge Confirmation
+    ↓
+Reconcile on Arrival
 ```
 
 ### Withdrawal Flow with Queue
@@ -181,6 +251,48 @@ Mark as CLAIMABLE
 User Claims (After Delay)
     ↓
 Burn Shares & Transfer $USDN
+```
+
+### Remote Position Capital Return Flow
+
+```
+Initiate Position Withdrawal
+    ↓
+Mark Expected USDN as Inflight
+    ↓
+NAV Includes Inflight USDN Value
+    ↓
+Hyperlane Confirmation Received
+    ↓
+Mark Transaction as Completed
+    ↓
+Mark as PENDING_WITHDRAWAL_DISTRIBUTION
+    ↓
+Update Vault Liquidity
+    ↓
+Process Withdrawal Queue
+```
+
+### Rebalancing Between Positions Flow
+
+```
+Initiate Rebalance Strategy
+    ↓
+Withdraw USDN from Source Position
+    ↓
+Mark as WITHDRAWAL_FROM_POSITION Inflight
+    ↓
+USDN Arrives at Noble
+    ↓
+Mark as PENDING_DEPLOYMENT
+    ↓
+Deploy to Target Position
+    ↓
+Mark as DEPOSIT_TO_POSITION Inflight
+    ↓
+Confirm Arrival at Target
+    ↓
+Update Position Values
 ```
 
 ## Economic Model
@@ -234,7 +346,9 @@ Burn Shares & Transfer $USDN
 ### Recovery Procedures
 
 - **Position Recovery**: Retrieve funds from failed positions
+- **Inflight Recovery**: Manual intervention for stuck bridge transactions
 - **Oracle Fallback**: Manual NAV updates if oracles fail
+- **Transaction Override**: Force-complete stale inflight funds
 - **Emergency Withdrawal**: Direct redemption at last known NAV
 - **Governance Override**: Multi-sig can intervene if needed
 

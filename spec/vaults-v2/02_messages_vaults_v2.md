@@ -49,12 +49,12 @@ This message allows Noble Dollar users to deposit $USDN into a vault and receive
 - Vault must not be in emergency mode.
 - User's deposit velocity must not trigger suspicious activity flags.
 
-### State Changes
-
 - User's $USDN balance is decreased by the deposit amount.
+- Funds are marked as PENDING_DEPLOYMENT until allocated to positions.
 - Vault shares are minted to the user based on current NAV.
 - User's deposit history and velocity metrics are updated.
 - Total vault shares are increased.
+- NAV includes pending deployment funds as local assets.
 
 ### Anti-Manipulation Mechanisms
 
@@ -228,9 +228,11 @@ This message updates the Net Asset Value of a vault based on the performance of 
 ### State Changes
 
 - Individual remote position values are updated.
-- Vault's total NAV is recalculated as sum of all positions plus local assets.
+- Inflight funds are included in NAV calculation with their last known values.
+- Vault's total NAV is recalculated as: Local Assets + Σ(Remote Positions) + Σ(Inflight Funds) - Pending Liabilities.
 - Last NAV update timestamp is recorded.
 - Pending withdrawal requests may be processed if liquidity available.
+- Stale inflight funds (beyond max duration) may be marked for investigation.
 
 ## CreateRemotePosition
 
@@ -293,10 +295,14 @@ This message deploys capital from a vault to a remote yield-generating position 
 
 ### State Changes
 
-- Capital is bridged to the destination chain via Hyperlane or IBC.
-- New remote position entry is created with ACTIVE status.
+- Capital is marked as inflight with DEPOSIT_TO_POSITION type.
+- Inflight fund entry created with expected arrival time (amount in USDN).
+- Capital is bridged to the destination chain via Hyperlane/IBC.
 - Vault's available liquidity is decreased.
-- Position is added to NAV tracking with initial value.
+- NAV continues to include the inflight USDN value during transit.
+- Upon confirmation, inflight status transitions to CONFIRMED.
+- New remote position entry is created with ACTIVE status once funds arrive.
+- Inflight fund entry is marked COMPLETED and archived.
 
 ## CloseRemotePosition
 
@@ -350,8 +356,13 @@ This message initiates the withdrawal of capital from a remote position back to 
 
 - Withdrawal is initiated on the remote chain.
 - Position status updated to WITHDRAWING.
-- Expected return amount is tracked for reconciliation.
+- Inflight fund entry created with WITHDRAWAL_FROM_POSITION type (amount in USDN).
+- Expected return amount and arrival time are tracked.
+- NAV continues to include the inflight USDN value during transit.
+- Funds marked as PENDING_WITHDRAWAL_DISTRIBUTION upon arrival.
 - Withdrawal requests in queue may be marked for processing upon receipt.
+- Upon bridge confirmation via Hyperlane, inflight status transitions to CONFIRMED.
+- Once received, inflight entry is marked COMPLETED.
 
 ## ProcessWithdrawalQueue
 
@@ -406,6 +417,68 @@ This message processes pending withdrawal requests in the queue when liquidity b
 - Available vault liquidity is reserved for claims.
 - Users are notified their withdrawals are ready to claim.
 
+
+
+## HandleStaleInflight
+
+`noble.dollar.vaults.v2.MsgHandleStaleInflight`
+
+This message handles inflight funds that have exceeded their maximum duration without reconciliation, potentially indicating bridge failures or other issues.
+
+```json
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/noble.dollar.vaults.v2.MsgHandleStaleInflight",
+        "signer": "noble1governance",
+        "vault_id": "vault-001",
+        "transaction_id": "hyperlane-tx-456",
+        "action": "write_off",
+        "justification": "Bridge timeout confirmed, funds unrecoverable"
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+```
+
+### Arguments
+
+- `vault_id` — The vault with stale inflight funds.
+- `transaction_id` — The identifier of the stale transaction.
+- `action` — Action to take: "write_off", "extend", "manual_recovery".
+- `justification` — Explanation for the action taken.
+
+### Requirements
+
+- Transaction must have exceeded maximum inflight duration.
+- Signer must be governance or emergency multisig.
+- Action must be appropriate for the situation.
+- Write-offs require governance approval for amounts above threshold.
+
+### State Changes
+
+- Inflight fund status updated based on action.
+- For write-offs: NAV is reduced by the lost USDN amount.
+- For extensions: New expected arrival time is set.
+- For manual recovery: Fund is marked for manual intervention.
+- Incident is logged for tracking purposes.
+- Affected users may be compensated from insurance fund.
+
 ## Rebalance
 
 `noble.dollar.vaults.v2.MsgRebalance`
@@ -433,7 +506,8 @@ This message rebalances capital across a vault's multiple remote positions based
             "position_id": "3",
             "target_percentage": "25"
           }
-        ]
+        ],
+        "rebalance_strategy": "GRADUAL"
       }
     ],
     "memo": "",
@@ -468,7 +542,14 @@ This message rebalances capital across a vault's multiple remote positions based
 
 ### State Changes
 
-- Capital movements are initiated between positions.
+- Capital movements are initiated between positions (all in USDN).
+- For position-to-position rebalancing:
+  - Source position withdrawal creates WITHDRAWAL_FROM_POSITION inflight.
+  - Upon arrival at Noble, funds marked as PENDING_DEPLOYMENT.
+  - Deployment to target position creates DEPOSIT_TO_POSITION inflight.
+- For position-to-Noble rebalancing (for withdrawals):
+  - Creates WITHDRAWAL_FROM_POSITION inflight.
+  - Upon arrival, funds marked as PENDING_WITHDRAWAL_DISTRIBUTION.
 - Temporary liquidity constraints may delay withdrawal processing.
-- Rebalancing transactions are tracked for audit.
-- NAV remains constant (minus any transaction costs).
+- Rebalancing transactions are tracked.
+- NAV remains constant during rebalancing (inflight USDN counted at initiation value).

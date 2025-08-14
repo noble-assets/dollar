@@ -15,7 +15,15 @@ Retrieves the current Net Asset Value and related metrics for a specific vault.
   "total_shares": "10000000",
   "local_assets": "2000000",
   "remote_positions_value": "8500000",
-  "pending_withdrawals": "500000"
+  "inflight_funds_value": "150000",
+  "pending_withdrawals": "500000",
+  "nav_breakdown": {
+    "local": "2000000",
+    "remote_positions": "8500000",
+    "inflight": "150000",
+    "liabilities": "-500000",
+    "total": "10150000"
+  }
 }
 ```
 
@@ -32,7 +40,9 @@ Retrieves the current Net Asset Value and related metrics for a specific vault.
 - `total_shares` — Total outstanding shares.
 - `local_assets` — Value of assets held locally.
 - `remote_positions_value` — Combined value of all remote positions.
+- `inflight_funds_value` — Total value of funds currently in transit.
 - `pending_withdrawals` — Total value locked for pending withdrawals.
+- `nav_breakdown` — Detailed breakdown of NAV components.
 
 ## RemotePositions
 
@@ -374,3 +384,106 @@ Simulates a withdrawal to show expected proceeds and queue time.
 - `estimated_fulfillment_time` — Estimated seconds until fulfillment.
 - `available_liquidity` — Current available liquidity.
 - `ahead_in_queue` — Total value of requests ahead in queue.
+
+## InflightFunds
+
+**Endpoint**: `/noble/dollar/vaults/v2/inflight_funds/{vault_id}`
+
+Retrieves all inflight funds for a specific vault, including funds in transit between Noble and remote positions.
+
+```json
+{
+  "inflight_funds": [
+    {
+      "transaction_id": "hyperlane-tx-123",
+      "type": "DEPOSIT_TO_POSITION",
+      "amount": "100000",
+      "current_value": "100000",
+      "source": "noble",
+      "destination": "ethereum-aave-v3",
+      "initiated_at": "2024-01-15T14:00:00Z",
+      "expected_at": "2024-01-15T14:30:00Z",
+      "status": "PENDING",
+      "bridge": "hyperlane",
+      "time_remaining": "600"
+    },
+    {
+      "transaction_id": "hyperlane-tx-456",
+      "type": "WITHDRAWAL_FROM_POSITION",
+      "amount": "50000",
+      "current_value": "50000",
+      "source": "arbitrum-compound-v3",
+      "destination": "noble",
+      "initiated_at": "2024-01-15T13:45:00Z",
+      "expected_at": "2024-01-15T14:15:00Z",
+      "status": "CONFIRMED",
+      "bridge": "hyperlane",
+      "time_remaining": "0"
+    }
+  ],
+  "total_inflight": "150000",
+  "pending_deployment": "200000",
+  "pending_withdrawal_distribution": "75000",
+  "by_type": {
+    "deposits_to_position": "100000",
+    "withdrawals_from_position": "50000",
+    "rebalance_between_positions": "0",
+    "pending_deployment": "200000",
+    "pending_withdrawal_distribution": "75000"
+  },
+  "by_status": {
+    "pending": "100000",
+    "confirmed": "50000",
+    "completed": "0"
+  }
+}
+```
+
+### Arguments
+
+- `vault_id` — The unique identifier of the vault.
+
+### Response
+
+- `inflight_funds` — Array of all inflight fund transactions (all amounts in USDN).
+- `total_inflight` — Total value of all funds in transit (USDN).
+- `pending_deployment` — USDN awaiting deployment to remote positions.
+- `pending_withdrawal_distribution` — USDN awaiting distribution to withdrawal queue.
+- `by_type` — Breakdown by transaction type including pending states.
+- `by_status` — Breakdown by current status.
+
+## StaleInflightFunds
+
+**Endpoint**: `/noble/dollar/vaults/v2/stale_inflight_funds`
+
+Retrieves inflight funds that have exceeded their expected arrival time and may require intervention.
+
+```json
+{
+  "stale_funds": [
+    {
+      "vault_id": "vault-001",
+      "transaction_id": "hyperlane-tx-789",
+      "amount": "75000",
+      "type": "DEPOSIT_TO_POSITION",
+      "initiated_at": "2024-01-14T10:00:00Z",
+      "expected_at": "2024-01-14T10:30:00Z",
+      "hours_overdue": "28.5",
+      "bridge": "hyperlane",
+      "last_known_status": "PENDING",
+      "recommended_action": "investigate"
+    }
+  ],
+  "total_stale_value": "75000",
+  "total_stale_count": 1,
+  "oldest_stale_hours": "28.5"
+}
+```
+
+### Response
+
+- `stale_funds` — Array of stale inflight fund entries (amounts in USDN).
+- `total_stale_value` — Total value of stale funds in USDN.
+- `total_stale_count` — Number of stale transactions.
+- `oldest_stale_hours` — Hours since oldest stale transaction.
+
