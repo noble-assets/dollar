@@ -51,7 +51,7 @@ This message allows Noble Dollar users to deposit $USDN into the Noble vault and
 - Funds are marked as PENDING_DEPLOYMENT until allocated to remote positions.
 - Shares are minted to the user based on current NAV.
 - User's deposit history and velocity metrics are updated.
-- Total vault shares are increased.
+- Total Noble vault shares are increased.
 - NAV includes pending deployment funds as local assets.
 
 ### Anti-Manipulation Mechanisms
@@ -524,7 +524,7 @@ This message deploys capital from the Noble vault to a remote yield-generating p
 - `vault_address` — The address of the target ERC-4626 compatible vault.
 - `chain_id` — The Hyperlane Domain ID of the destination (998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer).
 - `amount` — The amount of USDN capital to deploy.
-- `min_shares_out` — Minimum acceptable vault shares to receive (slippage protection).
+- `min_shares_out` — Minimum acceptable Noble vault shares to receive (slippage protection).
 
 ### Requirements
 
@@ -543,7 +543,7 @@ This message deploys capital from the Noble vault to a remote yield-generating p
 - NAV continues to include the inflight USDN value during transit, tracked per route.
 - Upon Hyperlane confirmation, inflight status transitions to CONFIRMED.
 - USDN is deposited into the target ERC-4626 compatible vault.
-- Vault shares are received and tracked in the remote position.
+- Remote vault shares are tracked in the remote position.
 - New remote position entry is created with ACTIVE status once shares are confirmed.
 - Inflight fund entry for that Hyperlane route is marked COMPLETED and archived.
 
@@ -782,14 +782,14 @@ This message rebalances capital across the Noble vault's multiple remote positio
 - Capital movements are initiated between positions (all in USDN).
 - For position-to-position rebalancing:
   - Example: Hyperliquid vault to Base vault rebalancing
-  - Vault shares are redeemed from source vault for USDN.
+  - Remote vault shares are redeemed from source vault for USDN.
   - Source position withdrawal creates WITHDRAWAL_FROM_POSITION inflight on Hyperliquid→Noble route (e.g., route 998_4000260).
   - Upon arrival at Noble, funds marked as PENDING_DEPLOYMENT.
   - Deployment to target vault creates DEPOSIT_TO_POSITION inflight on Noble→Base route (e.g., route 4000260_8453).
   - Target vault shares are received and tracked.
 - For position-to-Noble rebalancing (for withdrawals):
   - Example: Base vault withdrawal for user redemptions
-  - Vault shares are redeemed from the vault for USDN.
+  - Remote vault shares are redeemed from the vault for USDN.
   - Creates WITHDRAWAL_FROM_POSITION inflight on Base→Noble route (e.g., route 8453_4000260).
   - Upon arrival, funds marked as PENDING_WITHDRAWAL_DISTRIBUTION.
 - Each Hyperlane route tracks its own inflight funds separately.

@@ -17,8 +17,8 @@ const NAVKey = []byte("vaults/v2/nav")
 ### NAV Calculation Formula
 
 ```
-Total NAV = Local Assets 
-          + Σ(Remote Position Values) 
+Total NAV = Local Assets
+          + Σ(Remote Position Values)
           + Σ(Inflight Funds Values)
           - Pending Withdrawal Liabilities
 
@@ -48,7 +48,7 @@ type RemotePosition struct {
     PositionID       uint64
     VaultAddress     []byte  // Address of the ERC-4626 compatible vault (Boring Vault or other)
     ChainID          uint32  // Hyperlane Domain ID (e.g., 998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer)
-    SharesHeld       math.Int // Number of vault shares held
+    SharesHeld       math.Int // Number of remote vault shares held
     Principal        math.Int // USDN amount initially deposited
     LastUpdatedNAV   math.LegacyDec
     LastUpdateTime   time.Time
@@ -58,7 +58,7 @@ type RemotePosition struct {
 
 ## InflightFunds
 
-The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a Hyperlane route identifier (`uint32`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions, tracked per Hyperlane route.
+The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a Hyperlane route identifier (`uint32`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions, tracked per Hyperlane route. There should be only one `InflightFund` per route at a time.
 
 ```go
 const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
@@ -319,7 +319,6 @@ const VaultConfigurationKey = []byte("vaults/v2/vault_config")
 
 ```go
 type VaultConfig struct {
-    Name                  string
     MaxRemotePositions    uint32
     AllowedChains         []uint32  // Hyperlane domain IDs
     AllowedVaultAddresses map[uint32][][]byte // Chain ID -> List of approved vault addresses
