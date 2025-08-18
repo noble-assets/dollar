@@ -298,9 +298,9 @@ func (k *Keeper) GetDenom() string {
 
 // GetVaultsSeasonTwoYieldCollector is a utility that returns the
 // configured yield collector address for Vaults Season Two.
-func (k *Keeper) GetVaultsSeasonTwoYieldCollector(ctx context.Context) sdk.AccAddress {
-	collector, _ := k.VaultsSeasonTwoYieldCollector.Get(ctx)
-	return collector
+func (k *Keeper) GetVaultsSeasonTwoYieldCollector(ctx context.Context) (sdk.AccAddress, error) {
+	collector, err := k.VaultsSeasonTwoYieldCollector.Get(ctx)
+	return collector, err
 }
 
 // GetYield is a utility that returns the user's current amount of claimable $USDN yield.
