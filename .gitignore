@@ -1,6 +1,9 @@
 .dollar
 .idea
 build
+cache
+node_modules
+out
 coverage.out
 coverage.html
 go.work
