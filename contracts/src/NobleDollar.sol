@@ -19,6 +19,10 @@ pragma solidity 0.8.20;
 
 import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
+import {IndexingMath} from "../utils/IndexingMath.sol";
+
+import {UIntMath} from "../utils/UIntMath.sol";
+
 /*
 
 ███╗   ██╗ ██████╗ ██████╗ ██╗     ███████╗      
@@ -56,7 +60,7 @@ contract NobleDollar is HypERC20 {
      * @param totalPrincipal The total principal amount at the time of update.
      * @param yieldAccrued The amount of yield that was accrued.
      */
-    event IndexUpdated(uint128 oldIndex, uint128 newIndex, uint256 totalPrincipal, uint256 yieldAccrued);
+    event IndexUpdated(uint128 oldIndex, uint128 newIndex, uint112 totalPrincipal, uint256 yieldAccrued);
 
     /**
      * @notice Emitted when yield is claimed by an account.
@@ -68,8 +72,8 @@ contract NobleDollar is HypERC20 {
     /// @custom:storage-location erc7201:noble.storage.USDN
     struct USDNStorage {
         uint128 index;
-        mapping(address account => uint256) principal;
-        uint256 totalPrincipal;
+        uint112 totalPrincipal;
+        mapping(address account => uint112) principal;
     }
 
     // keccak256(abi.encode(uint256(keccak256("noble.storage.USDN")) - 1)) & ~bytes32(uint256(0xff))
@@ -86,22 +90,21 @@ contract NobleDollar is HypERC20 {
     function initialize(address hook_, address ism_) public virtual initializer {
         super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
 
-        USDNStorage storage $ = _getUSDNStorage();
-        $.index = 1e12;
+        _getUSDNStorage().index = IndexingMath.EXP_SCALED_ONE;
     }
 
     /// @dev Returns the current index used for yield calculations.
-    function index() public view returns (uint256) {
+    function index() public view returns (uint128) {
         return _getUSDNStorage().index;
     }
 
     /// @dev Returns the amount of principal in existence.
-    function totalPrincipal() public view returns (uint256) {
+    function totalPrincipal() public view returns (uint112) {
         return _getUSDNStorage().totalPrincipal;
     }
 
     /// @dev Returns the amount of principal owned for a given account.
-    function principalOf(address account) public view returns (uint256) {
+    function principalOf(address account) public view returns (uint112) {
         return _getUSDNStorage().principal[account];
     }
 
@@ -122,7 +125,9 @@ contract NobleDollar is HypERC20 {
      */
     function yield(address account) public view returns (uint256) {
         USDNStorage storage $ = _getUSDNStorage();
-        uint256 expectedBalance = $.principal[account] * $.index / 1e12;
+
+        uint256 expectedBalance = IndexingMath.getPresentAmountRoundedDown($.principal[account], $.index);
+
         uint256 currentBalance = balanceOf(account);
 
         return expectedBalance > currentBalance ? expectedBalance - currentBalance : 0;
@@ -138,11 +143,10 @@ contract NobleDollar is HypERC20 {
      */
     function claim() public {
         uint256 amount = yield(msg.sender);
-        if (amount == 0) {
-            revert NoClaimableYield();
-        }
 
-        _transfer(address(this), msg.sender, amount);
+        if (amount == 0) revert NoClaimableYield();
+
+        _update(address(this), msg.sender, amount);
 
         emit YieldClaimed(msg.sender, amount);
     }
@@ -164,51 +168,54 @@ contract NobleDollar is HypERC20 {
      *
      * @custom:throws InvalidTransfer if attempting to transfer to the contract from a non-zero address
      * @custom:emits IndexUpdated when yield is accrued and the index is updated
-     * @custom:security Principal is calculated using ceiling division to prevent rounding errors
+     * @custom:security Principal is calculated using ceiling / floor division in favor of protocol.
      */
     function _update(address from, address to, uint256 value) internal virtual override {
-        USDNStorage storage $ = _getUSDNStorage();
-
         super._update(from, to, value);
 
-        if (from == address(this)) {
-            // We don't want to perform any principal updates in the case of yield payout.
+        // Special case, no-op operation.
+        if (from == address(0) && to == address(0)) return;
+
+        // We don't want to perform any principal updates in the case of yield payout.
+        if (from == address(this)) return;
+
+        // We don't want to allow any other transfers to the yield account.
+        if (from != address(0) && to == address(this)) revert InvalidTransfer();
+
+        USDNStorage storage $ = _getUSDNStorage();
+
+        // Distribute yield, derive new index from the adjusted total supply.
+        // NOTE: We don't want to perform any principal updates in the case of yield accrual.
+        if (to == address(this)) {
+            uint128 oldIndex = $.index;
+
+            $.index = IndexingMath.getIndexRoundedDown(totalSupply(), $.totalPrincipal);
+
+            emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
+
             return;
         }
-        if (to == address(this)) {
-            if (from == address(0)) {
-                // We don't want to perform any principal updates in the case of yield accrual.
-                uint128 oldIndex = $.index;
 
-                $.index = uint128(totalSupply() * 1e12 / $.totalPrincipal);
+        // Minting
+        if (from == address(0)) {
+            uint112 principalDown = IndexingMath.getPrincipalAmountRoundedDown(value, $.index);
+            $.principal[to] += principalDown;
+            $.totalPrincipal += principalDown;
 
-                emit IndexUpdated(oldIndex, $.index, $.totalPrincipal, value);
-
-                return;
-            }
-
-            // We don't want to allow any other transfers to the yield account.
-            revert InvalidTransfer();
+            return;
         }
 
-        uint256 principal = ((value * 1e12) + $.index - 1) / $.index;
+        // Safely round up principal in case of transfers or burning.
+        uint112 fromPrincipal = $.principal[from];
+        uint112 principalUp = IndexingMath.getSafePrincipalAmountRoundedUp(value, $.index, fromPrincipal);
+        $.principal[from] = fromPrincipal - principalUp;
 
-        // We don't want to update the sender's principal in the case of issuance.
-        if (from != address(0)) {
-            $.principal[from] -= principal;
+        if (to == address(0)) {
+            // Burning
+            $.totalPrincipal -= principalUp;
         } else {
-            $.totalPrincipal += principal;
-        }
-
-        // We don't want to update the recipient's principal in the case of withdrawal.
-        if (to != address(0)) {
-            if (from == address(0)) {
-                principal = (value * 1e12) / $.index;
-            }
-
-            $.principal[to] += principal;
-        } else {
-            $.totalPrincipal -= principal;
+            // Transfer
+            $.principal[to] += principalUp;
         }
     }
 }
