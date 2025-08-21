@@ -8,7 +8,7 @@ The Noble Dollar Vault V2 system represents a significant evolution in decentral
 
 ### Single Vault, Multiple Remote Positions
 
-The V2 system features a single vault on the Noble chain that can maintain multiple remote positions simultaneously across different chains. These remote positions are ERC-4626 compatible vaults. This architecture provides:
+The V2 system features a single vault on the Noble chain that can maintain multiple remote positions simultaneously across different chains. These remote positions are [ERC-4626](https://ethereum.org/en/developers/docs/standards/tokens/erc-4626/) compatible vaults. This architecture provides:
 
 - **Diversification**: Risk is spread across multiple yield sources managed by the single vault
 - **Optimization**: The vault can dynamically allocate capital to the highest-performing strategies
