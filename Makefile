@@ -21,6 +21,9 @@ FILES := $(shell find . -name "*.go" -not -path "./simapp/*" -not -name "*.pb.go
 license:
 	@go-license --config .github/license.yml $(FILES)
 
+check-license:
+	@go-license --config .github/license.yml $(FILES) --verify
+
 format:
 	@echo "🤖 Running formatter..."
 	@go run $(gofumpt_cmd) -l -w .
