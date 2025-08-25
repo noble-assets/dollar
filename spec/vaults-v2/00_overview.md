@@ -140,7 +140,7 @@ Remote positions leverage Hyperlane for secure cross-chain operations:
 - **Automatic Value Updates**: Noble continuously receives and applies byte-encoded price data directly from the Hyperlane Mailbox
 - **Redemptions**: Vault shares redeemed for USDN and bridged back to Noble via specific return routes
 - **Completion Tracking**: Monitoring of bridge transaction completions per route
-- **Emergency Recovery**: Fallback mechanisms for bridge failures on specific routes
+- **Emergency Recovery**: Most bridge failures will be temporary. They may be cause by something like a chain halt or relayer in the ISM going offline. In this case, it should be possible to just 
 
 ### Risk Management
 
@@ -185,7 +185,7 @@ Inflight funds are included in NAV calculations to prevent artificial value fluc
 
 ```
 During Transit:
-- USDN leaves source → Marked as inflight
+- USDN leaves source → Marked as inflight. WITHDRAWL_FROM_POSITION and DEPOSIT_TO_POSITION states are inflight.
 - NAV unchanged (USDN still counted)
 - Hyperlane confirms → Status: CONFIRMED
 - USDN arrives → Status: COMPLETED
@@ -200,15 +200,12 @@ Special States:
 
 1. **Status Tracking**: Bridge transactions monitored for completion
 2. **Timeout Management**: Stale transactions flagged for investigation
-3. **Manual Intervention**: Failed transactions require governance action
+3. **Manual Intervention**: Failed transactions requiring intervention from the authority module.
 
 ### Risk Mitigation
 
 - **Maximum Duration Limits**: Funds cannot remain inflight indefinitely on any route
 - **Per-Route Value Caps**: Limits on inflight exposure for each Hyperlane route
-- **Total Value Caps**: Aggregate limits across all routes for the vault
-- **Route Diversification**: Use multiple Hyperlane routes to reduce concentration risk
-- **Insurance Reserve**: Coverage for potential failures on specific routes
 - **Message Authentication**: Verification of Hyperlane message origin and integrity
 
 ## Operational Flows
