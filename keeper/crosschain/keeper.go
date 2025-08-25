@@ -1,6 +1,7 @@
 package crosschain
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -70,12 +71,14 @@ type CrossChainKeeper struct {
 	providers map[dollarv2.Provider]CrossChainProvider
 
 	// Collections for state management
-	routes      collections.Map[string, vaultsv2.CrossChainRoute]
-	positions   collections.Map[collections.Pair[string, []byte], vaultsv2.RemotePosition]
-	inFlight    collections.Map[uint64, vaultsv2.InFlightPosition]
-	snapshots   collections.Map[collections.Pair[int32, int64], vaultsv2.CrossChainPositionSnapshot]
-	driftAlerts collections.Map[collections.Pair[string, []byte], vaultsv2.DriftAlert]
-	config      collections.Item[vaultsv2.CrossChainConfig]
+	routes               collections.Map[string, vaultsv2.CrossChainRoute]
+	positions            collections.Map[collections.Pair[string, []byte], vaultsv2.RemotePosition]
+	inFlight             collections.Map[uint64, vaultsv2.InFlightPosition]
+	snapshots            collections.Map[collections.Pair[int32, int64], vaultsv2.CrossChainPositionSnapshot]
+	driftAlerts          collections.Map[collections.Pair[string, []byte], vaultsv2.DriftAlert]
+	config               collections.Item[vaultsv2.CrossChainConfig]
+	inflightValueByRoute collections.Map[string, string]
+	totalInflightValue   collections.Item[string]
 
 	// Nonce counter for operations
 	nonceCounter collections.Sequence
@@ -89,17 +92,21 @@ func NewCrossChainKeeper(
 	snapshots collections.Map[collections.Pair[int32, int64], vaultsv2.CrossChainPositionSnapshot],
 	driftAlerts collections.Map[collections.Pair[string, []byte], vaultsv2.DriftAlert],
 	config collections.Item[vaultsv2.CrossChainConfig],
+	inflightValueByRoute collections.Map[string, string],
+	totalInflightValue collections.Item[string],
 	nonceCounter collections.Sequence,
 ) *CrossChainKeeper {
 	return &CrossChainKeeper{
-		providers:    make(map[dollarv2.Provider]CrossChainProvider),
-		routes:       routes,
-		positions:    positions,
-		inFlight:     inFlight,
-		snapshots:    snapshots,
-		driftAlerts:  driftAlerts,
-		config:       config,
-		nonceCounter: nonceCounter,
+		providers:            make(map[dollarv2.Provider]CrossChainProvider),
+		routes:               routes,
+		positions:            positions,
+		inFlight:             inFlight,
+		snapshots:            snapshots,
+		driftAlerts:          driftAlerts,
+		config:               config,
+		inflightValueByRoute: inflightValueByRoute,
+		totalInflightValue:   totalInflightValue,
+		nonceCounter:         nonceCounter,
 	}
 }
 
@@ -263,6 +270,11 @@ func (k *CrossChainKeeper) InitiateRemoteDeposit(
 		return 0, fmt.Errorf("failed to store in-flight position: %w", err)
 	}
 
+	// Track inflight value for NAV calculations
+	if err := k.addInflightValue(ctx, routeId, amount); err != nil {
+		return 0, fmt.Errorf("failed to track inflight value: %w", err)
+	}
+
 	return nonce, nil
 }
 
@@ -346,6 +358,11 @@ func (k *CrossChainKeeper) InitiateRemoteWithdraw(
 	// Store in-flight position
 	if err := k.inFlight.Set(ctx, nonce, inFlightPos); err != nil {
 		return 0, fmt.Errorf("failed to store in-flight position: %w", err)
+	}
+
+	// Track inflight value for NAV calculations
+	if err := k.addInflightValue(ctx, routeId, amount); err != nil {
+		return 0, fmt.Errorf("failed to track inflight value: %w", err)
 	}
 
 	return nonce, nil
@@ -544,6 +561,80 @@ func (k *CrossChainKeeper) createDriftAlert(ctx sdk.Context, routeId string, use
 	k.driftAlerts.Set(ctx, alertKey, alert)
 }
 
+// addInflightValue increases the tracked inflight value for a given route
+// and updates the overall inflight total.
+func (k *CrossChainKeeper) addInflightValue(ctx sdk.Context, routeId string, amount math.Int) error {
+	// Update per-route value
+	currentStr, err := k.inflightValueByRoute.Get(ctx, routeId)
+	var current math.Int
+	if err != nil {
+		if !errors.Is(err, collections.ErrNotFound) {
+			return err
+		}
+		current = math.ZeroInt()
+	} else {
+		current, _ = math.NewIntFromString(currentStr)
+	}
+	current = current.Add(amount)
+	if err := k.inflightValueByRoute.Set(ctx, routeId, current.String()); err != nil {
+		return err
+	}
+
+	// Update total inflight value
+	totalStr, err := k.totalInflightValue.Get(ctx)
+	var total math.Int
+	if err != nil {
+		if !errors.Is(err, collections.ErrNotFound) {
+			return err
+		}
+		total = math.ZeroInt()
+	} else {
+		total, _ = math.NewIntFromString(totalStr)
+	}
+	total = total.Add(amount)
+	return k.totalInflightValue.Set(ctx, total.String())
+}
+
+// removeInflightValue decreases the tracked inflight value for a route and
+// adjusts the overall inflight total. It gracefully handles missing entries.
+func (k *CrossChainKeeper) removeInflightValue(ctx sdk.Context, routeId string, amount math.Int) error {
+	currentStr, err := k.inflightValueByRoute.Get(ctx, routeId)
+	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			return nil
+		}
+		return err
+	}
+	current, _ := math.NewIntFromString(currentStr)
+	current = current.Sub(amount)
+	if current.IsNegative() {
+		current = math.ZeroInt()
+	}
+	if current.IsZero() {
+		if err := k.inflightValueByRoute.Remove(ctx, routeId); err != nil {
+			return err
+		}
+	} else {
+		if err := k.inflightValueByRoute.Set(ctx, routeId, current.String()); err != nil {
+			return err
+		}
+	}
+
+	totalStr, err := k.totalInflightValue.Get(ctx)
+	if err != nil {
+		if errors.Is(err, collections.ErrNotFound) {
+			return nil
+		}
+		return err
+	}
+	total, _ := math.NewIntFromString(totalStr)
+	total = total.Sub(amount)
+	if total.IsNegative() {
+		total = math.ZeroInt()
+	}
+	return k.totalInflightValue.Set(ctx, total.String())
+}
+
 func (k *CrossChainKeeper) processSuccessfulOperation(ctx sdk.Context, inFlightPos *vaultsv2.InFlightPosition, resultAmount math.Int) error {
 	switch inFlightPos.OperationType {
 	case vaultsv2.OPERATION_REMOTE_DEPOSIT:
@@ -586,6 +677,10 @@ func (k *CrossChainKeeper) processSuccessfulDeposit(ctx sdk.Context, inFlightPos
 		position.ProviderTracking = inFlightPos.ProviderTracking
 	}
 
+	if err := k.removeInflightValue(ctx, inFlightPos.RouteId, inFlightPos.Amount); err != nil {
+		return err
+	}
+
 	return k.positions.Set(ctx, positionKey, position)
 }
 
@@ -609,10 +704,19 @@ func (k *CrossChainKeeper) processSuccessfulWithdraw(ctx sdk.Context, inFlightPo
 		position.Status = vaultsv2.REMOTE_POSITION_CLOSED
 	}
 
+	if err := k.removeInflightValue(ctx, inFlightPos.RouteId, inFlightPos.Amount); err != nil {
+		return err
+	}
+
 	return k.positions.Set(ctx, positionKey, position)
 }
 
 func (k *CrossChainKeeper) processFailedOperation(ctx sdk.Context, inFlightPos *vaultsv2.InFlightPosition) error {
+	// Remove the inflight value since the operation will not complete
+	if err := k.removeInflightValue(ctx, inFlightPos.RouteId, inFlightPos.Amount); err != nil {
+		return err
+	}
+
 	// For failed operations, we might need to:
 	// 1. Return funds to user (for deposits)
 	// 2. Restore shares (for withdrawals)
