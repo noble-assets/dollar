@@ -17,8 +17,8 @@ const NAVKey = []byte("vaults/v2/nav")
 ### NAV Calculation Formula
 
 ```
-Total NAV = Local Assets 
-          + Σ(Remote Position Values) 
+Total NAV = Local Assets
+          + Σ(Remote Position Values)
           + Σ(Inflight Funds Values)
           - Pending Withdrawal Liabilities
 
@@ -48,7 +48,7 @@ type RemotePosition struct {
     PositionID       uint64
     VaultAddress     []byte  // Address of the ERC-4626 compatible vault (Boring Vault or other)
     ChainID          uint32  // Hyperlane Domain ID (e.g., 998 for Hyperliquid, 8453 for Base, 4000261 for Noble App Layer)
-    SharesHeld       math.Int // Number of vault shares held
+    SharesHeld       math.Int // Number of remote vault shares held
     Principal        math.Int // USDN amount initially deposited
     LastUpdatedNAV   math.LegacyDec
     LastUpdateTime   time.Time
@@ -58,7 +58,7 @@ type RemotePosition struct {
 
 ## InflightFunds
 
-The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a Hyperlane route identifier (`uint32`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions, tracked per Hyperlane route.
+The `InflightFunds` field is a mapping ([`collections.Map`][map]) between a Hyperlane route identifier (`uint32`) and an `vaults.v2.InflightFund` value. These represent funds that are currently in transit between the Noble vault and its remote positions or between positions, tracked per Hyperlane route. There should be only one `InflightFund` per route at a time.
 
 ```go
 const InflightFundsPrefix = []byte("vaults/v2/inflight_funds/")
@@ -228,23 +228,84 @@ type DepositVelocity struct {
 
 ## RemotePositionOracles
 
-The `RemotePositionOracles` field is a mapping ([`collections.Map`][map]) between a composite key of vault address and chain ID (`[]byte`, `uint32`) and oracle configuration (`vaults.v2.OracleConfig`). This is used to track the value of shares in remote ERC-4626 compatible vaults.
+The `RemotePositionOracles` field is a mapping ([`collections.Map`][map]) between a position ID (`string`) and oracle configuration (`vaults.v2.PositionOracleConfig`). Each remote position has a dedicated oracle that provides share price and shares held data.
 
 ```go
 const RemotePositionOraclesPrefix = []byte("vaults/v2/remote_position_oracles/")
 ```
 
-### OracleConfig Structure
+### PositionOracleConfig Structure
 
 ```go
-type OracleConfig struct {
-    OracleType       string  // "hyperlane", "chainlink", "internal"
-    UpdateFrequency  int64   // blocks between required updates
-    MaxStaleness     int64   // maximum blocks before data considered stale
-    MinConfirmations uint32  // minimum confirmations required
-    TrustedSources   [][]byte // addresses of trusted oracle sources
+type PositionOracleConfig struct {
+    PositionID        string   // Unique identifier for the position
+    OracleAddress     string   // Oracle contract address on remote chain
+    ChainID           uint32   // Source chain ID
+    VaultAddress      string   // Address of vault holding this position
+    AuthorizedSender  string   // Authorized message sender address
+    MaxStaleness      int64    // Maximum blocks before data considered stale
+    LastUpdate        time.Time // Timestamp of last oracle update
+    SharePrice        sdk.Dec  // Current share price from oracle
+    SharesHeld        sdk.Int  // Number of shares held in position
 }
 ```
+
+## OracleUpdates
+
+The `OracleUpdates` field is a mapping ([`collections.Map`][map]) between a composite key of chain ID and vault address (`uint32`, `[]byte`) and the latest price update (`vaults.v2.OracleUpdate`). This stores the most recent share price data received directly from the Hyperlane Mailbox.
+
+```go
+const OracleUpdatesPrefix = []byte("vaults/v2/oracle_updates/")
+```
+
+### OracleUpdate Structure
+
+```go
+type OracleUpdate struct {
+    SharePrice       math.LegacyDec  // Current price per share
+    TotalShares      math.Int        // Total shares outstanding
+    TotalAssets      math.Int        // Total assets in vault
+    Timestamp        time.Time       // When price was read on remote chain
+    BlockHeight      int64           // Noble block when Mailbox processed update
+    SourceDomain     uint32          // Hyperlane domain ID of source
+    MessageID        string          // Hyperlane message ID from Mailbox
+    Status           UpdateStatus    // VALIDATED, APPLIED (no PENDING - direct processing)
+}
+```
+
+## OracleRouteConfigs
+
+The `OracleRouteConfigs` field is a mapping ([`collections.Map`][map]) between Hyperlane route ID (`uint64`) and route configuration (`vaults.v2.OracleRouteConfig`). Each route represents a specific path for oracle data transmission through the Hyperlane Mailbox.
+
+```go
+const OracleRouteConfigsPrefix = []byte("vaults/v2/oracle_route_configs/")
+```
+
+### OracleRouteConfig Structure
+
+```go
+type OracleRouteConfig struct {
+    RouteID              uint64
+    SourceDomain         uint32   // Source Hyperlane domain
+    DestinationDomain    uint32   // Destination Hyperlane domain (Noble)
+    UpdateFrequency      uint32   // Expected blocks between updates
+    MaxStaleness         uint32   // Maximum blocks before stale
+    AuthorizedSender     []byte   // Authorized oracle contract on source chain
+    LastMessageNonce     uint32   // Last processed message nonce from Mailbox
+    LastProcessedTime    time.Time // When last Mailbox message was processed
+    Active               bool     // Whether route is currently active
+}
+```
+
+## LastOracleUpdate
+
+The `LastOracleUpdate` field is a mapping ([`collections.Map`][map]) between position ID (`uint64`) and the timestamp of the last successful oracle update (`time.Time`). This is updated when the Mailbox handler processes a price update for the position.
+
+```go
+const LastOracleUpdatePrefix = []byte("vaults/v2/last_oracle_update/")
+```
+
+
 
 ## VaultConfiguration
 
@@ -258,7 +319,6 @@ const VaultConfigurationKey = []byte("vaults/v2/vault_config")
 
 ```go
 type VaultConfig struct {
-    Name                  string
     MaxRemotePositions    uint32
     AllowedChains         []uint32  // Hyperlane domain IDs
     AllowedVaultAddresses map[uint32][][]byte // Chain ID -> List of approved vault addresses
