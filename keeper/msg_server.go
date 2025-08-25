@@ -480,7 +480,11 @@ func (k *Keeper) handleVaultsYieldSeasonTwo(ctx context.Context) error {
 	}
 
 	// Send the Staked vault yield to the Collector address.
-	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, k.vaultsSeasonTwoYieldCollector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
+	collector, err := k.VaultsSeasonTwoYieldCollector.Get(ctx)
+	if err != nil {
+		return err
+	}
+	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, collector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
 	if err != nil {
 		return err
 	}
