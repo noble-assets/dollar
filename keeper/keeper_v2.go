@@ -16,12 +16,14 @@ import (
 // V2VaultCollections contains all collections for the V2 vault system
 type V2VaultCollections struct {
 	// V2 Vault State Collections
-	VaultStates       collections.Item[vaultsv2.VaultState]                                      // Single vault state
-	UserPositions     collections.Map[[]byte, vaultsv2.UserPosition]                             // address -> UserPosition
-	ExitRequests      collections.Map[string, vaultsv2.ExitRequest]                              // request_id -> ExitRequest
-	ExitQueue         collections.Map[uint64, string]                                            // queue_pos -> request_id
-	RemotePositions   collections.Map[collections.Pair[string, []byte], vaultsv2.RemotePosition] // (route_id, address) -> RemotePosition
-	InFlightPositions collections.Map[uint64, vaultsv2.InFlightPosition]                         // nonce -> InFlightPosition
+	VaultStates          collections.Item[vaultsv2.VaultState]                                      // Single vault state
+	UserPositions        collections.Map[[]byte, vaultsv2.UserPosition]                             // address -> UserPosition
+	ExitRequests         collections.Map[string, vaultsv2.ExitRequest]                              // request_id -> ExitRequest
+	ExitQueue            collections.Map[uint64, string]                                            // queue_pos -> request_id
+	RemotePositions      collections.Map[collections.Pair[string, []byte], vaultsv2.RemotePosition] // (route_id, address) -> RemotePosition
+	InFlightPositions    collections.Map[uint64, vaultsv2.InFlightPosition]                         // nonce -> InFlightPosition
+	InflightValueByRoute collections.Map[string, string]                                            // route_id -> inflight value
+	TotalInflightValue   collections.Item[string]                                                   // total inflight value
 
 	// Configuration Collections
 	NAVConfig        collections.Item[vaultsv2.NAVConfig]              // Single NAV config
@@ -93,6 +95,19 @@ func (k *Keeper) InitializeV2Collections(builder *collections.SchemaBuilder) V2V
 			"v2_inflight_positions",
 			collections.Uint64Key,
 			codec.CollValue[vaultsv2.InFlightPosition](k.cdc),
+		),
+		InflightValueByRoute: collections.NewMap(
+			builder,
+			collections.NewPrefix(206),
+			"v2_inflight_value_by_route",
+			collections.StringKey,
+			collections.StringValue,
+		),
+		TotalInflightValue: collections.NewItem(
+			builder,
+			collections.NewPrefix(207),
+			"v2_total_inflight_value",
+			collections.StringValue,
 		),
 
 		// Configuration Collections
