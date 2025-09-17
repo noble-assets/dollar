@@ -144,7 +144,9 @@ contract NobleDollar is HypERC20 {
      * @custom:emits YieldClaimed when yield is successfully claimed.
      */
     function claim() public {
-        uint256 amount = yield(msg.sender);
+
+        // Avoid claiming DOS by taking min of the contract's balance and user's yield 
+        uint256 amount = UIntMath.min256(balanceOf(address(this)), yield(msg.sender));
 
         if (amount == 0) revert NoClaimableYield();
 
