@@ -144,8 +144,7 @@ contract NobleDollar is HypERC20 {
      * @custom:emits YieldClaimed when yield is successfully claimed.
      */
     function claim() public {
-
-        // Avoid claiming DOS by taking min of the contract's balance and user's yield 
+        // Avoid DOS claiming by taking min of the contract's balance and user's yield.
         uint256 amount = UIntMath.min256(balanceOf(address(this)), yield(msg.sender));
 
         if (amount == 0) revert NoClaimableYield();
@@ -191,7 +190,6 @@ contract NobleDollar is HypERC20 {
         // Distribute yield, derive new index from the adjusted total supply.
         // NOTE: We don't want to perform any principal updates in the case of yield accrual.
         if (to == address(this)) {
-
             if ($.totalPrincipal == 0) return;
 
             uint128 oldIndex = $.index;
