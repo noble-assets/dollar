@@ -63,7 +63,7 @@ contract NobleDollarTest is Test {
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
 
         // ASSERT: The transfer was successful, USER1 has a balance of 1M $USDN with a principal of 1M.
-        assertEq(mintSuccess, true);
+        assertTrue(mintSuccess, "Initial mint should succeed");
 
         assertEq(usdn.index(), 1e12);
         assertEq(usdn.totalSupply(), 1e12);
@@ -84,7 +84,7 @@ contract NobleDollarTest is Test {
         (bool yieldSuccess,) = MAILBOX.call(yieldPayload);
 
         // ASSERT: The yield accrual was successful, USER1 has 111.506849 $USDN of claimable yield.
-        assertEq(yieldSuccess, true);
+        assertTrue(yieldSuccess, "Yield accrual should succeed");
 
         assertEq(usdn.index(), 1000111506849);
         assertEq(usdn.totalSupply(), 1000111506849);
@@ -135,7 +135,7 @@ contract NobleDollarTest is Test {
         (bool yieldSuccess2,) = MAILBOX.call(yieldPayload2);
 
         // ASSERT: The yield accrual was successful.
-        assertEq(yieldSuccess2, true);
+        assertTrue(yieldSuccess2, "Second yield accrual should succeed");
 
         assertEq(usdn.index(), 1000223013698);
         assertEq(usdn.totalSupply(), 1000223013698);
@@ -156,6 +156,7 @@ contract NobleDollarTest is Test {
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
+        assertTrue(mintSuccess, "Initial mint should succeed");
 
         uint256 _user1Balance = usdn.balanceOf(USER1);
 
@@ -175,6 +176,7 @@ contract NobleDollarTest is Test {
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
+        assertTrue(mintSuccess, "Initial mint should succeed");
 
         uint256 _user1Balance = usdn.balanceOf(USER1);
 
@@ -197,6 +199,7 @@ contract NobleDollarTest is Test {
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
+        assertTrue(mintSuccess, "Initial mint should succeed");
 
         vm.expectRevert(NobleDollar.NoClaimableYield.selector);
 
@@ -218,6 +221,7 @@ contract NobleDollarTest is Test {
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000ffffffffffffffffffffffffffff"
         );
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
+        assertTrue(mintSuccess, "Initial mint should succeed");
 
         uint256 _user1Balance = usdn.balanceOf(USER1);
 
@@ -242,6 +246,7 @@ contract NobleDollarTest is Test {
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
+        assertTrue(mintSuccess, "Initial mint should succeed");
 
         // Accrue 1 million in yield
         bytes memory yieldPayload = abi.encodeWithSignature(
@@ -250,6 +255,7 @@ contract NobleDollarTest is Test {
             hex"03000000014e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (bool yieldSuccess,) = MAILBOX.call(yieldPayload);
+        assertTrue(yieldSuccess, "Yield accrual should succeed");
 
         // Mint 1 million to USER2
         mintPayload = abi.encodeWithSignature(
@@ -258,6 +264,7 @@ contract NobleDollarTest is Test {
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000f2f1acbe0ba726fee8d75f3e32900526874740bb000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (mintSuccess,) = MAILBOX.call(mintPayload);
+        assertEq(mintSuccess, true);
 
         uint256 _principalUSER1 = usdn.principalOf(USER1);
         uint256 _principalUSER2 = usdn.principalOf(USER2);
@@ -455,7 +462,8 @@ contract NobleDollarTest is Test {
             0x0,
             hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
-        MAILBOX.call(mintPayload);
+        (bool success,) = MAILBOX.call(mintPayload);
+        assertTrue(success, "Initial mint should succeed");
 
         // Accrue 100% yield
         bytes memory yieldPayload1 = abi.encodeWithSignature(
@@ -463,12 +471,13 @@ contract NobleDollarTest is Test {
             0x0,
             hex"03000000014e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
-        MAILBOX.call(yieldPayload1);
+        (success,) = MAILBOX.call(yieldPayload1);
+        assertTrue(success, "Yield accrual should succeed");
         assertEq(usdn.index(), 2e12, "Index should be 2.0 after 100% yield");
 
         // Burn entire pre yield claimed balance of USER1
         vm.prank(USER1);
-        bytes32 messageId = usdn.transferRemote{value: 1 ether}(
+        usdn.transferRemote{value: 1 ether}(
             1313817164, // destination domain (you used this in setUp)
             bytes32(uint256(uint160(USER2))),
             1e12 // amount to transfer (1M USDN)
@@ -499,7 +508,8 @@ contract NobleDollarTest is Test {
             0x0,
             hex"03000000024e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
-        MAILBOX.call(yieldPayload2);
+        (success,) = MAILBOX.call(yieldPayload2);
+        assertTrue(success, "Second yield accrual should succeed");
 
         _balanceUSER1 = usdn.balanceOf(USER1);
         _principalUSER1 = usdn.principalOf(USER1);
