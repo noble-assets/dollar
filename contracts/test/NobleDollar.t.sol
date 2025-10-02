@@ -20,8 +20,6 @@ pragma solidity >=0.8.0;
 import {Test} from "forge-std/Test.sol";
 
 import {NoopIsm} from "@hyperlane/isms/NoopIsm.sol";
-import {Message} from "@hyperlane/libs/Message.sol";
-import {TokenMessage} from "@hyperlane/token/libs/TokenMessage.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 import {NobleDollar} from "../src/NobleDollar.sol";
@@ -98,7 +96,7 @@ contract NobleDollarTest is Test {
 
         // ACT: Transfer of 500k $USDN from USER1 to USER2.
         vm.prank(USER1);
-        usdn.transfer(USER2, 5e11);
+        require(usdn.transfer(USER2, 5e11));
 
         // ASSERT: The transfer was successful.
         assertEq(usdn.index(), 1000111506849);
@@ -165,7 +163,8 @@ contract NobleDollarTest is Test {
         vm.expectRevert(abi.encodeWithSelector(NobleDollar.InvalidTransfer.selector));
 
         vm.prank(USER1);
-        usdn.transfer(address(usdn), 1000e6);
+        bool success = usdn.transfer(address(usdn), 1000e6);
+        assertTrue(!success, "transfer should fail");
     }
 
     function test_transferFromToUSDNFromNonZeroAccountReverts() public {
@@ -188,7 +187,8 @@ contract NobleDollarTest is Test {
         vm.expectRevert(abi.encodeWithSelector(NobleDollar.InvalidTransfer.selector));
 
         vm.prank(USER2);
-        usdn.transferFrom(USER1, address(usdn), 1000e6);
+        bool success = usdn.transferFrom(USER1, address(usdn), 1000e6);
+        assertTrue(!success, "transferFrom should fail");
     }
 
     function test_noClaimableYield() public {
@@ -266,11 +266,11 @@ contract NobleDollarTest is Test {
         (mintSuccess,) = MAILBOX.call(mintPayload);
         assertEq(mintSuccess, true);
 
-        uint256 _principalUSER1 = usdn.principalOf(USER1);
-        uint256 _principalUSER2 = usdn.principalOf(USER2);
+        uint256 _principalUser1 = usdn.principalOf(USER1);
+        uint256 _principalUser2 = usdn.principalOf(USER2);
 
-        assertEq(_principalUSER1, 1000000e6, "user 1 should have 1 million principal");
-        assertEq(_principalUSER2, 500000e6, "user 2 should have 500 thousand principal");
+        assertEq(_principalUser1, 1000000e6, "user 1 should have 1 million principal");
+        assertEq(_principalUser2, 500000e6, "user 2 should have 500 thousand principal");
     }
 
     function test_claimYield() public {
@@ -384,7 +384,7 @@ contract NobleDollarTest is Test {
 
         // Transfer half (500k) to USER2
         vm.prank(USER1);
-        usdn.transfer(USER2, 5e11);
+        require(usdn.transfer(USER2, 5e11));
 
         // Call yield
         uint256 user1Yield = usdn.yield(USER1);
@@ -483,11 +483,11 @@ contract NobleDollarTest is Test {
             1e12 // amount to transfer (1M USDN)
         );
 
-        uint256 _balanceUSER1 = usdn.balanceOf(USER1);
-        uint256 _principalUSER1 = usdn.principalOf(USER1);
+        uint256 _balanceUser1 = usdn.balanceOf(USER1);
+        uint256 _principalUser1 = usdn.principalOf(USER1);
 
-        assertEq(_balanceUSER1, 0, "USER1 balance should be 0 after transfer");
-        assertEq(_principalUSER1, 5e11, "USER1 principal should be halved after burn");
+        assertEq(_balanceUser1, 0, "USER1 balance should be 0 after transfer");
+        assertEq(_principalUser1, 5e11, "USER1 principal should be halved after burn");
 
         assertEq(usdn.totalPrincipal(), 5e11, "Total principal should be 500k after burn");
         assertEq(usdn.totalSupply(), 1e12, "Contract should still hold unclaimed yield");
@@ -496,11 +496,11 @@ contract NobleDollarTest is Test {
         vm.prank(USER1);
         usdn.claim();
 
-        _balanceUSER1 = usdn.balanceOf(USER1);
-        _principalUSER1 = usdn.principalOf(USER1);
+        _balanceUser1 = usdn.balanceOf(USER1);
+        _principalUser1 = usdn.principalOf(USER1);
 
-        assertEq(_balanceUSER1, 1e12, "USER1 should have all yield as balance after claiming");
-        assertEq(_principalUSER1, 5e11, "USER1 principal should remain the same");
+        assertEq(_balanceUser1, 1e12, "USER1 should have all yield as balance after claiming");
+        assertEq(_principalUser1, 5e11, "USER1 principal should remain the same");
 
         // Realize 100% yield again, 1m tokens
         bytes memory yieldPayload2 = abi.encodeWithSignature(
@@ -511,8 +511,8 @@ contract NobleDollarTest is Test {
         (success,) = MAILBOX.call(yieldPayload2);
         assertTrue(success, "Second yield accrual should succeed");
 
-        _balanceUSER1 = usdn.balanceOf(USER1);
-        _principalUSER1 = usdn.principalOf(USER1);
+        _balanceUser1 = usdn.balanceOf(USER1);
+        _principalUser1 = usdn.principalOf(USER1);
 
         assertEq(usdn.index(), 4e12, "index should be doubled again");
     }

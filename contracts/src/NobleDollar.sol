@@ -20,7 +20,6 @@ pragma solidity 0.8.30;
 import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
 import {IndexingMath} from "../utils/IndexingMath.sol";
-
 import {UIntMath} from "../utils/UIntMath.sol";
 
 /*
