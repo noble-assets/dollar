@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-pragma solidity 0.8.20;
+pragma solidity 0.8.30;
 
 import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
@@ -85,7 +85,9 @@ contract NobleDollar is HypERC20 {
         }
     }
 
-    constructor(address mailbox_) HypERC20(6, 1, mailbox_) {}
+    constructor(address mailbox_) HypERC20(6, 1, mailbox_) {
+        _disableInitializers();
+    }
 
     function initialize(address hook_, address ism_) public virtual initializer {
         super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
@@ -142,7 +144,8 @@ contract NobleDollar is HypERC20 {
      * @custom:emits YieldClaimed when yield is successfully claimed.
      */
     function claim() public {
-        uint256 amount = yield(msg.sender);
+        // Avoid DOS claiming by taking min of the contract's balance and user's yield.
+        uint256 amount = UIntMath.min256(balanceOf(address(this)), yield(msg.sender));
 
         if (amount == 0) revert NoClaimableYield();
 
@@ -187,6 +190,8 @@ contract NobleDollar is HypERC20 {
         // Distribute yield, derive new index from the adjusted total supply.
         // NOTE: We don't want to perform any principal updates in the case of yield accrual.
         if (to == address(this)) {
+            if ($.totalPrincipal == 0) return;
+
             uint128 oldIndex = $.index;
 
             $.index = IndexingMath.getIndexRoundedDown(totalSupply(), $.totalPrincipal);

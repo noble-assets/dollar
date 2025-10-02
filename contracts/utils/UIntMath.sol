@@ -36,4 +36,14 @@ library UIntMath {
         if (n > type(uint128).max) revert InvalidUInt128();
         return uint128(n);
     }
+
+    /**
+     * @notice Takes the min between two uint256 values.
+     * @param a First value
+     * @param b Second value
+     * @return The lesser of the two
+     */
+    function min256(uint256 a, uint256 b) internal pure returns (uint256) {
+        return a < b ? a : b;
+    }
 }

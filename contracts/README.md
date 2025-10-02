@@ -111,6 +111,26 @@ To integrate with the NobleDollar contract:
 3. **Yield Claims**: Call `yield(address)` to check claimable amounts and `claim()` to collect yield
 4. **Cross-Chain Operations**: Utilize Hyperlane's routing for cross-chain transfers
 
+## Rounding Behavior and Principal-Balance Relationship
+
+### Mathematical Precision Considerations
+
+Due to the dual accounting system that tracks both principal and balance, there can be slight rounding inconsistencies in how these values relate to each other depending on how a user's position was created:
+
+- **Organic yield accrual**: When users hold tokens while the index increases, their balance is calculated as `roundDown(principal × index)`
+- **Direct minting**: When users mint tokens at the current index, their principal is calculated as `roundDown(balance / index)`, which can result in `balance ≈ roundUp(principal × index)`
+
+#### Example
+At index 1.199e12:
+- A user who held 100 principal from index 1e12 will have balance = 119 wei (`roundDown(100 × 1.199)`)
+- A user who mints 119 wei will receive 99 principal (`roundDown(119 / 1.199)`), where `99 × 1.199 = 118.8 → 119`
+
+This means users with identical balances may have slightly different principal amounts (and thus different future yield accrual rates) depending on their transaction history. These differences are typically limited to 1 wei of principal and are an inherent characteristic of maintaining separate principal and balance values with integer arithmetic.
+
+### Impact
+- The rounding differences are minimal and do not affect the security or core functionality of the protocol
+- Users will always receive at least the yield they are entitled to based on their principal
+
 ## License
 
 Copyright 2025 NASD Inc. All rights reserved.
