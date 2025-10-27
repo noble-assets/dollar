@@ -160,36 +160,16 @@ func (k *Keeper) UpdateIndex(ctx context.Context, index int64) error {
 		}
 	}
 
-	// Claim the yield of the Flexible vault.
-	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
-	if err != nil {
-		return err
-	}
-
-	// Claim the yield of the Staked vault and redirect it to the Flexible vault.
-	stakedYield, err := k.claimStakedVaultYield(ctx)
-	if err != nil {
-		return err
-	}
-
-	// get the current Flexible total principal.
-	totalFlexiblePrincipal := math.ZeroInt()
-	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
-		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
-		if err != nil {
+	// Handle the vaults yield logic for Season One only if it has not ended.
+	if !k.IsVaultsSeasonOneEnded(ctx) {
+		if err := k.handleVaultsYieldSeasonOne(ctx, index); err != nil {
 			return err
 		}
-		totalFlexiblePrincipal = totalFlexiblePrincipal.Add(current)
-	}
-
-	// Register the new Rewards record.
-	rewards := stakedYield.Add(flexibleYield)
-	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
-		Index:   index,
-		Total:   totalFlexiblePrincipal,
-		Rewards: rewards,
-	}); err != nil {
-		return err
+	} else {
+		// Handle the vaults yield logic for Season Two.
+		if err := k.handleVaultsYieldSeasonTwo(ctx); err != nil {
+			return err
+		}
 	}
 
 	// Claim and transfer the yield of ibc external chains.
@@ -306,7 +286,7 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 		}
 
 		timeout := uint64(k.header.GetHeaderInfo(ctx).Time.UnixNano()) + transfertypes.DefaultRelativePacketTimeoutTimestamp
-		_, err = k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
+		_, transferErr := k.transfer.Transfer(ctx, &transfertypes.MsgTransfer{
 			SourcePort:       transfertypes.PortID,
 			SourceChannel:    channelId,
 			Token:            sdk.NewCoin(k.denom, accruedYield),
@@ -316,8 +296,13 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 			TimeoutTimestamp: timeout,
 			Memo:             "",
 		})
-		if err != nil {
-			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, channelId)
+		if transferErr != nil {
+			k.logger.Error("unable to transfer ibc yield", "identifier", channelId, "err", transferErr)
+
+			err = k.IncrementRetryAmount(ctx, provider, channelId, accruedYield)
+			if err != nil {
+				return errors.Wrapf(err, "unable to increment retry amount for %s/%s", provider, channelId)
+			}
 		}
 
 		err = k.IncrementTotalExternalYield(ctx, provider, channelId, yield)
@@ -325,7 +310,9 @@ func (k *Keeper) claimExternalYieldIBC(ctx context.Context) error {
 			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, channelId)
 		}
 
-		k.logger.Info("claimed and transferred ibc yield", "amount", yield, "identifier", channelId)
+		if transferErr == nil {
+			k.logger.Info("claimed and transferred ibc yield", "amount", accruedYield, "identifier", channelId)
+		}
 	}
 
 	return nil
@@ -386,7 +373,12 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		collateral := token.CollateralBalance
 		collateralPortion := math.LegacyNewDecFromInt(collateral).QuoInt(totalCollateral)
 		yieldPortion := collateralPortion.MulInt(yield).TruncateInt()
-		if !yieldPortion.IsPositive() {
+		retryAmount, err := k.GetRetryAmountAndRemove(ctx, provider, identifier)
+		if err != nil {
+			return errors.Wrapf(err, "unable to get and remove retry amount for %s/%s", provider, identifier)
+		}
+		accruedYield := yieldPortion.Add(retryAmount)
+		if !accruedYield.IsPositive() {
 			continue
 		}
 
@@ -401,20 +393,25 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 		}
 
 		sdkCtx := sdk.UnwrapSDKContext(ctx)
-		_, err = k.warp.RemoteTransferCollateral(
+		_, transferErr := k.warp.RemoteTransferCollateral(
 			sdkCtx,
 			token,
 			address.String(),
 			router.ReceiverDomain,
 			yieldRecipientBz,
-			yieldPortion,
+			accruedYield,
 			nil,
 			math.ZeroInt(),
 			sdk.NewCoin(k.denom, math.ZeroInt()),
 			nil,
 		)
-		if err != nil {
-			return errors.Wrapf(err, "unable to transfer yield for %s/%s", provider, identifier)
+		if transferErr != nil {
+			k.logger.Error("unable to transfer hyperlane yield", "identifier", identifier, "err", transferErr)
+
+			err = k.IncrementRetryAmount(ctx, provider, identifier, accruedYield)
+			if err != nil {
+				return errors.Wrapf(err, "unable to increment retry amount for %s/%s", provider, identifier)
+			}
 		}
 
 		err = k.IncrementTotalExternalYield(ctx, provider, identifier, yieldPortion)
@@ -422,7 +419,74 @@ func (k *Keeper) claimExternalYieldHyperlane(ctx context.Context) error {
 			return errors.Wrapf(err, "unable to increment total yield for %s/%s", provider, identifier)
 		}
 
-		k.logger.Info("claimed and transferred hyperlane yield", "amount", yieldPortion, "identifier", identifier)
+		if transferErr == nil {
+			k.logger.Info("claimed and transferred hyperlane yield", "amount", accruedYield, "identifier", identifier)
+		}
+	}
+
+	return nil
+}
+
+// handleVaultsYieldSeasonOne handles the logic of the vaults for Season One.
+// Yield from the Staked vault gets redirected to the Flexible vault.
+func (k *Keeper) handleVaultsYieldSeasonOne(ctx context.Context, index int64) error {
+	// Claim the yield of the Flexible vault.
+	flexibleYield, err := k.claimModuleYield(ctx, vaults.FlexibleVaultAddress)
+	if err != nil {
+		return err
+	}
+
+	// Claim the yield of the Staked vault and redirect it to the Flexible vault.
+	stakedYield, err := k.claimStakedVaultYield(ctx)
+	if err != nil {
+		return err
+	}
+
+	// get the current Flexible total principal.
+	totalFlexiblePrincipal := math.ZeroInt()
+	if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
+		current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
+		if err != nil {
+			return err
+		}
+		totalFlexiblePrincipal = totalFlexiblePrincipal.Add(current)
+	}
+
+	// Register the new Rewards record.
+	rewards := stakedYield.Add(flexibleYield)
+	if err = k.VaultsRewards.Set(ctx, index, vaults.Reward{
+		Index:   index,
+		Total:   totalFlexiblePrincipal,
+		Rewards: rewards,
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// handleVaultsYieldSeasonTwo handles the logic of the vaults for Season Two.
+// Yield from the Staked vault gets redirected to a configured collector address.
+func (k *Keeper) handleVaultsYieldSeasonTwo(ctx context.Context) error {
+	// Claim the yield of the Staked vault.
+	yield, err := k.claimModuleYield(ctx, vaults.StakedVaultAddress)
+	if err != nil {
+		return err
+	}
+
+	// Ensure that there is a valid amount of yield to send.
+	if !yield.IsPositive() {
+		return nil
+	}
+
+	// Send the Staked vault yield to the Collector address.
+	collector, err := k.VaultsSeasonTwoYieldCollector.Get(ctx)
+	if err != nil {
+		return err
+	}
+	err = k.bank.SendCoins(ctx, vaults.StakedVaultAddress, collector, sdk.NewCoins(sdk.NewCoin(k.denom, yield)))
+	if err != nil {
+		return err
 	}
 
 	return nil

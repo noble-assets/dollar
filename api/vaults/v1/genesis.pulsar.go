@@ -118,12 +118,14 @@ func (x *_GenesisState_3_list) IsValid() bool {
 }
 
 var (
-	md_GenesisState                          protoreflect.MessageDescriptor
-	fd_GenesisState_positions                protoreflect.FieldDescriptor
-	fd_GenesisState_rewards                  protoreflect.FieldDescriptor
-	fd_GenesisState_total_flexible_principal protoreflect.FieldDescriptor
-	fd_GenesisState_paused                   protoreflect.FieldDescriptor
-	fd_GenesisState_stats                    protoreflect.FieldDescriptor
+	md_GenesisState                            protoreflect.MessageDescriptor
+	fd_GenesisState_positions                  protoreflect.FieldDescriptor
+	fd_GenesisState_rewards                    protoreflect.FieldDescriptor
+	fd_GenesisState_total_flexible_principal   protoreflect.FieldDescriptor
+	fd_GenesisState_paused                     protoreflect.FieldDescriptor
+	fd_GenesisState_stats                      protoreflect.FieldDescriptor
+	fd_GenesisState_season_one_ended           protoreflect.FieldDescriptor
+	fd_GenesisState_season_two_yield_collector protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -134,6 +136,8 @@ func init() {
 	fd_GenesisState_total_flexible_principal = md_GenesisState.Fields().ByName("total_flexible_principal")
 	fd_GenesisState_paused = md_GenesisState.Fields().ByName("paused")
 	fd_GenesisState_stats = md_GenesisState.Fields().ByName("stats")
+	fd_GenesisState_season_one_ended = md_GenesisState.Fields().ByName("season_one_ended")
+	fd_GenesisState_season_two_yield_collector = md_GenesisState.Fields().ByName("season_two_yield_collector")
 }
 
 var _ protoreflect.Message = (*fastReflection_GenesisState)(nil)
@@ -231,6 +235,18 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
+	if x.SeasonOneEnded != false {
+		value := protoreflect.ValueOfBool(x.SeasonOneEnded)
+		if !f(fd_GenesisState_season_one_ended, value) {
+			return
+		}
+	}
+	if x.SeasonTwoYieldCollector != "" {
+		value := protoreflect.ValueOfString(x.SeasonTwoYieldCollector)
+		if !f(fd_GenesisState_season_two_yield_collector, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -256,6 +272,10 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 		return x.Paused != 0
 	case "noble.dollar.vaults.v1.GenesisState.stats":
 		return x.Stats != nil
+	case "noble.dollar.vaults.v1.GenesisState.season_one_ended":
+		return x.SeasonOneEnded != false
+	case "noble.dollar.vaults.v1.GenesisState.season_two_yield_collector":
+		return x.SeasonTwoYieldCollector != ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.GenesisState"))
@@ -282,6 +302,10 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 		x.Paused = 0
 	case "noble.dollar.vaults.v1.GenesisState.stats":
 		x.Stats = nil
+	case "noble.dollar.vaults.v1.GenesisState.season_one_ended":
+		x.SeasonOneEnded = false
+	case "noble.dollar.vaults.v1.GenesisState.season_two_yield_collector":
+		x.SeasonTwoYieldCollector = ""
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.GenesisState"))
@@ -319,6 +343,12 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 	case "noble.dollar.vaults.v1.GenesisState.stats":
 		value := x.Stats
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "noble.dollar.vaults.v1.GenesisState.season_one_ended":
+		value := x.SeasonOneEnded
+		return protoreflect.ValueOfBool(value)
+	case "noble.dollar.vaults.v1.GenesisState.season_two_yield_collector":
+		value := x.SeasonTwoYieldCollector
+		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.GenesisState"))
@@ -353,6 +383,10 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 		x.Paused = (PausedType)(value.Enum())
 	case "noble.dollar.vaults.v1.GenesisState.stats":
 		x.Stats = value.Message().Interface().(*Stats)
+	case "noble.dollar.vaults.v1.GenesisState.season_one_ended":
+		x.SeasonOneEnded = value.Bool()
+	case "noble.dollar.vaults.v1.GenesisState.season_two_yield_collector":
+		x.SeasonTwoYieldCollector = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.GenesisState"))
@@ -394,6 +428,10 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		panic(fmt.Errorf("field total_flexible_principal of message noble.dollar.vaults.v1.GenesisState is not mutable"))
 	case "noble.dollar.vaults.v1.GenesisState.paused":
 		panic(fmt.Errorf("field paused of message noble.dollar.vaults.v1.GenesisState is not mutable"))
+	case "noble.dollar.vaults.v1.GenesisState.season_one_ended":
+		panic(fmt.Errorf("field season_one_ended of message noble.dollar.vaults.v1.GenesisState is not mutable"))
+	case "noble.dollar.vaults.v1.GenesisState.season_two_yield_collector":
+		panic(fmt.Errorf("field season_two_yield_collector of message noble.dollar.vaults.v1.GenesisState is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.GenesisState"))
@@ -420,6 +458,10 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 	case "noble.dollar.vaults.v1.GenesisState.stats":
 		m := new(Stats)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "noble.dollar.vaults.v1.GenesisState.season_one_ended":
+		return protoreflect.ValueOfBool(false)
+	case "noble.dollar.vaults.v1.GenesisState.season_two_yield_collector":
+		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: noble.dollar.vaults.v1.GenesisState"))
@@ -512,6 +554,13 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			l = options.Size(x.Stats)
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
+		if x.SeasonOneEnded {
+			n += 2
+		}
+		l = len(x.SeasonTwoYieldCollector)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -540,6 +589,23 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.SeasonTwoYieldCollector) > 0 {
+			i -= len(x.SeasonTwoYieldCollector)
+			copy(dAtA[i:], x.SeasonTwoYieldCollector)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.SeasonTwoYieldCollector)))
+			i--
+			dAtA[i] = 0x42
+		}
+		if x.SeasonOneEnded {
+			i--
+			if x.SeasonOneEnded {
+				dAtA[i] = 1
+			} else {
+				dAtA[i] = 0
+			}
+			i--
+			dAtA[i] = 0x38
 		}
 		if x.Stats != nil {
 			encoded, err := options.Marshal(x.Stats)
@@ -803,6 +869,58 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 				}
 				iNdEx = postIndex
+			case 7:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field SeasonOneEnded", wireType)
+				}
+				var v int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				x.SeasonOneEnded = bool(v != 0)
+			case 8:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field SeasonTwoYieldCollector", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.SeasonTwoYieldCollector = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -867,6 +985,10 @@ type GenesisState struct {
 	Paused PausedType `protobuf:"varint,5,opt,name=paused,proto3,enum=noble.dollar.vaults.v1.PausedType" json:"paused,omitempty"`
 	// stats contains the genesis statistics around the Noble Dollar Vaults.
 	Stats *Stats `protobuf:"bytes,6,opt,name=stats,proto3" json:"stats,omitempty"`
+	// season_one_ended indicates whether Vaults Season One has ended.
+	SeasonOneEnded bool `protobuf:"varint,7,opt,name=season_one_ended,json=seasonOneEnded,proto3" json:"season_one_ended,omitempty"`
+	// season_two_yield_collector defines the yield collector during Vaults Season Two.
+	SeasonTwoYieldCollector string `protobuf:"bytes,8,opt,name=season_two_yield_collector,json=seasonTwoYieldCollector,proto3" json:"season_two_yield_collector,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -924,6 +1046,20 @@ func (x *GenesisState) GetStats() *Stats {
 	return nil
 }
 
+func (x *GenesisState) GetSeasonOneEnded() bool {
+	if x != nil {
+		return x.SeasonOneEnded
+	}
+	return false
+}
+
+func (x *GenesisState) GetSeasonTwoYieldCollector() string {
+	if x != nil {
+		return x.SeasonTwoYieldCollector
+	}
+	return ""
+}
+
 var File_noble_dollar_vaults_v1_genesis_proto protoreflect.FileDescriptor
 
 var file_noble_dollar_vaults_v1_genesis_proto_rawDesc = []byte{
@@ -937,7 +1073,7 @@ var file_noble_dollar_vaults_v1_genesis_proto_rawDesc = []byte{
 	0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x1a, 0x23, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72,
 	0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xfc, 0x02, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65,
+	0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xe3, 0x03, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65,
 	0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x49, 0x0a, 0x09, 0x70, 0x6f, 0x73, 0x69,
 	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x25, 0x2e, 0x6e, 0x6f,
 	0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74,
@@ -961,21 +1097,28 @@ var file_noble_dollar_vaults_v1_genesis_proto_rawDesc = []byte{
 	0x74, 0x61, 0x74, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x6e, 0x6f, 0x62,
 	0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73,
 	0x2e, 0x76, 0x31, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x73, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52,
-	0x05, 0x73, 0x74, 0x61, 0x74, 0x73, 0x42, 0xde, 0x01, 0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72,
-	0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x37, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f,
-	0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76, 0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e,
-	0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x76, 0x31, 0xa2, 0x02,
-	0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c,
-	0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16,
+	0x05, 0x73, 0x74, 0x61, 0x74, 0x73, 0x12, 0x28, 0x0a, 0x10, 0x73, 0x65, 0x61, 0x73, 0x6f, 0x6e,
+	0x5f, 0x6f, 0x6e, 0x65, 0x5f, 0x65, 0x6e, 0x64, 0x65, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x08,
+	0x52, 0x0e, 0x73, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x4f, 0x6e, 0x65, 0x45, 0x6e, 0x64, 0x65, 0x64,
+	0x12, 0x3b, 0x0a, 0x1a, 0x73, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x5f, 0x74, 0x77, 0x6f, 0x5f, 0x79,
+	0x69, 0x65, 0x6c, 0x64, 0x5f, 0x63, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x18, 0x08,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x17, 0x73, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x54, 0x77, 0x6f, 0x59,
+	0x69, 0x65, 0x6c, 0x64, 0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x42, 0xde, 0x01,
+	0x0a, 0x1a, 0x63, 0x6f, 0x6d, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x47, 0x65,
+	0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x37, 0x64, 0x6f,
+	0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2e, 0x78, 0x79, 0x7a, 0x2f, 0x76,
+	0x32, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6e, 0x6f, 0x62, 0x6c, 0x65, 0x2f, 0x64, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x4e, 0x44, 0x56, 0xaa, 0x02, 0x16, 0x4e, 0x6f,
+	0x62, 0x6c, 0x65, 0x2e, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74,
+	0x73, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x16, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c,
+	0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22,
 	0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75,
-	0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x22, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x5c, 0x44,
-	0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0x5c,
-	0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f,
-	0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c, 0x61, 0x72, 0x3a, 0x3a, 0x56, 0x61, 0x75,
-	0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6c, 0x74, 0x73, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61,
+	0x74, 0x61, 0xea, 0x02, 0x19, 0x4e, 0x6f, 0x62, 0x6c, 0x65, 0x3a, 0x3a, 0x44, 0x6f, 0x6c, 0x6c,
+	0x61, 0x72, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (

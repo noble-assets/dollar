@@ -161,6 +161,18 @@ func InitGenesis(ctx context.Context, k *keeper.Keeper, address address.Codec, g
 		panic(errors.Wrap(err, "unable to set genesis vaults paused state"))
 	}
 
+	if err = k.VaultsSeasonOneEnded.Set(ctx, genesis.Vaults.SeasonOneEnded); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis vaults season one ended state"))
+	}
+
+	vaultsSeasonTwoYieldCollector, err := address.StringToBytes(genesis.Vaults.SeasonTwoYieldCollector)
+	if err != nil {
+		panic(errors.Wrap(err, "unable to decode genesis vaults season two yield collector"))
+	}
+	if err = k.VaultsSeasonTwoYieldCollector.Set(ctx, vaultsSeasonTwoYieldCollector); err != nil {
+		panic(errors.Wrap(err, "unable to set genesis vaults season two yield collector"))
+	}
+
 	if err = k.VaultsStats.Set(ctx, genesis.Vaults.Stats); err != nil {
 		panic(errors.Wrapf(err, "unable to set genesis vaults stats"))
 	}
@@ -189,6 +201,8 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 	vaultsPositions, _ := k.GetVaultsPositions(ctx)
 	vaultsTotalFlexiblePrincipal, _ := k.GetVaultsTotalFlexiblePrincipal(ctx)
 	vaultsPaused := k.GetVaultsPaused(ctx)
+	vaultsSeasonOneEnded := k.IsVaultsSeasonOneEnded(ctx)
+	vaultsSeasonTwoYieldCollector, _ := k.GetVaultsSeasonTwoYieldCollector(ctx)
 	vaultsStats, _ := k.GetVaultsStats(ctx)
 
 	return &types.GenesisState{
@@ -200,11 +214,13 @@ func ExportGenesis(ctx context.Context, k *keeper.Keeper) *types.GenesisState {
 			Nonce:         portalNonce,
 		},
 		Vaults: vaults.GenesisState{
-			Positions:              vaultsPositions,
-			Rewards:                vaultsRewards,
-			TotalFlexiblePrincipal: vaultsTotalFlexiblePrincipal,
-			Paused:                 vaultsPaused,
-			Stats:                  vaultsStats,
+			Positions:               vaultsPositions,
+			Rewards:                 vaultsRewards,
+			TotalFlexiblePrincipal:  vaultsTotalFlexiblePrincipal,
+			Paused:                  vaultsPaused,
+			SeasonOneEnded:          vaultsSeasonOneEnded,
+			SeasonTwoYieldCollector: vaultsSeasonTwoYieldCollector.String(),
+			Stats:                   vaultsStats,
 		},
 		Paused:             paused,
 		Index:              index,

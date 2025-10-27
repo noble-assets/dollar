@@ -28,11 +28,11 @@ import (
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgSetYieldRecipientResponse{}, "dollar/SetYieldRecipient", nil)
+	cdc.RegisterConcrete(&MsgSetYieldRecipient{}, "dollar/SetYieldRecipient", nil)
 }
 
 func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
-	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetYieldRecipientResponse{})
+	registry.RegisterImplementations((*sdk.Msg)(nil), &MsgSetYieldRecipient{})
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

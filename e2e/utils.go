@@ -106,6 +106,8 @@ func Suite(t *testing.T, ibcEnabled bool, hyperlaneEnabled bool) (ctx context.Co
 
 					updatedGenesis := []cosmos.GenesisKV{
 						cosmos.NewGenesisKV("app_state.dollar.portal.peers", peers),
+						cosmos.NewGenesisKV("app_state.dollar.vaults.season_one_ended", true),
+						cosmos.NewGenesisKV("app_state.dollar.vaults.season_two_yield_collector", "noble1zw7vatnx0vla7gzxucgypz0kfr6965akpvzw69"),
 						cosmos.NewGenesisKV("app_state.wormhole.config", wormholetypes.Config{
 							ChainId:          uint16(vaautils.ChainIDNoble),
 							GuardianSetIndex: 0,

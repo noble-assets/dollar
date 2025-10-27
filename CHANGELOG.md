@@ -1,5 +1,45 @@
 # CHANGELOG
 
+## v2.2.0
+
+*Oct 21, 2025*
+
+This is a consensus-breaking minor release to the `v2` line.
+
+### IMPROVEMENTS
+
+- Move vaults new configuration values to state. ([#53](https://github.com/noble-assets/dollar/pull/53))
+
+## v2.1.0
+
+*Jul 30, 2025*
+
+This is a consensus-breaking minor release to the `v2` line.
+
+### FEATURES
+
+- Implement `BeginBlocker` to end Vaults Season One after a specific timestamp. ([#48](https://github.com/noble-assets/dollar/pull/48))
+
+## v2.0.2
+
+*Jul 8, 2025*
+
+This is a non-consensus breaking patch to the `v2` release line.
+
+### BUG FIXES
+
+- Correctly register `MsgSetYieldRecipient` in codecs. ([#47](https://github.com/noble-assets/dollar/pull/47))
+
+## v2.0.1
+
+*Jul 2, 2025*
+
+This is a non-consensus breaking patch to the `v2` release line, if there are no yield recipients enabled.
+
+### BUG FIXES
+
+- Gracefully handle transfer errors when distributing external yield. ([#45](https://github.com/noble-assets/dollar/pull/45))
+
 ## v2.0.0
 
 *Jun 6, 2025*

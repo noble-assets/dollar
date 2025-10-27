@@ -40,9 +40,11 @@ var (
 )
 
 var (
-	PausedKey                 = []byte("vaults/paused")
-	TotalFlexiblePrincipalKey = []byte("vaults/total_flexible_principal")
-	PositionPrefix            = []byte("vaults/position/")
-	RewardPrefix              = []byte("vaults/reward/")
-	StatsKey                  = []byte("vaults/stats")
+	PausedKey                  = []byte("vaults/paused")
+	SeasonOneEndedKey          = []byte("vaults/season_one_ended")
+	SeasonTwoYieldCollectorKey = []byte("vaults/season_two_yield_collector")
+	TotalFlexiblePrincipalKey  = []byte("vaults/total_flexible_principal")
+	PositionPrefix             = []byte("vaults/position/")
+	RewardPrefix               = []byte("vaults/reward/")
+	StatsKey                   = []byte("vaults/stats")
 )

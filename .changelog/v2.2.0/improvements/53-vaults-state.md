@@ -1,0 +1,1 @@
+- Move vaults new configuration values to state. ([#53](https://github.com/noble-assets/dollar/pull/53))

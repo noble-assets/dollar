@@ -81,11 +81,13 @@ type Keeper struct {
 	PortalBridgingPaths collections.Map[collections.Pair[uint16, []byte], bool]
 	PortalNonce         collections.Item[uint32]
 
-	VaultsPaused                 collections.Item[int32]
-	VaultsPositions              *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
-	VaultsTotalFlexiblePrincipal collections.Item[math.Int]
-	VaultsRewards                collections.Map[int64, vaults.Reward]
-	VaultsStats                  collections.Item[vaults.Stats]
+	VaultsPaused                  collections.Item[int32]
+	VaultsSeasonOneEnded          collections.Item[bool]
+	VaultsSeasonTwoYieldCollector collections.Item[[]byte]
+	VaultsPositions               *collections.IndexedMap[collections.Triple[[]byte, int32, int64], vaults.Position, VaultsPositionsIndexes]
+	VaultsTotalFlexiblePrincipal  collections.Item[math.Int]
+	VaultsRewards                 collections.Map[int64, vaults.Reward]
+	VaultsStats                   collections.Item[vaults.Stats]
 }
 
 func NewKeeper(
@@ -153,11 +155,13 @@ func NewKeeper(
 		PortalBridgingPaths: collections.NewMap(builder, portal.BridgingPathPrefix, "portal_bridging_paths", collections.PairKeyCodec(collections.Uint16Key, collections.BytesKey), collections.BoolValue),
 		PortalNonce:         collections.NewItem(builder, portal.NonceKey, "portal_nonce", collections.Uint32Value),
 
-		VaultsPaused:                 collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
-		VaultsPositions:              collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
-		VaultsTotalFlexiblePrincipal: collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
-		VaultsRewards:                collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
-		VaultsStats:                  collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
+		VaultsPaused:                  collections.NewItem(builder, vaults.PausedKey, "vaults_paused", collections.Int32Value),
+		VaultsSeasonOneEnded:          collections.NewItem(builder, vaults.SeasonOneEndedKey, "vaults_season_one_ended", collections.BoolValue),
+		VaultsSeasonTwoYieldCollector: collections.NewItem(builder, vaults.SeasonTwoYieldCollectorKey, "vaults_season_two_yield_collector", collections.BytesValue),
+		VaultsPositions:               collections.NewIndexedMap(builder, vaults.PositionPrefix, "vaults_positions", collections.TripleKeyCodec(collections.BytesKey, collections.Int32Key, collections.Int64Key), codec.CollValue[vaults.Position](cdc), NewVaultsPositionsIndexes(builder)),
+		VaultsTotalFlexiblePrincipal:  collections.NewItem(builder, vaults.TotalFlexiblePrincipalKey, "vaults_total_flexible_principal", sdk.IntValue),
+		VaultsRewards:                 collections.NewMap(builder, vaults.RewardPrefix, "vaults_rewards", collections.Int64Key, codec.CollValue[vaults.Reward](cdc)),
+		VaultsStats:                   collections.NewItem(builder, vaults.StatsKey, "vaults_stats", codec.CollValue[vaults.Stats](cdc)),
 	}
 
 	_, err := builder.Build()
@@ -290,6 +294,13 @@ func (k *Keeper) SendRestrictionFn(ctx context.Context, sender, recipient sdk.Ac
 // GetDenom is a utility that returns the configured denomination of $USDN.
 func (k *Keeper) GetDenom() string {
 	return k.denom
+}
+
+// GetVaultsSeasonTwoYieldCollector is a utility that returns the
+// configured yield collector address for Vaults Season Two.
+func (k *Keeper) GetVaultsSeasonTwoYieldCollector(ctx context.Context) (sdk.AccAddress, error) {
+	collector, err := k.VaultsSeasonTwoYieldCollector.Get(ctx)
+	return collector, err
 }
 
 // GetYield is a utility that returns the user's current amount of claimable $USDN yield.
