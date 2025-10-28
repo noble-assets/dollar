@@ -4,15 +4,15 @@
     "": {
       "name": "@noble-assets/usdn",
       "devDependencies": {
-        "@hyperlane-xyz/core": "9.0.9",
+        "@hyperlane-xyz/core": "9.0.15",
         "@openzeppelin/contracts": "5.4.0",
         "@openzeppelin/contracts-upgradeable": "5.4.0",
-        "forge-std": "github:foundry-rs/forge-std#v1.10.0",
+        "forge-std": "github:foundry-rs/forge-std#v1.11.0",
       },
     },
   },
   "patchedDependencies": {
-    "@hyperlane-xyz/core@9.0.9": "patches/@hyperlane-xyz%2Fcore@9.0.9.patch",
+    "@hyperlane-xyz/core@9.0.15": "patches/@hyperlane-xyz%2Fcore@9.0.15.patch",
   },
   "packages": {
     "@arbitrum/nitro-contracts": ["@arbitrum/nitro-contracts@1.3.0", "", { "dependencies": { "@offchainlabs/upgrade-executor": "1.1.0-beta.0", "@openzeppelin/contracts": "4.5.0", "@openzeppelin/contracts-upgradeable": "4.5.2", "patch-package": "^6.4.7" } }, "sha512-nNNOgqqyiOxFiF1k53u0upC6tRWar1aj2arRZoE8C99/0eMnWk9az6rUO1yhxgMyMmk5fx9Pg42oSsZ9H7noOg=="],
@@ -137,9 +137,9 @@
 
     "@grpc/proto-loader": ["@grpc/proto-loader@0.7.15", "", { "dependencies": { "lodash.camelcase": "^4.3.0", "long": "^5.0.0", "protobufjs": "^7.2.5", "yargs": "^17.7.2" }, "bin": { "proto-loader-gen-types": "build/bin/proto-loader-gen-types.js" } }, "sha512-tMXdRCfYVixjuFK+Hk0Q1s38gV9zDiDJfWL3h1rv4Qc39oILCu1TRTDt7+fGUI8K4G1Fj125Hx/ru3azECWTyQ=="],
 
-    "@hyperlane-xyz/core": ["@hyperlane-xyz/core@9.0.9", "", { "dependencies": { "@arbitrum/nitro-contracts": "^1.2.1", "@chainlink/contracts-ccip": "^1.5.0", "@eth-optimism/contracts": "^0.6.0", "@hyperlane-xyz/utils": "18.2.0", "@matterlabs/hardhat-zksync-solc": "1.2.5", "@matterlabs/hardhat-zksync-verify": "1.7.1", "@openzeppelin/contracts": "^4.9.3", "@openzeppelin/contracts-upgradeable": "^4.9.3" }, "peerDependencies": { "@ethersproject/abi": "*", "@ethersproject/providers": "*", "@types/sinon-chai": "*" } }, "sha512-FM6oeOGjN54NO0pIKDmbpgn/Cg/BwEOFHcGqKBA4Wldhy46KcV2e6aq5SRvlOAkmC6gNA5htzpTsM4dZ1fSwvA=="],
+    "@hyperlane-xyz/core": ["@hyperlane-xyz/core@9.0.15", "", { "dependencies": { "@arbitrum/nitro-contracts": "^1.2.1", "@chainlink/contracts-ccip": "^1.5.0", "@eth-optimism/contracts": "^0.6.0", "@hyperlane-xyz/utils": "19.3.0", "@matterlabs/hardhat-zksync-solc": "1.2.5", "@matterlabs/hardhat-zksync-verify": "1.7.1", "@openzeppelin/contracts": "^4.9.3", "@openzeppelin/contracts-upgradeable": "^4.9.3" }, "peerDependencies": { "@ethersproject/abi": "*", "@ethersproject/providers": "*", "@types/sinon-chai": "*" } }, "sha512-O7q+sWkM+vdehbXCloaDjA71Svbb4Za+SGWHfuwuIRV9GdGSPRRXe+xSWUKXE6lhmTOycIzEBGOya+d1hMR2zQ=="],
 
-    "@hyperlane-xyz/utils": ["@hyperlane-xyz/utils@18.2.0", "", { "dependencies": { "@cosmjs/encoding": "^0.32.4", "@solana/web3.js": "^1.95.4", "bech32": "^2.0.0", "bignumber.js": "^9.1.1", "ethers": "^5.8.0", "lodash-es": "^4.17.21", "pino": "^8.19.0", "starknet": "^7.4.0", "yaml": "2.4.5" }, "peerDependencies": { "@google-cloud/pino-logging-gcp-config": "^1.0.6", "pino-pretty": ">=10.0.0" }, "optionalPeers": ["@google-cloud/pino-logging-gcp-config", "pino-pretty"] }, "sha512-Y0amJTjE9Sly0bOFUYL6yjOPnIov9yQvCkaOFlY/ZaQBm5uy3213IHaiOVvUmXP5ZNYL4UW6t5TR/kLpAdOAUA=="],
+    "@hyperlane-xyz/utils": ["@hyperlane-xyz/utils@19.3.0", "", { "dependencies": { "@cosmjs/encoding": "^0.32.4", "@solana/web3.js": "^1.95.4", "bech32": "^2.0.0", "bignumber.js": "^9.1.1", "ethers": "^5.8.0", "lodash-es": "^4.17.21", "pino": "^8.19.0", "starknet": "^7.4.0", "yaml": "2.4.5" }, "peerDependencies": { "@google-cloud/pino-logging-gcp-config": "^1.0.6", "pino-pretty": ">=10.0.0" }, "optionalPeers": ["@google-cloud/pino-logging-gcp-config", "pino-pretty"] }, "sha512-mHv8kUHLEiQHQ2V5Tz/ijwsvdOXfUpMWHEpMr/ao1HwdZ8dwZjXQMbwnYIvsVVNYHJD3/vbumP6T5z0QBohf5Q=="],
 
     "@inquirer/external-editor": ["@inquirer/external-editor@1.0.2", "", { "dependencies": { "chardet": "^2.1.0", "iconv-lite": "^0.7.0" }, "peerDependencies": { "@types/node": ">=18" }, "optionalPeers": ["@types/node"] }, "sha512-yy9cOoBnx58TlsPrIxauKIFQTiyH+0MK4e97y4sV9ERbI+zDxw7i2hxHLCIEGIE/8PPvDxGhgzIOTSOWcs6/MQ=="],
 
@@ -553,7 +553,7 @@
 
     "for-each": ["for-each@0.3.5", "", { "dependencies": { "is-callable": "^1.2.7" } }, "sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg=="],
 
-    "forge-std": ["forge-std@github:foundry-rs/forge-std#8bbcf6e", {}, "foundry-rs-forge-std-8bbcf6e"],
+    "forge-std": ["forge-std@github:foundry-rs/forge-std#8e40513", {}, "foundry-rs-forge-std-8e40513"],
 
     "form-data": ["form-data@4.0.4", "", { "dependencies": { "asynckit": "^0.4.0", "combined-stream": "^1.0.8", "es-set-tostringtag": "^2.1.0", "hasown": "^2.0.2", "mime-types": "^2.1.12" } }, "sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow=="],
 

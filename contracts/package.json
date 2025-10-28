@@ -2,12 +2,12 @@
   "name": "@noble-assets/usdn",
   "private": true,
   "devDependencies": {
-    "@hyperlane-xyz/core": "9.0.9",
+    "@hyperlane-xyz/core": "9.0.15",
     "@openzeppelin/contracts": "5.4.0",
     "@openzeppelin/contracts-upgradeable": "5.4.0",
-    "forge-std": "github:foundry-rs/forge-std#v1.10.0"
+    "forge-std": "github:foundry-rs/forge-std#v1.11.0"
   },
   "patchedDependencies": {
-    "@hyperlane-xyz/core@9.0.9": "patches/@hyperlane-xyz%2Fcore@9.0.9.patch"
+    "@hyperlane-xyz/core@9.0.15": "patches/@hyperlane-xyz%2Fcore@9.0.15.patch"
   }
 }

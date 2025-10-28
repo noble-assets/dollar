@@ -24,14 +24,14 @@ import {UIntMath} from "../utils/UIntMath.sol";
 
 /*
 
-███╗   ██╗ ██████╗ ██████╗ ██╗     ███████╗      
-████╗  ██║██╔═══██╗██╔══██╗██║     ██╔════╝      
-██╔██╗ ██║██║   ██║██████╔╝██║     █████╗        
-██║╚██╗██║██║   ██║██╔══██╗██║     ██╔══╝        
-██║ ╚████║╚██████╔╝██████╔╝███████╗███████╗      
-╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝      
-                                                 
-██████╗  ██████╗ ██╗     ██╗      █████╗ ██████╗ 
+███╗   ██╗ ██████╗ ██████╗ ██╗     ███████╗
+████╗  ██║██╔═══██╗██╔══██╗██║     ██╔════╝
+██╔██╗ ██║██║   ██║██████╔╝██║     █████╗
+██║╚██╗██║██║   ██║██╔══██╗██║     ██╔══╝
+██║ ╚████║╚██████╔╝██████╔╝███████╗███████╗
+╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝
+
+██████╗  ██████╗ ██╗     ██╗      █████╗ ██████╗
 ██╔══██╗██╔═══██╗██║     ██║     ██╔══██╗██╔══██╗
 ██║  ██║██║   ██║██║     ██║     ███████║██████╔╝
 ██║  ██║██║   ██║██║     ██║     ██╔══██║██╔══██╗
@@ -94,17 +94,17 @@ contract NobleDollar is HypERC20 {
         _getUSDNStorage().index = IndexingMath.EXP_SCALED_ONE;
     }
 
-    /// @dev Returns the current index used for yield calculations.
+    /// @notice Returns the current index used for yield calculations.
     function index() public view returns (uint128) {
         return _getUSDNStorage().index;
     }
 
-    /// @dev Returns the amount of principal in existence.
+    /// @notice Returns the amount of principal in existence.
     function totalPrincipal() public view returns (uint112) {
         return _getUSDNStorage().totalPrincipal;
     }
 
-    /// @dev Returns the amount of principal owned for a given account.
+    /// @notice Returns the amount of principal owned for a given account.
     function principalOf(address account) public view returns (uint112) {
         return _getUSDNStorage().principal[account];
     }
@@ -134,23 +134,32 @@ contract NobleDollar is HypERC20 {
         return expectedBalance > currentBalance ? expectedBalance - currentBalance : 0;
     }
 
+    /// @notice Claims all available yield for the caller.
+    function claim() public {
+        claim(msg.sender);
+    }
+
     /**
-     * @notice Claims all available yield for the caller.
+     * @notice Internal function to claim all available yield for a specified address.
      * @dev Calculates the claimable yield based on the difference between the expected balance
      *      (principal * current index) and the actual token balance. Transfers the yield amount
-     *      from the contract to the caller and emits a YieldClaimed event.
-     * @custom:throws NoClaimableYield if the caller has no yield available to claim.
+     *      from the contract to the specified address and emits a YieldClaimed event.
+     * @param user The address to claim yield for.
+     * @return The amount of yield claimed.
+     * @custom:throws NoClaimableYield if the address has no yield available to claim.
      * @custom:emits YieldClaimed when yield is successfully claimed.
      */
-    function claim() public {
+    function claim(address user) internal returns (uint256) {
         // Avoid DOS claiming by taking min of the contract's balance and user's yield.
-        uint256 amount = UIntMath.min256(balanceOf(address(this)), yield(msg.sender));
+        uint256 amount = UIntMath.min256(balanceOf(address(this)), yield(user));
 
         if (amount == 0) revert NoClaimableYield();
 
-        _update(address(this), msg.sender, amount);
+        _update(address(this), user, amount);
 
-        emit YieldClaimed(msg.sender, amount);
+        emit YieldClaimed(user, amount);
+
+        return amount;
     }
 
     /**

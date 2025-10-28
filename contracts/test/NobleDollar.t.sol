@@ -32,6 +32,8 @@ contract NobleDollarTest is Test {
     address constant USER2 = 0xF2f1ACbe0BA726fEE8d75f3E32900526874740BB;
 
     function setUp() public {
+        vm.createSelectFork("mainnet");
+
         NobleDollar implementation = new NobleDollar(MAILBOX);
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
             address(implementation),

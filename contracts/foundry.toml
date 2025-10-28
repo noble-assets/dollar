@@ -1,5 +1,9 @@
 [profile.default]
+libs = ["node_modules"]
 remappings = ["@hyperlane/=node_modules/@hyperlane-xyz/core/contracts/", "forge-std/=node_modules/forge-std/src/"]
+
+[rpc_endpoints]
+mainnet = "https://ethereum-rpc.publicnode.com"
 
 [lint]
 exclude_lints = ["pascal-case-struct", "mixed-case-function", "screaming-snake-case-const"]
