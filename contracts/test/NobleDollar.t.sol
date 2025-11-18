@@ -49,7 +49,7 @@ contract NobleDollarTest is Test {
     function setUp() public {
         vm.createSelectFork("mainnet");
 
-        OWNER = makeAddr("owner");
+        OWNER = vm.addr(5);
         NobleDollar implementation = new NobleDollar(MAILBOX);
 
         // deploy the proxy
