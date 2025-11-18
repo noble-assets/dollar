@@ -28,7 +28,11 @@ contract NobleDollar is BaseNobleDollar {
     /// @notice The address of the Hyperliquid bridge for this token
     address public bridge;
 
-    constructor(address mailbox_, uint32 tokenId_) BaseNobleDollar(mailbox_) {
+    constructor(address mailbox_) BaseNobleDollar(mailbox_) {}
+
+    function initialize(address hook_, address ism_, uint32 tokenId_) public initializer {
+        super.initialize(hook_, ism_);
+
         // According to the Hyperliquid documentation, this is how you derive the
         // bridge address for a linked HyperCore <> HyperEVM token.
         //

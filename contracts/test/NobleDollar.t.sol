@@ -20,9 +20,22 @@ pragma solidity >=0.8.0;
 import {Test} from "forge-std/Test.sol";
 
 import {NoopIsm} from "@hyperlane/isms/NoopIsm.sol";
-import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
-import {NobleDollar} from "../src/NobleDollar.sol";
+import {NobleDollar} from "../src/HyperliquidNobleDollar.sol";
+import {NobleDollar as BaseNobleDollar} from "../src/NobleDollar.sol";
+
+// Simple extension to test upgradeability
+contract NobleDollarV2 is NobleDollar {
+    address public bridge2;
+
+    constructor(address mailbox_) NobleDollar(mailbox_) {}
+
+    // Add a new function to test the upgrade worked
+    function setBridge2(address _bridge2) public {
+        bridge2 = _bridge2;
+    }
+}
 
 contract NobleDollarTest is Test {
     NobleDollar public usdn;
@@ -30,27 +43,34 @@ contract NobleDollarTest is Test {
     address constant MAILBOX = 0xc005dc82818d67AF737725bD4bf75435d065D239;
     address constant USER1 = 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045;
     address constant USER2 = 0xF2f1ACbe0BA726fEE8d75f3E32900526874740BB;
+    uint32 constant TOKENID = 377;
+    address OWNER;
 
     function setUp() public {
         vm.createSelectFork("mainnet");
 
+        OWNER = vm.addr(5);
         NobleDollar implementation = new NobleDollar(MAILBOX);
-        TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
-            address(implementation),
-            msg.sender,
-            abi.encodeWithSelector(
-                NobleDollar.initialize.selector,
-                address(0x9e6B1022bE9BBF5aFd152483DAD9b88911bC8611),
-                address(new NoopIsm())
-            )
+
+        // deploy the proxy
+        bytes memory initData = abi.encodeWithSelector(
+            NobleDollar.initialize.selector,
+            address(0x9e6B1022bE9BBF5aFd152483DAD9b88911bC8611),
+            address(new NoopIsm()),
+            TOKENID
         );
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
         usdn = NobleDollar(address(proxy));
+
+        assertEq(usdn.bridge(), address(0x2000000000000000000000000000000000000179));
 
         uint32[] memory domains = new uint32[](1);
         domains[0] = 1313817164;
         bytes32[] memory routers = new bytes32[](1);
         routers[0] = 0x726f757465725f61707000000000000000000000000000010000000000000000;
         usdn.enrollRemoteRouters(domains, routers);
+        // Give ownership to OWNER to test bridge claim and upgrades
+        usdn.transferOwnership(OWNER);
     }
 
     function test() public {
@@ -162,7 +182,7 @@ contract NobleDollarTest is Test {
 
         assertEq(_user1Balance, 1000000e6, "user 1 should have 1 million usdn");
 
-        vm.expectRevert(abi.encodeWithSelector(NobleDollar.InvalidTransfer.selector));
+        vm.expectRevert(abi.encodeWithSelector(BaseNobleDollar.InvalidTransfer.selector));
 
         vm.prank(USER1);
         bool success = usdn.transfer(address(usdn), 1000e6);
@@ -186,7 +206,7 @@ contract NobleDollarTest is Test {
         vm.prank(USER1);
         usdn.approve(USER2, type(uint256).max);
 
-        vm.expectRevert(abi.encodeWithSelector(NobleDollar.InvalidTransfer.selector));
+        vm.expectRevert(abi.encodeWithSelector(BaseNobleDollar.InvalidTransfer.selector));
 
         vm.prank(USER2);
         bool success = usdn.transferFrom(USER1, address(usdn), 1000e6);
@@ -203,13 +223,13 @@ contract NobleDollarTest is Test {
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
         assertTrue(mintSuccess, "Initial mint should succeed");
 
-        vm.expectRevert(NobleDollar.NoClaimableYield.selector);
+        vm.expectRevert(BaseNobleDollar.NoClaimableYield.selector);
 
         vm.prank(USER1);
         usdn.claim();
 
         // Test when account with zero balance calls claim()
-        vm.expectRevert(NobleDollar.NoClaimableYield.selector);
+        vm.expectRevert(BaseNobleDollar.NoClaimableYield.selector);
 
         vm.prank(USER2);
         usdn.claim();
@@ -304,7 +324,7 @@ contract NobleDollarTest is Test {
 
         // Claim yield
         vm.expectEmit(true, true, true, true);
-        emit NobleDollar.YieldClaimed(USER1, 1e12);
+        emit BaseNobleDollar.YieldClaimed(USER1, 1e12);
 
         vm.prank(USER1);
         usdn.claim();
@@ -401,7 +421,7 @@ contract NobleDollarTest is Test {
         assertEq(usdn.balanceOf(USER1), 15e11, "USER1 should have 1.5M balance after claiming yield");
 
         // USER2 yield claim should fail
-        vm.expectRevert(abi.encode(NobleDollar.NoClaimableYield.selector));
+        vm.expectRevert(abi.encode(BaseNobleDollar.NoClaimableYield.selector));
         vm.prank(USER2);
         usdn.claim();
 
@@ -517,5 +537,78 @@ contract NobleDollarTest is Test {
         _principalUser1 = usdn.principalOf(USER1);
 
         assertEq(usdn.index(), 4e12, "index should be doubled again");
+    }
+
+    function test_claimYieldForBridge() public {
+        address bridgeAddress = usdn.bridge();
+
+        // ACT: Transfer of 1M $USDN from Noble Core to bridge address
+        bytes memory mintPayload = abi.encodeWithSignature(
+            "process(bytes,bytes)",
+            0x0,
+            hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a0000000000000000000000002000000000000000000000000000000000000179000000000000000000000000000000000000000000000000000000e8d4a51000"
+        );
+        (bool mintSuccess,) = MAILBOX.call(mintPayload);
+        assertTrue(mintSuccess, "Mint to bridge should succeed");
+
+        // ASSERT: Bridge has received the tokens
+        assertEq(usdn.balanceOf(bridgeAddress), 1e12, "Bridge should have 1M USDN");
+        assertEq(usdn.principalOf(bridgeAddress), 1e12, "Bridge should have 1M principal");
+        assertEq(usdn.yield(bridgeAddress), 0, "Bridge should have no yield initially");
+
+        // Accrue yield equal to deposit (1M USDN - 100% yield)
+        bytes memory yieldPayload = abi.encodeWithSignature(
+            "process(bytes,bytes)",
+            0x0,
+            hex"03000000014e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000000000000000000000000000000000e8d4a51000"
+        );
+        (bool yieldSuccess,) = MAILBOX.call(yieldPayload);
+        assertTrue(yieldSuccess, "Yield accrual should succeed");
+
+        // Verify yield is available
+        uint256 claimableYield = usdn.yield(bridgeAddress);
+        assertEq(claimableYield, 1e12, "Bridge should have 1M USDN in claimable yield");
+
+        // Claim yield
+        vm.expectEmit(true, true, true, true);
+        emit BaseNobleDollar.YieldClaimed(bridgeAddress, 1e12);
+
+        // Anyone can claim on behalf of the bridge
+        vm.prank(USER1);
+        usdn.claimForBridge();
+
+        // Verify post-claim state
+        assertEq(usdn.balanceOf(bridgeAddress), 1e12, "Bridge balance should still be the original");
+        assertEq(usdn.balanceOf(OWNER), 1e12, "Owner should have received the yield tokens");
+        assertEq(usdn.balanceOf(address(usdn)), 0, "Contract balance should be zero after full claim");
+        assertEq(usdn.yield(bridgeAddress), 0, "Bridge should have no claimable yield after claiming");
+        assertEq(usdn.principalOf(bridgeAddress), 5e11, "Bridge principal should now be halved");
+        assertEq(usdn.totalSupply(), 2e12, "Total supply should reflect the claimed yield");
+    }
+
+    function test_Upgrade() public {
+        NobleDollar oldImplementation = NobleDollar(address(usdn));
+
+        NobleDollarV2 newImplementation = new NobleDollarV2(MAILBOX);
+
+        // upgrade from non-owner account should fail
+        vm.prank(USER1);
+        vm.expectRevert();
+        usdn.upgradeToAndCall(address(newImplementation), "");
+
+        // upgrade from owner account should succeed
+        vm.prank(OWNER);
+        usdn.upgradeToAndCall(address(newImplementation), "");
+        NobleDollarV2 upgraded = NobleDollarV2(address(usdn));
+
+        // verify that the implementation address has changed
+        assertNotEq(address(oldImplementation), address(newImplementation));
+        assertEq(upgraded.bridge(), oldImplementation.bridge());
+        assertEq(upgraded.index(), oldImplementation.index());
+        assertEq(upgraded.totalSupply(), oldImplementation.totalSupply());
+        assertEq(upgraded.totalPrincipal(), oldImplementation.totalPrincipal());
+
+        upgraded.setBridge2(address(0x11));
+        assertEq(upgraded.bridge2(), address(0x11));
     }
 }
