@@ -68,7 +68,7 @@ contract NobleDollarTest is Test {
         bytes32[] memory routers = new bytes32[](1);
         routers[0] = 0x726f757465725f61707000000000000000000000000000010000000000000000;
         usdn.enrollRemoteRouters(domains, routers);
-        // Give ownership to OWNER for testing bridge claim and upgrades
+        // Give ownership to OWNER to test bridge claim and upgrades
         usdn.transferOwnership(OWNER);
     }
 
