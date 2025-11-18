@@ -43,12 +43,13 @@ contract NobleDollarTest is Test {
     address constant MAILBOX = 0xc005dc82818d67AF737725bD4bf75435d065D239;
     address constant USER1 = 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045;
     address constant USER2 = 0xF2f1ACbe0BA726fEE8d75f3E32900526874740BB;
-    address constant OWNER = address(5);
-    uint32 constant TOKENID = 31;
+    uint32 constant TOKENID = 377;
+    address OWNER;
 
     function setUp() public {
         vm.createSelectFork("mainnet");
 
+        OWNER = makeAddr("owner");
         NobleDollar implementation = new NobleDollar(MAILBOX);
 
         // deploy the proxy
@@ -61,7 +62,7 @@ contract NobleDollarTest is Test {
         ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
         usdn = NobleDollar(address(proxy));
 
-        assertEq(usdn.bridge(), address(0x200000000000000000000000000000000000001F));
+        assertEq(usdn.bridge(), address(0x2000000000000000000000000000000000000179));
 
         uint32[] memory domains = new uint32[](1);
         domains[0] = 1313817164;
@@ -545,7 +546,7 @@ contract NobleDollarTest is Test {
         bytes memory mintPayload = abi.encodeWithSignature(
             "process(bytes,bytes)",
             0x0,
-            hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a000000000000000000000000200000000000000000000000000000000000001f000000000000000000000000000000000000000000000000000000e8d4a51000"
+            hex"03000000004e4f424c726f757465725f6170700000000000000000000000000001000000000000000000000001000000000000000000000000f62849f9a0b5bf2913b396098f7c7019b51a820a0000000000000000000000002000000000000000000000000000000000000179000000000000000000000000000000000000000000000000000000e8d4a51000"
         );
         (bool mintSuccess,) = MAILBOX.call(mintPayload);
         assertTrue(mintSuccess, "Mint to bridge should succeed");

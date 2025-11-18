@@ -18,20 +18,17 @@
 pragma solidity 0.8.30;
 
 import {NobleDollar as BaseNobleDollar} from "./NobleDollar.sol";
-import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @title  NobleDollar
  * @author John Letey <john@noble.xyz>
  * @notice ERC20 Noble Dollar on HyperEVM.
  */
-contract NobleDollar is BaseNobleDollar, UUPSUpgradeable {
+contract NobleDollar is BaseNobleDollar {
     /// @notice The address of the Hyperliquid bridge for this token
     address public bridge;
 
-    constructor(address mailbox_) BaseNobleDollar(mailbox_) {
-        _disableInitializers();
-    }
+    constructor(address mailbox_) BaseNobleDollar(mailbox_) {}
 
     function initialize(address hook_, address ism_, uint32 tokenId_) public initializer {
         super.initialize(hook_, ism_);
@@ -52,9 +49,4 @@ contract NobleDollar is BaseNobleDollar, UUPSUpgradeable {
 
         _update(bridge, owner(), amount);
     }
-
-    /// @dev Function that authorizes contract upgrades - required by UUPSUpgradeable
-    /// @param newImplementation address of the new implementation
-    /// @notice Only the contract owner can authorize an upgrade
-    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 }

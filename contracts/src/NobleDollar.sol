@@ -21,6 +21,7 @@ import {HypERC20} from "@hyperlane/token/HypERC20.sol";
 
 import {IndexingMath} from "../utils/IndexingMath.sol";
 import {UIntMath} from "../utils/UIntMath.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 /*
 
@@ -45,7 +46,7 @@ import {UIntMath} from "../utils/UIntMath.sol";
  * @author John Letey <john@noble.xyz>
  * @notice ERC20 Noble Dollar.
  */
-contract NobleDollar is HypERC20 {
+contract NobleDollar is HypERC20, UUPSUpgradeable {
     /// @notice Thrown when a user attempts to claim yield but has no claimable yield available.
     error NoClaimableYield();
 
@@ -84,13 +85,20 @@ contract NobleDollar is HypERC20 {
         }
     }
 
-    constructor(address mailbox_) HypERC20(6, 1, mailbox_) {}
+    constructor(address mailbox_) HypERC20(6, 1, mailbox_) {
+        _disableInitializers();
+    }
 
     function initialize(address hook_, address ism_) public virtual initializer {
         super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
 
         _getUSDNStorage().index = IndexingMath.EXP_SCALED_ONE;
     }
+
+    /// @dev Function that authorizes contract upgrades - required by UUPSUpgradeable
+    /// @param newImplementation address of the new implementation
+    /// @notice Only the contract owner can authorize an upgrade
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     /// @notice Returns the current index used for yield calculations.
     function index() public view returns (uint128) {
