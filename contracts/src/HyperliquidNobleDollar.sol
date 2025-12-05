@@ -30,7 +30,7 @@ contract NobleDollar is BaseNobleDollar {
 
     constructor(address mailbox_) BaseNobleDollar(mailbox_) {}
 
-    function initialize(address hook_, address ism_, uint32 tokenId_) public initializer {
+    function initialize(address hook_, address ism_, uint32 tokenId_) public {
         super.initialize(hook_, ism_);
 
         // According to the Hyperliquid documentation, this is how you derive the

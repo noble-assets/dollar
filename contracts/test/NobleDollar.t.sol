@@ -44,12 +44,12 @@ contract NobleDollarTest is Test {
     address constant USER1 = 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045;
     address constant USER2 = 0xF2f1ACbe0BA726fEE8d75f3E32900526874740BB;
     uint32 constant TOKENID = 377;
-    address OWNER;
+    address owner;
 
     function setUp() public {
         vm.createSelectFork("mainnet");
 
-        OWNER = vm.addr(5);
+        owner = vm.addr(5);
         NobleDollar implementation = new NobleDollar(MAILBOX);
 
         // deploy the proxy
@@ -69,8 +69,8 @@ contract NobleDollarTest is Test {
         bytes32[] memory routers = new bytes32[](1);
         routers[0] = 0x726f757465725f61707000000000000000000000000000010000000000000000;
         usdn.enrollRemoteRouters(domains, routers);
-        // Give ownership to OWNER to test bridge claim and upgrades
-        usdn.transferOwnership(OWNER);
+        // Give ownership to owner to test bridge claim and upgrades
+        usdn.transferOwnership(owner);
     }
 
     function test() public {
@@ -579,7 +579,7 @@ contract NobleDollarTest is Test {
 
         // Verify post-claim state
         assertEq(usdn.balanceOf(bridgeAddress), 1e12, "Bridge balance should still be the original");
-        assertEq(usdn.balanceOf(OWNER), 1e12, "Owner should have received the yield tokens");
+        assertEq(usdn.balanceOf(owner), 1e12, "Owner should have received the yield tokens");
         assertEq(usdn.balanceOf(address(usdn)), 0, "Contract balance should be zero after full claim");
         assertEq(usdn.yield(bridgeAddress), 0, "Bridge should have no claimable yield after claiming");
         assertEq(usdn.principalOf(bridgeAddress), 5e11, "Bridge principal should now be halved");
@@ -597,7 +597,7 @@ contract NobleDollarTest is Test {
         usdn.upgradeToAndCall(address(newImplementation), "");
 
         // upgrade from owner account should succeed
-        vm.prank(OWNER);
+        vm.prank(owner);
         usdn.upgradeToAndCall(address(newImplementation), "");
         NobleDollarV2 upgraded = NobleDollarV2(address(usdn));
 
