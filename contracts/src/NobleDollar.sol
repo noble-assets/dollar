@@ -89,7 +89,7 @@ contract NobleDollar is HypERC20, UUPSUpgradeable {
         _disableInitializers();
     }
 
-    function initialize(address hook_, address ism_) public virtual initializer {
+    function initialize(address hook_, address ism_) public virtual {
         super.initialize("Noble Dollar", "USDN", hook_, ism_, msg.sender);
 
         _getUSDNStorage().index = IndexingMath.EXP_SCALED_ONE;
