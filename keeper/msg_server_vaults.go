@@ -23,7 +23,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"sort"
 	"strings"
 
 	"cosmossdk.io/collections"
@@ -45,118 +44,11 @@ func NewVaultsMsgServer(keeper *Keeper) vaults.MsgServer {
 	return &vaultsMsgServer{Keeper: keeper}
 }
 
-func (k vaultsMsgServer) Lock(ctx context.Context, msg *vaults.MsgLock) (*vaults.MsgLockResponse, error) {
-	if msg.Vault == vaults.FLEXIBLE && k.IsVaultsSeasonOneEnded(ctx) {
-		return nil, errors.Wrapf(vaults.ErrActionPaused, "cannot lock because season one has ended")
-	}
-	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.LOCK {
-		return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused")
-	}
-
-	// Ensure that the signer is a valid address.
-	addr, err := k.address.StringToBytes(msg.Signer)
-	if err != nil {
-		return nil, fmt.Errorf("unable to decode user address: %s", msg.Signer)
-	}
-
-	// Ensure that the amount is at least the `vaultsMinimumLock`.
-	if msg.Amount.LT(math.NewInt(k.vaultsMinimumLock)) {
-		return nil, errors.Wrapf(
-			vaults.ErrInvalidAmount,
-			"must lock at least %d%s",
-			k.vaultsMinimumLock,
-			k.denom,
-		)
-	}
-
-	// Ensure that the Vault type does exist.
-	_, vaultTypeExists := vaults.VaultType_value[msg.Vault.String()]
-	if !vaultTypeExists || msg.Vault == vaults.UNSPECIFIED {
-		return nil, errors.Wrapf(vaults.ErrInvalidVaultType, "vault type %s does not exist", msg.Vault)
-	}
-
-	currentTime := k.header.GetHeaderInfo(ctx).Time.Unix()
-
-	// Verify that no position from the same user and vault exists within the current block.
-	key := collections.Join3(addr, int32(msg.Vault), currentTime)
-	if has, _ := k.VaultsPositions.Has(ctx, key); has {
-		return nil, errors.Wrapf(vaults.ErrInvalidVaultType, "cannot create multiple user positions in the same block")
-	}
-
-	// Verify that the user has sufficient balance.
-	if k.bank.GetBalance(ctx, addr, k.denom).Amount.LT(msg.Amount) {
-		return nil, errors.Wrapf(vaults.ErrInvalidAmount, "insufficient balance")
-	}
-
-	vaultUserAccount := authtypes.NewEmptyModuleAccount(k.ToUserVaultPositionModuleAccount(msg.Signer, msg.Vault, currentTime))
-	vaultAccount := k.account.NewAccount(ctx, vaultUserAccount).(*authtypes.ModuleAccount)
-	k.account.SetModuleAccount(ctx, vaultAccount)
-
-	// Transfer the specified amount from the user to the submodule Vault account.
-	if err = k.bank.SendCoins(ctx,
-		addr,
-		vaultAccount.GetAddress(),
-		sdk.NewCoins(sdk.NewCoin(k.denom, msg.Amount)),
-	); err != nil {
-		return nil, err
-	}
-
-	// Get the current Index.
-	index, err := k.Index.Get(ctx)
-	if err != nil {
-		return nil, errors.Wrap(err, "unable to get index from state")
-	}
-	amountPrincipal := k.GetPrincipalAmountRoundedDown(msg.Amount, index)
-
-	// Create the user Vault Position.
-	if err = k.VaultsPositions.Set(ctx, key, vaults.Position{
-		Index:     index,
-		Principal: amountPrincipal,
-		Amount:    msg.Amount,
-		Time:      k.header.GetHeaderInfo(ctx).Time,
-	}); err != nil {
-		return nil, errors.Wrapf(err, "unable to set position")
-	}
-
-	// If the Vault type is Flexible, handle the additional login.
-	if msg.Vault == vaults.FLEXIBLE {
-		// Increase the Total Flexible Principal
-		total := math.ZeroInt()
-		if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
-			current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
-			if err != nil {
-				return nil, err
-			}
-			total = total.Add(current)
-		}
-		if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, total.Add(amountPrincipal)); err != nil {
-			return nil, err
-		}
-	}
-
-	// Update Vaults stats.
-	if positions, _ := k.GetVaultsPositionsByProviderAndVault(ctx, addr, vaults.VaultType_value[msg.Vault.String()]); len(positions) == 1 {
-		if err = k.IncrementVaultUsers(ctx, msg.Vault); err != nil {
-			return nil, errors.Wrap(err, "unable to increment vault total users")
-		}
-	}
-	if err = k.IncrementVaultTotalPrincipal(ctx, msg.Vault, amountPrincipal); err != nil {
-		return nil, errors.Wrap(err, "unable to increment vault total principal")
-	}
-
-	return &vaults.MsgLockResponse{}, k.event.EventManager(ctx).Emit(ctx, &vaults.PositionLocked{
-		Account:   msg.Signer,
-		VaultType: msg.Vault.String(),
-		Index:     index,
-		Amount:    msg.Amount,
-		Principal: amountPrincipal,
-	})
+func (k vaultsMsgServer) Lock(_ context.Context, _ *vaults.MsgLock) (*vaults.MsgLockResponse, error) {
+	return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused@")
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
-	if msg.Vault == vaults.FLEXIBLE && k.IsVaultsSeasonOneEnded(ctx) {
-		return nil, errors.Wrapf(vaults.ErrActionPaused, "cannot unlock because season one has ended")
-	}
 	if paused := k.GetVaultsPaused(ctx); paused == vaults.ALL || paused == vaults.UNLOCK {
 		return nil, errors.Wrapf(vaults.ErrActionPaused, "unlock is paused")
 	}
@@ -242,42 +134,6 @@ func (k *Keeper) unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.Msg
 		amountToSend := positionAmountToRemove
 		positionPrincipalToRemove := k.GetPrincipalAmountRoundedDown(positionAmountToRemove, position.Index)
 
-		// If the vault is Flexible, handle the additional logic.
-		if msg.Vault == vaults.FLEXIBLE {
-			// Get total Vault principal.
-			totalVaultUsersPrincipal := math.ZeroInt()
-			if has, _ := k.VaultsTotalFlexiblePrincipal.Has(ctx); has {
-				current, err := k.VaultsTotalFlexiblePrincipal.Get(ctx)
-				if err != nil {
-					return nil, err
-				}
-				totalVaultUsersPrincipal = totalVaultUsersPrincipal.Add(current)
-			}
-			// Deduct the relative position's principal amount from the TotalVaultUsersPrincipal.
-			if err = k.VaultsTotalFlexiblePrincipal.Set(ctx, totalVaultUsersPrincipal.Sub(positionPrincipalToRemove)); err != nil {
-				return nil, errors.Wrapf(err, "unable to set position for %s", msg.Vault)
-			}
-
-			// Claim the rewards associated to the current position.
-			rewards, err := k.ClaimRewards(ctx, position, positionAmountToRemove)
-			if err != nil {
-				return nil, err
-			}
-			if err = k.IncrementFlexibleTotalDistributedRewardsPrincipal(ctx, rewards); err != nil {
-				return nil, errors.Wrap(err, "unable to increment flexible vault total distributed rewards principal")
-			}
-
-			// Claim the yield associated to the current position.
-			yield, err := k.claimModuleYield(ctx, authtypes.NewModuleAddress(k.ToUserVaultPositionModuleAccount(msg.Signer, msg.Vault, position.Time.Unix())))
-			if err != nil {
-				return nil, err
-			}
-			if yield.IsPositive() {
-				amountToSend = positionAmountToRemove.Add(yield)
-			}
-
-		}
-
 		// Transfer the specified amount from submodule's vault account to the user.
 		err = k.bank.SendCoins(ctx,
 			authtypes.NewModuleAddress(k.ToUserVaultPositionModuleAccount(msg.Signer, position.Vault, position.Time.Unix())),
@@ -360,81 +216,6 @@ func (k vaultsMsgServer) SetPausedState(ctx context.Context, msg *vaults.MsgSetP
 	})
 }
 
-func (k *Keeper) ClaimRewards(ctx context.Context, position vaults.PositionEntry, amount math.Int) (math.Int, error) {
-	userAddress, err := k.address.BytesToString(position.Address)
-	if err != nil {
-		return math.Int{}, err
-	}
-
-	// Get the total Vault rewards.
-	vaultRewardsPrincipal := math.ZeroInt()
-	if has, _ := k.Principal.Has(ctx, vaults.FlexibleVaultAddress); has {
-		current, err := k.Principal.Get(ctx, vaults.FlexibleVaultAddress)
-		if err != nil {
-			return math.ZeroInt(), err
-		}
-		vaultRewardsPrincipal = vaultRewardsPrincipal.Add(current)
-	}
-
-	// Exit if there are no rewards.
-	if !vaultRewardsPrincipal.IsPositive() {
-		return math.ZeroInt(), nil
-	}
-
-	// Retrieve the current Index and amount Principal.
-	currentIndex, err := k.Index.Get(ctx)
-	if err != nil {
-		return math.ZeroInt(), errors.Wrap(err, "unable to get index from state")
-	}
-	amountPrincipal := k.GetPrincipalAmountRoundedDown(amount, position.Index)
-
-	// Iterate through the rewards to calculate the amount owed to the user, proportional to their position.
-	// NOTE: For the user to be eligible, they must have joined before and exited after a complete `UpdateIndex` cycle.
-	rewardsAmount := math.ZeroInt()
-	if err := k.VaultsRewards.Walk(
-		ctx,
-		new(collections.Range[int64]).StartExclusive(position.Index), // Exclude the entry point Index.
-		func(key int64, record vaults.Reward) (stop bool, err error) {
-			if !record.Total.IsPositive() || !record.Rewards.IsPositive() {
-				return false, nil
-			}
-
-			// Exclude the last Index.
-			userReward := math.ZeroInt()
-			if record.Index != currentIndex && !record.Rewards.IsNegative() {
-				userReward = record.Rewards.ToLegacyDec().Quo(record.Total.ToLegacyDec()).MulInt(amountPrincipal).TruncateInt()
-			}
-
-			// Update the Rewards entry.
-			if err = k.VaultsRewards.Set(ctx, key, vaults.Reward{
-				Index:   record.Index,
-				Total:   record.Total.Sub(amountPrincipal),
-				Rewards: record.Rewards.Sub(userReward),
-			}); err != nil {
-				return true, err
-			}
-			rewardsAmount = rewardsAmount.Add(userReward)
-			return false, nil
-		}); err != nil {
-		return math.ZeroInt(), nil
-	}
-
-	// Transfer the specified amount back to the user from the submodule's Vault account.
-	err = k.bank.SendCoins(ctx,
-		authtypes.NewModuleAddress(vaults.FlexibleVaultName),
-		position.Address,
-		sdk.NewCoins(sdk.NewCoin(k.denom, rewardsAmount)),
-	)
-	if err != nil {
-		return math.ZeroInt(), err
-	}
-
-	return rewardsAmount, k.event.EventManager(ctx).Emit(ctx, &vaults.RewardClaimed{
-		Account: userAddress,
-		Amount:  rewardsAmount,
-	})
-}
-
 func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaults.VaultType, timestamp int64) string {
 	if vaultType == vaults.FLEXIBLE {
 		// Flexible Vaults use individual accounts for each user position.
@@ -443,59 +224,4 @@ func (k *Keeper) ToUserVaultPositionModuleAccount(address string, vaultType vaul
 		// Staked Vaults use a shared account for all users.
 		return vaults.StakedVaultName
 	}
-}
-
-// endVaultsSeasonOne handles the logic to end Vaults Season One, unlocking all
-// Flexible vault user positions.
-func (k *Keeper) endVaultsSeasonOne(ctx context.Context) error {
-	// Get all the vaults positions.
-	positions, err := k.GetVaultsPositions(ctx)
-	if err != nil {
-		return err
-	}
-
-	// Create a mapping by address and the total positions amount.
-	flexibleUsers := map[string]math.Int{}
-	var flexibleUsersAddress []string
-
-	// Iterate through all the positions.
-	k.logger.Info("collecting vault positions")
-	for _, position := range positions {
-		switch position.Vault {
-		case vaults.FLEXIBLE:
-			addr, err := k.address.BytesToString(position.Address)
-			if err != nil {
-				k.logger.Warn("invalid position address: " + err.Error())
-				continue
-			}
-
-			if _, exists := flexibleUsers[addr]; !exists {
-				flexibleUsers[addr] = position.Amount
-				flexibleUsersAddress = append(flexibleUsersAddress, addr)
-			} else {
-				flexibleUsers[addr] = flexibleUsers[addr].Add(position.Amount)
-			}
-		}
-	}
-
-	sort.Strings(flexibleUsersAddress)
-
-	// Unlock all the Flexible vault positions.
-	k.logger.Info(fmt.Sprintf("unlocking %d flexible vault positions", len(flexibleUsers)))
-	flexibleUsersProcessed := 0
-	for _, flexibleUserAddr := range flexibleUsersAddress {
-		flexibleUserTotalAmount := flexibleUsers[flexibleUserAddr]
-		if _, err := k.unlock(ctx, &vaults.MsgUnlock{
-			Signer: flexibleUserAddr,
-			Vault:  vaults.FLEXIBLE,
-			Amount: flexibleUserTotalAmount,
-		}); err != nil {
-			k.logger.Error(fmt.Sprintf("failed to unlock flexible vault position for %s: %v", flexibleUserAddr, err))
-			continue
-		}
-		flexibleUsersProcessed += 1
-	}
-	k.logger.Info(fmt.Sprintf("unlocked %d/%d flexible vault positions successfully", flexibleUsersProcessed, len(flexibleUsers)))
-
-	return nil
 }

@@ -240,34 +240,6 @@ func (AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 						},
 					},
 				},
-				"vaults": {
-					Service: vaultsv1.Msg_ServiceDesc.ServiceName,
-					RpcCommandOptions: []*autocliv1.RpcCommandOptions{
-						{
-							RpcMethod: "Lock",
-							Use:       "lock [vault] [amount]",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "vault"},
-								{ProtoField: "amount"},
-							},
-						},
-						{
-							RpcMethod: "Unlock",
-							Use:       "unlock [vault] [amount]",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "vault"},
-								{ProtoField: "amount"},
-							},
-						},
-						{
-							RpcMethod: "SetPausedState",
-							Use:       "set-paused-state [paused]",
-							PositionalArgs: []*autocliv1.PositionalArgDescriptor{
-								{ProtoField: "paused"},
-							},
-						},
-					},
-				},
 			},
 			EnhanceCustomCommand: true,
 		},
