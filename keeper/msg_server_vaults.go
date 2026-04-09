@@ -45,7 +45,7 @@ func NewVaultsMsgServer(keeper *Keeper) vaults.MsgServer {
 }
 
 func (k vaultsMsgServer) Lock(_ context.Context, _ *vaults.MsgLock) (*vaults.MsgLockResponse, error) {
-	return nil, errors.Wrapf(vaults.ErrActionPaused, "lock is paused@")
+	return nil, errors.Wrapf(vaults.ErrActionPaused, "locking is unsupported")
 }
 
 func (k vaultsMsgServer) Unlock(ctx context.Context, msg *vaults.MsgUnlock) (*vaults.MsgUnlockResponse, error) {
