@@ -1,0 +1,1 @@
+- Handle the end of the Vaults program by removing yield handling and disabling locking. ([#65](https://github.com/noble-assets/dollar/pull/65))

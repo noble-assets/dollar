@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v2.3.0
+
+*Apr 9, 2025*
+
+This is a consensus-breaking minor release to the `v2` line.
+
+### FEATURES
+
+- Handle the end of the Vaults program by removing yield handling and disabling locking. ([#65](https://github.com/noble-assets/dollar/pull/65))
+
 ## v2.2.0
 
 *Oct 21, 2025*
